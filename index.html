@@ -227,6 +227,9 @@
     </div>
 
     <script>
+        window.netlifyIdentity.init({
+                APIUrl: "https://YOUR-OLD-SITE-NAME.netlify.app/.netlify/identity"
+            });
         // Open the Netlify Identity modal when our custom button is clicked
         document.getElementById('login-btn').addEventListener('click', () => {
             netlifyIdentity.open();
