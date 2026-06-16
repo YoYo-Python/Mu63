@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦠 Parasites & Reproductive Oncology — Interactive Study Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080f;
+    --surface: #0e1120;
+    --surface2: #141828;
+    --surface3: #1c2235;
+    --border: rgba(255,255,255,0.07);
+    --teal: #00d4aa;
+    --teal-dim: rgba(0,212,170,0.12);
+    --teal-glow: rgba(0,212,170,0.3);
+    --amber: #ffb347;
+    --amber-dim: rgba(255,179,71,0.12);
+    --rose: #ff6b8a;
+    --rose-dim: rgba(255,107,138,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96,165,250,0.12);
+    --text: #e8eaf6;
+    --text-muted: #7b82a4;
+    --text-dim: #4a5180;
+    --green: #4ade80;
+    --red: #f87171;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* BACKGROUND */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 0%, rgba(0,212,170,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 100%, rgba(96,165,250,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(167,139,250,0.03) 0%, transparent 70%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* HEADER */
+  .header {
+    position: relative; z-index: 10;
+    background: rgba(14,17,32,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    position: sticky; top: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--teal), #0099ff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    box-shadow: 0 0 20px var(--teal-glow);
+  }
+  .header-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--text); line-height: 1.2; }
+  .header-sub { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+  .stats-bar { display: flex; gap: 20px; align-items: center; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 50px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);
+  }
+  .stat-pill span { color: var(--teal); font-weight: 700; }
+  .stat-pill .label { font-size: 10px; }
+
+  /* NAV TABS */
+  .nav-wrapper {
+    position: sticky; top: 87px; z-index: 9;
+    background: rgba(7,8,15,0.95); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-tabs { display: inline-flex; padding: 0 24px; gap: 2px; }
+  .nav-tab {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 14px 18px; font-size: 13px; font-weight: 600;
+    font-family: var(--font-head); color: var(--text-dim);
+    cursor: pointer; border: none; background: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s; white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .nav-tab:hover { color: var(--text-muted); background: var(--surface); border-radius: 8px 8px 0 0; }
+  .nav-tab.active { color: var(--teal); border-bottom-color: var(--teal); background: rgba(0,212,170,0.04); border-radius: 8px 8px 0 0; }
+
+  /* MAIN CONTENT */
+  .main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+  .tab-panel { display: none; animation: fadeSlide 0.35s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SHARED COMPONENTS */
+  .section-title {
+    font-family: var(--font-head); font-size: 28px; font-weight: 800;
+    margin-bottom: 8px; letter-spacing: -0.02em;
+  }
+  .section-sub { color: var(--text-muted); font-size: 15px; margin-bottom: 32px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    transition: all 0.2s; box-shadow: var(--shadow);
+  }
+  .card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 50px; font-size: 11px;
+    font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.04em;
+  }
+  .badge-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+  .badge-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(255,179,71,0.2); }
+  .badge-rose { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(255,107,138,0.2); }
+  .badge-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-family: var(--font-head); font-size: 13px; font-weight: 700;
+    cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
+  }
+  .btn-teal { background: var(--teal); color: #000; }
+  .btn-teal:hover { background: #00f0c0; box-shadow: 0 0 20px var(--teal-glow); }
+  .btn-outline { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+  .tag-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    font-family: var(--font-mono);
+  }
+  .pill-exam { background: rgba(255,179,71,0.15); color: var(--amber); }
+  .pill-pearl { background: rgba(0,212,170,0.15); color: var(--teal); }
+  .pill-yield { background: rgba(255,107,138,0.15); color: var(--rose); }
+
+  /* SEARCH BAR */
+  .search-wrap { position: relative; margin-bottom: 28px; }
+  .search-input {
+    width: 100%; padding: 12px 18px 12px 44px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 50px; color: var(--text); font-size: 14px;
+    font-family: var(--font-body); outline: none; transition: all 0.2s;
+  }
+  .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-dim); }
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
+  .search-results-info { font-size: 12px; color: var(--text-muted); margin-top: 8px; font-family: var(--font-mono); }
+
+  /* ========== TAB 1: OVERVIEW ========== */
+  .hero-banner {
+    background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(96,165,250,0.06) 100%);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: var(--radius); padding: 28px 32px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-banner::before {
+    content: '🦠'; position: absolute; right: 24px; top: 50%;
+    transform: translateY(-50%); font-size: 80px; opacity: 0.08;
+  }
+  .hero-banner h2 { font-family: var(--font-head); font-size: 22px; font-weight: 800; margin-bottom: 8px; color: var(--teal); }
+  .hero-banner p { color: var(--text-muted); max-width: 600px; font-size: 14px; }
+  .key-fact {
+    background: var(--surface2); border-left: 3px solid var(--teal);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 16px; margin-top: 12px; font-size: 13px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .key-fact .icon { font-size: 16px; flex-shrink: 0; }
+
+  .parasite-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; cursor: pointer;
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .parasite-card::after {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; border-radius: 3px 0 0 3px;
+    transition: all 0.2s;
+  }
+  .parasite-card.teal::after { background: var(--teal); }
+  .parasite-card.amber::after { background: var(--amber); }
+  .parasite-card.rose::after { background: var(--rose); }
+  .parasite-card.purple::after { background: var(--purple); }
+  .parasite-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .parasite-card h4 { font-family: var(--font-mono); font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .parasite-card .name { font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .parasite-card .desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .parasite-card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+
+  .timeline-wrap { margin: 32px 0; }
+  .timeline-title { font-family: var(--font-head); font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--teal); }
+  .timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 20px; top: 24px; bottom: 24px;
+    width: 2px; background: linear-gradient(to bottom, var(--teal), var(--purple));
+  }
+  .t-item { display: flex; gap: 20px; padding: 12px 0; position: relative; }
+  .t-dot {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; border: 2px solid var(--border); position: relative; z-index: 1;
+  }
+  .t-dot.teal { background: var(--teal-dim); border-color: var(--teal); }
+  .t-dot.amber { background: var(--amber-dim); border-color: var(--amber); }
+  .t-dot.rose { background: var(--rose-dim); border-color: var(--rose); }
+  .t-dot.purple { background: var(--purple-dim); border-color: var(--purple); }
+  .t-dot.blue { background: var(--blue-dim); border-color: var(--blue); }
+  .t-content { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .t-content strong { font-family: var(--font-head); font-size: 14px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .t-content p { font-size: 13px; color: var(--text-muted); }
+  .t-content .outcome { font-size: 12px; color: var(--teal); font-family: var(--font-mono); margin-top: 6px; }
+
+  /* ========== TAB 2: QUIZ ========== */
+  .quiz-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+  .quiz-progress-bar { height: 6px; background: var(--surface3); border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); border-radius: 3px; transition: width 0.5s ease; }
+  .quiz-score-display {
+    display: flex; gap: 20px; align-items: center;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 24px; margin-bottom: 24px;
+  }
+  .score-item { text-align: center; }
+  .score-num { font-family: var(--font-head); font-size: 28px; font-weight: 800; }
+  .score-num.green { color: var(--green); }
+  .score-num.red { color: var(--red); }
+  .score-num.amber { color: var(--amber); }
+  .score-label { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+  .quiz-q-num { font-family: var(--font-mono); font-size: 12px; color: var(--teal); margin-bottom: 12px; }
+  .quiz-question { font-family: var(--font-head); font-size: 17px; font-weight: 700; line-height: 1.5; margin-bottom: 20px; color: var(--text); }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .quiz-option {
+    padding: 14px 18px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: flex-start; gap: 12px; text-align: left;
+    font-size: 14px; font-family: var(--font-body);
+  }
+  .quiz-option:hover:not(.disabled) { border-color: rgba(0,212,170,0.4); background: var(--teal-dim); }
+  .quiz-option.selected-correct { border-color: var(--green); background: rgba(74,222,128,0.1); animation: pulse-green 0.4s ease; }
+  .quiz-option.selected-wrong { border-color: var(--red); background: rgba(248,113,113,0.1); animation: shake 0.4s ease; }
+  .quiz-option.show-correct { border-color: var(--green); background: rgba(74,222,128,0.08); }
+  .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+  .option-letter {
+    width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    background: var(--surface3); color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .selected-correct .option-letter { background: var(--green); color: #000; }
+  .selected-wrong .option-letter { background: var(--red); color: #fff; }
+  .show-correct .option-letter { background: var(--green); color: #000; }
+  .quiz-explanation {
+    background: var(--surface2); border-left: 3px solid var(--teal);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px; font-size: 13px; color: var(--text-muted); display: none;
+  }
+  .quiz-explanation.show { display: block; animation: fadeSlide 0.3s ease; }
+  .quiz-explanation strong { color: var(--teal); }
+  .quiz-nav { display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px; }
+  @keyframes pulse-green { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .streak-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--amber-dim); border: 1px solid rgba(255,179,71,0.3);
+    padding: 4px 12px; border-radius: 50px; font-family: var(--font-mono);
+    font-size: 12px; color: var(--amber); font-weight: 700;
+  }
+
+  /* ========== TAB 3: FLASHCARDS ========== */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .flashcard { perspective: 1000px; height: 200px; cursor: pointer; }
+  .flashcard-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: var(--radius); padding: 22px;
+    display: flex; flex-direction: column; justify-content: center;
+    border: 1px solid var(--border);
+  }
+  .fc-front { background: var(--surface); }
+  .fc-back { background: var(--surface2); transform: rotateY(180deg); }
+  .fc-front::before {
+    content: '?'; position: absolute; right: 16px; top: 12px;
+    font-family: var(--font-head); font-size: 40px; font-weight: 800;
+    color: rgba(255,255,255,0.04);
+  }
+  .fc-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .fc-question { font-family: var(--font-head); font-size: 15px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .fc-answer { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .fc-answer strong { color: var(--teal); }
+  .fc-hint { font-size: 11px; color: var(--teal); font-family: var(--font-mono); margin-top: 12px; }
+  .fc-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+
+  /* ========== TAB 4: CLINICAL CASES ========== */
+  .case-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  }
+  .case-header {
+    padding: 20px 24px; background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+  }
+  .case-num { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .case-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; }
+  .case-patient {
+    background: var(--surface3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px; margin: 20px 24px 0;
+    font-size: 14px; line-height: 1.7; color: var(--text-muted);
+    font-style: italic;
+  }
+  .case-patient strong { color: var(--text); font-style: normal; }
+  .case-questions { padding: 20px 24px; }
+  .case-question { margin-bottom: 20px; }
+  .case-q-text { font-family: var(--font-head); font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .reveal-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px; background: var(--surface3);
+    border: 1px dashed var(--border); border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text-muted); cursor: pointer;
+    transition: all 0.2s; font-family: var(--font-body);
+  }
+  .reveal-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-dim); }
+  .case-answer {
+    background: var(--surface2); border-left: 3px solid var(--green);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px; font-size: 13px; color: var(--text-muted);
+    line-height: 1.6; display: none;
+  }
+  .case-answer.show { display: block; animation: fadeSlide 0.3s ease; }
+  .case-answer strong { color: var(--green); }
+
+  /* ========== TAB 5: PATHOPHYSIOLOGY ========== */
+  .flow-section { margin-bottom: 40px; }
+  .flow-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .flow-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+  .flow-chain { display: flex; flex-direction: column; gap: 4px; }
+  .flow-step {
+    display: flex; align-items: flex-start; gap: 16px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 18px; transition: all 0.2s;
+  }
+  .flow-step:hover { border-color: rgba(0,212,170,0.3); background: var(--teal-dim); }
+  .flow-step.expanded { border-color: var(--teal); background: var(--teal-dim); }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.3);
+  }
+  .step-content strong { font-family: var(--font-head); font-size: 14px; font-weight: 700; display: block; }
+  .step-content p { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; display: none; }
+  .flow-step.expanded .step-content p { display: block; }
+  .flow-arrow { text-align: center; font-size: 20px; color: var(--text-dim); margin: 0; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    background: var(--surface); border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .compare-head {
+    padding: 14px 18px; font-family: var(--font-head); font-size: 14px;
+    font-weight: 800; display: flex; align-items: center; gap: 10px;
+  }
+  .compare-head.teal { background: var(--teal-dim); color: var(--teal); border-bottom: 1px solid rgba(0,212,170,0.2); }
+  .compare-head.amber { background: var(--amber-dim); color: var(--amber); border-bottom: 1px solid rgba(255,179,71,0.2); }
+  .compare-head.rose { background: var(--rose-dim); color: var(--rose); border-bottom: 1px solid rgba(255,107,138,0.2); }
+  .compare-head.purple { background: var(--purple-dim); color: var(--purple); border-bottom: 1px solid rgba(167,139,250,0.2); }
+  .compare-body { padding: 14px 18px; }
+  .compare-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .compare-item:last-child { border-bottom: none; }
+  .compare-label { color: var(--text-muted); min-width: 90px; flex-shrink: 0; font-size: 12px; }
+  .compare-value { color: var(--text); font-weight: 500; }
+
+  /* ========== TAB 6: DIAGNOSIS ========== */
+  .diag-algo { display: flex; flex-direction: column; gap: 4px; }
+  .algo-box {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 18px; background: var(--surface2);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .algo-box .algo-icon { font-size: 20px; flex-shrink: 0; }
+  .algo-box .algo-text strong { font-family: var(--font-head); font-size: 14px; font-weight: 700; }
+  .algo-box .algo-text span { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .algo-arrow { text-align: center; font-size: 18px; color: var(--text-dim); }
+  .diag-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .diag-table th { background: var(--surface3); padding: 10px 14px; text-align: left; font-family: var(--font-head); font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  .diag-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .diag-table tr:hover td { background: var(--surface3); }
+  .diag-table td:first-child { color: var(--text); font-weight: 600; font-size: 13px; }
+  .diag-table .gold { color: var(--amber); font-weight: 700; }
+
+  /* ========== TAB 7: TREATMENT ========== */
+  .drug-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden;
+  }
+  .drug-accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .drug-accent.teal { background: var(--teal); }
+  .drug-accent.amber { background: var(--amber); }
+  .drug-accent.rose { background: var(--rose); }
+  .drug-accent.purple { background: var(--purple); }
+  .drug-accent.blue { background: var(--blue); }
+  .drug-name { font-family: var(--font-head); font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .drug-generic { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+  .drug-info { display: flex; flex-direction: column; gap: 8px; }
+  .drug-row { display: flex; gap: 10px; font-size: 13px; }
+  .drug-key { color: var(--text-muted); min-width: 80px; flex-shrink: 0; font-size: 12px; }
+  .drug-val { color: var(--text); font-weight: 500; }
+  .alert-box {
+    border-radius: var(--radius-sm); padding: 14px 16px; font-size: 13px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .alert-box.amber { background: var(--amber-dim); border: 1px solid rgba(255,179,71,0.25); color: var(--amber); }
+  .alert-box.rose { background: var(--rose-dim); border: 1px solid rgba(255,107,138,0.25); color: var(--rose); }
+  .alert-box.teal { background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.25); color: var(--teal); }
+  .alert-box .alert-text { color: var(--text-muted); }
+  .alert-box .alert-text strong { color: inherit; }
+
+  /* ========== TAB 8: MNEMONICS ========== */
+  .mnemonic-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 20px;
+  }
+  .mnemonic-header {
+    padding: 18px 22px; display: flex; justify-content: space-between;
+    align-items: flex-start; cursor: pointer; gap: 16px;
+    transition: background 0.2s;
+  }
+  .mnemonic-header:hover { background: var(--surface2); }
+  .mnemonic-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; }
+  .mnemonic-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .mnemonic-acronym {
+    font-family: var(--font-mono); font-size: 26px; font-weight: 700;
+    color: var(--teal); flex-shrink: 0;
+  }
+  .mnemonic-body { padding: 0 22px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+  .mnemonic-body.open { max-height: 600px; padding: 0 22px 22px; }
+  .mnemonic-row {
+    display: flex; gap: 14px; padding: 10px 0;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .mnemonic-row:last-child { border-bottom: none; }
+  .mnemonic-letter {
+    width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+    background: var(--teal-dim); color: var(--teal);
+    border: 1px solid rgba(0,212,170,0.3);
+  }
+  .mnemonic-row div strong { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--text); }
+  .mnemonic-row div span { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .fun-fact {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin-top: 12px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .fun-fact .ff-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+  .fun-fact strong { color: var(--amber); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .header { padding: 16px 20px; }
+    .main { padding: 24px 16px 60px; }
+    .section-title { font-size: 22px; }
+    .quiz-question { font-size: 15px; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* HIDDEN SEARCH ITEMS */
+  .searchable.hidden { display: none !important; }
+
+  /* COMPLETION BANNER */
+  .completion-banner {
+    background: linear-gradient(135deg, rgba(74,222,128,0.1), rgba(0,212,170,0.1));
+    border: 1px solid rgba(74,222,128,0.3); border-radius: var(--radius);
+    padding: 24px; text-align: center; display: none;
+  }
+  .completion-banner.show { display: block; animation: fadeSlide 0.5s ease; }
+  .completion-banner h3 { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--green); }
+</style>
+</head>
+<body>
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-icon">🦠</div>
+    <div>
+      <div class="header-title">Parasites & Reproductive Oncology</div>
+      <div class="header-sub">Microbiology / Parasitology — Interactive Study Hub</div>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-pill"><span id="stat-score">0</span>/<span>25</span> <div class="label">Quiz</div></div>
+    <div class="stat-pill">🔥 <span id="stat-streak">0</span> <div class="label">Streak</div></div>
+    <div class="stat-pill">📚 <span id="stat-cards">0</span> <div class="label">Cards</div></div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="nav-wrapper">
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('overview', this)">🏠 Overview</button>
+    <button class="nav-tab" onclick="switchTab('quiz', this)">🎯 Quiz Mode</button>
+    <button class="nav-tab" onclick="switchTab('flashcards', this)">🃏 Flashcards</button>
+    <button class="nav-tab" onclick="switchTab('cases', this)">🩺 Clinical Cases</button>
+    <button class="nav-tab" onclick="switchTab('pathophys', this)">⚗️ Pathophysiology</button>
+    <button class="nav-tab" onclick="switchTab('diagnosis', this)">🔬 Diagnosis</button>
+    <button class="nav-tab" onclick="switchTab('treatment', this)">💊 Treatment</button>
+    <button class="nav-tab" onclick="switchTab('mnemonics', this)">🧠 Mnemonics</button>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ===== TAB 1: OVERVIEW ===== -->
+<div id="tab-overview" class="tab-panel active">
+  <div class="section-title">📖 Topic Overview</div>
+  <p class="section-sub">Parasites of the Reproductive System — from ectoparasites to oncogenesis.</p>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" type="text" placeholder="Search parasites, mechanisms, treatments..." oninput="doSearch(this.value)" id="search-input">
+    <div class="search-results-info" id="search-info"></div>
+  </div>
+
+  <div class="hero-banner">
+    <h2>⚠️ HIGH-YIELD EXAM CONCEPT</h2>
+    <p>Both <em>T. vaginalis</em> and <em>S. haematobium</em> dramatically increase cervical cancer risk through chronic inflammation that facilitates HPV acquisition and prevents viral clearance.</p>
+    <div class="key-fact"><span class="icon">💡</span> Always treat BOTH partners for <em>T. vaginalis</em> — males are often asymptomatic (up to 50%) but can reinfect the female (ping-pong transmission).</div>
+    <div class="key-fact"><span class="icon">🎓</span> Granuloma formation by <em>S. haematobium</em> is the pre-cancerous stage — called "الجرانيولوما دي البريكانس".</div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-bottom:16px;">🦠 Parasite Categories</div>
+  <div class="grid-2" id="parasite-overview-grid">
+    <div class="parasite-card teal searchable" data-text="phthirus pubis sarcoptes scabiei arthropod ectoparasite pubic lice itch mite dermatitis permethrin">
+      <h4>CATEGORY 01 — ARTHROPODS</h4>
+      <div class="name">Phthirus pubis & Sarcoptes scabiei</div>
+      <div class="desc">Ectoparasites affecting external genitalia. <em>P. pubis</em> attaches to pubic hair; <em>S. scabiei</em> creates intracutaneous tunnels. Cause severe itching, dermatitis, and secondary bacterial infections.</div>
+      <div class="tags">
+        <span class="tag-pill pill-exam">⚠️ EXAM: Stops at dermatitis</span>
+        <span class="badge badge-teal">Permethrin Rx</span>
+      </div>
+    </div>
+    <div class="parasite-card amber searchable" data-text="schistosoma haematobium enterobius vermicularis wuchereria bancrofti helminth granuloma praziquantel mebendazole filariasis">
+      <h4>CATEGORY 02 — HELMINTHS</h4>
+      <div class="name">Schistosoma, Enterobius & W. bancrofti</div>
+      <div class="desc">Cause granulomatous lesions, obstructive fibrosis, and lymphatic obstruction. <em>S. haematobium</em> eggs trapped in pelvic venules cause granuloma. <em>W. bancrofti</em> obstructs lymphatics → elephantiasis.</div>
+      <div class="tags">
+        <span class="tag-pill pill-yield">🔥 Pre-cancerous granuloma</span>
+        <span class="badge badge-amber">Praziquantel Rx</span>
+      </div>
+    </div>
+    <div class="parasite-card rose searchable" data-text="trichomonas vaginalis toxoplasma gondii plasmodium trypanosoma cruzi protozoa metronidazole cytolysis vaginitis">
+      <h4>CATEGORY 03 — PROTOZOA</h4>
+      <div class="name">T. vaginalis, T. gondii, Plasmodium & T. cruzi</div>
+      <div class="desc">Intracellular damage and cytotoxic cytolysis. <em>T. vaginalis</em> causes contact-dependent cytolysis. <em>T. cruzi</em> amastigotes cause irreversible nerve/muscle destruction → Mega uterus.</div>
+      <div class="tags">
+        <span class="tag-pill pill-pearl">💊 Both partners!</span>
+        <span class="badge badge-rose">Metronidazole Rx</span>
+      </div>
+    </div>
+    <div class="parasite-card purple searchable" data-text="cancer HPV oncogenesis TvMIF IL-6 cervical cancer prostate cancer inflammation schistosoma trichomonas colposcopy">
+      <h4>CATEGORY 04 — ONCOGENESIS</h4>
+      <div class="name">Parasite-Induced Cancer</div>
+      <div class="desc"><em>T. vaginalis</em> releases TvMIF and increases IL-6, facilitating HPV acquisition. <em>S. haematobium</em> causes cervical erosions (HPV entry) and interferes with viral clearance (HPV persistence).</div>
+      <div class="tags">
+        <span class="tag-pill pill-yield">🎯 MOST HIGH-YIELD</span>
+        <span class="badge badge-purple">Colposcopy screen</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="timeline-title">🔄 Cervical Cancer Pathway — Parasite to Malignancy</div>
+    <div class="timeline">
+      <div class="t-item">
+        <div class="t-dot teal">🦠</div>
+        <div class="t-content">
+          <strong>Step 1 — Parasite Infection</strong>
+          <p>Sexual contact with <em>T. vaginalis</em> or skin penetration by <em>S. haematobium</em> furcocercous cercariae. Parasite establishes in genitourinary tract or pelvic venous plexus.</p>
+          <div class="outcome">→ Infection established</div>
+        </div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="t-item">
+        <div class="t-dot amber">🔥</div>
+        <div class="t-content">
+          <strong>Step 2 — Chronic Inflammation</strong>
+          <p><em>T. vaginalis</em> releases pro-inflammatory cytokines + TvMIF + ↑IL-6. <em>S. haematobium</em> eggs trapped in vessel walls → granuloma + fibrosis → cervical erosions and ulcerations.</p>
+          <div class="outcome">→ Epithelial barrier disrupted</div>
+        </div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="t-item">
+        <div class="t-dot rose">🦠</div>
+        <div class="t-content">
+          <strong>Step 3 — HPV Acquisition</strong>
+          <p>Cervical erosions act as entry points for Human Papilloma Virus (HPV). Inflammatory environment facilitates viral adhesion and penetration.</p>
+          <div class="outcome">→ HPV enters cervical epithelium</div>
+        </div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="t-item">
+        <div class="t-dot purple">🧬</div>
+        <div class="t-content">
+          <strong>Step 4 — Impaired Viral Clearance</strong>
+          <p>Chronic schistosomal inflammation impairs local immune system from clearing HPV. TvMIF promotes abnormal cell proliferation. ↑ sustained viral load.</p>
+          <div class="outcome">→ HPV persists & viral load rises</div>
+        </div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="t-item">
+        <div class="t-dot blue">🔬</div>
+        <div class="t-content">
+          <strong>Step 5 — Precancer & Cancer</strong>
+          <p>HPV drives cervical intraepithelial neoplasia (CIN) → cervical carcinoma. In males: <em>T. vaginalis</em> IL-6 ↑ → BPH → prostate cancer risk.</p>
+          <div class="outcome">→ Cervical / Prostate Cancer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-bottom:16px;">🎓 Quick-Reference Clinical Pearls</div>
+  <div class="grid-3">
+    <div class="card searchable" data-text="strawberry cervix trichomonas vaginalis">
+      <div style="font-size:28px;margin-bottom:10px;">🍓</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">"Strawberry Cervix"</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">Classic sign of <em>T. vaginalis</em> — punctate hemorrhages on cervix giving a strawberry appearance. Also: greenish-yellow frothy discharge, foul smell.</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-exam">⚠️ EXAM FAVORITE</span></div>
+    </div>
+    <div class="card searchable" data-text="sandy patches schistosoma calcified haematuria">
+      <div style="font-size:28px;margin-bottom:10px;">🪨</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">"Sandy Patches"</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">Calcified <em>S. haematobium</em> egg deposits in bladder/cervix seen on colposcopy. Classic finding in female genital schistosomiasis + terminal hematuria.</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-yield">🔥 HIGH-YIELD</span></div>
+    </div>
+    <div class="card searchable" data-text="mega uterus trypanosoma cruzi amastigote chagas">
+      <div style="font-size:28px;margin-bottom:10px;">🔴</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">"Mega Uterus"</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;"><em>T. cruzi</em> amastigotes destroy nerve + muscle cells → massive uterine enlargement. Chronic stage — nerve destruction is IRREVERSIBLE even after treatment.</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-pearl">💎 CLINICAL PEARL</span></div>
+    </div>
+    <div class="card searchable" data-text="elephantiasis hydrocele wuchereria bancrofti lymphedema scrotal">
+      <div style="font-size:28px;margin-bottom:10px;">🦵</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">Scrotal Elephantiasis</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;"><em>W. bancrofti</em> adult worms in lymph vessels → chronic obstruction → scrotal lymphedema, hydrocele, and elephantiasis. Endemic regions.</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-exam">⚠️ MCQ TRAP</span></div>
+    </div>
+    <div class="card searchable" data-text="toxoplasma gondii transplacental congenital spiramycin pregnant cat">
+      <div style="font-size:28px;margin-bottom:10px;">🐱</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">Congenital Toxoplasmosis</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;"><em>T. gondii</em> transplacental transmission. In pregnancy → Spiramycin (NOT pyrimethamine). Source: cat feces (oocysts) OR undercooked meat (tissue cysts).</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-yield">🔥 DRUG SWAP</span></div>
+    </div>
+    <div class="card searchable" data-text="enterobius vermicularis pinworm fallopian tube ectopic granuloma perianal">
+      <div style="font-size:28px;margin-bottom:10px;">🪱</div>
+      <strong style="font-family:var(--font-head);font-size:14px;font-weight:700;">Extra-intestinal Pinworm</strong>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">Gravid <em>E. vermicularis</em> females migrate into vagina → uterus → fallopian tubes → granulomas, peritoneal adhesions, and tube-ovarian abscesses.</p>
+      <div style="margin-top:10px;"><span class="tag-pill pill-pearl">💎 UNIQUE COMPLICATION</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: QUIZ ===== -->
+<div id="tab-quiz" class="tab-panel">
+  <div class="quiz-header">
+    <div>
+      <div class="section-title">🎯 Quiz Mode</div>
+      <p class="section-sub" style="margin-bottom:0;">25 MCQs — Mechanism, Structure, Regulatory & Comparative</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="streak-badge">🔥 Streak: <span id="streak-display">0</span></div>
+      <button class="btn btn-outline" onclick="resetQuiz()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="quiz-score-display">
+    <div class="score-item"><div class="score-num green" id="q-correct">0</div><div class="score-label">✅ Correct</div></div>
+    <div class="score-item"><div class="score-num red" id="q-wrong">0</div><div class="score-label">❌ Wrong</div></div>
+    <div class="score-item"><div class="score-num amber" id="q-remaining">25</div><div class="score-label">⏳ Remaining</div></div>
+    <div style="flex:1;"></div>
+    <div class="score-item"><div class="score-num" id="q-percent" style="color:var(--teal)">0%</div><div class="score-label">📊 Score</div></div>
+  </div>
+  <div id="quiz-container"></div>
+  <div class="completion-banner" id="quiz-complete">
+    <div style="font-size:48px;margin-bottom:10px;">🎉</div>
+    <h3 id="complete-msg">Quiz Complete!</h3>
+    <p id="complete-score" style="color:var(--text-muted);margin:8px 0 20px;font-size:15px;"></p>
+    <button class="btn btn-teal" onclick="resetQuiz()">🔄 Retake Quiz</button>
+  </div>
+</div>
+
+<!-- ===== TAB 3: FLASHCARDS ===== -->
+<div id="tab-flashcards" class="tab-panel">
+  <div class="fc-controls">
+    <div>
+      <div class="section-title">🃏 Flashcards</div>
+      <p class="section-sub" style="margin-bottom:0;">Click any card to flip it. <span id="fc-flipped-count">0</span> of 20 reviewed.</p>
+    </div>
+    <button class="btn btn-outline" onclick="resetFlashcards()">↺ Reset All</button>
+  </div>
+  <div class="flashcard-grid" id="flashcard-grid"></div>
+</div>
+
+<!-- ===== TAB 4: CLINICAL CASES ===== -->
+<div id="tab-cases" class="tab-panel">
+  <div class="section-title">🩺 Clinical Cases</div>
+  <p class="section-sub">Exam-style vignettes — read the case, answer the questions, then reveal.</p>
+  <div id="cases-container"></div>
+</div>
+
+<!-- ===== TAB 5: PATHOPHYSIOLOGY ===== -->
+<div id="tab-pathophys" class="tab-panel">
+  <div class="section-title">⚗️ Pathophysiology</div>
+  <p class="section-sub">Interactive step-by-step disease mechanisms. Click any step to expand.</p>
+
+  <div class="flow-section">
+    <div class="flow-title" style="color:var(--rose);">🔴 <em>Trichomonas vaginalis</em> → Cancer Pathway</div>
+    <div class="flow-sub">Sexual transmission → Cytolysis → Inflammation → TvMIF/IL-6 → HPV → Cervical/Prostate Cancer</div>
+    <div class="flow-chain" id="flow-tv"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="flow-section">
+    <div class="flow-title" style="color:var(--amber);">🟡 <em>Schistosoma haematobium</em> → Cancer Pathway</div>
+    <div class="flow-sub">Skin penetration → Pelvic migration → Egg deposition → Granuloma → HPV synergy → Cancer</div>
+    <div class="flow-chain" id="flow-sh"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title" style="font-size:18px;margin-bottom:20px;">🔄 Comparative Parasite Profiles</div>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="compare-head teal">🦠 T. vaginalis <span style="font-size:11px;font-weight:400;opacity:0.8">Protozoan</span></div>
+      <div class="compare-body">
+        <div class="compare-item"><div class="compare-label">Class</div><div class="compare-value">Flagellated protozoan</div></div>
+        <div class="compare-item"><div class="compare-label">Location</div><div class="compare-value">Lower genitourinary tract</div></div>
+        <div class="compare-item"><div class="compare-label">Mechanism</div><div class="compare-value">Contact-dependent cytolysis + TvMIF + IL-6</div></div>
+        <div class="compare-item"><div class="compare-label">Female sign</div><div class="compare-value">Strawberry cervix, frothy discharge</div></div>
+        <div class="compare-item"><div class="compare-label">Cancer link</div><div class="compare-value">Cervical + Prostate cancer (via HPV)</div></div>
+        <div class="compare-item"><div class="compare-label">Treatment</div><div class="compare-value">Metronidazole (BOTH partners)</div></div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head amber">🪱 S. haematobium <span style="font-size:11px;font-weight:400;opacity:0.8">Trematode</span></div>
+      <div class="compare-body">
+        <div class="compare-item"><div class="compare-label">Class</div><div class="compare-value">Blood fluke (Trematode)</div></div>
+        <div class="compare-item"><div class="compare-label">Location</div><div class="compare-value">Vesical & pelvic venous plexuses</div></div>
+        <div class="compare-item"><div class="compare-label">Mechanism</div><div class="compare-value">Egg trapping → Granuloma → Fibrosis → Erosions</div></div>
+        <div class="compare-item"><div class="compare-label">Classic sign</div><div class="compare-value">Sandy patches, terminal hematuria</div></div>
+        <div class="compare-item"><div class="compare-label">Cancer link</div><div class="compare-value">Cervical cancer (dual-stage HPV synergy)</div></div>
+        <div class="compare-item"><div class="compare-label">Treatment</div><div class="compare-value">Praziquantel</div></div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head rose">🩸 T. cruzi <span style="font-size:11px;font-weight:400;opacity:0.8">Protozoan</span></div>
+      <div class="compare-body">
+        <div class="compare-item"><div class="compare-label">Class</div><div class="compare-value">Hemoflagellate protozoan</div></div>
+        <div class="compare-item"><div class="compare-label">Location</div><div class="compare-value">Tissue cells (intracellular)</div></div>
+        <div class="compare-item"><div class="compare-label">Mechanism</div><div class="compare-value">Amastigote multiplication → Cell destruction + fibrosis</div></div>
+        <div class="compare-item"><div class="compare-label">Key sign</div><div class="compare-value">Mega uterus, mega organs</div></div>
+        <div class="compare-item"><div class="compare-label">Transmission</div><div class="compare-value">Bug feces (metacyclic trypomastigotes) via wound</div></div>
+        <div class="compare-item"><div class="compare-label">Treatment</div><div class="compare-value">Benznidazole / Nifurtimox</div></div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head purple">🦟 W. bancrofti <span style="font-size:11px;font-weight:400;opacity:0.8">Nematode</span></div>
+      <div class="compare-body">
+        <div class="compare-item"><div class="compare-label">Class</div><div class="compare-value">Filarial nematode</div></div>
+        <div class="compare-item"><div class="compare-label">Location</div><div class="compare-value">Lymph vessels</div></div>
+        <div class="compare-item"><div class="compare-label">Mechanism</div><div class="compare-value">Lymphatic obstruction → dilatation → varices</div></div>
+        <div class="compare-item"><div class="compare-label">Key sign</div><div class="compare-value">Scrotal lymphedema, hydrocele, elephantiasis</div></div>
+        <div class="compare-item"><div class="compare-label">Infective stage</div><div class="compare-value">Filariform larva (via mosquito)</div></div>
+        <div class="compare-item"><div class="compare-label">Treatment</div><div class="compare-value">Diethylcarbamazine (Hetrazan)</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 6: DIAGNOSIS ===== -->
+<div id="tab-diagnosis" class="tab-panel">
+  <div class="section-title">🔬 Diagnosis</div>
+  <p class="section-sub">Gold standards, lab tests, and diagnostic algorithms per parasite.</p>
+
+  <div class="card" style="margin-bottom:28px;">
+    <div style="font-family:var(--font-head);font-size:16px;font-weight:800;margin-bottom:20px;color:var(--teal);">📋 Diagnostic Methods Comparison Table</div>
+    <div style="overflow-x:auto;">
+      <table class="diag-table">
+        <thead>
+          <tr>
+            <th>Parasite</th>
+            <th>Method</th>
+            <th>Sample</th>
+            <th>Finding</th>
+            <th>Gold Standard?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>T. vaginalis</td><td>Wet mount microscopy</td><td>Vaginal discharge</td><td>Motile, pear-shaped flagellated trophozoites</td><td class="gold">★ Yes</td></tr>
+          <tr><td>T. vaginalis</td><td>Culture (Diamond's media)</td><td>Vaginal swab</td><td>Protozoan growth</td><td>Confirmatory</td></tr>
+          <tr><td>S. haematobium (FGS)</td><td>Colposcopy + Biopsy</td><td>Cervical-vaginal tissue</td><td>Eggs with terminal spine, sandy patches</td><td class="gold">★ Yes</td></tr>
+          <tr><td>S. haematobium</td><td>Urine microscopy</td><td>Terminal urine</td><td>Eggs with terminal spine</td><td>Routine screen</td></tr>
+          <tr><td>T. cruzi</td><td>Blood film</td><td>Peripheral blood</td><td>Monomorphic trypomastigotes</td><td class="gold">★ Acute</td></tr>
+          <tr><td>T. cruzi</td><td>Serology (ELISA)</td><td>Blood</td><td>Anti-T. cruzi antibodies</td><td>Chronic stage</td></tr>
+          <tr><td>W. bancrofti</td><td>Blood film (night)</td><td>Nocturnal blood</td><td>Microfilariae with sheath</td><td class="gold">★ Yes</td></tr>
+          <tr><td>T. gondii</td><td>Serology (IgM/IgG)</td><td>Blood</td><td>Rising IgM (acute), IgG (chronic)</td><td class="gold">★ Yes</td></tr>
+          <tr><td>E. vermicularis</td><td>Scotch tape test</td><td>Perianal skin</td><td>Eggs with one flat side</td><td class="gold">★ Yes</td></tr>
+          <tr><td>Plasmodium</td><td>Thick/thin blood film</td><td>Blood (fever spike)</td><td>Intra-RBC parasites, gametocytes</td><td class="gold">★ Yes</td></tr>
+          <tr><td>P. pubis / S. scabiei</td><td>Clinical + dermoscopy</td><td>Skin inspection</td><td>Lice/nits on hair; skin burrows (scabies)</td><td>Clinical</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-bottom:20px;">🔄 Diagnostic Algorithm — Genital Discharge Workup</div>
+  <div class="diag-algo">
+    <div class="algo-box" style="border-color:rgba(0,212,170,0.3);"><div class="algo-icon">👩</div><div class="algo-text"><strong>Female patient with genital symptoms</strong><span>Discharge, itching, pelvic pain, abnormal bleeding</span></div></div>
+    <div class="algo-arrow">↓</div>
+    <div class="algo-box"><div class="algo-icon">🔬</div><div class="algo-text"><strong>Wet mount microscopy (FIRST)</strong><span>Motile pear-shaped → T. vaginalis | Clue cells → Bacterial vaginosis | Hyphae → Candida</span></div></div>
+    <div class="algo-arrow">↓</div>
+    <div class="algo-box"><div class="algo-icon">🩺</div><div class="algo-text"><strong>Colposcopy if abnormal cervix</strong><span>"Strawberry cervix" → T. vaginalis | Sandy patches / erosions → Consider S. haematobium (endemic history)</span></div></div>
+    <div class="algo-arrow">↓</div>
+    <div class="algo-box"><div class="algo-icon">🔭</div><div class="algo-text"><strong>Biopsy if lesion present</strong><span>Eggs with terminal spine = S. haematobium (GOLD STANDARD for FGS)</span></div></div>
+    <div class="algo-arrow">↓</div>
+    <div class="algo-box" style="border-color:rgba(255,107,138,0.3);"><div class="algo-icon">🧬</div><div class="algo-text"><strong>HPV testing / Pap smear</strong><span>Especially if T. vaginalis or S. haematobium confirmed — both dramatically increase HPV risk</span></div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="grid-2">
+    <div class="alert-box amber">
+      <span>⚠️</span>
+      <div class="alert-text"><strong>EXAM TRAP:</strong> Female genital schistosomiasis (FGS) gold standard is biopsy of cervical tissue — NOT urine microscopy. Urine is for bladder schistosomiasis.</div>
+    </div>
+    <div class="alert-box teal">
+      <span>💡</span>
+      <div class="alert-text"><strong>CLINICAL PEARL:</strong> T. vaginalis males are often asymptomatic. Culture on Modified Diamond's media is used when wet mount is negative but suspicion remains high.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 7: TREATMENT ===== -->
+<div id="tab-treatment" class="tab-panel">
+  <div class="section-title">💊 Treatment</div>
+  <p class="section-sub">Drugs, doses, and special considerations for each parasite.</p>
+
+  <div class="alert-box rose" style="margin-bottom:28px;">
+    <span>🚨</span>
+    <div class="alert-text"><strong>CRITICAL RULE:</strong> Always treat BOTH partners simultaneously for T. vaginalis — even if the male is asymptomatic. Failure = ping-pong reinfection cycle.</div>
+  </div>
+
+  <div class="grid-2" id="drug-grid"></div>
+
+  <div class="divider"></div>
+  <div class="section-title" style="font-size:18px;margin-bottom:20px;">📊 Treatment Summary Table</div>
+  <div style="overflow-x:auto;">
+    <table class="diag-table">
+      <thead>
+        <tr><th>Parasite</th><th>Drug of Choice</th><th>Alternative</th><th>Special Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>T. vaginalis</td><td style="color:var(--teal);font-weight:700;">Metronidazole</td><td>Tinidazole</td><td>Treat BOTH partners</td></tr>
+        <tr><td>S. haematobium</td><td style="color:var(--teal);font-weight:700;">Praziquantel</td><td>—</td><td>Kills adult worms, stops egg deposition</td></tr>
+        <tr><td>E. vermicularis</td><td style="color:var(--teal);font-weight:700;">Mebendazole</td><td>Albendazole</td><td>Treat all household members</td></tr>
+        <tr><td>W. bancrofti</td><td style="color:var(--teal);font-weight:700;">Diethylcarbamazine</td><td>Ivermectin</td><td>Hetrazan — kills microfilariae</td></tr>
+        <tr><td>T. cruzi</td><td style="color:var(--teal);font-weight:700;">Benznidazole</td><td>Nifurtimox</td><td>Chronic nerve damage is IRREVERSIBLE</td></tr>
+        <tr><td>T. gondii (non-pregnant)</td><td style="color:var(--teal);font-weight:700;">Pyrimethamine + Sulfadiazine</td><td>Clindamycin</td><td>Add folinic acid to prevent bone marrow suppression</td></tr>
+        <tr><td>T. gondii (pregnant) 🚨</td><td style="color:var(--amber);font-weight:700;">Spiramycin</td><td>—</td><td>Safer for fetus — crosses placenta less</td></tr>
+        <tr><td>Plasmodium</td><td style="color:var(--teal);font-weight:700;">Chloroquine / Artemisinin</td><td>Primaquine (P. vivax)</td><td>Avoid Primaquine in G6PD deficiency</td></tr>
+        <tr><td>P. pubis (pubic lice)</td><td style="color:var(--teal);font-weight:700;">Permethrin 1%</td><td>Benzyl alcohol 5%, Ivermectin</td><td>Treat clothing/bedding too</td></tr>
+        <tr><td>S. scabiei</td><td style="color:var(--teal);font-weight:700;">Benzyl benzoate 25%</td><td>Permethrin 5%, Ivermectin</td><td>Apply to entire body, not just affected area</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TAB 8: MNEMONICS ===== -->
+<div id="tab-mnemonics" class="tab-panel">
+  <div class="section-title">🧠 Mnemonics</div>
+  <p class="section-sub">Custom memory aids built from the lecture content. Click to expand each one.</p>
+  <div id="mnemonics-container"></div>
+</div>
+
+</main>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const quizData = [
+  { q: "How does Trichomonas vaginalis directly contribute to the progression of prostate cancer?", opts: ["By forming calcified granulomas in the prostate","By secreting TvMIF which induces inflammation and cell proliferation","By destroying the nerve supply to the prostate","By obstructing lymphatic drainage","By laying eggs in the seminal vesicles"], ans: 1, exp: "✅ T. vaginalis produces TvMIF (Macrophage Migration Inhibitory Factor), which induces chronic inflammation and promotes abnormal cell proliferation — a key step in prostate cancer development. A = Schistosoma. C = T. cruzi. D = W. bancrofti. E = Schistosoma." },
+  { q: "Which cytokine is notably elevated by Trichomonas vaginalis, promoting Benign Prostatic Hyperplasia (BPH)?", opts: ["IL-1","IL-2","IL-6","TNF-alpha","Interferon-gamma"], ans: 2, exp: "✅ IL-6 is the specific cytokine elevated by T. vaginalis infection. This is directly linked to BPH and prostate cancer development. Only IL-6 is explicitly named in this mechanism." },
+  { q: "What is the PRIMARY mechanism by which female genital schistosomiasis facilitates initial HPV acquisition?", opts: ["Causing immunosuppression via bone marrow destruction","Causing cervical erosions and ulcerations that allow viral entry","By directly acting as a viral vector","By increasing vaginal pH","By secreting TvMIF"], ans: 1, exp: "✅ The physical cervical erosions and ulcerations caused by S. haematobium egg deposition create entry points for HPV. E = mechanism for T. vaginalis, not schistosomiasis." },
+  { q: "During the viral CLEARANCE phase, how does Schistosoma haematobium promote cervical precancer?", opts: ["By destroying T-cells","By interfering with HPV clearance, leading to increased viral load","By inducing apoptosis in cervical cells","By mutating the HPV genome directly","By increasing IL-6 only"], ans: 1, exp: "✅ S. haematobium's chronic inflammation impairs the local immune clearance of HPV, leading to a sustained increased viral load — the key driver of CIN and cervical precancer." },
+  { q: "What mechanism leads to 'Mega Uterus' in Trypanosoma cruzi infection?", opts: ["Massive granuloma formation","Lymphatic obstruction","Irreversible cellular destruction and fibrosis of muscle and nerve control","Severe secondary bacterial infection","Egg deposition in the myometrium"], ans: 2, exp: "✅ T. cruzi amastigotes multiply inside cells causing irreversible destruction and fibrosis of the nerves and muscles controlling the uterus — resulting in Mega uterus (Chagas disease)." },
+  { q: "How does Plasmodium infection lead to spontaneous abortion?", opts: ["Formation of placental granulomas","Cytotoxic contact-dependent cytolysis of the fetus","Destruction of parasitized RBCs causing tissue hypoxia","Migration of adult worms into the uterus","Release of TvMIF"], ans: 2, exp: "✅ Massive destruction of parasitized RBCs causes severe tissue hypoxia, which is the mechanism for spontaneous abortion in malaria during pregnancy." },
+  { q: "How do Schistosoma eggs cause chronic obstructive lesions in the male genital system?", opts: ["By migrating through the lymphatic vessels","By getting trapped in blood vessel walls, causing inflammatory cell aggregation (granuloma) and fibrosis","By multiplying inside reticuloendothelial cells","By releasing IL-6","By cytotoxic cytolysis"], ans: 1, exp: "✅ S. haematobium eggs trap in blood vessel walls → granuloma formation + fibrosis → fibrotic obstructive lesions in the vas deferens, epididymis, and testis → infertility." },
+  { q: "How does Enterobius vermicularis cause fallopian tube-ovarian abscesses?", opts: ["Hematogenous spread of eggs","Lymphatic spread of microfilariae","Migration of gravid females into the pelvic peritoneum","Ingestion of cysts","Penetration of furcocercous cercariae"], ans: 2, exp: "✅ Extra-intestinal enterobiasis: gravid E. vermicularis females migrate from rectum → vagina → uterus → fallopian tubes, forming granulomas that can lead to tube-ovarian abscesses." },
+  { q: "What is the pathogenetic mechanism of Wuchereria bancrofti causing scrotal lymphedema?", opts: ["Obstructing venous return causing varicocele","Dilatation of lymphatics leading to scrotal lymphedema and hydrocele","Contact-dependent cytolysis of the epididymis","Destruction of the pudendal nerve","Granuloma formation around eggs in the vas deferens"], ans: 1, exp: "✅ Adult W. bancrofti worms inhabit lymph vessels → chronic obstruction → lymphatic dilatation → varicosities, hydrocele, and scrotal elephantiasis." },
+  { q: "How does Sarcoptes scabiei cause severe itching on the external genitalia?", opts: ["By biting the skin surface","By creating intracutaneous tortuous tunnels","By laying eggs in hair follicles","By secreting pro-inflammatory cytokines into the blood","By obstructing local lymphatics"], ans: 1, exp: "✅ The 'itch mite' S. scabiei burrows through the stratum corneum, creating intracutaneous tortuous tunnels. This burrowing + immune reaction causes the characteristic intense itching." },
+  { q: "Why does Trichomonas vaginalis infection require simultaneous treatment of both sexual partners?", opts: ["Because it is transmitted by mosquitoes to both partners","Because males are often asymptomatic and will continually reinfect the female (ping-pong transmission)","Because it causes genetic mutations in both partners","Because the medication only works when both take it simultaneously","Because it forms airborne cysts"], ans: 1, exp: "✅ Up to 50% of infected males are asymptomatic but carry the flagellate in the urethra/prostate. If only the female is treated, the male will reinfect her — creating a 'ping-pong' transmission cycle." },
+  { q: "What is the primary pathological effect of Phthirus pubis?", opts: ["Skin tunneling","Attachment to small hairs causing severe itching and dermatitis","Secretion of IL-6","Intracellular multiplication","Granuloma formation"], ans: 1, exp: "✅ Phthirus pubis (pubic lice) is an ectoparasite that lives attached to pubic hair, causing severe itching and dermatitis. Importantly, P. pubis does NOT transmit other diseases." },
+  { q: "How does Toxoplasma gondii cause congenital toxoplasmosis?", opts: ["Through infected cat scratches","Transplacental transmission after ingestion of oocysts or tissue cysts by the pregnant mother","Through the bite of an Anopheles mosquito","By migrating gravid females","By sexual transmission"], ans: 1, exp: "✅ Transplacental (vertical) transmission occurs when a pregnant mother ingests mature oocysts from cat feces OR tissue cysts from undercooked meat — the parasite crosses the placenta to infect the fetus." },
+  { q: "Which parasite is characterized as a flagellated protozoan affecting the lower genitourinary tract?", opts: ["Toxoplasma gondii","Plasmodium falciparum","Trichomonas vaginalis","Schistosoma haematobium","Trypanosoma cruzi"], ans: 2, exp: "✅ T. vaginalis is definitionally a flagellated protozoan — it has 4 anterior flagella + 1 recurrent flagellum — specifically infecting the lower genitourinary tract." },
+  { q: "What is the infective stage of Wuchereria bancrofti transmitted by the mosquito?", opts: ["Egg","Furcocercous cercaria","Filariform larva (L3)","Metacyclic trypomastigote","Sporozoite"], ans: 2, exp: "✅ The filariform larva (L3 stage) is deposited into skin during the mosquito's blood meal. Furcocercous cercariae = Schistosoma. Metacyclic trypomastigote = T. cruzi. Sporozoite = Plasmodium." },
+  { q: "What is the gold standard for diagnosing female genital schistosomiasis?", opts: ["Serological ELISA","Identification of eggs in biopsies from cervical-vaginal tissue","Microscopic wet mount","Culture on Modified Diamond's media","Blood film"], ans: 1, exp: "✅ The gold standard for FGS is colposcopy + identification of S. haematobium eggs (terminal spine) in biopsies from cervical-vaginal tissue — NOT urine microscopy (that's for bladder disease)." },
+  { q: "What diagnostic stage is identified in the blood of a patient with Trypanosoma cruzi?", opts: ["Trophozoite","Microfilariae","Monomorphic trypomastigotes","Furcocercous cercariae","Gametocytes"], ans: 2, exp: "✅ Monomorphic trypomastigotes of T. cruzi are found in peripheral blood during the acute phase. Microfilariae = W. bancrofti. Gametocytes = Plasmodium. Cercariae = Schistosoma (free-living)." },
+  { q: "Where do adult Schistosoma haematobium worms primarily reside in humans?", opts: ["Caecum and adjacent intestine","Lymph vessels","Vesical and pelvic venous plexuses","Posterior fornix of the vagina","Striated muscles"], ans: 2, exp: "✅ Adult S. haematobium worms live in the vesical and pelvic venous plexuses surrounding the bladder and reproductive organs — this is why their eggs damage the urinary and reproductive systems." },
+  { q: "Compare treatments: Which pairing of T. vaginalis → S. haematobium treatment is correct?", opts: ["Praziquantel → Metronidazole","Metronidazole → Praziquantel","Mebendazole → Diethylcarbamazine","Chloroquine → Spiramycin","Permethrin → Ivermectin"], ans: 1, exp: "✅ Metronidazole (or Tinidazole) treats T. vaginalis (protozoan). Praziquantel treats Schistosoma (trematode). These are frequently swapped in exam traps." },
+  { q: "Which two parasites are specifically noted to increase the risk of acquiring Human Papilloma Virus (HPV)?", opts: ["Toxoplasma gondii and Plasmodium","Enterobius vermicularis and Wuchereria bancrofti","Trichomonas vaginalis and Schistosoma haematobium","Trypanosoma cruzi and Sarcoptes scabiei","Phthirus pubis and Trichomonas vaginalis"], ans: 2, exp: "✅ Both T. vaginalis (via TvMIF + IL-6 + cytolysis) and S. haematobium (via cervical erosions + impaired viral clearance) are directly linked to increased HPV acquisition and cervical cancer." },
+  { q: "In a pregnant woman diagnosed with Toxoplasma gondii, what is the recommended treatment to protect the fetus?", opts: ["Pyrimethamine/Sulfadiazine","Spiramycin","Praziquantel","Primaquine","Benznidazole"], ans: 1, exp: "✅ Spiramycin is the drug of choice in PREGNANT women with toxoplasmosis — it concentrates in placental tissue, protecting the fetus while causing fewer teratogenic effects than pyrimethamine." },
+  { q: "What clinical findings are expected in advanced prostatic cancer driven by T. vaginalis?", opts: ["Abnormal vaginal bleeding","Urinary retention, hematuria, and bone pain","Funiculitis and epididymitis only","Ectopic pregnancy","Mega disease of pelvic organs"], ans: 1, exp: "✅ Advanced prostatic cancer (regardless of initial cause) presents with: obstructive symptoms (urinary retention), hematuria, and bony metastases causing bone pain. A/D = female signs. E = T. cruzi." },
+  { q: "How is Trypanosoma cruzi transmitted to humans by the triatomine bug?", opts: ["Injection of sporozoites via saliva","Contamination of skin wounds or mucous membranes by bug's feces containing metacyclic trypomastigotes","Ingestion of the bug","Inhalation of bug feces","Skin penetration by cercariae"], ans: 1, exp: "✅ The 'kissing bug' bites and defecates nearby — feces contain metacyclic trypomastigotes that enter through the bite wound or mucous membranes when the victim scratches. NOT salivary (unlike malaria)." },
+  { q: "What is the main pathological finding in 'Female Genital Schistosomiasis' on colposcopy?", opts: ["Motile flagellated trophozoites","Calcified sandy patches from egg deposits and cervical erosions","Intracutaneous tortuous tunnels","Lymphatic varices and edema","Monomorphic trypomastigotes"], ans: 1, exp: "✅ Calcified 'sandy patches' = calcified S. haematobium eggs deposited in cervical/vaginal tissue. These create cervical erosions — the key pathological finding on colposcopy in FGS." },
+  { q: "A patient presents with massive scrotal swelling and varicosities of lymphatic vessels. The infective larva was transmitted by a mosquito. What is the treatment?", opts: ["Metronidazole","Praziquantel","Mebendazole","Diethylcarbamazine (Hetrazan)","Benznidazole"], ans: 3, exp: "✅ This is classic W. bancrofti filariasis — mosquito-transmitted filariform larva → lymphatic obstruction → hydrocele + elephantiasis. Treatment = Diethylcarbamazine (Hetrazan)." }
+];
+
+const flashcardData = [
+  { q: "What does TvMIF stand for and what does it do?", a: "<strong>Trichomona vaginalis Macrophage Migration Inhibitory Factor</strong> — a molecule released by T. vaginalis that induces chronic inflammation and promotes abnormal cell proliferation, linking the infection to prostate and cervical cancer." },
+  { q: "Name the CLASSIC clinical triad of female T. vaginalis infection", a: "<strong>1)</strong> Greenish-yellow frothy discharge <strong>2)</strong> Foul smell (malodor) <strong>3)</strong> 'Strawberry cervix' (punctate hemorrhages on cervix)" },
+  { q: "What is 'Ping-Pong Transmission' in T. vaginalis?", a: "The cycle where a female is treated but her male partner (often asymptomatic) is not treated → he re-infects her → she gets treated again → endless cycle. <strong>Prevention: Treat BOTH partners simultaneously.</strong>" },
+  { q: "What are the TWO stages by which S. haematobium increases HPV oncogenic potential?", a: "<strong>Stage 1 (Acquisition):</strong> Cervical erosions from egg-induced granulomas provide HPV entry points. <strong>Stage 2 (Persistence):</strong> Chronic inflammation impairs viral clearance → sustained high HPV viral load → precancer." },
+  { q: "Differentiate the mechanisms of S. haematobium vs W. bancrofti in male genital disease", a: "<strong>S. haematobium:</strong> Eggs trapped in vessel walls → granuloma + fibrosis → obstructive lesions (vas deferens, epididymis). <strong>W. bancrofti:</strong> Adult worms in lymph vessels → lymphatic obstruction → hydrocele, elephantiasis." },
+  { q: "Why is Spiramycin used instead of Pyrimethamine/Sulfadiazine in pregnant T. gondii patients?", a: "Pyrimethamine is a folate antagonist and potentially teratogenic. <strong>Spiramycin</strong> concentrates in placental tissue, is safer for the developing fetus, and effectively reduces transplacental transmission." },
+  { q: "What are 3 mechanisms by which T. vaginalis promotes cancer?", a: "<strong>1)</strong> Induces pro-inflammatory cytokines <strong>2)</strong> Releases TvMIF → drives inflammation + abnormal cell proliferation <strong>3)</strong> Increases IL-6 levels → associated with BPH and prostate cancer" },
+  { q: "What is 'Mega Uterus' and what causes it?", a: "<strong>Mega Uterus</strong> = massive enlargement and dysfunction of the uterus caused by <strong>Trypanosoma cruzi</strong>. Amastigotes multiply inside cells → irreversible destruction of muscle and nerve cells controlling the uterus. Part of Chagas disease." },
+  { q: "Gold standard for diagnosing Female Genital Schistosomiasis (FGS)?", a: "<strong>Colposcopy + biopsy</strong> of cervical-vaginal tissue showing S. haematobium eggs with characteristic terminal spine and 'sandy patches'. NOT urine microscopy (that's for bladder disease)." },
+  { q: "What is the diagnostic finding of T. vaginalis on wet mount?", a: "<strong>Motile, pear-shaped trophozoites</strong> with 4 anterior flagella + 1 recurrent flagellum. Movement is characteristic — jerky/tumbling. No cyst stage in this parasite." },
+  { q: "What causes terminal hematuria in endemic populations?", a: "<strong>Schistosoma haematobium</strong> — adult worms in vesical venous plexus deposit eggs in bladder wall → inflammatory reaction → ulceration → <strong>blood at the end of urination (terminal hematuria)</strong>." },
+  { q: "How does E. vermicularis reach the fallopian tubes?", a: "Gravid female worms emerge from the rectum at night → migrate anteriorly → enter the vagina → travel through the uterus → reach the fallopian tubes → deposit eggs → form <strong>extra-intestinal granulomas</strong>." },
+  { q: "What is the infective stage and transmission route of W. bancrofti?", a: "<strong>Infective stage:</strong> Filariform larva (L3). <strong>Route:</strong> Deposited into skin during blood meal by Culex mosquito. Larva migrates to lymphatics → develops into adult worms." },
+  { q: "Describe the transmission route of Trypanosoma cruzi (Chagas disease)", a: "<strong>Triatomine ('kissing') bug</strong> bites → defecates near bite wound → metacyclic trypomastigotes in feces contaminate wound or mucous membranes → enter host. NOT via saliva (key differentiator from malaria)." },
+  { q: "What defines 'extra-intestinal enterobiasis' and its clinical significance?", a: "When E. vermicularis gravid females migrate beyond the intestine into: vagina, uterus, fallopian tubes, peritoneum. Causes granulomas, bleeding, peritoneal adhesions, <strong>infertility, and fallopian tube-ovarian abscesses</strong>." },
+  { q: "What are the 4 routes of T. gondii acquisition in humans?", a: "<strong>1)</strong> Ingestion/inhalation of mature oocysts (cat feces) <strong>2)</strong> Ingestion of tissue cysts in undercooked meat <strong>3)</strong> Transplacental (congenital) <strong>4)</strong> Blood transfusion / organ transplant" },
+  { q: "How does Plasmodium affect pregnancy?", a: "Destruction of parasitized RBCs → tissue hypoxia → <strong>spontaneous abortion</strong>. Congenital malaria can also occur. Severe anemia is a major complication in endemic pregnancy." },
+  { q: "Compare P. pubis vs S. scabiei: mechanism and treatment", a: "<strong>P. pubis:</strong> Attaches to pubic hair → itching + dermatitis. Tx: Permethrin 1%. <strong>S. scabiei:</strong> Burrows intracutaneous tunnels → intense itching + vesicles + secondary infection. Tx: Benzyl benzoate 25%." },
+  { q: "What blood finding confirms acute T. cruzi infection?", a: "<strong>Monomorphic trypomastigotes</strong> in peripheral blood smear during acute phase. In chronic phase, parasitemia is low — serology (ELISA for antibodies) is used instead." },
+  { q: "What are the chronic obstructive manifestations of W. bancrofti in male genitalia?", a: "<strong>1) Hydrocele</strong> — fluid accumulation around testis <strong>2) Scrotal lymphedema</strong> — massive soft-tissue swelling <strong>3) Lymphatic varices</strong> — dilated lymphatic vessels. All due to lymphatic obstruction by adult filarial worms." }
+];
+
+const casesData = [
+  {
+    num: "CASE 01", title: "Frothy Discharge with Strawberry Cervix",
+    patient: "A <strong>40-year-old female</strong> presents with greenish-yellow, foul-smelling frothy vaginal discharge and dyspareunia for 2 weeks. On examination: erythematous cervix with punctate hemorrhages. Wet mount microscopy shows motile pear-shaped organisms with flagella.",
+    questions: [
+      { q: "1. What is the most likely diagnosis and the pathogenic mechanism?", a: "<strong>Diagnosis: Trichomonas vaginalis vaginitis.</strong><br><br>Mechanism: T. vaginalis trophozoites attach to the vaginal epithelium via surface lectins → contact-dependent cytolysis → direct cellular damage. This is followed by release of pro-inflammatory cytokines, TvMIF, and ↑IL-6 → inflammation, epithelial destruction → 'strawberry cervix' appearance." },
+      { q: "2. What treatment is required and what is a critical management rule?", a: "<strong>Treatment: Metronidazole (single dose 2g OR 400mg BD × 7 days).</strong><br><br>⚠️ CRITICAL RULE: Both sexual partners must be treated SIMULTANEOUSLY, even if the male is completely asymptomatic. Up to 50% of infected males have no symptoms but harbor the parasite in the urethra/prostate — creating a 'ping-pong' reinfection cycle if left untreated." },
+      { q: "3. How does this infection increase the risk of cervical cancer?", a: "T. vaginalis raises cancer risk through 3 mechanisms:<br><strong>1)</strong> Induces chronic pro-inflammatory cytokines → creates a carcinogenic environment<br><strong>2)</strong> Releases TvMIF → promotes abnormal cell proliferation<br><strong>3)</strong> ↑IL-6 → promotes tumor growth<br><br>Additionally, the inflammatory state dramatically facilitates HPV acquisition — HPV acts as the main oncogenic driver for cervical cancer." }
+    ]
+  },
+  {
+    num: "CASE 02", title: "Terminal Hematuria with Bladder Mass",
+    patient: "A <strong>45-year-old male from Egypt</strong> presents with painless blood at the end of urination (terminal hematuria) for 3 months. Cystoscopy reveals a mass in the bladder with calcified nodular lesions. Biopsy shows calcified eggs with a terminal spine embedded in tissue surrounded by fibrosis.",
+    questions: [
+      { q: "1. What is the causative organism and its mechanism of disease?", a: "<strong>Schistosoma haematobium</strong><br><br>Adult worms reside in the vesical venous plexus → female deposits eggs in vessel walls → eggs trapped → intense local immune response → granuloma formation (inflammatory cell aggregation) → fibrosis and calcification → 'sandy patches' + mucosal damage → hematuria. The calcified eggs with terminal spine are pathognomonic." },
+      { q: "2. How does this infection relate to cervical cancer in females?", a: "In females, eggs are deposited in the lower 1/3 of the uterus, vagina, and cervix via the pelvic venous plexus → cervical granulomas and erosions. <br><br><strong>Dual mechanism for HPV:</strong><br>• Cervical erosions = physical entry points for HPV<br>• Chronic schistosomal inflammation interferes with local immune clearance of HPV → sustained high viral load → CIN → cervical cancer" },
+      { q: "3. What is the treatment and diagnosis gold standard?", a: "<strong>Treatment: Praziquantel</strong> — kills adult worms, halts egg deposition and prevents further granuloma formation. Given early enough, prevents neoplastic transformation.<br><br><strong>Diagnosis Gold Standard:</strong> For Female Genital Schistosomiasis (FGS) = Colposcopy + biopsy of cervical-vaginal tissue identifying terminal-spine eggs. For bladder = urine microscopy for eggs + cystoscopy." }
+    ]
+  },
+  {
+    num: "CASE 03", title: "South American Patient with Massively Enlarged Uterus",
+    patient: "A <strong>35-year-old woman from Brazil</strong> presents with a massively enlarged uterus, irregular menstruation, and severe constipation. She has a history of living in a rural area with mud-wall construction. Examination: splenomegaly + massively enlarged uterus. ECG shows right bundle branch block.",
+    questions: [
+      { q: "1. What is the diagnosis and what is the causative mechanism of the uterine enlargement?", a: "<strong>Diagnosis: Chagas Disease — Trypanosoma cruzi infection.</strong><br><br>'Mega Uterus' mechanism: T. cruzi amastigotes multiply inside smooth muscle cells and neurons of the uterine wall → irreversible destruction of myocytes and autonomic nerve ganglia → loss of neuromuscular coordination → massive enlargement and dysfunction. This is analogous to 'Mega Colon' and 'Mega Esophagus' seen in the same disease." },
+      { q: "2. How was this patient infected?", a: "Infected by the <strong>triatomine bug ('kissing bug')</strong> — common in mud-wall constructions in rural Latin America.<br><br>Transmission route: Bug bites (often near the mouth) → <strong>defecates near the wound</strong> → metacyclic trypomastigotes in feces contaminate the wound when the person scratches → enter through skin or mucous membranes. NOT via saliva." },
+      { q: "3. Is the uterine damage reversible with treatment?", a: "<strong>No — chronic nerve destruction is IRREVERSIBLE.</strong><br><br>Benznidazole or Nifurtimox can cure the acute infection (kill trypomastigotes/amastigotes) but cannot restore destroyed autonomic nerve ganglia. The 'mega organ' damage in the chronic phase is permanent. This underscores the importance of early diagnosis and treatment before chronic complications develop." }
+    ]
+  },
+  {
+    num: "CASE 04", title: "Perianal Itching with Fallopian Tube Mass",
+    patient: "A <strong>28-year-old female</strong> presents with severe perianal and vulvar itching, especially at night, and progressive pelvic pain. She has two children at home with similar complaints. CT scan reveals a right fallopian tube-ovarian mass. Surgical biopsy of the mass reveals granulomas containing small eggs with one flat side.",
+    questions: [
+      { q: "1. What organism is responsible and how did it reach the fallopian tube?", a: "<strong>Enterobius vermicularis (Pinworm) — Extra-intestinal Enterobiasis.</strong><br><br>Mechanism of migration: Gravid female worms migrate from the rectum at night → anteriorly along perineum → enter the vagina → travel through the cervical canal → uterine cavity → fallopian tubes → deposit eggs → eggs trigger granuloma formation → tube-ovarian abscess." },
+      { q: "2. What are the potential long-term consequences of this extra-intestinal migration?", a: "Extra-intestinal enterobiasis can cause:<br>• <strong>Fallopian tube-ovarian abscesses</strong> (as in this case)<br>• <strong>Peritoneal granulomas</strong> and adhesions<br>• <strong>Infertility</strong> (due to tubal damage)<br>• <strong>Abnormal uterine bleeding</strong><br>• <strong>Ectopic pregnancy risk</strong> (if tube is damaged)" },
+      { q: "3. How should this be managed?", a: "<strong>Treatment: Mebendazole</strong> (100mg single dose, repeated after 2 weeks) OR Albendazole.<br><br>⚠️ All household members should be treated simultaneously (family clusters are common in children).<br><br>The ovarian abscess requires <strong>surgical intervention</strong> in addition to antiparasitic therapy. Repeat the Scotch tape test for family members to confirm household infestation." }
+    ]
+  },
+  {
+    num: "CASE 05", title: "Co-Infection: The Dual Threat to the Cervix",
+    patient: "A <strong>35-year-old female</strong> from a Nile Delta region presents with abnormal vaginal bleeding, pelvic pain, and frothy greenish discharge. Colposcopy shows a 'strawberry cervix' AND calcified sandy patches on the cervical os. Biopsy reveals both <strong>motile trophozoites AND calcified eggs with a terminal spine</strong>.",
+    questions: [
+      { q: "1. What is the diagnosis and what makes this case particularly dangerous?", a: "<strong>Co-infection: Trichomonas vaginalis AND Schistosoma haematobium.</strong><br><br>This is especially dangerous because both parasites act SYNERGISTICALLY on cervical cancer risk:<br>• T. vaginalis: cytolysis + TvMIF + IL-6 → inflammatory environment promoting HPV acquisition<br>• S. haematobium: cervical erosions (HPV entry) + impaired viral clearance (HPV persistence)<br><br>Together, they create a perfect storm for HPV-driven cervical carcinogenesis." },
+      { q: "2. What are the investigations to confirm this co-infection?", a: "<strong>For T. vaginalis:</strong><br>• Wet mount microscopy → motile pear-shaped trophozoites (immediate)<br>• Culture on Modified Diamond's media if wet mount negative<br><br><strong>For S. haematobium FGS:</strong><br>• Colposcopy + cervical-vaginal biopsy → eggs with terminal spine (GOLD STANDARD)<br>• Urine microscopy for eggs (bladder disease screening)<br><br><strong>Followed by:</strong> HPV testing + Pap smear (both infections dramatically raise HPV risk)" },
+      { q: "3. What is the management plan?", a: "<strong>Simultaneous dual treatment:</strong><br>1. <strong>Metronidazole</strong> for T. vaginalis — treat BOTH partners<br>2. <strong>Praziquantel</strong> for S. haematobium<br><br><strong>Monitoring:</strong><br>• Repeat colposcopy after treatment<br>• HPV testing and Pap smear for cervical cancer surveillance<br>• Routine screening is critical as the inflammatory damage may have already facilitated HPV infection" }
+    ]
+  }
+];
+
+const flowTV = [
+  { title: "Sexual Transmission", detail: "T. vaginalis trophozoites are transmitted sexually. The flagellated protozoan has no cyst stage — transmission occurs directly from trophozoite to trophozoite." },
+  { title: "Contact-Dependent Adhesion", detail: "Trophozoites adhere to vaginal or urethral epithelium via surface lectins (P270 adhesion protein). This intimate contact is required for the next step." },
+  { title: "Cytotoxic Cytolysis", detail: "Contact-dependent cytolysis — the trophozoite directly destroys host epithelial cells through lytic enzymes and physical disruption. This creates the inflammatory microenvironment." },
+  { title: "Pro-inflammatory Cytokine Release", detail: "Cytolysis and immune recognition trigger release of pro-inflammatory cytokines: TNF-α, IL-8, and others. This creates a chronic inflammatory state." },
+  { title: "TvMIF & ↑IL-6 Secretion", detail: "T. vaginalis releases TvMIF (Macrophage Migration Inhibitory Factor) which promotes abnormal cell proliferation. IL-6 is specifically elevated, strongly associating with BPH in males and cervical dysplasia in females." },
+  { title: "HPV Acquisition & Persistence", detail: "The inflammatory environment: (1) facilitates HPV entry through disrupted epithelium, and (2) impairs immune surveillance that normally clears HPV. Result: HPV persists with high viral load." },
+  { title: "Neoplastic Transformation", detail: "Persistent HPV integration into host genome → disruption of p53 and Rb tumor suppressor genes → Cervical Intraepithelial Neoplasia (CIN) → Cervical Carcinoma. In males: BPH → Prostate Cancer." }
+];
+
+const flowSH = [
+  { title: "Skin Penetration by Furcocercous Cercariae", detail: "Free-swimming furcocercous cercariae (released from infected freshwater snails) actively penetrate intact human skin → transform into schistosomulae → enter circulation." },
+  { title: "Migration to Pelvic Venous Plexus", detail: "Schistosomulae migrate via portal circulation → mature in portal veins → adult pairs travel to vesical and pelvic venous plexuses surrounding bladder and reproductive organs." },
+  { title: "Egg Deposition in Pelvic Tissues", detail: "Females deposit eggs in venule walls of bladder, lower uterus, vagina, and cervix. Eggs possess a terminal spine — they must escape to the lumen for excretion but many remain trapped." },
+  { title: "Granuloma Formation", detail: "Trapped eggs release antigens → intense T-cell mediated immune response → aggregation of macrophages, eosinophils, lymphocytes around egg → GRANULOMA forms. This is the pre-cancerous lesion (البريكانس)." },
+  { title: "Fibrosis and Cervical Erosions", detail: "Granulomas undergo central fibrosis. Calcified eggs create 'sandy patches' visible on colposcopy. Surface ulcerations and erosions develop on the cervical epithelium." },
+  { title: "HPV Entry Through Erosions", detail: "Cervical erosions act as portals of entry for Human Papilloma Virus. Disrupted epithelial barrier allows HPV to infect basal cells that are normally protected." },
+  { title: "Impaired HPV Clearance → Cancer", detail: "Chronic schistosomal inflammation impairs local cell-mediated immunity → immune system cannot clear HPV → viral load increases → sustained HPV infection → CIN → Cervical Carcinoma." }
+];
+
+const drugsData = [
+  { name: "Metronidazole", generic: "Flagyl® / Metrogyl®", color: "teal", targets: ["Trichomonas vaginalis","Anaerobic bacteria"], dose: "2g single OR 400mg BD × 7d", note: "⚠️ Treat BOTH partners. Avoid alcohol (Disulfiram-like). Avoid in 1st trimester of pregnancy." },
+  { name: "Praziquantel", generic: "Biltricide®", color: "amber", targets: ["Schistosoma haematobium","All Schistosoma species"], dose: "40mg/kg (2 divided doses)", note: "Kills adult worms only. Eggs already deposited remain. Give early to prevent cancer progression." },
+  { name: "Mebendazole", generic: "Vermox®", color: "rose", targets: ["Enterobius vermicularis","Many intestinal helminths"], dose: "100mg single dose, repeat in 2 wks", note: "Treat all household members simultaneously. Scotch tape test to confirm cure." },
+  { name: "Diethylcarbamazine", generic: "Hetrazan® / DEC", color: "purple", targets: ["Wuchereria bancrofti","Brugia malayi"], dose: "6mg/kg/day × 12 days", note: "Kills microfilariae and damages adult worms. Nocturnal blood sample for diagnosis (microfilaremia)." },
+  { name: "Benznidazole", generic: "Rochagan®", color: "blue", targets: ["Trypanosoma cruzi (Chagas)"], dose: "5–7mg/kg/day × 60 days", note: "⚠️ Works best in acute phase. Chronic nerve/muscle damage is IRREVERSIBLE — treatment won't reverse Mega uterus." },
+  { name: "Spiramycin", generic: "Rovamycine®", color: "teal", targets: ["Toxoplasma gondii (PREGNANT)"], dose: "3g/day in divided doses", note: "⚠️ ONLY in pregnancy! Concentrates in placenta. Does NOT cross to fetus well — prevents transplacental spread. Non-pregnant: use Pyrimethamine + Sulfadiazine." }
+];
+
+const mnemonicsData = [
+  {
+    acronym: "T-CAMP",
+    title: "T. vaginalis Cancer Mechanisms",
+    sub: "5 ways T. vaginalis promotes cancer",
+    letters: [
+      { l: "T", word: "TvMIF Release", detail: "Macrophage Migration Inhibitory Factor → drives inflammation + abnormal cell proliferation" },
+      { l: "C", word: "Cytolysis", detail: "Contact-dependent cytotoxic cytolysis of host epithelial cells → disrupts barrier" },
+      { l: "A", word: "Abnormal IL-6 Elevation", detail: "Increased interleukin-6 → associated with BPH and prostate cancer" },
+      { l: "M", word: "Multiple Co-infections", detail: "Candida, Mycoplasma, Gardnerella co-infections enhance synergistic inflammation" },
+      { l: "P", word: "Pro-inflammatory Cytokines", detail: "Overall inflammatory microenvironment facilitates HPV acquisition and persistence" }
+    ],
+    fun: "💡 Think: T. vaginalis sets up a <strong>T-CAMP</strong> in your cervix for HPV!"
+  },
+  {
+    acronym: "FRESH",
+    title: "S. haematobium Female Genital Schistosomiasis",
+    sub: "Key features of FGS",
+    letters: [
+      { l: "F", word: "Fibrosis + Sandy patches", detail: "Calcified egg deposits (terminal spine eggs) appear as grainy sandy patches on colposcopy" },
+      { l: "R", word: "Role in HPV Synergy", detail: "Dual role: erosions for HPV entry + impaired clearance for HPV persistence" },
+      { l: "E", word: "Erosions of Cervix", detail: "Physical disruption of cervical epithelium — the portal for HPV entry" },
+      { l: "S", word: "Sandy Patches (Pathognomonic)", detail: "The pathognomonic colposcopy finding of female genital schistosomiasis" },
+      { l: "H", word: "Hematuria (Terminal)", detail: "Blood at the END of urination — hallmark of bladder S. haematobium" }
+    ],
+    fun: "💡 The lesions are '<strong>FRESH</strong>' — except they're actually chronic and fibrotic!"
+  },
+  {
+    acronym: "MEGA",
+    title: "Trypanosoma cruzi (Chagas) Organs",
+    sub: "Remember all the 'Mega' complications",
+    letters: [
+      { l: "M", word: "Mega Uterus", detail: "Massive uterine enlargement from amastigote destruction of nerve + muscle cells" },
+      { l: "E", word: "Esophagus (Mega)", detail: "Mega esophagus — dysphagia from autonomic ganglia destruction" },
+      { l: "G", word: "Giant Colon (Megacolon)", detail: "Severe constipation, bowel obstruction from loss of colonic nerve supply" },
+      { l: "A", word: "Arrhythmia (Cardiac)", detail: "Heart involvement — dilated cardiomyopathy, RBBB — most deadly complication" }
+    ],
+    fun: "💡 <strong>MEGA</strong> problems from a tiny bug's feces contaminating a bite wound — Chagas disease."
+  },
+  {
+    acronym: "PETS",
+    title: "Treatment Pairs to Memorize",
+    sub: "Drug-parasite matching",
+    letters: [
+      { l: "P", word: "Praziquantel = Platyhelminthes (Flukes/Tapeworms)", detail: "Schistosoma haematobium + all trematodes → Praziquantel" },
+      { l: "E", word: "Enterobius = Mebendazole", detail: "Pinworm (E. vermicularis) → Mebendazole 100mg single dose" },
+      { l: "T", word: "Trichomonas = Metronidazole", detail: "T. vaginalis + all anaerobes → Metro (treat BOTH partners!)" },
+      { l: "S", word: "Spiramycin = Safe in pregnancy (Toxoplasma)", detail: "Pregnant toxoplasmosis → Spiramycin only. Non-pregnant → Pyrimethamine + Sulfadiazine" }
+    ],
+    fun: "💡 Your <strong>PETS</strong> need the right treatment — don't mix up Metronidazole with Praziquantel!"
+  },
+  {
+    acronym: "WHAM",
+    title: "W. bancrofti Lymphatic Complications",
+    sub: "Chronic filarial disease progression",
+    letters: [
+      { l: "W", word: "Worm obstruction of Lymphatics", detail: "Adult filarial worms inhabit lymph vessels → chronic obstruction" },
+      { l: "H", word: "Hydrocele", detail: "Fluid accumulation around testis due to lymphatic insufficiency" },
+      { l: "A", word: "Aplasia of lymph flow → Varices", detail: "Lymphatic varicosities form as lymph backs up and vessels dilate" },
+      { l: "M", word: "Massive lymphedema (Elephantiasis)", detail: "End-stage chronic filarial lymphedema → scrotal elephantiasis" }
+    ],
+    fun: "💡 W. bancrofti gives your lymphatics a real <strong>WHAM</strong> — straight from a mosquito bite!"
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let quizState = JSON.parse(localStorage.getItem('parasite_quiz') || 'null') || { current: 0, correct: 0, wrong: 0, streak: 0, answers: {}, completed: false };
+let fcFlipped = JSON.parse(localStorage.getItem('parasite_fc') || '[]');
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('parasite_last_tab', id);
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function doSearch(q) {
+  const items = document.querySelectorAll('.searchable');
+  const info = document.getElementById('search-info');
+  if (!q.trim()) {
+    items.forEach(i => i.classList.remove('hidden'));
+    info.textContent = '';
+    return;
+  }
+  const term = q.toLowerCase();
+  let count = 0;
+  items.forEach(i => {
+    const text = (i.dataset.text || '') + ' ' + (i.textContent || '');
+    if (text.toLowerCase().includes(term)) { i.classList.remove('hidden'); count++; }
+    else i.classList.add('hidden');
+  });
+  info.textContent = count + ' result' + (count !== 1 ? 's' : '') + ' found';
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizData.forEach((q, idx) => {
+    const answered = quizState.answers.hasOwnProperty(idx);
+    const div = document.createElement('div');
+    div.id = 'qblock-' + idx;
+    div.style.display = (idx === quizState.current && !quizState.completed) ? 'block' : 'none';
+    div.innerHTML = `
+      <div class="quiz-q-num">Question ${idx + 1} of ${quizData.length} — ${getCatLabel(idx)}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o, i) => `
+          <div class="quiz-option ${answered ? getOptClass(idx, i) + ' disabled' : ''}" 
+               onclick="${answered ? '' : 'selectAnswer(' + idx + ',' + i + ')'}" 
+               id="opt-${idx}-${i}">
+            <div class="option-letter">${'ABCDE'[i]}</div>
+            <span>${o}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-explanation ${answered ? 'show' : ''}" id="exp-${idx}">
+        <strong>Explanation:</strong> ${q.exp}
+      </div>
+      <div class="quiz-nav">
+        ${idx > 0 ? '<button class="btn btn-outline" onclick="goToQ(' + (idx-1) + ')">← Back</button>' : ''}
+        ${idx < quizData.length - 1 ? '<button class="btn btn-teal" onclick="goToQ(' + (idx+1) + ')">Next →</button>' : '<button class="btn btn-teal" onclick="finishQuiz()">Finish Quiz 🎉</button>'}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  updateQuizStats();
+}
+
+function getCatLabel(idx) {
+  if (idx < 13) return '⚙️ Mechanism';
+  if (idx < 20) return '🔬 Structure/Definition';
+  return '⚖️ Regulatory/Comparative';
+}
+
+function getOptClass(qIdx, optIdx) {
+  const userAns = quizState.answers[qIdx];
+  const correct = quizData[qIdx].ans;
+  if (optIdx === correct) return 'show-correct disabled';
+  if (optIdx === userAns && userAns !== correct) return 'selected-wrong disabled';
+  return 'disabled';
+}
+
+function selectAnswer(qIdx, optIdx) {
+  if (quizState.answers.hasOwnProperty(qIdx)) return;
+  quizState.answers[qIdx] = optIdx;
+  const correct = quizData[qIdx].ans;
+  const isCorrect = optIdx === correct;
+  if (isCorrect) { quizState.correct++; quizState.streak++; }
+  else { quizState.wrong++; quizState.streak = 0; }
+  const optEl = document.getElementById('opt-' + qIdx + '-' + optIdx);
+  optEl.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+  optEl.classList.add('disabled');
+  document.getElementById('opt-' + qIdx + '-' + correct).classList.add('show-correct');
+  document.querySelectorAll('#qblock-' + qIdx + ' .quiz-option').forEach(o => o.classList.add('disabled'));
+  document.getElementById('exp-' + qIdx).classList.add('show');
+  saveQuizState();
+  updateQuizStats();
+}
+
+function goToQ(idx) {
+  document.querySelectorAll('[id^="qblock-"]').forEach(b => b.style.display = 'none');
+  const block = document.getElementById('qblock-' + idx);
+  if (block) { block.style.display = 'block'; quizState.current = idx; saveQuizState(); }
+}
+
+function finishQuiz() {
+  quizState.completed = true;
+  saveQuizState();
+  document.querySelectorAll('[id^="qblock-"]').forEach(b => b.style.display = 'none');
+  const banner = document.getElementById('quiz-complete');
+  const pct = Math.round(quizState.correct / quizData.length * 100);
+  banner.classList.add('show');
+  document.getElementById('complete-msg').textContent = pct >= 80 ? '🎉 Excellent! ' + pct + '% — You Passed!' : pct >= 60 ? '👍 Good effort! ' + pct + '% — Review weak areas.' : '📚 ' + pct + '% — Keep studying!';
+  document.getElementById('complete-score').textContent = quizState.correct + ' correct out of ' + quizData.length + ' questions.';
+}
+
+function resetQuiz() {
+  quizState = { current: 0, correct: 0, wrong: 0, streak: 0, answers: {}, completed: false };
+  saveQuizState();
+  document.getElementById('quiz-complete').classList.remove('show');
+  buildQuiz();
+}
+
+function saveQuizState() {
+  localStorage.setItem('parasite_quiz', JSON.stringify(quizState));
+  updateQuizStats();
+}
+
+function updateQuizStats() {
+  const total = quizData.length;
+  const answered = Object.keys(quizState.answers).length;
+  document.getElementById('q-correct').textContent = quizState.correct;
+  document.getElementById('q-wrong').textContent = quizState.wrong;
+  document.getElementById('q-remaining').textContent = total - answered;
+  document.getElementById('q-percent').textContent = answered > 0 ? Math.round(quizState.correct / answered * 100) + '%' : '0%';
+  document.getElementById('progress-fill').style.width = (answered / total * 100) + '%';
+  document.getElementById('stat-score').textContent = quizState.correct;
+  document.getElementById('stat-streak').textContent = quizState.streak;
+  document.getElementById('streak-display').textContent = quizState.streak;
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+function buildFlashcards() {
+  const grid = document.getElementById('flashcard-grid');
+  grid.innerHTML = '';
+  flashcardData.forEach((fc, idx) => {
+    const div = document.createElement('div');
+    div.className = 'flashcard' + (fcFlipped.includes(idx) ? ' flipped' : '');
+    div.onclick = () => flipCard(idx, div);
+    div.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-label">Q${String(idx+1).padStart(2,'0')} — Click to Reveal</div>
+          <div class="fc-question">${fc.q}</div>
+          <div class="fc-hint">👆 Tap to flip</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-label">Answer</div>
+          <div class="fc-answer">${fc.a}</div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+  updateFCCount();
+}
+
+function flipCard(idx, el) {
+  el.classList.toggle('flipped');
+  if (!fcFlipped.includes(idx)) fcFlipped.push(idx);
+  else fcFlipped = fcFlipped.filter(i => i !== idx);
+  localStorage.setItem('parasite_fc', JSON.stringify(fcFlipped));
+  updateFCCount();
+}
+
+function resetFlashcards() {
+  fcFlipped = [];
+  localStorage.setItem('parasite_fc', '[]');
+  document.querySelectorAll('.flashcard').forEach(f => f.classList.remove('flipped'));
+  updateFCCount();
+}
+
+function updateFCCount() {
+  const unique = new Set(fcFlipped).size;
+  document.getElementById('fc-flipped-count').textContent = unique;
+  document.getElementById('stat-cards').textContent = unique;
+}
+
+// ============================================================
+// CLINICAL CASES
+// ============================================================
+function buildCases() {
+  const c = document.getElementById('cases-container');
+  c.innerHTML = '';
+  casesData.forEach((cs, ci) => {
+    const div = document.createElement('div');
+    div.className = 'case-card';
+    div.innerHTML = `
+      <div class="case-header">
+        <div><div class="case-num">${cs.num}</div><div class="case-title">${cs.title}</div></div>
+        <span class="badge badge-rose">🩺 Clinical Vignette</span>
+      </div>
+      <div class="case-patient">${cs.patient}</div>
+      <div class="case-questions">
+        ${cs.questions.map((q, qi) => `
+          <div class="case-question">
+            <div class="case-q-text">${q.q}</div>
+            <button class="reveal-btn" onclick="revealAnswer('ans-${ci}-${qi}', this)">
+              👁️ Reveal Answer
+            </button>
+            <div class="case-answer" id="ans-${ci}-${qi}">${q.a}</div>
+          </div>
+        `).join('<div class="divider" style="margin:16px 0;"></div>')}
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function revealAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (el.classList.contains('show')) {
+    el.classList.remove('show');
+    btn.textContent = '👁️ Reveal Answer';
+  } else {
+    el.classList.add('show');
+    btn.innerHTML = '🙈 Hide Answer';
+  }
+}
+
+// ============================================================
+// PATHOPHYSIOLOGY FLOWS
+// ============================================================
+function buildFlows() {
+  buildFlowChain('flow-tv', flowTV);
+  buildFlowChain('flow-sh', flowSH);
+}
+
+function buildFlowChain(containerId, steps) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  steps.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'flow-step';
+    div.onclick = () => { div.classList.toggle('expanded'); };
+    div.innerHTML = `
+      <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="step-content">
+        <strong>${s.title}</strong>
+        <p>${s.detail}</p>
+      </div>
+      <span style="color:var(--text-dim);font-size:12px;flex-shrink:0;">▼</span>
+    `;
+    c.appendChild(div);
+    if (i < steps.length - 1) {
+      const arr = document.createElement('div');
+      arr.className = 'flow-arrow';
+      arr.textContent = '↓';
+      c.appendChild(arr);
+    }
+  });
+}
+
+// ============================================================
+// TREATMENT - DRUG CARDS
+// ============================================================
+function buildDrugs() {
+  const grid = document.getElementById('drug-grid');
+  grid.innerHTML = '';
+  drugsData.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'drug-card';
+    div.innerHTML = `
+      <div class="drug-accent ${d.color}"></div>
+      <div class="drug-name">${d.name}</div>
+      <div class="drug-generic">${d.generic}</div>
+      <div class="drug-info">
+        <div class="drug-row"><div class="drug-key">Targets:</div><div class="drug-val">${d.targets.join(', ')}</div></div>
+        <div class="drug-row"><div class="drug-key">Dose:</div><div class="drug-val">${d.dose}</div></div>
+        <div class="drug-row"><div class="drug-key">Note:</div><div class="drug-val" style="color:var(--amber);">${d.note}</div></div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ============================================================
+// MNEMONICS
+// ============================================================
+function buildMnemonics() {
+  const c = document.getElementById('mnemonics-container');
+  c.innerHTML = '';
+  mnemonicsData.forEach((m, mi) => {
+    const div = document.createElement('div');
+    div.className = 'mnemonic-card';
+    div.innerHTML = `
+      <div class="mnemonic-header" onclick="toggleMnemonic('mb-${mi}')">
+        <div>
+          <div class="mnemonic-title">${m.title}</div>
+          <div class="mnemonic-sub">${m.sub}</div>
+        </div>
+        <div class="mnemonic-acronym">${m.acronym}</div>
+      </div>
+      <div class="mnemonic-body" id="mb-${mi}">
+        ${m.letters.map(l => `
+          <div class="mnemonic-row">
+            <div class="mnemonic-letter">${l.l}</div>
+            <div>
+              <strong>${l.word}</strong>
+              <span>${l.detail}</span>
+            </div>
+          </div>
+        `).join('')}
+        <div class="fun-fact">
+          <span class="ff-icon">🎓</span>
+          ${m.fun}
+        </div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function toggleMnemonic(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  buildQuiz();
+  buildFlashcards();
+  buildCases();
+  buildFlows();
+  buildDrugs();
+  buildMnemonics();
+  // Restore last tab
+  const last = localStorage.getItem('parasite_last_tab');
+  if (last) {
+    const btn = Array.from(document.querySelectorAll('.nav-tab')).find(b => b.onclick.toString().includes("'" + last + "'"));
+    if (btn) switchTab(last, btn);
+  }
+});
+</script>
+</body>
+</html>

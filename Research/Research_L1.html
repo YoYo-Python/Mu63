@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KME - Research Methodology Study Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ========================================
+           CSS CUSTOM PROPERTIES (THEME TOKENS)
+           ======================================== */
+        :root {
+            /* Light Theme */
+            --kme-bg-primary: #f4f6fb;
+            --kme-bg-card: #ffffff;
+            --kme-bg-card-hover: #f8f9ff;
+            --kme-text-primary: #1a1a2e;
+            --kme-text-secondary: #4a4a6a;
+            --kme-text-muted: #7a7a9a;
+            --kme-accent: #4361ee;
+            --kme-accent-light: #eef0ff;
+            --kme-accent-dark: #3251ce;
+            --kme-border: #e2e6f0;
+            --kme-border-light: #f0f2f8;
+            --kme-danger-bg: #fff5f5;
+            --kme-danger-border: #fed7d7;
+            --kme-danger-text: #c53030;
+            --kme-danger-icon: #e53e3e;
+            --kme-success: #38a169;
+            --kme-success-bg: #f0fff4;
+            --kme-success-border: #c6f6d5;
+            --kme-error: #e53e3e;
+            --kme-error-bg: #fff5f5;
+            --kme-error-border: #fed7d7;
+            --kme-warning-bg: #fffbeb;
+            --kme-warning-border: #fef3c7;
+            --kme-warning-text: #92400e;
+            --kme-pro-bg: #f0fff4;
+            --kme-pro-border: #c6f6d5;
+            --kme-pro-text: #276749;
+            --kme-con-bg: #fff5f5;
+            --kme-con-border: #fed7d7;
+            --kme-con-text: #9b2c2c;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --kme-shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+            --kme-radius-sm: 8px;
+            --kme-radius-md: 12px;
+            --kme-radius-lg: 16px;
+            --kme-radius-xl: 20px;
+            --kme-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --kme-font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            --kme-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --kme-quiz-selected-bg: #eef0ff;
+            --kme-quiz-selected-border: #4361ee;
+            --kme-header-bg: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            --kme-nav-bg: rgba(255,255,255,0.95);
+            --kme-nav-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+            --kme-tab-active-bg: #4361ee;
+            --kme-tab-active-text: #ffffff;
+            --kme-tab-inactive-text: #7a7a9a;
+            --kme-scrollbar-track: #f0f2f8;
+            --kme-scrollbar-thumb: #c4c9d9;
+        }
+
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f0f1a;
+            --kme-bg-card: #1a1a2e;
+            --kme-bg-card-hover: #22223a;
+            --kme-text-primary: #e8e8f0;
+            --kme-text-secondary: #b0b0c8;
+            --kme-text-muted: #7a7a9a;
+            --kme-accent: #6c83f7;
+            --kme-accent-light: #1e2248;
+            --kme-accent-dark: #8da0ff;
+            --kme-border: #2a2a42;
+            --kme-border-light: #222238;
+            --kme-danger-bg: #2d1515;
+            --kme-danger-border: #4a1e1e;
+            --kme-danger-text: #fc8181;
+            --kme-danger-icon: #fc8181;
+            --kme-success: #68d391;
+            --kme-success-bg: #1a2e1a;
+            --kme-success-border: #2a4a2a;
+            --kme-error: #fc8181;
+            --kme-error-bg: #2d1515;
+            --kme-error-border: #4a1e1e;
+            --kme-warning-bg: #2d2815;
+            --kme-warning-border: #4a3e1e;
+            --kme-warning-text: #fbd38d;
+            --kme-pro-bg: #1a2e1a;
+            --kme-pro-border: #2a4a2a;
+            --kme-pro-text: #68d391;
+            --kme-con-bg: #2d1515;
+            --kme-con-border: #4a1e1e;
+            --kme-con-text: #fc8181;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --kme-shadow-md: 0 4px 14px rgba(0,0,0,0.4);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+            --kme-quiz-selected-bg: #1e2248;
+            --kme-quiz-selected-border: #6c83f7;
+            --kme-header-bg: linear-gradient(135deg, #1e2248 0%, #0f0f1a 100%);
+            --kme-nav-bg: rgba(26,26,46,0.95);
+            --kme-nav-shadow: 0 -2px 10px rgba(0,0,0,0.4);
+            --kme-tab-active-bg: #6c83f7;
+            --kme-tab-active-text: #ffffff;
+            --kme-tab-inactive-text: #7a7a9a;
+            --kme-scrollbar-track: #1a1a2e;
+            --kme-scrollbar-thumb: #3a3a5a;
+        }
+
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--kme-font-sans);
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+            transition: var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--kme-scrollbar-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--kme-scrollbar-thumb);
+            border-radius: 3px;
+        }
+
+        /* ========================================
+           HEADER
+           ======================================== */
+        .kme-header {
+            background: var(--kme-header-bg);
+            color: #ffffff;
+            padding: 24px 20px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-header-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kme-header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .kme-header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        .kme-header-title .kme-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.75;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .kme-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Theme Toggle Button */
+        .kme-theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover,
+        .kme-theme-toggle:active {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* Progress Indicator */
+        .kme-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 0 3px 0 0;
+            transition: width 0.3s ease;
+        }
+
+        /* ========================================
+           BOTTOM NAVIGATION (MOBILE TAB BAR)
+           ======================================== */
+        .kme-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--kme-nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: var(--kme-nav-shadow);
+            border-top: 1px solid var(--kme-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            padding: 4px 0;
+            padding-bottom: max(4px, env(safe-area-inset-bottom));
+        }
+
+        .kme-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 4px;
+            color: var(--kme-tab-inactive-text);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            background: none;
+            position: relative;
+        }
+
+        .kme-nav-item i {
+            font-size: 1.2rem;
+            transition: var(--kme-transition);
+        }
+
+        .kme-nav-item.kme-nav-active {
+            color: var(--kme-accent);
+        }
+
+        .kme-nav-item.kme-nav-active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 3px;
+            background: var(--kme-accent);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .kme-nav-item:active {
+            transform: scale(0.92);
+        }
+
+        /* ========================================
+           MAIN LAYOUT
+           ======================================== */
+        .kme-main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Section containers for tab navigation */
+        .kme-section {
+            display: none;
+            animation: kme-fadeIn 0.35s ease;
+        }
+
+        .kme-section.kme-section-active {
+            display: block;
+        }
+
+        @keyframes kme-fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Headers */
+        .kme-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--kme-border);
+        }
+
+        .kme-section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--kme-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .kme-section-icon.kme-icon-concepts {
+            background: var(--kme-accent-light);
+            color: var(--kme-accent);
+        }
+        .kme-section-icon.kme-icon-compare {
+            background: var(--kme-warning-bg);
+            color: var(--kme-warning-text);
+        }
+        .kme-section-icon.kme-icon-traps {
+            background: var(--kme-danger-bg);
+            color: var(--kme-danger-icon);
+        }
+        .kme-section-icon.kme-icon-quiz {
+            background: var(--kme-success-bg);
+            color: var(--kme-success);
+        }
+
+        .kme-section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-section-count {
+            font-size: 0.8rem;
+            color: var(--kme-text-muted);
+            font-weight: 400;
+        }
+
+        /* ========================================
+           CONCEPT CARDS
+           ======================================== */
+        .kme-concept-card {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kme-concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--kme-accent);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .kme-concept-card:active {
+            transform: scale(0.99);
+        }
+
+        .kme-concept-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding: 12px 0 12px 32px;
+            border-bottom: 1px solid var(--kme-border-light);
+            font-size: 0.95rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.65;
+        }
+
+        .kme-concept-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .kme-concept-list li:first-child {
+            padding-top: 0;
+        }
+
+        .kme-concept-list li::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 20px;
+            width: 8px;
+            height: 8px;
+            background: var(--kme-accent);
+            border-radius: 50%;
+        }
+
+        .kme-concept-list li:first-child::before {
+            top: 8px;
+        }
+
+        .kme-concept-list li strong,
+        .kme-concept-list li b {
+            color: var(--kme-text-primary);
+            font-weight: 600;
+        }
+
+        .kme-key-term {
+            color: var(--kme-accent);
+            font-weight: 700;
+            background: var(--kme-accent-light);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* ========================================
+           COMPARISON TABLE (RESPONSIVE)
+           ======================================== */
+        .kme-table-responsive {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            box-shadow: var(--kme-shadow-sm);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .kme-table-title {
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--kme-text-primary);
+            border-bottom: 1px solid var(--kme-border);
+            background: var(--kme-bg-card);
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .kme-comparison-list {
+            padding: 8px 16px 16px;
+        }
+
+        .kme-comparison-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--kme-border-light);
+            font-size: 0.93rem;
+            line-height: 1.55;
+        }
+
+        .kme-comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        .kme-comparison-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            min-width: 54px;
+            justify-content: center;
+        }
+
+        .kme-badge-pro {
+            background: var(--kme-pro-bg);
+            color: var(--kme-pro-text);
+            border: 1px solid var(--kme-pro-border);
+        }
+
+        .kme-badge-con {
+            background: var(--kme-con-bg);
+            color: var(--kme-con-text);
+            border: 1px solid var(--kme-con-border);
+        }
+
+        .kme-comparison-text {
+            color: var(--kme-text-secondary);
+        }
+
+        /* ========================================
+           EXAM TRAPS (ALERT DANGER)
+           ======================================== */
+        .kme-alert-danger {
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            border-radius: var(--kme-radius-lg);
+            padding: 0;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            overflow: hidden;
+        }
+
+        .kme-alert-danger-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--kme-danger-border);
+        }
+
+        .kme-alert-danger-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--kme-radius-sm);
+            background: var(--kme-danger-icon);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-alert-danger-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--kme-danger-text);
+        }
+
+        .kme-trap-list {
+            list-style: none;
+            padding: 12px 18px 16px;
+        }
+
+        .kme-trap-list li {
+            position: relative;
+            padding: 10px 0 10px 28px;
+            border-bottom: 1px solid var(--kme-danger-border);
+            font-size: 0.9rem;
+            color: var(--kme-danger-text);
+            line-height: 1.6;
+        }
+
+        .kme-trap-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .kme-trap-list li::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 12px;
+            font-size: 0.7rem;
+            color: var(--kme-danger-icon);
+            opacity: 0.7;
+        }
+
+        .kme-trap-list li strong {
+            font-weight: 700;
+        }
+
+        /* ========================================
+           MCQ QUIZ SECTION
+           ======================================== */
+        .kme-quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .kme-quiz-score {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-md);
+            padding: 10px 16px;
+            box-shadow: var(--kme-shadow-sm);
+            flex-wrap: wrap;
+        }
+
+        .kme-score-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .kme-score-correct { color: var(--kme-success); }
+        .kme-score-incorrect { color: var(--kme-error); }
+        .kme-score-total { color: var(--kme-text-muted); }
+
+        .kme-quiz-reset {
+            padding: 8px 18px;
+            border-radius: var(--kme-radius-sm);
+            border: 1px solid var(--kme-border);
+            background: var(--kme-bg-card);
+            color: var(--kme-text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-quiz-reset:hover,
+        .kme-quiz-reset:active {
+            background: var(--kme-accent);
+            color: #fff;
+            border-color: var(--kme-accent);
+        }
+
+        /* MCQ Container */
+        .kme-mcq-container {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+            overflow: hidden;
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-container.kme-answered-correct {
+            border-color: var(--kme-success);
+            box-shadow: 0 0 0 1px var(--kme-success);
+        }
+
+        .kme-mcq-container.kme-answered-incorrect {
+            border-color: var(--kme-error);
+            box-shadow: 0 0 0 1px var(--kme-error);
+        }
+
+        .kme-mcq-question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 18px 18px 14px;
+            border-bottom: 1px solid var(--kme-border-light);
+        }
+
+        .kme-mcq-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--kme-accent);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .kme-mcq-question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.55;
+            padding-top: 4px;
+        }
+
+        /* Options */
+        .kme-mcq-options {
+            padding: 8px 14px 14px;
+        }
+
+        .kme-mcq-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 14px;
+            margin: 4px 0;
+            border-radius: var(--kme-radius-md);
+            border: 2px solid transparent;
+            background: var(--kme-bg-primary);
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            min-height: 48px; /* Touch target size */
+            position: relative;
+        }
+
+        .kme-mcq-option:hover {
+            background: var(--kme-bg-card-hover);
+            border-color: var(--kme-border);
+        }
+
+        .kme-mcq-option:active {
+            transform: scale(0.98);
+        }
+
+        .kme-mcq-option.kme-option-selected {
+            background: var(--kme-quiz-selected-bg);
+            border-color: var(--kme-quiz-selected-border);
+        }
+
+        .kme-mcq-option.kme-option-correct {
+            background: var(--kme-success-bg);
+            border-color: var(--kme-success);
+        }
+
+        .kme-mcq-option.kme-option-incorrect {
+            background: var(--kme-error-bg);
+            border-color: var(--kme-error);
+        }
+
+        .kme-mcq-option.kme-option-disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .kme-mcq-option.kme-option-disabled:hover {
+            transform: none;
+        }
+
+        .kme-mcq-option.kme-option-correct.kme-option-disabled,
+        .kme-mcq-option.kme-option-incorrect.kme-option-disabled {
+            opacity: 1;
+        }
+
+        /* Custom Radio */
+        .kme-radio-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .kme-radio-visual {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--kme-border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--kme-transition);
+            background: var(--kme-bg-card);
+        }
+
+        .kme-radio-visual::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--kme-accent);
+            transform: scale(0);
+            transition: var(--kme-transition);
+        }
+
+        .kme-option-selected .kme-radio-visual {
+            border-color: var(--kme-accent);
+        }
+
+        .kme-option-selected .kme-radio-visual::after {
+            transform: scale(1);
+        }
+
+        .kme-option-correct .kme-radio-visual {
+            border-color: var(--kme-success);
+            background: var(--kme-success);
+        }
+
+        .kme-option-correct .kme-radio-visual::after {
+            background: #fff;
+            transform: scale(1);
+            border-radius: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            background: transparent;
+            transform: rotate(45deg) scale(1);
+            margin-top: -2px;
+        }
+
+        .kme-option-incorrect .kme-radio-visual {
+            border-color: var(--kme-error);
+            background: var(--kme-error);
+        }
+
+        .kme-option-incorrect .kme-radio-visual::after {
+            background: #fff;
+            transform: scale(1);
+            border-radius: 1px;
+            width: 12px;
+            height: 2px;
+        }
+
+        .kme-option-letter {
+            font-weight: 700;
+            color: var(--kme-text-muted);
+            font-size: 0.82rem;
+            min-width: 18px;
+        }
+
+        .kme-option-text {
+            font-size: 0.9rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        /* Explanation */
+        .kme-explanation {
+            display: none;
+            padding: 14px 18px;
+            border-top: 1px solid var(--kme-border-light);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            animation: kme-slideDown 0.3s ease;
+        }
+
+        .kme-explanation.kme-explanation-visible {
+            display: block;
+        }
+
+        .kme-explanation-correct {
+            background: var(--kme-success-bg);
+            color: var(--kme-success);
+            border-top-color: var(--kme-success-border);
+        }
+
+        .kme-explanation-incorrect {
+            background: var(--kme-error-bg);
+            color: var(--kme-error);
+            border-top-color: var(--kme-error-border);
+        }
+
+        .kme-explanation i {
+            margin-right: 6px;
+        }
+
+        @keyframes kme-slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 200px;
+            }
+        }
+
+        /* ========================================
+           QUIZ NAVIGATION
+           ======================================== */
+        .kme-quiz-pagination {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-md);
+        }
+
+        .kme-quiz-page-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--kme-border);
+            background: var(--kme-bg-primary);
+            color: var(--kme-text-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-quiz-page-dot.kme-dot-correct {
+            background: var(--kme-success);
+            border-color: var(--kme-success);
+            color: #fff;
+        }
+
+        .kme-quiz-page-dot.kme-dot-incorrect {
+            background: var(--kme-error);
+            border-color: var(--kme-error);
+            color: #fff;
+        }
+
+        .kme-quiz-page-dot:active {
+            transform: scale(0.9);
+        }
+
+        /* ========================================
+           UTILITIES & RESPONSIVE
+           ======================================== */
+
+        /* Tablet+ Styles */
+        @media (min-width: 600px) {
+            .kme-main {
+                padding: 24px;
+            }
+
+            .kme-header {
+                padding: 28px 24px 24px;
+            }
+
+            .kme-header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .kme-concept-card {
+                padding: 24px 24px 24px 28px;
+            }
+
+            .kme-mcq-option {
+                padding: 16px;
+            }
+
+            .kme-section-title {
+                font-size: 1.5rem;
+            }
+
+            .kme-bottom-nav {
+                max-width: 500px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: var(--kme-radius-lg) var(--kme-radius-lg) 0 0;
+                bottom: 0;
+            }
+
+            .kme-nav-item {
+                font-size: 0.72rem;
+            }
+        }
+
+        /* Large Screen */
+        @media (min-width: 900px) {
+            .kme-bottom-nav {
+                max-width: 440px;
+            }
+
+            body {
+                font-size: 17px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .kme-bottom-nav,
+            .kme-header,
+            .kme-theme-toggle,
+            .kme-quiz-reset {
+                display: none !important;
+            }
+
+            .kme-section {
+                display: block !important;
+            }
+
+            body {
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================
+         HEADER
+         ============================ -->
+    <header class="kme-header">
+        <div class="kme-header-inner">
+            <div class="kme-header-title">
+                <h1><i class="fas fa-microscope" style="margin-right:6px; opacity:0.85;"></i>Research Methodology</h1>
+                <span class="kme-subtitle">Study Guide · Descriptive Studies & Research Fundamentals</span>
+            </div>
+            <div class="kme-header-actions">
+                <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+                    <i class="fas fa-moon" id="kmeThemeIcon"></i>
+                </button>
+            </div>
+        </div>
+        <div class="kme-progress-bar" id="kmeProgressBar" style="width: 0%;"></div>
+    </header>
+
+    <!-- ============================
+         MAIN CONTENT AREA
+         ============================ -->
+    <main class="kme-main">
+
+        <!-- ========== SECTION: CORE CONCEPTS ========== -->
+        <section class="kme-section kme-section-active" id="kme-sec-concepts" data-section="concepts">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-concepts">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div>
+                    <div class="kme-section-title">Core Concepts</div>
+                    <div class="kme-section-count">10 key points to master</div>
+                </div>
+            </div>
+
+            <!-- Concept Card 1: Research Definition -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Research</strong> is the <b>systematic collection, description, analysis, and interpretation</b> of data to answer a question or solve a problem.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 2: FINER Criteria -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li>A strong research question is evaluated using the <span class="kme-key-term">FINER</span> criteria: <strong>Feasible</strong>, <strong>Interesting</strong>, <strong>Novel</strong>, <strong>Ethical</strong>, and <strong>Relevant</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 3: Aim vs Objective -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li>A study's <strong>"Aim"</strong> is a broad statement of overall intention, while an <strong>"Objective"</strong> details exactly how to achieve the aim and must be <span class="kme-key-term">SMART</span> (<strong>S</strong>pecific, <strong>M</strong>easurable, <strong>A</strong>pplicable, <strong>R</strong>elevant, <strong>T</strong>ime-bound).</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 4: Descriptive Studies -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Descriptive studies</strong> are observational designs that lack a <b>comparison group</b> and an <b>assigned intervention</b>.</li>
+                    <li>Descriptive studies are utilized strictly to <strong>formulate or generate</strong> research hypotheses, <b>not to test them</b>.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 5: Case Reports vs Case Series -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Case Reports</strong> document a <b>single</b> unusual clinical case.</li>
+                    <li><strong>Case Series</strong> detail <b>multiple similar cases</b> that can signal the start of an epidemic.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 6: Ecological Studies -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Ecological (correlational) studies</strong> search for exposure-outcome associations using existing <b>population-level data</b> (e.g., vital statistics) rather than individual data.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 7: Cross-Sectional Studies -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Cross-sectional (prevalence) studies</strong> provide a <b>single snapshot in time</b> to estimate disease <b>prevalence</b> and exposure proportions.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 8: Longitudinal Studies -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Longitudinal (incidence) studies</strong> perform <b>repeated follow-up observations</b> on a community to measure disease <b>incidence</b> and natural history.</li>
+                </ul>
+            </div>
+
+            <!-- Concept Card 9: Survey Studies -->
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Survey studies</strong> are descriptive field studies conducted to investigate <b>community problems</b>, perform <b>case finding</b>, and determine <b>problem magnitude</b>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========== SECTION: COMPARISONS ========== -->
+        <section class="kme-section" id="kme-sec-compare" data-section="compare">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-compare">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div>
+                    <div class="kme-section-title">Comparisons</div>
+                    <div class="kme-section-count">Cross-Sectional Studies · Pros & Cons</div>
+                </div>
+            </div>
+
+            <div class="kme-table-responsive">
+                <div class="kme-table-title">
+                    <i class="fas fa-camera" style="margin-right:8px; opacity:0.6;"></i>Cross-Sectional Studies
+                </div>
+                <div class="kme-comparison-list">
+                    <!-- Pros -->
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-pro"><i class="fas fa-plus"></i> Pro</span>
+                        <span class="kme-comparison-text">Quick and inexpensive.</span>
+                    </div>
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-pro"><i class="fas fa-plus"></i> Pro</span>
+                        <span class="kme-comparison-text">Estimates disease prevalence.</span>
+                    </div>
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-pro"><i class="fas fa-plus"></i> Pro</span>
+                        <span class="kme-comparison-text">Useful for chronic conditions.</span>
+                    </div>
+                    <!-- Cons -->
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-con"><i class="fas fa-minus"></i> Con</span>
+                        <span class="kme-comparison-text">Cannot estimate incidence.</span>
+                    </div>
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-con"><i class="fas fa-minus"></i> Con</span>
+                        <span class="kme-comparison-text">Poor for acute diseases.</span>
+                    </div>
+                    <div class="kme-comparison-item">
+                        <span class="kme-comparison-badge kme-badge-con"><i class="fas fa-minus"></i> Con</span>
+                        <span class="kme-comparison-text">Cannot establish temporal sequence.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SECTION: EXAM TRAPS ========== -->
+        <section class="kme-section" id="kme-sec-traps" data-section="traps">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-traps">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div>
+                    <div class="kme-section-title">Exam Traps</div>
+                    <div class="kme-section-count">8 common pitfalls to avoid</div>
+                </div>
+            </div>
+
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <div class="kme-alert-danger-icon">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <div class="kme-alert-danger-title">High-Yield Exam Traps</div>
+                </div>
+                <ul class="kme-trap-list">
+                    <li>Do <strong>not</strong> confuse <strong>Aim</strong> with <strong>Objective</strong>; an Aim is a broad goal, while an Objective must be highly specific and SMART.</li>
+                    <li>Cross-sectional studies are strictly for calculating disease <strong>prevalence</strong>, <strong>never incidence</strong>.</li>
+                    <li>Cross-sectional studies are <strong>useless</strong> for highly fatal, short-duration, or acute diseases.</li>
+                    <li>Descriptive studies only <strong>formulate hypotheses</strong>; they <strong>cannot test</strong> hypotheses or prove absolute causation.</li>
+                    <li>Ecological studies strictly use <strong>aggregate population-level data</strong>, never individual patient data.</li>
+                    <li>A <strong>case report</strong> describes <strong>one</strong> unique patient, whereas a <strong>case series</strong> describes a <strong>group</strong> of similar cases and can indicate a new epidemic.</li>
+                    <li>The very <strong>first step</strong> of the research process is <strong>formulating the research problem</strong>, not picking the study design.</li>
+                    <li><strong>Longitudinal studies</strong> frequently suffer from <strong>loss to follow-up</strong>, a complication that does not apply to cross-sectional studies.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========== SECTION: MCQ QUIZ ========== -->
+        <section class="kme-section" id="kme-sec-quiz" data-section="quiz">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-quiz">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                    <div class="kme-section-title">Practice Quiz</div>
+                    <div class="kme-section-count">20 MCQs · Test your knowledge</div>
+                </div>
+            </div>
+
+            <!-- Quiz Score & Controls -->
+            <div class="kme-quiz-header">
+                <div class="kme-quiz-score">
+                    <div class="kme-score-item kme-score-correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="kmeScoreCorrect">0</span>
+                    </div>
+                    <div class="kme-score-item kme-score-incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span id="kmeScoreIncorrect">0</span>
+                    </div>
+                    <div class="kme-score-item kme-score-total">
+                        <i class="fas fa-list-ol"></i>
+                        <span id="kmeScoreTotal">0</span>/20
+                    </div>
+                </div>
+                <button class="kme-quiz-reset" id="kmeQuizReset">
+                    <i class="fas fa-redo-alt" style="margin-right:4px;"></i> Reset Quiz
+                </button>
+            </div>
+
+            <!-- Quiz Pagination Dots -->
+            <div class="kme-quiz-pagination" id="kmeQuizPagination"></div>
+
+            <!-- MCQ Container - All 20 Questions -->
+            <div id="kmeQuizContainer"></div>
+        </section>
+    </main>
+
+    <!-- ============================
+         BOTTOM NAVIGATION
+         ============================ -->
+    <nav class="kme-bottom-nav" id="kmeBottomNav">
+        <button class="kme-nav-item kme-nav-active" data-target="concepts" aria-label="Core Concepts">
+            <i class="fas fa-lightbulb"></i>
+            <span>Concepts</span>
+        </button>
+        <button class="kme-nav-item" data-target="compare" aria-label="Comparisons">
+            <i class="fas fa-balance-scale"></i>
+            <span>Compare</span>
+        </button>
+        <button class="kme-nav-item" data-target="traps" aria-label="Exam Traps">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Traps</span>
+        </button>
+        <button class="kme-nav-item" data-target="quiz" aria-label="Quiz">
+            <i class="fas fa-brain"></i>
+            <span>Quiz</span>
+        </button>
+    </nav>
+
+    <!-- ============================
+         JAVASCRIPT
+         ============================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ========================================
+        // MCQ DATA
+        // ========================================
+        const kmeQuizData = [
+            {
+                id: 1,
+                question: "What is the very first step in planning a research study?",
+                options: [
+                    { letter: "A", text: "Select a study sample" },
+                    { letter: "B", text: "Write the research protocol" },
+                    { letter: "C", text: "Formulate a research problem" },
+                    { letter: "D", text: "Choose a research design" },
+                    { letter: "E", text: "Construct data collection tools" }
+                ],
+                correct: "C",
+                explanation: "Formulating the research problem is the foundational first step of the research process."
+            },
+            {
+                id: 2,
+                question: "Which characteristic is part of the FINER criteria for a good research question?",
+                options: [
+                    { letter: "A", text: "Frequent" },
+                    { letter: "B", text: "Factual" },
+                    { letter: "C", text: "Feasible" },
+                    { letter: "D", text: "Fast" },
+                    { letter: "E", text: "Formal" }
+                ],
+                correct: "C",
+                explanation: "The \"F\" in FINER stands for Feasible."
+            },
+            {
+                id: 3,
+                question: "Research objectives must follow the SMART criteria. What does the \"T\" stand for?",
+                options: [
+                    { letter: "A", text: "Theoretical" },
+                    { letter: "B", text: "Time-bound" },
+                    { letter: "C", text: "Tested" },
+                    { letter: "D", text: "Targeted" },
+                    { letter: "E", text: "Tolerable" }
+                ],
+                correct: "B",
+                explanation: "The \"T\" in SMART stands for Time-bound."
+            },
+            {
+                id: 4,
+                question: "A broad statement describing the overall intention of a research study is known as the:",
+                options: [
+                    { letter: "A", text: "Specific objective" },
+                    { letter: "B", text: "Research question" },
+                    { letter: "C", text: "Aim" },
+                    { letter: "D", text: "Hypothesis" },
+                    { letter: "E", text: "Research design" }
+                ],
+                correct: "C",
+                explanation: "An Aim is a broad statement of overall intention, whereas objectives are specific."
+            },
+            {
+                id: 5,
+                question: "Descriptive studies are primarily utilized to:",
+                options: [
+                    { letter: "A", text: "Test complex hypotheses" },
+                    { letter: "B", text: "Provide an experimental intervention" },
+                    { letter: "C", text: "Formulate and generate hypotheses" },
+                    { letter: "D", text: "Establish absolute causation" },
+                    { letter: "E", text: "Compare randomized treatments" }
+                ],
+                correct: "C",
+                explanation: "Descriptive studies generate or formulate hypotheses but do not test them."
+            },
+            {
+                id: 6,
+                question: "Which descriptive study reports on a single patient with a newly described disease or unexpected therapeutic effect?",
+                options: [
+                    { letter: "A", text: "Case series" },
+                    { letter: "B", text: "Case report" },
+                    { letter: "C", text: "Ecological study" },
+                    { letter: "D", text: "Cross-sectional study" },
+                    { letter: "E", text: "Longitudinal study" }
+                ],
+                correct: "B",
+                explanation: "Case reports detail a single unusual case or new finding."
+            },
+            {
+                id: 7,
+                question: "A major trigger for further research that describes a number of similar cases and may indicate the start of an epidemic is a:",
+                options: [
+                    { letter: "A", text: "Case report" },
+                    { letter: "B", text: "Case series" },
+                    { letter: "C", text: "Clinical trial" },
+                    { letter: "D", text: "Ecological study" },
+                    { letter: "E", text: "Cross-sectional survey" }
+                ],
+                correct: "B",
+                explanation: "Case series describe multiple similar cases and can signal the onset of an epidemic."
+            },
+            {
+                id: 8,
+                question: "Which study design uses already collected population-level data rather than individual-level data?",
+                options: [
+                    { letter: "A", text: "Case report" },
+                    { letter: "B", text: "Case series" },
+                    { letter: "C", text: "Cross-sectional study" },
+                    { letter: "D", text: "Ecological study" },
+                    { letter: "E", text: "Longitudinal study" }
+                ],
+                correct: "D",
+                explanation: "Ecological studies examine associations using aggregate population data, not individual data."
+            },
+            {
+                id: 9,
+                question: "A study that measures exposure and outcome simultaneously at a single snapshot in time is a:",
+                options: [
+                    { letter: "A", text: "Cross-sectional study" },
+                    { letter: "B", text: "Longitudinal study" },
+                    { letter: "C", text: "Experimental study" },
+                    { letter: "D", text: "Cohort study" },
+                    { letter: "E", text: "Case-control study" }
+                ],
+                correct: "A",
+                explanation: "Cross-sectional studies evaluate a population at one specific point in time."
+            },
+            {
+                id: 10,
+                question: "What disease frequency measure does a cross-sectional study calculate?",
+                options: [
+                    { letter: "A", text: "Incidence" },
+                    { letter: "B", text: "Relative Risk" },
+                    { letter: "C", text: "Case fatality rate" },
+                    { letter: "D", text: "Odds Ratio" },
+                    { letter: "E", text: "Prevalence" }
+                ],
+                correct: "E",
+                explanation: "Cross-sectional studies can only estimate prevalence, not incidence."
+            },
+            {
+                id: 11,
+                question: "Which condition is LEAST suitable to be studied using a cross-sectional design?",
+                options: [
+                    { letter: "A", text: "Chronic hypertension" },
+                    { letter: "B", text: "Highly fatal acute disease" },
+                    { letter: "C", text: "Chronic obesity" },
+                    { letter: "D", text: "Long-lasting diabetes mellitus" },
+                    { letter: "E", text: "Chronic arthritis" }
+                ],
+                correct: "B",
+                explanation: "Cross-sectional studies are highly ineffective for acute or highly fatal diseases."
+            },
+            {
+                id: 12,
+                question: "A major disadvantage of a cross-sectional study is its inability to:",
+                options: [
+                    { letter: "A", text: "Estimate disease prevalence" },
+                    { letter: "B", text: "Study chronic conditions" },
+                    { letter: "C", text: "Be conducted quickly" },
+                    { letter: "D", text: "Establish a temporal sequence between exposure and disease" },
+                    { letter: "E", text: "Generate causal hypotheses" }
+                ],
+                correct: "D",
+                explanation: "Because exposure and outcome are measured simultaneously, temporal sequence cannot be determined."
+            },
+            {
+                id: 13,
+                question: "Which study design relies on repeated follow-up observations in the same community over a prolonged period?",
+                options: [
+                    { letter: "A", text: "Cross-sectional study" },
+                    { letter: "B", text: "Case report" },
+                    { letter: "C", text: "Longitudinal study" },
+                    { letter: "D", text: "Ecological study" },
+                    { letter: "E", text: "Case series" }
+                ],
+                correct: "C",
+                explanation: "Longitudinal studies require continuous follow-up over a prolonged period."
+            },
+            {
+                id: 14,
+                question: "What is a primary disadvantage of a longitudinal study?",
+                options: [
+                    { letter: "A", text: "Cannot estimate incidence" },
+                    { letter: "B", text: "Poor for establishing natural history of disease" },
+                    { letter: "C", text: "Loss to follow-up over time" },
+                    { letter: "D", text: "Cannot determine temporal sequence" },
+                    { letter: "E", text: "Only measures prevalence" }
+                ],
+                correct: "C",
+                explanation: "Maintaining participant follow-up over a long duration is a major challenge in longitudinal studies."
+            },
+            {
+                id: 15,
+                question: "If an investigator actively assigns an exposure or intervention to participants, the study is classified as:",
+                options: [
+                    { letter: "A", text: "Observational" },
+                    { letter: "B", text: "Descriptive" },
+                    { letter: "C", text: "Ecological" },
+                    { letter: "D", text: "Experimental" },
+                    { letter: "E", text: "Cross-sectional" }
+                ],
+                correct: "D",
+                explanation: "When an investigator intervenes or assigns exposure, it is an experimental study."
+            },
+            {
+                id: 16,
+                question: "An experimental study that includes random allocation of participants is called a:",
+                options: [
+                    { letter: "A", text: "Non-randomized controlled trial" },
+                    { letter: "B", text: "Randomized controlled trial" },
+                    { letter: "C", text: "Cohort study" },
+                    { letter: "D", text: "Case-control study" },
+                    { letter: "E", text: "Longitudinal study" }
+                ],
+                correct: "B",
+                explanation: "Experimental studies with random assignment are Randomized Controlled Trials."
+            },
+            {
+                id: 17,
+                question: "A descriptive field study carried out to investigate community problems or perform case finding is known as a:",
+                options: [
+                    { letter: "A", text: "Survey study" },
+                    { letter: "B", text: "Case report" },
+                    { letter: "C", text: "Laboratory experiment" },
+                    { letter: "D", text: "Clinical trial" },
+                    { letter: "E", text: "Case-control study" }
+                ],
+                correct: "A",
+                explanation: "Survey studies are descriptive field studies used for case finding and community assessment."
+            },
+            {
+                id: 18,
+                question: "A survey confined to a specific local community, such as a single factory or school, is a:",
+                options: [
+                    { letter: "A", text: "National survey" },
+                    { letter: "B", text: "Multipurpose survey" },
+                    { letter: "C", text: "Local survey" },
+                    { letter: "D", text: "Global survey" },
+                    { letter: "E", text: "Regional survey" }
+                ],
+                correct: "C",
+                explanation: "Local surveys are restricted to specific groups like a single school or factory."
+            },
+            {
+                id: 19,
+                question: "Finding a positive correlation between national per capita sales of cigarettes and national mortality from coronary heart disease is an example of which study design?",
+                options: [
+                    { letter: "A", text: "Cross-sectional study" },
+                    { letter: "B", text: "Case report" },
+                    { letter: "C", text: "Longitudinal study" },
+                    { letter: "D", text: "Ecological study" },
+                    { letter: "E", text: "Case series" }
+                ],
+                correct: "D",
+                explanation: "Using national aggregate data to find correlations is the hallmark of an ecological study."
+            },
+            {
+                id: 20,
+                question: "Which of the following is considered an analytical observational study rather than a descriptive study?",
+                options: [
+                    { letter: "A", text: "Case report" },
+                    { letter: "B", text: "Cohort study" },
+                    { letter: "C", text: "Ecological study" },
+                    { letter: "D", text: "Cross-sectional study" },
+                    { letter: "E", text: "Case series" }
+                ],
+                correct: "B",
+                explanation: "Cohort studies are analytical because they use comparison groups to test hypotheses."
+            }
+        ];
+
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+        const STORAGE_KEY = 'kme_study_guide_state';
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) return JSON.parse(saved);
+            } catch (e) {
+                console.warn('KME: Could not load state from localStorage', e);
+            }
+            return {
+                theme: 'light',
+                activeTab: 'concepts',
+                quizAnswers: {} // { questionId: { selected: 'A', correct: true/false } }
+            };
+        }
+
+        function saveState(state) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.warn('KME: Could not save state to localStorage', e);
+            }
+        }
+
+        let state = loadState();
+
+        // ========================================
+        // THEME MANAGEMENT
+        // ========================================
+        const themeToggleBtn = document.getElementById('kmeThemeToggle');
+        const themeIcon = document.getElementById('kmeThemeIcon');
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            state.theme = theme;
+            saveState(state);
+        }
+
+        // Initialize theme
+        applyTheme(state.theme);
+
+        themeToggleBtn.addEventListener('click', function() {
+            const newTheme = state.theme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+        });
+
+        // ========================================
+        // TAB NAVIGATION
+        // ========================================
+        const navItems = document.querySelectorAll('.kme-nav-item');
+        const sections = document.querySelectorAll('.kme-section');
+
+        function activateTab(target) {
+            // Update nav items
+            navItems.forEach(function(item) {
+                item.classList.toggle('kme-nav-active', item.dataset.target === target);
+            });
+
+            // Update sections
+            sections.forEach(function(sec) {
+                sec.classList.toggle('kme-section-active', sec.dataset.section === target);
+            });
+
+            // Save state
+            state.activeTab = target;
+            saveState(state);
+
+            // Scroll to top when switching tabs
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        navItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                activateTab(this.dataset.target);
+            });
+        });
+
+        // Restore active tab
+        activateTab(state.activeTab);
+
+        // ========================================
+        // QUIZ RENDERING
+        // ========================================
+        const quizContainer = document.getElementById('kmeQuizContainer');
+        const paginationContainer = document.getElementById('kmeQuizPagination');
+        const scoreCorrectEl = document.getElementById('kmeScoreCorrect');
+        const scoreIncorrectEl = document.getElementById('kmeScoreIncorrect');
+        const scoreTotalEl = document.getElementById('kmeScoreTotal');
+        const quizResetBtn = document.getElementById('kmeQuizReset');
+        const progressBar = document.getElementById('kmeProgressBar');
+
+        function renderQuiz() {
+            let html = '';
+
+            kmeQuizData.forEach(function(q) {
+                const answered = state.quizAnswers[q.id];
+                const isAnswered = !!answered;
+                const isCorrect = answered ? answered.correct : false;
+
+                let containerClass = 'kme-mcq-container';
+                if (isAnswered) {
+                    containerClass += isCorrect ? ' kme-answered-correct' : ' kme-answered-incorrect';
+                }
+
+                html += '<div class="' + containerClass + '" data-question-id="' + q.id + '" id="kme-q-' + q.id + '">';
+
+                // Question Header
+                html += '<div class="kme-mcq-question-header">';
+                html += '<div class="kme-mcq-number">' + q.id + '</div>';
+                html += '<div class="kme-mcq-question-text">' + escapeHTML(q.question) + '</div>';
+                html += '</div>';
+
+                // Options
+                html += '<div class="kme-mcq-options">';
+                q.options.forEach(function(opt) {
+                    let optClass = 'kme-mcq-option';
+
+                    if (isAnswered) {
+                        optClass += ' kme-option-disabled';
+                        if (opt.letter === q.correct) {
+                            optClass += ' kme-option-correct';
+                        }
+                        if (opt.letter === answered.selected && !answered.correct) {
+                            optClass += ' kme-option-incorrect';
+                        }
+                        if (opt.letter === answered.selected) {
+                            optClass += ' kme-option-selected';
+                        }
+                    }
+
+                    const checked = (isAnswered && opt.letter === answered.selected) ? 'checked' : '';
+                    const disabled = isAnswered ? 'disabled' : '';
+
+                    html += '<label class="' + optClass + '" data-letter="' + opt.letter + '">';
+                    html += '<input type="radio" class="kme-radio-input" name="kme-q-' + q.id + '" value="' + opt.letter + '" ' + checked + ' ' + disabled + '>';
+                    html += '<span class="kme-radio-visual"></span>';
+                    html += '<span class="kme-option-letter">' + opt.letter + '.</span>';
+                    html += '<span class="kme-option-text">' + escapeHTML(opt.text) + '</span>';
+                    html += '</label>';
+                });
+                html += '</div>';
+
+                // Explanation
+                let expClass = 'kme-explanation';
+                if (isAnswered) {
+                    expClass += ' kme-explanation-visible';
+                    expClass += isCorrect ? ' kme-explanation-correct' : ' kme-explanation-incorrect';
+                }
+
+                const expIcon = isCorrect ? 'fa-check-circle' : 'fa-info-circle';
+
+                html += '<div class="' + expClass + '" data-explanation-for="' + q.id + '">';
+                html += '<i class="fas ' + expIcon + '"></i>';
+                if (isAnswered && !isCorrect) {
+                    html += '<strong>Correct: ' + q.correct + '.</strong> ';
+                }
+                html += escapeHTML(q.explanation);
+                html += '</div>';
+
+                html += '</div>';
+            });
+
+            quizContainer.innerHTML = html;
+
+            // Render pagination
+            renderPagination();
+
+            // Update scores
+            updateScores();
+
+            // Attach event listeners to radio inputs
+            attachQuizListeners();
+        }
+
+        function renderPagination() {
+            let dots = '';
+            kmeQuizData.forEach(function(q) {
+                const answered = state.quizAnswers[q.id];
+                let dotClass = 'kme-quiz-page-dot';
+                if (answered) {
+                    dotClass += answered.correct ? ' kme-dot-correct' : ' kme-dot-incorrect';
+                }
+                dots += '<button class="' + dotClass + '" data-scroll-to="' + q.id + '" aria-label="Question ' + q.id + '">' + q.id + '</button>';
+            });
+            paginationContainer.innerHTML = dots;
+
+            // Attach click to scroll
+            paginationContainer.querySelectorAll('.kme-quiz-page-dot').forEach(function(dot) {
+                dot.addEventListener('click', function() {
+                    const targetQ = document.getElementById('kme-q-' + this.dataset.scrollTo);
+                    if (targetQ) {
+                        targetQ.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
+        }
+
+        function updateScores() {
+            let correct = 0;
+            let incorrect = 0;
+            let total = 0;
+
+            Object.keys(state.quizAnswers).forEach(function(key) {
+                total++;
+                if (state.quizAnswers[key].correct) {
+                    correct++;
+                } else {
+                    incorrect++;
+                }
+            });
+
+            scoreCorrectEl.textContent = correct;
+            scoreIncorrectEl.textContent = incorrect;
+            scoreTotalEl.textContent = total;
+
+            // Update progress bar
+            const progress = (total / kmeQuizData.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function attachQuizListeners() {
+            const radioInputs = quizContainer.querySelectorAll('.kme-radio-input:not([disabled])');
+
+            radioInputs.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    const container = this.closest('.kme-mcq-container');
+                    const questionId = parseInt(container.dataset.questionId);
+                    const selectedLetter = this.value;
+                    const questionData = kmeQuizData.find(function(q) { return q.id === questionId; });
+                    const isCorrect = selectedLetter === questionData.correct;
+
+                    // Save answer
+                    state.quizAnswers[questionId] = {
+                        selected: selectedLetter,
+                        correct: isCorrect
+                    };
+                    saveState(state);
+
+                    // Update UI for this question
+                    // Add answered class to container
+                    container.classList.add(isCorrect ? 'kme-answered-correct' : 'kme-answered-incorrect');
+
+                    // Disable all options in this question
+                    const allOptions = container.querySelectorAll('.kme-mcq-option');
+                    const allRadios = container.querySelectorAll('.kme-radio-input');
+
+                    allRadios.forEach(function(r) { r.disabled = true; });
+
+                    allOptions.forEach(function(opt) {
+                        opt.classList.add('kme-option-disabled');
+                        const letter = opt.dataset.letter;
+
+                        if (letter === questionData.correct) {
+                            opt.classList.add('kme-option-correct');
+                        }
+                        if (letter === selectedLetter && !isCorrect) {
+                            opt.classList.add('kme-option-incorrect');
+                        }
+                        if (letter === selectedLetter) {
+                            opt.classList.add('kme-option-selected');
+                        }
+                    });
+
+                    // Show explanation
+                    const explanation = container.querySelector('.kme-explanation');
+                    explanation.classList.add('kme-explanation-visible');
+                    explanation.classList.add(isCorrect ? 'kme-explanation-correct' : 'kme-explanation-incorrect');
+
+                    // If incorrect, prepend correct answer info
+                    if (!isCorrect) {
+                        const icon = explanation.querySelector('i');
+                        if (icon) icon.className = 'fas fa-info-circle';
+                        const existingStrong = explanation.querySelector('strong');
+                        if (!existingStrong) {
+                            const strong = document.createElement('strong');
+                            strong.textContent = 'Correct: ' + questionData.correct + '. ';
+                            explanation.insertBefore(strong, explanation.querySelector('i').nextSibling);
+                        }
+                    } else {
+                        const icon = explanation.querySelector('i');
+                        if (icon) icon.className = 'fas fa-check-circle';
+                    }
+
+                    // Update pagination dot
+                    const dot = paginationContainer.querySelector('[data-scroll-to="' + questionId + '"]');
+                    if (dot) {
+                        dot.classList.remove('kme-dot-correct', 'kme-dot-incorrect');
+                        dot.classList.add(isCorrect ? 'kme-dot-correct' : 'kme-dot-incorrect');
+                    }
+
+                    // Update scores
+                    updateScores();
+                });
+            });
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Reset Quiz
+        quizResetBtn.addEventListener('click', function() {
+            if (Object.keys(state.quizAnswers).length === 0) return;
+
+            // Confirm reset
+            const confirmed = confirm('Reset all quiz answers? This cannot be undone.');
+            if (!confirmed) return;
+
+            state.quizAnswers = {};
+            saveState(state);
+            renderQuiz();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initial render
+        renderQuiz();
+
+        // ========================================
+        // SCROLL PROGRESS (for quiz section)
+        // ========================================
+        // Progress bar is updated when quiz answers change (see updateScores)
+
+    })();
+    </script>
+
+</body>
+</html>

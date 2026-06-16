@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🔬 Histology of the Testis — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #04080f;
+  --bg2: #080e1a;
+  --card: #0c1526;
+  --card2: #111d30;
+  --border: #1a2d4a;
+  --teal: #00c9a7;
+  --teal-dim: rgba(0,201,167,0.15);
+  --gold: #ffd166;
+  --gold-dim: rgba(255,209,102,0.12);
+  --red: #ef476f;
+  --red-dim: rgba(239,71,111,0.12);
+  --blue: #4cc9f0;
+  --purple: #7b5ea7;
+  --text: #dde4f0;
+  --muted: #6b84a6;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+/* === ANIMATED BACKGROUND === */
+.bg-canvas{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,201,167,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 80%, rgba(76,201,240,0.05) 0%, transparent 60%),
+              radial-gradient(ellipse 100% 60% at 50% 50%, rgba(4,8,15,1) 0%, transparent 100%);
+}
+.bg-dots{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image: radial-gradient(rgba(0,201,167,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+/* === HEADER === */
+header{
+  position:relative;z-index:10;
+  padding:40px 24px 32px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(0,201,167,0.04) 0%, transparent 100%);
+}
+.header-badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--teal);
+  background:var(--teal-dim);
+  border:1px solid rgba(0,201,167,0.25);
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:18px;
+}
+header h1{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,5vw,3.4rem);
+  font-weight:700;
+  color:#fff;
+  letter-spacing:-0.5px;
+  line-height:1.1;
+}
+header h1 span{color:var(--teal);}
+.header-sub{
+  font-size:14px;
+  color:var(--muted);
+  margin-top:8px;
+  font-weight:300;
+  letter-spacing:0.5px;
+}
+/* === STATS BAR === */
+.stats-bar{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  position:sticky;top:0;z-index:100;
+  overflow-x:auto;
+}
+.stat-item{
+  flex:1;min-width:100px;
+  padding:10px 16px;
+  text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat-item:last-child{border-right:none;}
+.stat-val{
+  font-family:var(--font-mono);
+  font-size:18px;
+  font-weight:500;
+  color:var(--teal);
+}
+.stat-label{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--muted);
+  margin-top:2px;
+}
+/* === TABS === */
+.tab-nav{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  overflow-x:auto;
+  position:sticky;top:44px;z-index:99;
+  scrollbar-width:none;
+}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{
+  padding:14px 20px;
+  background:none;border:none;
+  color:var(--muted);
+  font-family:var(--font-body);
+  font-size:13px;font-weight:500;
+  cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  letter-spacing:0.3px;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{
+  color:var(--teal);
+  border-bottom-color:var(--teal);
+  background:rgba(0,201,167,0.04);
+}
+/* === CONTENT AREA === */
+.content{
+  position:relative;z-index:1;
+  max-width:1100px;
+  margin:0 auto;
+  padding:32px 20px 80px;
+}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* === SECTION HEADERS === */
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3vw,2.1rem);
+  font-weight:600;color:#fff;
+  margin-bottom:6px;
+}
+.section-sub{color:var(--muted);font-size:13px;margin-bottom:28px;}
+
+/* === CARDS === */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px;
+  transition:border-color 0.2s, transform 0.2s;
+}
+.card:hover{border-color:rgba(0,201,167,0.3);}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+
+/* === TAGS === */
+.tag{
+  display:inline-block;
+  font-size:10px;font-weight:600;
+  letter-spacing:0.8px;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;margin:2px;
+}
+.tag-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(255,209,102,0.25);}
+.tag-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,201,167,0.25);}
+.tag-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,71,111,0.25);}
+.tag-blue{background:rgba(76,201,240,0.12);color:var(--blue);border:1px solid rgba(76,201,240,0.25);}
+
+/* === OVERVIEW SPECIFIC === */
+.overview-hero{
+  background:linear-gradient(135deg, #0c1f35 0%, #081526 100%);
+  border:1px solid rgba(0,201,167,0.2);
+  border-radius:16px;
+  padding:32px;
+  margin-bottom:28px;
+  position:relative;overflow:hidden;
+}
+.overview-hero::before{
+  content:'';position:absolute;
+  right:-40px;top:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle, rgba(0,201,167,0.12) 0%, transparent 70%);
+  border-radius:50%;
+}
+.overview-hero h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.2rem,3vw,1.7rem);
+  color:#fff;margin-bottom:12px;
+}
+.overview-hero p{color:var(--muted);font-size:14px;max-width:600px;}
+
+.key-fact{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-left:3px solid var(--teal);
+  border-radius:8px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.key-fact-icon{font-size:18px;margin-top:2px;flex-shrink:0;}
+.key-fact-text strong{color:#fff;font-size:14px;}
+.key-fact-text p{color:var(--muted);font-size:13px;margin-top:3px;}
+
+.exam-alert{
+  background:rgba(255,209,102,0.06);
+  border:1px solid rgba(255,209,102,0.2);
+  border-left:3px solid var(--gold);
+  border-radius:8px;
+  padding:14px 16px;
+  margin-top:8px;
+}
+.exam-alert-label{
+  font-family:var(--font-mono);
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:5px;
+}
+.exam-alert p{font-size:13px;color:#c9a84c;}
+
+/* === PATHWAY VISUAL === */
+.pathway{
+  display:flex;align-items:center;
+  flex-wrap:wrap;gap:0;
+  margin:20px 0;
+}
+.pathway-node{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:13px;font-weight:500;
+  text-align:center;flex-shrink:0;
+  transition:all 0.2s;
+}
+.pathway-node:hover{border-color:var(--teal);color:var(--teal);}
+.pathway-node.highlight{
+  border-color:var(--teal);
+  background:var(--teal-dim);
+  color:var(--teal);
+}
+.pathway-arrow{
+  color:var(--muted);font-size:18px;
+  padding:0 6px;flex-shrink:0;
+}
+.pathway-sub{
+  font-size:10px;color:var(--muted);
+  margin-top:3px;font-family:var(--font-mono);
+}
+
+/* === SEARCH === */
+.search-wrap{
+  position:relative;margin-bottom:24px;
+}
+.search-wrap input{
+  width:100%;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px 12px 42px;
+  color:var(--text);
+  font-family:var(--font-body);font-size:14px;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.search-wrap input:focus{border-color:var(--teal);}
+.search-wrap input::placeholder{color:var(--muted);}
+.search-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:16px;
+}
+
+/* === QUIZ === */
+.quiz-progress-bar{
+  width:100%;height:6px;
+  background:var(--border);
+  border-radius:3px;
+  margin-bottom:28px;
+  overflow:hidden;
+}
+.quiz-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--blue));
+  border-radius:3px;
+  transition:width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.quiz-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;
+  font-size:12px;color:var(--muted);font-family:var(--font-mono);
+}
+.quiz-q-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.quiz-q-num{
+  font-family:var(--font-mono);font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:12px;
+}
+.quiz-q-text{
+  font-size:16px;font-weight:500;color:#fff;
+  line-height:1.5;margin-bottom:20px;
+}
+.quiz-options{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:13px 16px;
+  cursor:pointer;
+  font-size:14px;color:var(--text);
+  text-align:left;
+  transition:all 0.15s;
+  display:flex;align-items:flex-start;gap:10px;
+}
+.quiz-opt:hover:not(:disabled){
+  border-color:rgba(0,201,167,0.4);
+  background:rgba(0,201,167,0.06);
+}
+.quiz-opt.correct{
+  border-color:var(--teal) !important;
+  background:var(--teal-dim) !important;
+  color:var(--teal) !important;
+  animation:pulseGreen 0.4s ease;
+}
+.quiz-opt.wrong{
+  border-color:var(--red) !important;
+  background:var(--red-dim) !important;
+  color:var(--red) !important;
+  animation:shake 0.4s ease;
+}
+.quiz-opt:disabled{cursor:default;}
+@keyframes pulseGreen{0%{transform:scale(1);}50%{transform:scale(1.01);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+.opt-letter{
+  width:22px;height:22px;
+  background:var(--border);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  flex-shrink:0;margin-top:1px;
+  transition:all 0.15s;
+}
+.quiz-explanation{
+  background:rgba(0,201,167,0.06);
+  border:1px solid rgba(0,201,167,0.2);
+  border-radius:9px;
+  padding:14px 16px;
+  margin-top:14px;
+  font-size:13px;color:var(--muted);
+  display:none;
+}
+.quiz-explanation.show{display:block;animation:fadeIn 0.3s ease;}
+.quiz-explanation strong{color:var(--teal);}
+.quiz-nav{
+  display:flex;gap:12px;justify-content:flex-end;margin-top:8px;
+}
+.btn{
+  padding:10px 22px;border:none;
+  border-radius:8px;cursor:pointer;
+  font-family:var(--font-body);font-size:14px;font-weight:500;
+  transition:all 0.2s;
+}
+.btn-primary{
+  background:var(--teal);color:#000;
+}
+.btn-primary:hover{background:#00b094;transform:translateY(-1px);}
+.btn-secondary{
+  background:var(--card2);color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal);}
+.quiz-score-screen{
+  text-align:center;padding:48px 24px;
+  display:none;
+}
+.score-circle{
+  width:120px;height:120px;
+  border-radius:50%;
+  border:4px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  font-family:var(--font-display);font-size:2.5rem;
+  color:var(--teal);font-weight:700;
+}
+
+/* === FLASHCARDS === */
+.flashcard-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:18px;
+}
+.flashcard{
+  height:180px;perspective:1000px;cursor:pointer;
+}
+.flashcard-inner{
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.flashcard-front,.flashcard-back{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;text-align:center;
+}
+.flashcard-front{
+  background:var(--card);
+  border:1px solid var(--border);
+  flex-direction:column;gap:8px;
+}
+.flashcard-front .fc-label{
+  font-family:var(--font-mono);
+  font-size:10px;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--teal);margin-bottom:4px;
+}
+.flashcard-front .fc-q{
+  font-size:15px;font-weight:500;color:#fff;line-height:1.4;
+}
+.flashcard-back{
+  background:linear-gradient(135deg,#091a2a,#0d2235);
+  border:1px solid rgba(0,201,167,0.3);
+  transform:rotateY(180deg);
+  flex-direction:column;gap:6px;
+}
+.flashcard-back .fc-ans{
+  font-size:15px;color:var(--teal);font-weight:600;line-height:1.4;
+}
+.flashcard-back .fc-detail{
+  font-size:12px;color:var(--muted);margin-top:4px;
+}
+.fc-flip-hint{
+  font-size:10px;color:var(--muted);
+  font-family:var(--font-mono);letter-spacing:1px;
+  text-transform:uppercase;margin-top:8px;
+}
+
+/* === CLINICAL CASES === */
+.case-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.case-header{
+  padding:18px 22px;
+  background:linear-gradient(90deg, rgba(0,201,167,0.08) 0%, transparent 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;
+}
+.case-title{
+  font-size:15px;font-weight:600;color:#fff;
+}
+.case-num{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--teal);letter-spacing:1px;
+}
+.case-toggle{
+  color:var(--muted);font-size:20px;
+  transition:transform 0.3s;
+}
+.case-body{
+  padding:22px;
+  display:none;
+}
+.case-body.open{display:block;animation:fadeIn 0.3s ease;}
+.case-scenario{
+  font-size:14px;color:var(--muted);line-height:1.7;
+  background:var(--card2);border-radius:8px;
+  padding:16px;margin-bottom:18px;
+  border-left:3px solid var(--blue);
+}
+.case-q{
+  font-size:14px;font-weight:500;color:var(--text);
+  margin-bottom:8px;
+}
+.reveal-btn{
+  background:var(--teal-dim);
+  border:1px solid rgba(0,201,167,0.3);
+  color:var(--teal);
+  padding:9px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;font-weight:500;
+  transition:all 0.2s;margin-top:10px;
+}
+.reveal-btn:hover{background:rgba(0,201,167,0.25);}
+.reveal-answer{
+  background:rgba(0,201,167,0.07);
+  border:1px solid rgba(0,201,167,0.2);
+  border-radius:8px;padding:14px 16px;
+  margin-top:12px;font-size:13px;
+  color:var(--text);line-height:1.7;
+  display:none;
+}
+.reveal-answer.show{display:block;animation:fadeIn 0.3s ease;}
+.reveal-answer strong{color:var(--teal);}
+.step-list{list-style:none;padding:0;margin-top:10px;}
+.step-list li{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:13px;color:var(--muted);
+  padding:8px 0;
+  border-bottom:1px solid rgba(26,45,74,0.5);
+}
+.step-list li:last-child{border-bottom:none;}
+.step-num{
+  width:22px;height:22px;
+  background:var(--teal-dim);border:1px solid rgba(0,201,167,0.25);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--teal);flex-shrink:0;
+}
+
+/* === STRUCTURE TAB === */
+.struct-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;
+}
+.struct-item{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:18px;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-align:center;
+}
+.struct-item:hover,.struct-item.selected{
+  border-color:var(--teal);
+  background:var(--teal-dim);
+}
+.struct-item-icon{font-size:26px;margin-bottom:8px;}
+.struct-item-name{font-size:13px;font-weight:600;color:#fff;}
+.struct-detail{
+  background:var(--card2);
+  border:1px solid rgba(0,201,167,0.25);
+  border-radius:12px;
+  padding:22px;
+  margin-top:20px;
+  display:none;
+}
+.struct-detail.show{display:block;animation:fadeIn 0.3s ease;}
+.struct-detail h3{
+  font-family:var(--font-display);
+  font-size:1.3rem;color:#fff;margin-bottom:12px;
+}
+.struct-detail p{font-size:14px;color:var(--muted);line-height:1.7;}
+.struct-detail ul{padding-left:18px;margin-top:8px;}
+.struct-detail ul li{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.struct-detail ul li strong{color:var(--text);}
+
+.flowchart{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  margin:24px 0;
+}
+.flow-node{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 24px;
+  font-size:13px;font-weight:500;
+  text-align:center;
+  max-width:320px;width:100%;
+  transition:all 0.2s;
+}
+.flow-node.teal{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);}
+.flow-node.gold{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.flow-node.red{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+.flow-arrow{
+  color:var(--muted);font-size:20px;
+  padding:4px 0;
+}
+.flow-label{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--muted);letter-spacing:1px;
+  margin:-4px 0 0;
+}
+
+/* === MNEMONICS === */
+.mnemonic-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.mnemonic-header{
+  padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.mnemonic-header:hover{background:rgba(0,201,167,0.04);}
+.mnemonic-title{
+  font-size:16px;font-weight:600;color:#fff;
+}
+.mnemonic-word{
+  font-family:var(--font-display);
+  font-size:clamp(1.3rem,3vw,2rem);
+  color:var(--teal);font-style:italic;
+  letter-spacing:1px;
+}
+.mnemonic-body{
+  padding:0 22px 22px;display:none;
+}
+.mnemonic-body.open{display:block;animation:fadeIn 0.3s ease;}
+.mnemonic-letters{
+  display:flex;flex-direction:column;gap:10px;margin-top:14px;
+}
+.mnemonic-row{
+  display:flex;align-items:center;gap:14px;
+}
+.mnemonic-letter{
+  width:38px;height:38px;
+  background:var(--teal-dim);
+  border:1px solid rgba(0,201,167,0.3);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:1.3rem;
+  font-weight:700;color:var(--teal);
+  flex-shrink:0;
+}
+.mnemonic-meaning{font-size:14px;color:var(--text);}
+.mnemonic-meaning span{color:var(--muted);font-size:12px;}
+
+/* === SCORE STREAK === */
+.streak-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,209,102,0.1);
+  border:1px solid rgba(255,209,102,0.25);
+  border-radius:20px;
+  padding:5px 12px;
+  font-family:var(--font-mono);font-size:12px;
+  color:var(--gold);
+}
+
+/* === RESPONSIVE === */
+@media(max-width:600px){
+  header{padding:28px 16px 24px;}
+  .content{padding:20px 12px 60px;}
+  .quiz-q-card{padding:18px;}
+  .pathway{gap:4px;}
+  .pathway-arrow{padding:0 2px;font-size:14px;}
+}
+/* === TOOLTIP === */
+[data-tip]{position:relative;}
+[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);
+  background:#1a2d4a;color:var(--text);
+  font-size:12px;padding:5px 10px;
+  border-radius:6px;white-space:nowrap;
+  pointer-events:none;z-index:200;
+  border:1px solid var(--border);
+}
+/* === TABLE === */
+.data-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;}
+.data-table th{
+  background:rgba(0,201,167,0.1);
+  color:var(--teal);
+  font-weight:600;
+  padding:10px 14px;
+  text-align:left;
+  border-bottom:1px solid rgba(0,201,167,0.2);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:0.5px;
+}
+.data-table td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+  color:var(--muted);
+  vertical-align:top;
+}
+.data-table td strong{color:var(--text);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(0,201,167,0.03);}
+</style>
+</head>
+<body>
+<div class="bg-canvas"></div>
+<div class="bg-dots"></div>
+
+<header>
+  <div class="header-badge">Mansoura University · Faculty of Medicine · Histology</div>
+  <h1>Histological Structure of<br/><span>The Testis</span></h1>
+  <p class="header-sub">Dr. Yomna Fathy · Interactive Study Platform · All Exam Content Included</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-val" id="stat-progress">0%</div>
+    <div class="stat-label">Progress</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val" id="stat-score">—</div>
+    <div class="stat-label">Quiz Score</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val" id="stat-streak">🔥 0</div>
+    <div class="stat-label">Streak</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val" id="stat-cards">0</div>
+    <div class="stat-label">Cards Viewed</div>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+  <button class="tab-btn" data-tab="quiz">🧠 Quiz (25 Qs)</button>
+  <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+  <button class="tab-btn" data-tab="cases">🏥 Clinical Cases</button>
+  <button class="tab-btn" data-tab="structure">🔬 Structure</button>
+  <button class="tab-btn" data-tab="mnemonics">💡 Mnemonics</button>
+</div>
+
+<div class="content">
+
+<!-- ============ OVERVIEW TAB ============ -->
+<div class="tab-panel active" id="tab-overview">
+  <div class="overview-hero">
+    <h2>🔬 Testis — At a Glance</h2>
+    <p>The testis is a compound tubular gland with both <strong style="color:var(--teal)">exocrine</strong> (spermatozoa) and <strong style="color:var(--gold)">endocrine</strong> (testosterone) functions. Highly tested in practical and written exams.</p>
+    <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+      <span class="tag tag-gold">⚠️ High Yield</span>
+      <span class="tag tag-teal">Heavily Emphasized</span>
+      <span class="tag tag-blue">Practical Exam</span>
+      <span class="tag tag-red">Essay Questions</span>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="overview-search" placeholder="Search concepts, cells, structures..." oninput="filterOverview(this.value)"/>
+  </div>
+
+  <!-- Spermatogenesis Pathway -->
+  <div class="section-title" style="margin-bottom:4px;">Spermatogenesis Pathway</div>
+  <p class="section-sub">The step-by-step sequence from stem cell to mature sperm</p>
+  <div class="pathway" style="margin-bottom:28px;">
+    <div class="pathway-node"><div>Type A Dark</div><div class="pathway-sub">Stem Cell</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node"><div>Type A Pale</div><div class="pathway-sub">Mitosis</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node"><div>Type B</div><div class="pathway-sub">Mitosis</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node highlight"><div>1° Spermatocyte</div><div class="pathway-sub">LARGEST CELL</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node"><div>2° Spermatocyte</div><div class="pathway-sub">Meiosis I</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node"><div>Spermatid</div><div class="pathway-sub">Meiosis II</div></div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node highlight"><div>Spermatozoon</div><div class="pathway-sub">Spermiogenesis</div></div>
+  </div>
+
+  <div class="grid-2" id="overview-content">
+    <!-- Stroma -->
+    <div class="card" data-search="stroma tunica albuginea septa trabeculae reticular capsule">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">🏗️ Stroma</div>
+        <span class="tag tag-gold">⚠️ Exam</span>
+      </div>
+      <div class="key-fact"><div class="key-fact-icon">🧱</div><div class="key-fact-text"><strong>Tunica Albuginea</strong><p>White fibrous capsule. Thickens posteriorly → <span style="color:var(--teal)">Mediastinum Testis</span></p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🔲</div><div class="key-fact-text"><strong>Septa / Trabeculae</strong><p>Divide testis into ~250 lobules. Each lobule contains 1–4 seminiferous tubules</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🕸️</div><div class="key-fact-text"><strong>Reticular Fibers</strong><p>Part of stroma. Support the seminiferous tubules</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">💧</div><div class="key-fact-text"><strong>Tunica Vaginalis</strong><p>Outer serous sac (peritoneal covering)</p></div></div>
+      <div class="exam-alert">
+        <div class="exam-alert-label">⚠️ Exam Pearl</div>
+        <p>"Parts of stroma = Tunica albuginea + Septa + Reticular fibers"</p>
+      </div>
+    </div>
+
+    <!-- Sertoli Cells -->
+    <div class="card" data-search="sertoli cells blood testis barrier BTB tight junctions ABP androgen binding protein lysosomes nurse">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">🏥 Sertoli Cells</div>
+        <span class="tag tag-red">⚠️ Very High Yield</span>
+      </div>
+      <div class="key-fact"><div class="key-fact-icon">📐</div><div class="key-fact-text"><strong>Morphology</strong><p>Tall columnar, irregular lateral surface, rest on basement membrane</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🔒</div><div class="key-fact-text"><strong>Tight Junctions → BTB</strong><p>Continuous TJs between lateral borders = Blood-Testis Barrier</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🧪</div><div class="key-fact-text"><strong>Secrete ABP</strong><p>Androgen-Binding Protein concentrates testosterone inside tubules</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🗑️</div><div class="key-fact-text"><strong>Phagocytosis</strong><p>Abundant lysosomes digest excess cytoplasm shed during spermiogenesis</p></div></div>
+      <div class="exam-alert">
+        <div class="exam-alert-label">⚠️ EM Exam</div>
+        <p>EM hallmarks: Lysosomes + Tight Junctions → function = Blood-Testis Barrier</p>
+      </div>
+    </div>
+
+    <!-- Leydig Cells -->
+    <div class="card" data-search="leydig cells testosterone steroid sER smooth endoplasmic reticulum lipid mitochondria tubular cristae interstitial">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">⚗️ Leydig Cells</div>
+        <span class="tag tag-teal">Endocrine</span>
+      </div>
+      <div class="key-fact"><div class="key-fact-icon">📍</div><div class="key-fact-text"><strong>Location</strong><p>Interstitial tissue between seminiferous tubules</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🔵</div><div class="key-fact-text"><strong>LM Appearance</strong><p>Large polygonal cells with acidophilic vacuolated cytoplasm</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🔬</div><div class="key-fact-text"><strong>EM Features (Steroid-secreting)</strong><p>Numerous <span style="color:var(--teal)">lipid droplets</span>, <span style="color:var(--gold)">tubular cristae mitochondria</span>, abundant <span style="color:var(--red)">sER</span></p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🧬</div><div class="key-fact-text"><strong>Function</strong><p>Synthesize testosterone hormone</p></div></div>
+      <div class="exam-alert">
+        <div class="exam-alert-label">⚠️ EM Exam</div>
+        <p>Any steroid-secreting cell = lipid droplets + sER + tubular cristae mitochondria</p>
+      </div>
+    </div>
+
+    <!-- Spermiogenesis -->
+    <div class="card" data-search="spermiogenesis acrosome golgi flagellum centriole mitochondria middle piece nucleus condense spermatid">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">🔄 Spermiogenesis</div>
+        <span class="tag tag-gold">⚠️ MOST Tested</span>
+      </div>
+      <div class="key-fact"><div class="key-fact-icon">🟡</div><div class="key-fact-text"><strong>Golgi → Acrosome</strong><p>Forms acrosomal vesicle covering anterior 2/3 of nucleus. Contains hydrolytic enzymes for fertilization</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🌀</div><div class="key-fact-text"><strong>Centriole → Flagellum</strong><p>One centriole attaches to nucleus; other elongates to form axoneme</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">⚡</div><div class="key-fact-text"><strong>Mitochondria → Middle Piece Sheath</strong><p>Aggregate around proximal flagellum = energy for motility</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🗑️</div><div class="key-fact-text"><strong>Nucleus Condenses + Cytoplasm Shed</strong><p>Excess cytoplasm phagocytosed by Sertoli lysosomes</p></div></div>
+      <div class="exam-alert">
+        <div class="exam-alert-label">⚠️ Triple Exam Hit</div>
+        <p>Golgi→Acrosome · Centriole→Flagellum · Mitochondria→Middle Sheath</p>
+      </div>
+    </div>
+
+    <!-- Sperm Tail -->
+    <div class="card" data-search="spermatozoon tail middle piece principal end axoneme 9 7 fibrous sheath mitochondrial">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">🐟 Sperm Tail Structure</div>
+        <span class="tag tag-gold">⚠️ Exam</span>
+      </div>
+      <table class="data-table">
+        <tr><th>Region</th><th>Components</th></tr>
+        <tr><td><strong>Middle Piece</strong></td><td>Axoneme + <span style="color:var(--teal)">9</span> outer dense fibers + <span style="color:var(--gold)">Mitochondrial sheath</span></td></tr>
+        <tr><td><strong>Principal Piece</strong></td><td>Axoneme + <span style="color:var(--teal)">7</span> outer dense fibers + <span style="color:var(--red)">Fibrous sheath</span></td></tr>
+        <tr><td><strong>End Piece</strong></td><td>Axoneme <strong>only</strong></td></tr>
+      </table>
+      <div class="exam-alert" style="margin-top:12px;">
+        <div class="exam-alert-label">⚠️ Memory Hook</div>
+        <p>"Middle=9+Mito · Principal=7+Fibrous · End=Axoneme Only"</p>
+      </div>
+    </div>
+
+    <!-- BTB -->
+    <div class="card" data-search="blood testis barrier BTB sertoli tight junctions adluminal basal compartment immune autoimmune">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:#fff;">🛡️ Blood-Testis Barrier</div>
+        <span class="tag tag-red">Essay Topic</span>
+      </div>
+      <div class="key-fact"><div class="key-fact-icon">🔗</div><div class="key-fact-text"><strong>Structure</strong><p>Continuous tight junctions between lateral borders of adjacent Sertoli cells</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">📦</div><div class="key-fact-text"><strong>Two Compartments</strong><p><span style="color:var(--teal)">Basal</span> (spermatogonia, early spermatocytes) vs <span style="color:var(--gold)">Adluminal</span> (post-meiotic cells)</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🔄</div><div class="key-fact-text"><strong>Dynamic Movement</strong><p>TJs disassemble ABOVE and reassemble BELOW moving primary spermatocytes</p></div></div>
+      <div class="key-fact"><div class="key-fact-icon">🛡️</div><div class="key-fact-text"><strong>Significance</strong><p>Isolates haploid cells from host immune system → prevents autoimmune infertility</p></div></div>
+    </div>
+  </div>
+
+  <!-- High Yield Summary -->
+  <div style="margin-top:32px;">
+    <div class="section-title" style="margin-bottom:16px;">🎯 High-Yield Summary Table</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="data-table">
+        <tr><th>Cell / Structure</th><th>Key Feature (LM)</th><th>Key Feature (EM)</th><th>Function</th></tr>
+        <tr><td><strong>Sertoli Cell</strong></td><td>Tall columnar, irregular lateral surface</td><td>Tight junctions + Lysosomes</td><td>BTB, ABP, Phagocytosis, Support</td></tr>
+        <tr><td><strong>Leydig Cell</strong></td><td>Polygonal, acidophilic vacuolated cytoplasm</td><td>Tubular cristae, sER, Lipid droplets</td><td>Testosterone synthesis</td></tr>
+        <tr><td><strong>Myoid Cell</strong></td><td>Around seminiferous tubule BM</td><td>Contractile filaments</td><td>Peristaltic sperm transport</td></tr>
+        <tr><td><strong>Type A Dark Spg.</strong></td><td>Dark nucleus</td><td>—</td><td>True stem cell (self-renewal)</td></tr>
+        <tr><td><strong>Primary Spermatocyte</strong></td><td>LARGEST spermatogenic cell</td><td>—</td><td>Meiosis I → secondary spermatocytes</td></tr>
+        <tr><td><strong>Secondary Spermatocyte</strong></td><td>Rarely seen (rapid division)</td><td>—</td><td>Meiosis II → spermatids</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ QUIZ TAB ============ -->
+<div class="tab-panel" id="tab-quiz">
+  <div class="section-title">🧠 Quiz Mode</div>
+  <p class="section-sub">25 mechanism-heavy MCQs · Select an answer to reveal explanation</p>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 / 25</span>
+    </div>
+    <div class="streak-badge">🔥 Streak: <span id="streak-display">0</span></div>
+  </div>
+
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-fill" style="width:0%"></div></div>
+
+  <div id="quiz-container"></div>
+  <div class="quiz-nav">
+    <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev" style="display:none">← Prev</button>
+    <button class="btn btn-primary" onclick="nextQuestion()" id="btn-next" style="display:none">Next →</button>
+    <button class="btn btn-primary" onclick="finishQuiz()" id="btn-finish" style="display:none">Finish Quiz 🏁</button>
+  </div>
+
+  <div class="quiz-score-screen" id="score-screen">
+    <div class="score-circle" id="final-score-circle">0</div>
+    <h2 style="font-family:var(--font-display);font-size:2rem;color:#fff;margin-bottom:8px;" id="score-msg">Quiz Complete!</h2>
+    <p style="color:var(--muted);margin-bottom:28px;" id="score-sub">You answered X out of 25 questions correctly.</p>
+    <button class="btn btn-primary" onclick="resetQuiz()">🔄 Retake Quiz</button>
+  </div>
+</div>
+
+
+<!-- ============ FLASHCARDS TAB ============ -->
+<div class="tab-panel" id="tab-flashcards">
+  <div class="section-title">🃏 Flashcards</div>
+  <p class="section-sub">Click any card to flip and reveal the answer · 22 cards total</p>
+  <div class="flashcard-grid" id="flashcard-grid"></div>
+</div>
+
+
+<!-- ============ CLINICAL CASES TAB ============ -->
+<div class="tab-panel" id="tab-cases">
+  <div class="section-title">🏥 Clinical Cases</div>
+  <p class="section-sub">Exam-style clinical vignettes · Click a case to expand · Click "Reveal Answer" for full explanation</p>
+  <div id="cases-container"></div>
+</div>
+
+
+<!-- ============ STRUCTURE TAB ============ -->
+<div class="tab-panel" id="tab-structure">
+  <div class="section-title">🔬 Structures & Spermatogenesis Flow</div>
+  <p class="section-sub">Click any structure for detailed explanation</p>
+
+  <div class="struct-grid">
+    <div class="struct-item" onclick="showStruct('tunica')"><div class="struct-item-icon">🧱</div><div class="struct-item-name">Tunica Albuginea</div></div>
+    <div class="struct-item" onclick="showStruct('seminiferous')"><div class="struct-item-icon">🌀</div><div class="struct-item-name">Seminiferous Tubule</div></div>
+    <div class="struct-item" onclick="showStruct('sertoli')"><div class="struct-item-icon">🏥</div><div class="struct-item-name">Sertoli Cell</div></div>
+    <div class="struct-item" onclick="showStruct('leydig')"><div class="struct-item-icon">⚗️</div><div class="struct-item-name">Leydig Cell</div></div>
+    <div class="struct-item" onclick="showStruct('spermatogonia')"><div class="struct-item-icon">🔵</div><div class="struct-item-name">Spermatogonia</div></div>
+    <div class="struct-item" onclick="showStruct('primary')"><div class="struct-item-icon">🔴</div><div class="struct-item-name">Primary Spermatocyte</div></div>
+    <div class="struct-item" onclick="showStruct('btb')"><div class="struct-item-icon">🛡️</div><div class="struct-item-name">Blood-Testis Barrier</div></div>
+    <div class="struct-item" onclick="showStruct('sperm')"><div class="struct-item-icon">🐟</div><div class="struct-item-name">Spermatozoon</div></div>
+    <div class="struct-item" onclick="showStruct('myoid')"><div class="struct-item-icon">💪</div><div class="struct-item-name">Myoid Cell</div></div>
+    <div class="struct-item" onclick="showStruct('acrosome')"><div class="struct-item-icon">🧪</div><div class="struct-item-name">Acrosome</div></div>
+  </div>
+
+  <div class="struct-detail" id="struct-detail"></div>
+
+  <!-- Spermatogenesis Flowchart -->
+  <div style="margin-top:36px;">
+    <div class="section-title" style="font-size:1.4rem;margin-bottom:6px;">Spermatogenesis — Detailed Flow</div>
+    <p class="section-sub">From stem cell renewal to mature gamete</p>
+    <div class="flowchart">
+      <div class="flow-node teal">🔵 Type A Dark Spermatogonia<br/><small style="font-family:var(--font-mono);font-size:10px;">TRUE STEM CELL — Self-renewing</small></div>
+      <div class="flow-arrow">↓</div><div class="flow-label">MITOSIS</div>
+      <div class="flow-node">🔵 Type A Pale Spermatogonia<br/><small style="color:var(--muted);font-size:11px;">Mitotically active committed progenitors</small></div>
+      <div class="flow-arrow">↓</div><div class="flow-label">MITOSIS</div>
+      <div class="flow-node">🟡 Type B Spermatogonia</div>
+      <div class="flow-arrow">↓</div><div class="flow-label">MITOSIS → enters meiosis</div>
+      <div class="flow-node gold">⭐ Primary Spermatocyte<br/><small style="font-size:11px;">LARGEST CELL · Longest phase · In basal → adluminal compartment</small></div>
+      <div class="flow-arrow">↓</div><div class="flow-label">MEIOSIS I</div>
+      <div class="flow-node">Secondary Spermatocyte<br/><small style="color:var(--muted);font-size:11px;">Rarely seen — divides rapidly</small></div>
+      <div class="flow-arrow">↓</div><div class="flow-label">MEIOSIS II</div>
+      <div class="flow-node">Round Spermatid</div>
+      <div class="flow-arrow">↓</div><div class="flow-label">SPERMIOGENESIS (no division)</div>
+      <div class="flow-node teal">🐟 Mature Spermatozoon<br/><small style="font-size:11px;">65 µm · Head + Neck + Tail</small></div>
+    </div>
+  </div>
+
+  <!-- Sperm Structure Visual Table -->
+  <div style="margin-top:32px;">
+    <div class="section-title" style="font-size:1.4rem;margin-bottom:6px;">Spermatozoon Anatomy</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="data-table">
+        <tr><th>Part</th><th>Region</th><th>Contents</th><th>Function</th></tr>
+        <tr><td><strong>Head</strong></td><td>Nucleus (anterior 2/3 covered by acrosome)</td><td>DNA + Acrosomal cap with hydrolytic enzymes</td><td>Genetic material + Fertilization (acrosome reaction)</td></tr>
+        <tr><td><strong>Neck</strong></td><td>Short connecting piece</td><td>Centrioles</td><td>Connects head to tail</td></tr>
+        <tr><td><strong style="color:var(--gold)">Middle Piece</strong></td><td>Proximal tail</td><td>Axoneme + <span style="color:var(--teal)">9</span> outer dense fibers + <span style="color:var(--gold)">Mitochondrial sheath</span></td><td>ATP production for motility</td></tr>
+        <tr><td><strong style="color:var(--red)">Principal Piece</strong></td><td>Mid tail (longest)</td><td>Axoneme + <span style="color:var(--teal)">7</span> outer dense fibers + Fibrous sheath</td><td>Structural support for movement</td></tr>
+        <tr><td><strong>End Piece</strong></td><td>Terminal tail</td><td>Axoneme only</td><td>Final motile segment</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ MNEMONICS TAB ============ -->
+<div class="tab-panel" id="tab-mnemonics">
+  <div class="section-title">💡 Mnemonics</div>
+  <p class="section-sub">Carefully crafted memory aids — click each to expand</p>
+  <div id="mnemonics-container"></div>
+</div>
+
+</div><!-- end .content -->
+
+<script>
+// ==================== DATA ====================
+
+const QUIZ_DATA = [
+  {q:"During spermiogenesis, which organelle is directly responsible for forming the head cap containing hydrolytic enzymes?",opts:["Mitochondria","Smooth Endoplasmic Reticulum","Golgi apparatus","Centrioles","Lysosomes"],ans:2,exp:"The <strong>Golgi complex</strong> transforms into a membranous acrosomal vesicle that covers the anterior 2/3 of the nucleus. Mitochondria → middle piece sheath. Centrioles → flagellum axoneme. Lysosomes → in Sertoli cells for phagocytosis."},
+  {q:"Which cellular process is uniquely associated with primary spermatocytes?",opts:["Mitosis","First meiotic division","Second meiotic division","Spermiogenesis","Phagocytosis"],ans:1,exp:"<strong>Primary spermatocytes</strong> undergo Meiosis I → secondary spermatocytes. Spermatogonia do mitosis. Secondary spermatocytes do Meiosis II. Spermatids undergo spermiogenesis. Sertoli cells do phagocytosis."},
+  {q:"How do primary spermatocytes migrate from the basal to adluminal compartment without breaching immune protection?",opts:["They secrete immunosuppressive cytokines","They travel through fenestrated capillaries","Sertoli tight junctions dynamically disassemble above and assemble below them","They differentiate into myoid cells to cross the BM","They undergo spermiogenesis to become invisible to immune cells"],ans:2,exp:"The <strong>Blood-Testis Barrier</strong> is maintained dynamically: tight junctions disassemble ABOVE moving primary spermatocytes and simultaneously reassemble BELOW them, ensuring no immunological gap."},
+  {q:"Contractile force that pushes immotile newly formed spermatozoa toward the duct system is provided by:",opts:["The flagellum's axoneme","Sertoli cell microtubules","Myoid cells in the loose connective tissue","Tunica albuginea fibers","Reticular fibers in the stroma"],ans:2,exp:"<strong>Myoid cells</strong> — smooth muscle-like contractile cells — surround the basement membrane of seminiferous tubules and propel immotile spermatozoa toward the duct system (rete testis)."},
+  {q:"Leydig cells synthesize testosterone. Which ultrastructural feature enables this steroidogenesis?",opts:["A prominent acrosome","Extensive tight junctions","Abundant sER and mitochondria with tubular cristae","Large amounts of hydrolytic lysosomes","A fibrous sheath"],ans:2,exp:"All steroid-secreting cells share the same EM hallmarks: <strong>abundant smooth ER</strong> (for steroid synthesis enzymes), <strong>mitochondria with tubular cristae</strong> (substrate delivery), and <strong>lipid droplets</strong> (cholesterol storage). Lysosomes are Sertoli. Tight junctions are Sertoli."},
+  {q:"The morphological transformation of spermatids into spermatozoa involves shedding excess cytoplasm. Which cells remove this debris?",opts:["Leydig cells","Spermatogonia","Myoid cells","Sertoli cells","Macrophages in the interstitium"],ans:3,exp:"<strong>Sertoli cells</strong> contain abundant lysosomes specifically for phagocytosing the residual cytoplasm shed during spermiogenesis. Leydig cells are endocrine. Interstitial macrophages don't access the adluminal compartment."},
+  {q:"What is the specific role of centrioles during spermiogenesis?",opts:["Condense the nucleus","Form the mitochondrial sheath","Form the axoneme of the flagellum","Synthesize androgen-binding protein","Form the blood-testis barrier"],ans:2,exp:"One centriole attaches to the nucleus (forming the neck region), while the <strong>other elongates to form the axoneme</strong> of the flagellum. The mitochondria form the sheath. ABP and BTB are Sertoli cell functions."},
+  {q:"Type A pale spermatogonia serve what mechanistic role in the seminiferous epithelium?",opts:["Act as the true, inactive stem cell reservoir","Divide mitotically to form primary spermatocytes directly","Are mitotically active cells that form more Type A pale or Type B spermatogonia","Enter the first meiotic division","Secrete testosterone"],ans:2,exp:"<strong>Type A Pale</strong> are mitotically active committed progenitors. They produce more Type A Pale (amplification) OR differentiate into Type B. <strong>Type A Dark</strong> are the true stem cells. Type B produces primary spermatocytes."},
+  {q:"By what mechanism does the testis ensure locally high testosterone concentration inside seminiferous tubules?",opts:["Leydig cells pump testosterone into the lumen","Sertoli cells secrete Androgen-Binding Protein (ABP)","Myoid cells trap testosterone in the basement membrane","Primary spermatocytes express massive testosterone receptors","Tunica albuginea prevents testosterone escaping"],ans:1,exp:"<strong>Sertoli cells secrete ABP</strong> — a carrier protein that binds and concentrates testosterone within the tubular lumen, maintaining levels high enough to support spermatogenesis even though blood testosterone is diluted."},
+  {q:"How does the secondary spermatocyte transition to a spermatid?",opts:["Mitosis","First meiotic division","Second meiotic division","Spermiogenesis","Phagocytosis"],ans:2,exp:"<strong>Secondary spermatocytes → spermatids</strong> via Meiosis II. They are haploid after Meiosis I and remain haploid. This division is very rapid (which is why secondary spermatocytes are rarely seen in sections)."},
+  {q:"What prevents host immune cells in interstitial tissue from attacking mature spermatozoa?",opts:["Thick tunica albuginea","Lack of blood vessels in the testis","Continuous tight junctions between Sertoli cells","Immunosuppressive hormones from Leydig cells","The basement membrane being impermeable to all molecules"],ans:2,exp:"The <strong>Blood-Testis Barrier</strong> — formed by continuous Sertoli cell tight junctions — creates the adluminal immunoprivileged compartment. Post-meiotic cells (spermatocytes, spermatids) are 'foreign' since they appeared after immunological self-tolerance was established."},
+  {q:"During fertilization, how does the spermatozoon penetrate the ovum?",opts:["Force generated by the fibrous sheath","Releases hydrolytic enzymes from the acrosomal vesicle","Uses its mitochondrial sheath to fuse with ovum membrane","Relies on Sertoli cell secretions in semen","Passively absorbed by the ovum"],ans:1,exp:"The <strong>acrosome reaction</strong> releases hydrolytic enzymes that dissolve the cumulus oophorus and zona pellucida cells surrounding the ovum. Without an acrosome, penetration is impossible (as in globozoospermia)."},
+  {q:"What happens to Dark Type A spermatogonia when they divide?",opts:["Form secondary spermatocytes","Form spermatids","Form additional Dark Type A AND Pale Type A spermatogonia","Form Type B spermatogonia exclusively","Immediately undergo spermiogenesis"],ans:2,exp:"<strong>Dark Type A</strong> divide asymmetrically: some daughter cells replenish the stem cell pool (remain Dark Type A) and others commit to differentiation (become Pale Type A). This ensures indefinite sperm production."},
+  {q:"Why are secondary spermatocytes rarely seen in histological sections of seminiferous tubules?",opts:["Immediately phagocytosed by Sertoli cells","They rapidly enter the 2nd meiotic division and become spermatids","Located outside the blood-testis barrier","They migrate out of the tubule into the interstitium","They are extremely small"],ans:1,exp:"<strong>Secondary spermatocytes</strong> have an extremely short lifespan because they very rapidly undergo Meiosis II and transform into spermatids. Their brief existence means few are captured in any given histological section."},
+  {q:"The energy required for flagellar motility of a spermatozoon is generated by structures located in which region?",opts:["The Head","The Neck","The Middle piece of the tail","The Principal piece","The End piece"],ans:2,exp:"The <strong>Middle piece</strong> contains a helical mitochondrial sheath around the axoneme. Mitochondria produce ATP via oxidative phosphorylation to power dynein ATPase activity that drives axonemal movement."},
+  {q:"The Principal piece of the sperm tail is distinguished from the Middle piece by the presence of:",opts:["Axoneme + 9 outer dense fibers + mitochondrial sheath","Axoneme only","Axoneme + 7 outer dense fibers + fibrous sheath","Centrioles + dense fibers","Golgi-derived vesicles"],ans:2,exp:"<strong>Principal piece</strong> = Axoneme + 7 outer dense fibers + fibrous sheath. Compare to Middle piece = Axoneme + 9 outer dense fibers + mitochondrial sheath. End piece = axoneme only. The difference in fiber count (9 vs 7) is frequently examined."},
+  {q:"Which part of the testicular stroma forms the mediastinum testis?",opts:["Tunica vaginalis at the posterior pole","Thickened tunica albuginea at the posterior aspect","Septa converging anteriorly","Reticular fibers condensing at the hilum","Myoid cells at the posterior pole"],ans:1,exp:"The <strong>Tunica albuginea thickens posteriorly</strong> to form the Mediastinum testis — a dense wedge of connective tissue through which blood vessels, lymphatics, and the rete testis run."},
+  {q:"A student sees a very large cell in the seminiferous tubule with abundant chromatin in late prophase. Which cell is most likely?",opts:["Type A dark spermatogonium","Type B spermatogonium","Primary spermatocyte","Secondary spermatocyte","Round spermatid"],ans:2,exp:"<strong>Primary spermatocytes</strong> are the LARGEST spermatogenic cells. They spend the longest time in prophase I of meiosis (weeks), so they are most commonly observed in sections. Their large size and prolonged prophase are key exam facts."},
+  {q:"The Sertoli cell rests on which structure, and what is the significance?",opts:["The lumen — for nutrient access","The basement membrane — allowing it to bridge basal and adluminal compartments","The myoid cell layer — for contractile coordination","The reticular fibers — for structural rigidity","Leydig cell clusters — for paracrine signaling"],ans:1,exp:"<strong>Sertoli cells rest on the basement membrane</strong> and extend from it to the lumen, bridging both compartments. This positioning allows them to simultaneously anchor stem cells (basally) and support maturing cells (adluminally) while maintaining the BTB."},
+  {q:"Electron microscopy of Sertoli cells shows two unique features that distinguish them from all other cells in the tubule. What are they?",opts:["sER and lipid droplets","Acrosomal vesicle and centrioles","Tight junctions and lysosomes","Mitochondria with tubular cristae and reticular fibers","Dense secretory granules and Golgi complex"],ans:2,exp:"On EM, Sertoli cells are identified by: (1) <strong>Tight junctions</strong> on their lateral borders (forming the BTB) and (2) abundant <strong>Lysosomes</strong> for phagocytosing residual cytoplasm. These are the two EM hallmarks explicitly tested in the lecture."},
+  {q:"Spermatogenesis is divided into three phases. In the correct order, they are:",opts:["Meiosis → Mitosis → Spermiogenesis","Spermiogenesis → Mitosis → Meiosis","Mitosis → Meiosis → Spermiogenesis","Meiosis → Spermiogenesis → Mitosis","Mitosis → Spermiogenesis → Meiosis"],ans:2,exp:"The three phases are: (1) <strong>Mitosis</strong> — spermatogonia proliferate and differentiate into primary spermatocytes. (2) <strong>Meiosis</strong> — two meiotic divisions yield haploid spermatids. (3) <strong>Spermiogenesis</strong> — spermatids transform into mature spermatozoa without further division."},
+  {q:"Which statement about the exocrine versus endocrine portions of the testis is correct?",opts:["Leydig cells are the exocrine portion","Sertoli cells constitute the endocrine portion","Seminiferous tubules are the exocrine portion; Leydig cells are the endocrine portion","The rete testis is the endocrine portion","Myoid cells are the endocrine portion"],ans:2,exp:"<strong>Exocrine portion</strong> = seminiferous tubules + duct system (produce and transport spermatozoa — external secretion). <strong>Endocrine portion</strong> = Leydig cells + fenestrated capillaries (synthesize and secrete testosterone into the bloodstream)."},
+  {q:"One centriole attaches to the nucleus of a spermatid while the other elongates. What does the elongating centriole produce?",opts:["The acrosomal cap","The mitochondrial sheath","The fibrous sheath of the principal piece","The axoneme of the flagellum","The residual body"],ans:3,exp:"The distal centriole elongates to produce the <strong>axoneme</strong>, the central '9+2' microtubule scaffold of the entire flagellum. The proximal centriole remains at the neck. This is a direct lecturer exam question: 'What forms the flagellum? Centriole.'"},
+  {q:"During spermiogenesis, what is the fate of excess cytoplasm produced by spermatids?",opts:["Recycled to form new mitochondria","Compressed to form the fibrous sheath","Shed as residual bodies and phagocytosed by Sertoli cells","Absorbed by Leydig cells for steroid synthesis","Converted into acrosomal enzymes"],ans:2,exp:"<strong>Excess cytoplasm</strong> is cast off as 'residual bodies' which are then immediately phagocytosed by the abundant lysosomes of Sertoli cells. This is critical for cell streamlining and essential for motility."},
+  {q:"A researcher wants to identify a pure population of steroid-secreting cells. Which combination of EM features defines this cell type universally?",opts:["Tight junctions + lysosomes + columnar shape","Lipid droplets + abundant sER + mitochondria with tubular cristae","Acrosomal vesicles + centrioles + fibrous sheath","Dense-core secretory vesicles + rough ER + Golgi","Reticular fibers + basement membrane + myofilaments"],ans:1,exp:"All <strong>steroid-secreting cells</strong> (Leydig cells, adrenal cortex, theca cells, etc.) share the same EM profile: (1) <strong>Lipid droplets</strong> — cholesterol substrate, (2) <strong>Abundant sER</strong> — site of steroidogenic enzymes, (3) <strong>Mitochondria with tubular cristae</strong> — initial steroidogenic steps occur here. This is the classic 'steroidogenic EM signature.'"}
+];
+
+const FLASHCARD_DATA = [
+  {q:"Which organelle forms the acrosome?",a:"Golgi Apparatus",detail:"Golgi → acrosomal vesicle covering anterior 2/3 of nucleus"},
+  {q:"What forms the flagellum axoneme?",a:"Centriole",detail:"Distal centriole elongates to form the axoneme"},
+  {q:"Which spermatogenic cell is the LARGEST?",a:"Primary Spermatocyte",detail:"Spends longest time in prophase I of meiosis"},
+  {q:"What division do primary spermatocytes undergo?",a:"Meiosis I (First Meiotic Division)",detail:"Primary → Secondary spermatocytes"},
+  {q:"What division do secondary spermatocytes undergo?",a:"Meiosis II (Second Meiotic Division)",detail:"Secondary spermatocytes → Spermatids"},
+  {q:"Why are secondary spermatocytes rarely seen in sections?",a:"They rapidly enter Meiosis II",detail:"Very short lifespan — few captured in any given section"},
+  {q:"Components of the MIDDLE PIECE of sperm tail?",a:"Axoneme + 9 dense fibers + Mitochondrial sheath",detail:"9 = nine outer dense fibers; provides ATP for motility"},
+  {q:"Components of the PRINCIPAL PIECE of sperm tail?",a:"Axoneme + 7 dense fibers + Fibrous sheath",detail:"7 = seven outer dense fibers; longest piece of the tail"},
+  {q:"What does the END PIECE of the sperm tail contain?",a:"Axoneme ONLY",detail:"No additional fibers or sheaths — bare axoneme"},
+  {q:"What forms the Blood-Testis Barrier?",a:"Continuous tight junctions between Sertoli cells",detail:"On their lateral borders — creates basal vs adluminal compartments"},
+  {q:"What does Sertoli cells secrete to concentrate testosterone?",a:"Androgen-Binding Protein (ABP)",detail:"ABP binds testosterone and concentrates it in the tubular lumen"},
+  {q:"EM hallmarks of Sertoli cells?",a:"Tight junctions + Lysosomes",detail:"TJs = BTB; Lysosomes = phagocytosis of residual cytoplasm"},
+  {q:"EM hallmarks of Leydig cells (steroidogenesis)?",a:"Lipid droplets + abundant sER + tubular cristae mitochondria",detail:"Classic steroid-secreting cell profile — shared with all steroidogenic cells"},
+  {q:"Where are Leydig cells located?",a:"Interstitial tissue between seminiferous tubules",detail:"Near fenestrated blood capillaries for easy hormone release"},
+  {q:"What is the function of myoid cells?",a:"Contractile cells that push sperm toward the duct system",detail:"Smooth muscle-like; surround the basement membrane of seminiferous tubules"},
+  {q:"Which spermatogonium is the TRUE stem cell?",a:"Type A Dark Spermatogonium",detail:"Self-renewing stem cells; never fully committed to differentiation"},
+  {q:"What do Type A Pale spermatogonia produce?",a:"More Type A Pale OR Type B Spermatogonia",detail:"Mitotically active amplifying progenitors"},
+  {q:"What is the significance of the BTB moving dynamically?",a:"TJs disassemble above and reassemble below moving primary spermatocytes",detail:"Ensures immunoprivilege is maintained during cell translocation"},
+  {q:"What thickens posteriorly to form the Mediastinum Testis?",a:"Tunica Albuginea",detail:"Blood vessels and rete testis pass through the mediastinum"},
+  {q:"How many lobules does the testis contain?",a:"~250 lobules",detail:"Each lobule contains 1–4 seminiferous tubules"},
+  {q:"What happens to the nucleus during spermiogenesis?",a:"It condenses and elongates",detail:"Chromatin compacts maximally for streamlined cell shape"},
+  {q:"What happens to mitochondria during spermiogenesis?",a:"They aggregate around the proximal flagellum forming the middle piece sheath",detail:"Provides energy for flagellar motility via ATP"}
+];
+
+const CASES_DATA = [
+  {
+    title:"Globozoospermia — Absent Acrosome",
+    scenario:"A 28-year-old man presents with primary infertility. Semen analysis reveals sperm with round heads (globozoospermia). Electron microscopy confirms complete absence of the acrosomal cap over the spermatid nucleus.",
+    questions:[
+      "Which organelle failed to function correctly during spermiogenesis?",
+      "What would happen during attempted fertilization?",
+      "Which phase of sperm development is implicated?"
+    ],
+    answer:"<strong>Organelle involved:</strong> The Golgi apparatus failed to transform into the acrosomal vesicle. Normally, the Golgi complex generates the acrosomal vesicle which envelops the anterior 2/3 of the nucleus forming a cap containing hydrolytic enzymes (hyaluronidase, acrosin).<br/><br/><strong>Fertilization failure:</strong> Without the acrosome reaction, the sperm cannot release enzymes needed to dissolve the cumulus oophorus and zona pellucida cells of the ovum. The sperm physically cannot penetrate the egg.<br/><br/><strong>Phase:</strong> Spermiogenesis — the morphological transformation of rounded spermatids into mature spermatozoa (no cell division occurs in this phase)."
+  },
+  {
+    title:"Autoimmune Orchitis — BTB Failure",
+    scenario:"A 35-year-old male develops sudden infertility after a severe testicular infection. Laboratory testing reveals anti-sperm antibodies in his serum causing sperm agglutination and immobilization.",
+    questions:[
+      "What structural failure permitted the immune system to encounter spermatozoa?",
+      "Which cells form the structure that normally prevents this?",
+      "Why do post-meiotic spermatogenic cells trigger an immune response?"
+    ],
+    answer:"<strong>Structural failure:</strong> The Blood-Testis Barrier (BTB) was disrupted. The continuous tight junctions between the lateral borders of adjacent Sertoli cells were compromised (by infection/inflammation), allowing immune cells from the interstitium to contact adluminal spermatogenic cells.<br/><br/><strong>Cells responsible:</strong> Sertoli cells form the BTB via continuous tight junctions on their lateral surfaces. These are visible on EM as the most characteristic ultrastructural feature of Sertoli cells.<br/><br/><strong>Immune response rationale:</strong> Haploid cells (secondary spermatocytes, spermatids, spermatozoa) first appear at puberty — AFTER immune self-tolerance was established in utero/early childhood. The immune system has never 'seen' these cells and treats them as foreign antigens."
+  },
+  {
+    title:"Low Intra-testicular Testosterone — ABP Deficiency",
+    scenario:"A testicular biopsy reveals a patient with arrested spermatogenesis at the primary spermatocyte stage. Blood testosterone is normal. Immunohistochemistry shows an absence of Androgen-Binding Protein within the seminiferous tubules.",
+    questions:[
+      "Which cells secrete ABP and what is its purpose?",
+      "Why is local (intra-testicular) testosterone important despite normal systemic levels?",
+      "What stage would arrest be most expected at?"
+    ],
+    answer:"<strong>ABP source:</strong> Sertoli cells secrete Androgen-Binding Protein (ABP) under FSH stimulation. ABP is a glycoprotein that binds testosterone and concentrates it within the seminiferous tubule lumen.<br/><br/><strong>Local vs systemic importance:</strong> Spermatogenesis requires a very HIGH local testosterone concentration — far exceeding systemic blood levels. Blood testosterone, though normal, is too dilute to support meiotic divisions without ABP-mediated concentration. Primary spermatocytes entering meiosis I are particularly dependent on high androgen levels.<br/><br/><strong>Arrest stage:</strong> Primary spermatocyte arrest is characteristic — consistent with this case — as completion of meiosis I requires very high intra-tubular testosterone."
+  },
+  {
+    title:"Asthenozoospermia — Absent Mitochondrial Sheath",
+    scenario:"A 30-year-old presents for infertility evaluation. Semen analysis shows sperm that appear morphologically normal by light microscopy but are completely immotile. Electron microscopy of the tail reveals total absence of the mitochondrial sheath.",
+    questions:[
+      "Which region of the tail is affected?",
+      "What is the direct consequence of missing mitochondria in the tail?",
+      "How does this differ from axonemal (Kartagener) defects?"
+    ],
+    answer:"<strong>Affected region:</strong> The Middle piece — the proximal segment of the tail where mitochondria normally form a helical sheath around the axoneme.<br/><br/><strong>Direct consequence:</strong> Mitochondria in the middle piece produce ATP via oxidative phosphorylation. This ATP powers dynein ATPase motors along the axoneme. Without mitochondrial ATP, the axoneme cannot generate the sliding forces needed for flagellar beating → complete immotility (asthenozoospermia).<br/><br/><strong>Difference from Kartagener's:</strong> In ciliary dyskinesia (Kartagener syndrome), the axonemal dynein arms themselves are absent/defective. In this case, the motor machinery (axoneme) is intact but lacks the fuel (ATP from mitochondria). Both cause immotility but through different mechanisms."
+  },
+  {
+    title:"Sertoli Cell-Only Syndrome",
+    scenario:"A 30-year-old male presents with azoospermia. Testicular biopsy reveals seminiferous tubules lined ONLY by Sertoli cells with complete absence of all spermatogenic cells. Serum FSH is markedly elevated. Testosterone levels are normal.",
+    questions:[
+      "Why are testosterone levels normal despite severe tubular damage?",
+      "Why is FSH elevated?",
+      "What are the ultrastructural features of the Sertoli cells remaining in the tubules?"
+    ],
+    answer:"<strong>Normal testosterone:</strong> Testosterone is produced by Leydig cells in the interstitial tissue — which are unaffected in Sertoli cell-only syndrome. The tubular epithelium (Sertoli + spermatogenic cells) has no role in testosterone synthesis.<br/><br/><strong>Elevated FSH:</strong> Sertoli cells normally produce Inhibin B in response to spermatogenesis, which feeds back to suppress FSH. Without spermatogenic cells, Inhibin B output falls → loss of negative feedback → FSH rises (classic finding in Sertoli cell-only syndrome).<br/><br/><strong>Sertoli cell EM features:</strong> Tall columnar cells resting on the basement membrane showing: (1) characteristic tight junctions on lateral borders (still present, forming remnant BTB), (2) abundant lysosomes, (3) irregular nuclear outline with prominent nucleolus, (4) no acrosome, no axoneme — these are Sertoli cells, not spermatogenic cells."
+  },
+  {
+    title:"Long Integrative — Failed Spermiogenesis & Accumulating Debris",
+    scenario:"A 30-year-old male presents for infertility evaluation. Testicular biopsy reveals severely disrupted seminiferous tubules filled with necrotic cellular debris and excess cytoplasm. Sperm maturation is arrested at the spermatid stage. Hormone panels show adequate blood testosterone.",
+    questions:[
+      "Step 1: Identify the failing structure/process",
+      "Step 2: Describe the normal mechanism step by step",
+      "Step 3: Why does arrested spermiogenesis cause debris accumulation?",
+      "Step 4: Best investigative technique?",
+      "Step 5: What is the broader role of the implicated cell?"
+    ],
+    answer:"<strong>Step 1 — Failing structure:</strong> Sertoli cells — specifically their phagocytic and support functions — are failing. The inability to clear residual cytoplasm and support spermiogenesis points to Sertoli cell dysfunction.<br/><br/><strong>Step 2 — Normal mechanism:</strong> During spermiogenesis: (a) Round spermatids undergo morphological transformation without division; (b) The Golgi forms the acrosomal vesicle; (c) One centriole forms the flagellar axoneme; (d) Mitochondria aggregate around the proximal flagellum forming the middle piece; (e) The nucleus condenses; (f) Excess cytoplasm is shed as residual bodies; (g) Sertoli lysosomes immediately phagocytose these residual bodies.<br/><br/><strong>Step 3 — Debris accumulation:</strong> Normal Sertoli cells use abundant lysosomes to phagocytose ~50% of shed spermatid cytoplasm. If Sertoli cells fail, residual bodies accumulate → tubular obstruction → toxic microenvironment → further spermatogenic arrest. This is a positive feedback loop of failure.<br/><br/><strong>Step 4 — Investigation:</strong> Electron microscopy of the seminiferous tubule — to assess Sertoli cell ultrastructure: lysosome content, tight junction integrity, and the presence/absence of BTB complexes. Testicular biopsy for immunohistochemistry (anti-inhibin B, anti-vimentin for Sertoli cells) is also indicated.<br/><br/><strong>Step 5 — Broader role:</strong> Sertoli cells are the 'nurse cells' (sustentacular cells) of spermatogenesis. They provide: nutritive factors, ABP (testosterone concentration), physical scaffolding, phagocytosis, BTB maintenance, and paracrine signaling. Without functional Sertoli cells, spermatogenesis universally fails regardless of hormonal status."
+  }
+];
+
+const STRUCT_DATA = {
+  tunica:{name:"Tunica Albuginea",icon:"🧱",desc:"The tunica albuginea is a dense white fibrous capsule composed of collagen fibers that immediately surrounds the testis beneath the tunica vaginalis.",points:["Forms the main structural capsule of the testis","Thickens at the posterior aspect to form the Mediastinum Testis","Mediastinum testis contains the rete testis, blood vessels, and lymphatics","Septa (trabeculae) extend from it inward, dividing testis into ~250 lobules","Each lobule contains 1–4 highly tortuous seminiferous tubules"]},
+  seminiferous:{name:"Seminiferous Tubule",icon:"🌀",desc:"Highly tortuous compound tubular glands — the site of spermatogenesis. Each testis contains approximately 250 lobules with 1–4 tubules each.",points:["Lined by spermatogenic cells (4–8 layers) and Sertoli cells","Surrounded by a basement membrane with a layer of myoid (peritubular) cells outside","The lumen connects to the rete testis via straight tubules (tubuli recti)","Contain both basal and adluminal compartments separated by the BTB","Spermatogenesis occurs continuously after puberty in these tubules"]},
+  sertoli:{name:"Sertoli Cell (Sustentacular Cell)",icon:"🏥",desc:"Tall columnar 'nurse cells' of spermatogenesis — essential for structural, metabolic, and immunological support of developing germ cells.",points:["Rest on and extend from the basement membrane to the lumen","Irregular lateral surface — deeply enmeshed with developing spermatogenic cells","Form the Blood-Testis Barrier via continuous tight junctions","Secrete Androgen-Binding Protein (ABP) — concentrates testosterone intratubularly","EM hallmarks: Tight junctions + abundant Lysosomes","Phagocytose residual bodies shed during spermiogenesis","Secrete Inhibin B — negative feedback on FSH"]},
+  leydig:{name:"Leydig Cell (Interstitial Cell of Leydig)",icon:"⚗️",desc:"Large polygonal endocrine cells located in the interstitial connective tissue between seminiferous tubules — the primary source of testosterone.",points:["LM: Polygonal, large, acidophilic vacuolated cytoplasm","Located near fenestrated blood capillaries for efficient hormone delivery","EM steroidogenic profile: abundant sER + tubular cristae mitochondria + lipid droplets","Lipid droplets = stored cholesterol (the precursor to all steroid hormones)","sER = site of steroidogenic enzymes (CYP enzymes)","Mitochondria with tubular cristae = unique feature of steroid-secreting cells","Stimulated by LH (luteinizing hormone) from the anterior pituitary"]},
+  spermatogonia:{name:"Spermatogonia (Types A & B)",icon:"🔵",desc:"The most basal spermatogenic cells, resting on or near the basement membrane in the basal compartment of the seminiferous epithelium.",points:["Type A Dark: True stem cells — replenish the stem cell pool indefinitely","Type A Pale: Mitotically active — form more A pale or differentiate to Type B","Type B: Committed progenitors — divide mitotically → primary spermatocytes","All spermatogonia are in the BASAL compartment (below the BTB)","They reside next to the basement membrane"]},
+  primary:{name:"Primary Spermatocyte",icon:"🔴",desc:"The largest of all spermatogenic cells. These cells are formed from Type B spermatogonia and undergo the lengthy first meiotic division.",points:["LARGEST spermatogenic cell — exam key fact","Undergo Meiosis I (first meiotic division)","Product: 2 secondary spermatocytes (still diploid, but with replicated chromatids separated)","Spends the longest time in prophase I (weeks) — most commonly seen in sections","Translocate from basal to adluminal compartment as they mature","The BTB dynamically disassembles above and reassembles below them during this movement"]},
+  btb:{name:"Blood-Testis Barrier (BTB)",icon:"🛡️",desc:"A physical immunological barrier formed by Sertoli cells that creates an immunoprivileged adluminal compartment protecting post-meiotic spermatogenic cells from autoimmune attack.",points:["Formed by continuous TIGHT JUNCTIONS between lateral borders of adjacent Sertoli cells","Divides tubule into BASAL compartment (spermatogonia) and ADLUMINAL compartment (post-meiotic cells)","Post-meiotic cells appear after immune self-tolerance is set → immune system sees them as 'foreign'","BTB dynamically disassembles above primary spermatocytes and reassembles below them as they translocate","Breakdown → anti-sperm antibodies → autoimmune infertility","Exam question: 'What forms the BTB? Tight junctions between Sertoli cells'"]},
+  sperm:{name:"Mature Spermatozoon",icon:"🐟",desc:"A 65 µm long, highly specialized gamete optimized for motility and fertilization, consisting of a Head, Neck, and Tail with three distinct pieces.",points:["HEAD: nucleus (haploid DNA) + acrosomal cap (hydrolytic enzymes)","NECK: proximal and distal centrioles","MIDDLE PIECE: axoneme + 9 outer dense fibers + mitochondrial sheath (ATP generation)","PRINCIPAL PIECE: axoneme + 7 outer dense fibers + fibrous sheath (longest piece)","END PIECE: axoneme only","Total length ~65 µm; produced continuously after puberty (spermatogenesis cycle ~74 days)"]},
+  myoid:{name:"Peritubular Myoid Cell",icon:"💪",desc:"Smooth muscle-like contractile cells in the loose connective tissue surrounding the basement membrane of seminiferous tubules.",points:["Located in the loose CT between the basement membrane and interstitial tissue","Contractile (hence 'myoid' — muscle-like)","Provide peristaltic contractions to propel immotile spermatozoa toward tubuli recti and rete testis","Newly formed spermatozoa are immotile — myoid contractions are the only means of transport in the tubule"]},
+  acrosome:{name:"Acrosome",icon:"🧪",desc:"A membrane-bound cap derived from the Golgi apparatus during spermiogenesis, covering the anterior 2/3 of the sperm nucleus and containing hydrolytic enzymes essential for fertilization.",points:["Formed by: Golgi apparatus (most important exam fact)","Location: Anterior 2/3 of the nucleus = the 'head cap'","Contains: Hydrolytic enzymes — hyaluronidase, acrosin, neuraminidase","Function: Acrosome reaction releases these enzymes to dissolve cumulus oophorus and zona pellucida of the ovum","Absence: Globozoospermia (round-headed sperm) — infertility as sperm cannot penetrate ovum","Clinical: Defects in acrosome formation = 100% infertility"]}
+};
+
+const MNEMONICS_DATA = [
+  {
+    title:"Spermiogenesis Organelle Transformations",
+    word:"G.C.M.S.",
+    subtitle:"Remember which organelle forms which structure",
+    letters:[
+      {l:"G",meaning:"Golgi",desc:"→ forms the Acrosome (head cap with enzymes)"},
+      {l:"C",meaning:"Centriole",desc:"→ forms the Flagellum axoneme"},
+      {l:"M",meaning:"Mitochondria",desc:"→ form the Middle piece sheath"},
+      {l:"S",meaning:"Shed cytoplasm",desc:"→ phagocytosed by Sertoli lysosomes"}
+    ]
+  },
+  {
+    title:"Sertoli Cell Functions",
+    word:"S.T.A.M.P.",
+    subtitle:"Everything Sertoli cells do",
+    letters:[
+      {l:"S",meaning:"Support",desc:"nutritive factors for developing spermatogenic cells"},
+      {l:"T",meaning:"Tight junctions",desc:"form the Blood-Testis Barrier"},
+      {l:"A",meaning:"ABP secretion",desc:"Androgen-Binding Protein concentrates testosterone"},
+      {l:"M",meaning:"Move the BTB",desc:"dynamically for primary spermatocyte translocation"},
+      {l:"P",meaning:"Phagocytosis",desc:"of residual cytoplasm via lysosomes"}
+    ]
+  },
+  {
+    title:"Sperm Tail Composition — Middle vs Principal vs End",
+    word:"9-7-0 Rule",
+    subtitle:"Count the outer dense fibers in each piece",
+    letters:[
+      {l:"9",meaning:"Middle piece",desc:"axoneme + 9 outer dense fibers + Mitochondrial sheath"},
+      {l:"7",meaning:"Principal piece",desc:"axoneme + 7 outer dense fibers + Fibrous sheath"},
+      {l:"0",meaning:"End piece",desc:"Axoneme ONLY — zero additional structures"}
+    ]
+  },
+  {
+    title:"Leydig Cell EM Features — Steroid Signature",
+    word:"MiSLip",
+    subtitle:"Every steroid-secreting cell has these three EM features",
+    letters:[
+      {l:"Mi",meaning:"Mitochondria",desc:"with TUBULAR cristae (unique to steroid cells)"},
+      {l:"S",meaning:"Smooth ER (sER)",desc:"abundant — site of steroidogenic enzymes"},
+      {l:"Lip",meaning:"Lipid droplets",desc:"stored cholesterol — precursor to all steroid hormones"}
+    ]
+  },
+  {
+    title:"Spermatogenesis Cell Sequence",
+    word:"DARK PALE B — 1st — 2nd — TIDS",
+    subtitle:"Trace the lineage from stem cell to sperm",
+    letters:[
+      {l:"D",meaning:"Dark Type A",desc:"true stem cell — self-renewing"},
+      {l:"P",meaning:"Pale Type A",desc:"mitotically active committed progenitor"},
+      {l:"B",meaning:"Type B",desc:"→ primary spermatocytes (via mitosis)"},
+      {l:"1",meaning:"Primary Spermatocyte",desc:"LARGEST cell — Meiosis I"},
+      {l:"2",meaning:"Secondary Spermatocyte",desc:"rarely seen — rapid Meiosis II"},
+      {l:"T",meaning:"Sperma-TIDS",desc:"→ spermatogenesis (morphological conversion, no division)"}
+    ]
+  }
+];
+
+// ==================== STATE ====================
+let currentQ = 0, score = 0, streak = 0, answered = 0, cardsViewed = 0;
+let answeredQ = new Array(QUIZ_DATA.length).fill(null);
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  buildQuiz();
+  buildFlashcards();
+  buildCases();
+  buildMnemonics();
+  updateStats();
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+      saveState();
+    });
+  });
+});
+
+// ==================== LOCAL STORAGE ====================
+function saveState(){
+  try{localStorage.setItem('testisStudy',JSON.stringify({score,streak,answered,cardsViewed,answeredQ,currentQ}));}catch(e){}
+}
+function loadState(){
+  try{
+    const d = JSON.parse(localStorage.getItem('testisStudy')||'{}');
+    if(d.score!==undefined){score=d.score;streak=d.streak||0;answered=d.answered||0;cardsViewed=d.cardsViewed||0;answeredQ=d.answeredQ||new Array(QUIZ_DATA.length).fill(null);currentQ=d.currentQ||0;}
+  }catch(e){}
+}
+
+// ==================== STATS ====================
+function updateStats(){
+  const pct = Math.round((answered/QUIZ_DATA.length)*100);
+  document.getElementById('stat-progress').textContent = pct+'%';
+  document.getElementById('stat-score').textContent = answered>0 ? score+'/'+answered : '—';
+  document.getElementById('stat-streak').textContent = '🔥 '+streak;
+  document.getElementById('stat-cards').textContent = cardsViewed;
+  document.getElementById('streak-display').textContent = streak;
+  const fill = document.getElementById('quiz-fill');
+  if(fill) fill.style.width = pct+'%';
+  saveState();
+}
+
+// ==================== QUIZ ====================
+function buildQuiz(){
+  renderQuestion(currentQ);
+}
+
+function renderQuestion(idx){
+  const container = document.getElementById('quiz-container');
+  const q = QUIZ_DATA[idx];
+  document.getElementById('q-counter').textContent = 'Question '+(idx+1)+' / '+QUIZ_DATA.length;
+  const fill = document.getElementById('quiz-fill');
+  if(fill) fill.style.width = (idx/QUIZ_DATA.length*100)+'%';
+
+  const prevAns = answeredQ[idx];
+  const letrs = ['A','B','C','D','E'];
+  let optsHTML = q.opts.map((o,i) => {
+    let cls = '';
+    if(prevAns!==null){
+      if(i===q.ans) cls='correct';
+      else if(i===prevAns && prevAns!==q.ans) cls='wrong';
+    }
+    return `<button class="quiz-opt ${cls}" ${prevAns!==null?'disabled':''} onclick="selectAnswer(${i})">
+      <span class="opt-letter">${letrs[i]}</span><span>${o}</span>
+    </button>`;
+  }).join('');
+
+  const expShow = prevAns!==null ? 'show' : '';
+  container.innerHTML = `
+    <div class="quiz-q-card">
+      <div class="quiz-q-num">Q${idx+1} · ${idx<15?'Mechanism':idx<20?'Structure':'Comparative'}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options" id="opts-${idx}">${optsHTML}</div>
+      <div class="quiz-explanation ${expShow}" id="exp-${idx}">
+        ${prevAns!==null?(prevAns===q.ans?'✅ <strong>Correct!</strong> ':'❌ <strong>Incorrect.</strong> ')+q.exp:''}
+      </div>
+    </div>`;
+
+  document.getElementById('btn-prev').style.display = idx>0?'block':'none';
+  document.getElementById('btn-next').style.display = (idx<QUIZ_DATA.length-1 && answeredQ[idx]!==null)?'block':'none';
+  document.getElementById('btn-finish').style.display = (idx===QUIZ_DATA.length-1 && answeredQ[idx]!==null)?'block':'none';
+}
+
+function selectAnswer(i){
+  if(answeredQ[currentQ]!==null) return;
+  answeredQ[currentQ]=i;
+  answered = answeredQ.filter(a=>a!==null).length;
+  const q = QUIZ_DATA[currentQ];
+  const correct = i===q.ans;
+  if(correct){score++;streak++;}else{streak=0;}
+
+  // animate opts
+  document.querySelectorAll('.quiz-opt').forEach((btn,idx) => {
+    btn.disabled=true;
+    if(idx===q.ans) btn.classList.add('correct');
+    if(idx===i && !correct) btn.classList.add('wrong');
+  });
+
+  // show explanation
+  const exp = document.getElementById('exp-'+currentQ);
+  exp.innerHTML = (correct?'✅ <strong>Correct!</strong> ':'❌ <strong>Incorrect.</strong> ')+q.exp;
+  exp.classList.add('show');
+
+  document.getElementById('btn-next').style.display = currentQ<QUIZ_DATA.length-1?'block':'none';
+  document.getElementById('btn-finish').style.display = currentQ===QUIZ_DATA.length-1?'block':'none';
+  updateStats();
+}
+
+function nextQuestion(){
+  if(currentQ<QUIZ_DATA.length-1){currentQ++;renderQuestion(currentQ);updateStats();}
+}
+function prevQuestion(){
+  if(currentQ>0){currentQ--;renderQuestion(currentQ);}
+}
+function finishQuiz(){
+  document.getElementById('quiz-container').style.display='none';
+  document.querySelectorAll('.quiz-nav button').forEach(b=>b.style.display='none');
+  const ss = document.getElementById('score-screen');
+  ss.style.display='block';
+  const pct = Math.round(score/QUIZ_DATA.length*100);
+  document.getElementById('final-score-circle').textContent=score+'/'+QUIZ_DATA.length;
+  document.getElementById('score-msg').textContent = pct>=80?'🏆 Excellent!':pct>=60?'👍 Good Work!':'📖 Keep Studying!';
+  document.getElementById('score-sub').textContent = `You scored ${score} out of ${QUIZ_DATA.length} — ${pct}%. ${pct>=80?'You are well prepared for this topic!':'Review the explanations and try again.'}`;
+  ss.style.display='block';
+}
+function resetQuiz(){
+  score=0;streak=0;answered=0;currentQ=0;answeredQ=new Array(QUIZ_DATA.length).fill(null);
+  document.getElementById('score-screen').style.display='none';
+  document.getElementById('quiz-container').style.display='block';
+  buildQuiz();updateStats();
+}
+
+// ==================== FLASHCARDS ====================
+function buildFlashcards(){
+  const grid = document.getElementById('flashcard-grid');
+  grid.innerHTML = FLASHCARD_DATA.map((c,i)=>`
+    <div class="flashcard" id="fc-${i}" onclick="flipCard(${i})">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-label">Question ${i+1} of ${FLASHCARD_DATA.length}</div>
+          <div class="fc-q">${c.q}</div>
+          <div class="fc-flip-hint">↻ tap to reveal</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-ans">${c.a}</div>
+          <div class="fc-detail">${c.detail}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function flipCard(i){
+  const card = document.getElementById('fc-'+i);
+  if(!card.classList.contains('flipped')){cardsViewed++;updateStats();}
+  card.classList.toggle('flipped');
+}
+
+// ==================== CLINICAL CASES ====================
+function buildCases(){
+  const container = document.getElementById('cases-container');
+  container.innerHTML = CASES_DATA.map((c,i)=>`
+    <div class="case-card">
+      <div class="case-header" onclick="toggleCase(${i})">
+        <div>
+          <div class="case-num">CASE ${i+1} of ${CASES_DATA.length}</div>
+          <div class="case-title">${c.title}</div>
+        </div>
+        <div class="case-toggle" id="ct-${i}">▼</div>
+      </div>
+      <div class="case-body" id="cb-${i}">
+        <div class="case-scenario">📋 <strong>Clinical Scenario:</strong><br/>${c.scenario}</div>
+        ${c.questions.map((q,j)=>`<div class="case-q">❓ ${j+1}. ${q}</div>`).join('')}
+        <button class="reveal-btn" onclick="revealCase(${i})">🔍 Reveal Full Answer</button>
+        <div class="reveal-answer" id="ca-${i}">${c.answer}</div>
+      </div>
+    </div>`).join('');
+}
+function toggleCase(i){
+  const body = document.getElementById('cb-'+i);
+  const toggle = document.getElementById('ct-'+i);
+  body.classList.toggle('open');
+  toggle.textContent = body.classList.contains('open')?'▲':'▼';
+}
+function revealCase(i){
+  const ans = document.getElementById('ca-'+i);
+  ans.classList.toggle('show');
+}
+
+// ==================== STRUCTURE ====================
+function showStruct(key){
+  document.querySelectorAll('.struct-item').forEach(el=>el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const d = STRUCT_DATA[key];
+  const detail = document.getElementById('struct-detail');
+  detail.innerHTML = `
+    <h3>${d.icon} ${d.name}</h3>
+    <p>${d.desc}</p>
+    <ul style="margin-top:12px;">${d.points.map(p=>`<li><strong>▸</strong> ${p}</li>`).join('')}</ul>`;
+  detail.classList.add('show');
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ==================== MNEMONICS ====================
+function buildMnemonics(){
+  const container = document.getElementById('mnemonics-container');
+  container.innerHTML = MNEMONICS_DATA.map((m,i)=>`
+    <div class="mnemonic-card">
+      <div class="mnemonic-header" onclick="toggleMnemonic(${i})">
+        <div>
+          <div class="mnemonic-word">${m.word}</div>
+          <div class="mnemonic-title">${m.title}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;">${m.subtitle}</div>
+        </div>
+        <div id="mt-${i}" style="color:var(--muted);font-size:20px;">▼</div>
+      </div>
+      <div class="mnemonic-body" id="mb-${i}">
+        <div class="mnemonic-letters">
+          ${m.letters.map(l=>`
+            <div class="mnemonic-row">
+              <div class="mnemonic-letter">${l.l}</div>
+              <div class="mnemonic-meaning">${l.meaning} <span>— ${l.desc}</span></div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleMnemonic(i){
+  const body = document.getElementById('mb-'+i);
+  const toggle = document.getElementById('mt-'+i);
+  body.classList.toggle('open');
+  toggle.textContent = body.classList.contains('open')?'▲':'▼';
+}
+
+// ==================== SEARCH ====================
+function filterOverview(q){
+  const items = document.querySelectorAll('#overview-content .card');
+  const term = q.toLowerCase().trim();
+  items.forEach(item=>{
+    const searchData = item.dataset.search||'';
+    const text = item.textContent;
+    item.style.display = (!term||text.toLowerCase().includes(term)||searchData.includes(term))?'':'none';
+  });
+}
+</script>
+</body>
+</html>

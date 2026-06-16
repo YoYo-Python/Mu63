@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KME · Experimental Studies</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
+:root {
+  --kme-bg:          #0D0F14;
+  --kme-surface:     #141720;
+  --kme-surface-2:   #1B1F2E;
+  --kme-surface-3:   #232840;
+  --kme-border:      rgba(255,255,255,0.07);
+  --kme-border-2:    rgba(255,255,255,0.12);
+
+  --kme-accent:      #6C8EFF;      /* electric indigo */
+  --kme-accent-dim:  rgba(108,142,255,0.15);
+  --kme-gold:        #E8B86D;      /* warm amber */
+  --kme-gold-dim:    rgba(232,184,109,0.12);
+  --kme-danger:      #FF6B6B;
+  --kme-danger-dim:  rgba(255,107,107,0.12);
+  --kme-success:     #4ECDC4;
+  --kme-success-dim: rgba(78,205,196,0.12);
+
+  --kme-text:        #E8EAF0;
+  --kme-text-muted:  #7A8099;
+  --kme-text-dim:    #4A5068;
+
+  --kme-radius:      14px;
+  --kme-radius-sm:   8px;
+  --kme-radius-lg:   20px;
+
+  --kme-font-body:   'DM Sans', sans-serif;
+  --kme-font-display:'DM Serif Display', serif;
+  --kme-font-mono:   'JetBrains Mono', monospace;
+
+  --kme-transition:  0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ─── RESET ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--kme-font-body);
+  background: var(--kme-bg);
+  color: var(--kme-text);
+  line-height: 1.6;
+  font-size: 15px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── AMBIENT GLOW ───────────────────────────────────────────────── */
+.kme-ambient {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.kme-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); opacity: 0.18;
+  animation: kme-float 12s ease-in-out infinite;
+}
+.kme-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #6C8EFF, transparent);
+  top: -150px; left: -100px;
+  animation-delay: 0s;
+}
+.kme-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #E8B86D, transparent);
+  top: 40%; right: -120px;
+  animation-delay: -5s;
+}
+.kme-orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, #4ECDC4, transparent);
+  bottom: 5%; left: 20%;
+  animation-delay: -9s;
+}
+@keyframes kme-float {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────────────── */
+.kme-wrapper {
+  position: relative; z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+/* ─── HEADER ─────────────────────────────────────────────────────── */
+.kme-header {
+  text-align: center;
+  padding: 48px 0 40px;
+}
+.kme-eyebrow {
+  font-family: var(--kme-font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--kme-accent);
+  background: var(--kme-accent-dim);
+  border: 1px solid rgba(108,142,255,0.3);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 18px;
+}
+.kme-header h1 {
+  font-family: var(--kme-font-display);
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--kme-text);
+  margin-bottom: 12px;
+}
+.kme-header h1 em {
+  font-style: italic;
+  color: var(--kme-accent);
+}
+.kme-header-sub {
+  font-size: 14px;
+  color: var(--kme-text-muted);
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* ─── NAV TABS ───────────────────────────────────────────────────── */
+.kme-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0 16px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 8px;
+}
+.kme-nav::-webkit-scrollbar { display: none; }
+.kme-nav-btn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--kme-border-2);
+  background: var(--kme-surface);
+  color: var(--kme-text-muted);
+  font-family: var(--kme-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--kme-transition);
+  white-space: nowrap;
+}
+.kme-nav-btn:hover {
+  border-color: var(--kme-accent);
+  color: var(--kme-text);
+}
+.kme-nav-btn.active {
+  background: var(--kme-accent);
+  border-color: var(--kme-accent);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(108,142,255,0.4);
+}
+
+/* ─── SECTIONS ───────────────────────────────────────────────────── */
+.kme-section { display: none; }
+.kme-section.active { display: block; }
+
+/* ─── SECTION HEADING ────────────────────────────────────────────── */
+.kme-section-label {
+  font-family: var(--kme-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kme-text-dim);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kme-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--kme-border);
+}
+
+/* ─── CONCEPT CARDS ──────────────────────────────────────────────── */
+.kme-concept-card {
+  background: var(--kme-surface);
+  border: 1px solid var(--kme-border);
+  border-radius: var(--kme-radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: border-color var(--kme-transition);
+  cursor: default;
+}
+.kme-concept-card:hover {
+  border-color: var(--kme-border-2);
+}
+.kme-concept-term {
+  font-weight: 600;
+  color: var(--kme-gold);
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kme-concept-term::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--kme-gold);
+  flex-shrink: 0;
+}
+.kme-concept-def {
+  font-size: 14px;
+  color: var(--kme-text-muted);
+  line-height: 1.65;
+}
+
+/* ─── TABLES ─────────────────────────────────────────────────────── */
+.kme-table-block {
+  margin-bottom: 28px;
+}
+.kme-table-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kme-text);
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+.kme-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--kme-radius);
+  border: 1px solid var(--kme-border);
+  -webkit-overflow-scrolling: touch;
+}
+.kme-table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 360px;
+  font-size: 13px;
+}
+.kme-table-responsive th {
+  background: var(--kme-surface-2);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kme-text-muted);
+  border-bottom: 1px solid var(--kme-border);
+  white-space: nowrap;
+}
+.kme-table-responsive td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--kme-border);
+  color: var(--kme-text);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.kme-table-responsive tr:last-child td { border-bottom: none; }
+.kme-table-responsive tr:hover td { background: var(--kme-surface-2); }
+.kme-table-responsive td.kme-col-a { color: var(--kme-accent); }
+.kme-table-responsive td.kme-col-b { color: var(--kme-gold); }
+.kme-table-responsive td.kme-col-pro { color: var(--kme-success); }
+.kme-table-responsive td.kme-col-con { color: var(--kme-danger); }
+
+/* ─── MATH BOXES ─────────────────────────────────────────────────── */
+.kme-math-box {
+  background: var(--kme-surface);
+  border: 1px solid rgba(108,142,255,0.25);
+  border-radius: var(--kme-radius);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.kme-formula-label {
+  font-family: var(--kme-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--kme-accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.kme-formula-expr {
+  font-family: var(--kme-font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--kme-text);
+  background: var(--kme-surface-2);
+  border: 1px solid var(--kme-border);
+  border-radius: var(--kme-radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.kme-formula-note {
+  font-size: 12px;
+  color: var(--kme-text-muted);
+  margin-top: 6px;
+}
+
+.kme-scenario-box {
+  background: var(--kme-surface);
+  border: 1px solid var(--kme-border);
+  border-left: 3px solid var(--kme-gold);
+  border-radius: var(--kme-radius);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.kme-scenario-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--kme-gold);
+  margin-bottom: 8px;
+}
+.kme-scenario-desc {
+  font-size: 13px;
+  color: var(--kme-text-muted);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+/* details / summary */
+.kme-steps-toggle {
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+.kme-steps-toggle summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--kme-surface-3);
+  border: 1px solid var(--kme-border);
+  border-radius: var(--kme-radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--kme-accent);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--kme-transition);
+}
+.kme-steps-toggle summary::-webkit-details-marker { display: none; }
+.kme-steps-toggle summary:hover { background: rgba(108,142,255,0.1); }
+.kme-steps-toggle[open] summary { border-radius: var(--kme-radius-sm) var(--kme-radius-sm) 0 0; }
+.kme-chevron {
+  transition: transform var(--kme-transition);
+}
+.kme-steps-toggle[open] .kme-chevron { transform: rotate(180deg); }
+.kme-steps-body {
+  border: 1px solid var(--kme-border);
+  border-top: none;
+  border-radius: 0 0 var(--kme-radius-sm) var(--kme-radius-sm);
+  padding: 14px;
+  background: var(--kme-surface-2);
+}
+.kme-step {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--kme-text);
+  border-bottom: 1px solid var(--kme-border);
+  align-items: flex-start;
+}
+.kme-step:last-child { border-bottom: none; padding-bottom: 0; }
+.kme-step-num {
+  font-family: var(--kme-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--kme-accent);
+  background: var(--kme-accent-dim);
+  border-radius: 99px;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.kme-step-val {
+  font-family: var(--kme-font-mono);
+  color: var(--kme-gold);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ─── EXAM TRAPS ─────────────────────────────────────────────────── */
+.kme-alert-danger {
+  background: var(--kme-danger-dim);
+  border: 1px solid rgba(255,107,107,0.25);
+  border-radius: var(--kme-radius);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: border-color var(--kme-transition);
+}
+.kme-alert-danger:hover {
+  border-color: rgba(255,107,107,0.45);
+}
+.kme-alert-icon {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  margin-top: 2px;
+  color: var(--kme-danger);
+}
+.kme-alert-body {}
+.kme-trap-label {
+  font-family: var(--kme-font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--kme-danger);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.kme-alert-text {
+  font-size: 13px;
+  color: var(--kme-text);
+  line-height: 1.65;
+}
+.kme-alert-text strong {
+  color: var(--kme-danger);
+}
+
+/* ─── MCQ ────────────────────────────────────────────────────────── */
+.kme-quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.kme-quiz-progress-ring {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--kme-text-muted);
+}
+.kme-score-badge {
+  font-family: var(--kme-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--kme-success);
+  background: var(--kme-success-dim);
+  border: 1px solid rgba(78,205,196,0.25);
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+.kme-quiz-reset-btn {
+  padding: 8px 16px;
+  border-radius: 99px;
+  background: transparent;
+  border: 1px solid var(--kme-border-2);
+  color: var(--kme-text-muted);
+  font-size: 12px;
+  font-family: var(--kme-font-body);
+  cursor: pointer;
+  transition: all var(--kme-transition);
+}
+.kme-quiz-reset-btn:hover {
+  border-color: var(--kme-danger);
+  color: var(--kme-danger);
+}
+
+.kme-mcq-container {
+  background: var(--kme-surface);
+  border: 1px solid var(--kme-border);
+  border-radius: var(--kme-radius);
+  padding: 22px 20px;
+  margin-bottom: 14px;
+  transition: border-color var(--kme-transition);
+}
+.kme-mcq-container.answered { border-color: var(--kme-border-2); }
+
+.kme-mcq-num {
+  font-family: var(--kme-font-mono);
+  font-size: 10px;
+  color: var(--kme-text-dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.kme-mcq-q {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--kme-text);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.kme-options-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.kme-option-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--kme-radius-sm);
+  border: 1px solid var(--kme-border);
+  cursor: pointer;
+  transition: all var(--kme-transition);
+  font-size: 13px;
+  color: var(--kme-text-muted);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+}
+.kme-option-label:hover:not(.disabled) {
+  border-color: var(--kme-accent);
+  color: var(--kme-text);
+  background: var(--kme-accent-dim);
+}
+.kme-option-label.disabled { cursor: default; }
+.kme-option-label.selected-correct {
+  background: var(--kme-success-dim);
+  border-color: var(--kme-success);
+  color: var(--kme-text);
+}
+.kme-option-label.selected-wrong {
+  background: var(--kme-danger-dim);
+  border-color: var(--kme-danger);
+  color: var(--kme-text);
+}
+.kme-option-label.correct-reveal {
+  background: rgba(78,205,196,0.08);
+  border-color: rgba(78,205,196,0.3);
+  color: var(--kme-text);
+}
+
+.kme-option-key {
+  font-family: var(--kme-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--kme-surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--kme-text-muted);
+  transition: all var(--kme-transition);
+  margin-top: 1px;
+}
+.selected-correct .kme-option-key { background: var(--kme-success); color: #fff; }
+.selected-wrong .kme-option-key   { background: var(--kme-danger); color: #fff; }
+.correct-reveal .kme-option-key   { background: rgba(78,205,196,0.4); color: var(--kme-success); }
+
+.kme-option-text { flex: 1; line-height: 1.5; }
+
+/* hidden radio */
+.kme-option-label input[type="radio"] {
+  position: absolute; opacity: 0; width: 0; height: 0;
+}
+
+.kme-explanation {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(108,142,255,0.08);
+  border-left: 3px solid var(--kme-accent);
+  border-radius: 0 var(--kme-radius-sm) var(--kme-radius-sm) 0;
+  font-size: 13px;
+  color: var(--kme-text);
+  line-height: 1.65;
+  animation: kme-fade-in 0.3s ease;
+}
+.kme-explanation.visible { display: block; }
+.kme-explanation strong {
+  color: var(--kme-accent);
+}
+@keyframes kme-fade-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SCORE SUMMARY ──────────────────────────────────────────────── */
+.kme-score-summary {
+  background: var(--kme-surface);
+  border: 1px solid var(--kme-border);
+  border-radius: var(--kme-radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.kme-score-big {
+  font-family: var(--kme-font-display);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--kme-accent);
+  margin-bottom: 4px;
+}
+.kme-score-label {
+  font-size: 13px;
+  color: var(--kme-text-muted);
+}
+.kme-score-bar-track {
+  margin-top: 16px;
+  height: 6px;
+  background: var(--kme-surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.kme-score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--kme-accent), var(--kme-success));
+  border-radius: 99px;
+  transition: width 1s ease;
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────────────── */
+.kme-footer {
+  margin-top: 60px;
+  text-align: center;
+  font-family: var(--kme-font-mono);
+  font-size: 11px;
+  color: var(--kme-text-dim);
+  letter-spacing: 0.08em;
+}
+
+/* ─── UTILITIES ──────────────────────────────────────────────────── */
+.kme-spacer { height: 24px; }
+</style>
+</head>
+<body>
+
+<!-- Ambient orbs -->
+<div class="kme-ambient" aria-hidden="true">
+  <div class="kme-orb kme-orb-1"></div>
+  <div class="kme-orb kme-orb-2"></div>
+  <div class="kme-orb kme-orb-3"></div>
+</div>
+
+<div class="kme-wrapper">
+
+  <!-- HEADER -->
+  <header class="kme-header">
+    <div class="kme-eyebrow">KME · Behavioral Science</div>
+    <h1>Experimental <em>Studies</em></h1>
+    <p class="kme-header-sub">RCT design, trial phases, bias control, and efficacy calculations</p>
+  </header>
+
+  <!-- NAV TABS -->
+  <nav class="kme-nav" role="tablist">
+    <button class="kme-nav-btn active" role="tab" aria-selected="true" data-tab="concepts">Concepts</button>
+    <button class="kme-nav-btn" role="tab" data-tab="comparisons">Comparisons</button>
+    <button class="kme-nav-btn" role="tab" data-tab="formulas">Formulas</button>
+    <button class="kme-nav-btn" role="tab" data-tab="traps">⚠ Exam Traps</button>
+    <button class="kme-nav-btn" role="tab" data-tab="mcqs">MCQs</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: CORE CONCEPTS                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="kme-section active" id="tab-concepts">
+    <p class="kme-section-label">Core Concepts</p>
+
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Experimental Study</div>
+      <div class="kme-concept-def">A prospective study intentionally introducing a treatment/intervention to observe outcomes and confirm etiological hypotheses.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Parallel Trial</div>
+      <div class="kme-concept-def">An experimental design where each group <em>concurrently</em> receives only one assigned treatment. No crossover occurs.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Crossover Trial</div>
+      <div class="kme-concept-def">A design where groups receive <em>all treatments sequentially</em>, requiring a <strong>washout period</strong> between treatments to eliminate carryover effects.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Factorial Trial</div>
+      <div class="kme-concept-def">A design allocating <em>two or more treatments per group</em> to test both <strong>combined</strong> and <strong>separate</strong> effects simultaneously.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Quasi-experimental Study</div>
+      <div class="kme-concept-def">A <em>non-randomized</em> trial assessing outcomes via <strong>pre-test and post-test</strong> measurements. Lacks the gold-standard random allocation of an RCT.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Randomization</div>
+      <div class="kme-concept-def">Unbiased <em>chance allocation</em> of subjects to control confounding variables and eliminate <strong>selection bias</strong>. Not the same as blinding.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Blinding (Masking)</div>
+      <div class="kme-concept-def">Hiding group allocation (using placebos) from subjects and/or investigators to prevent <strong>subjective observation bias</strong>. Not the same as randomization.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Phase I Trial</div>
+      <div class="kme-concept-def">Tests drug <strong>safety, tolerance,</strong> and <strong>pharmacokinetics</strong> on 20–100 <em>healthy volunteers</em>. Exception: severely ill patients (e.g., cancer) when the drug has serious side effects.</div>
+    </div>
+    <div class="kme-concept-card">
+      <div class="kme-concept-term">Phase III Trial</div>
+      <div class="kme-concept-def">Large <strong>randomized controlled trial</strong> (500–1500 subjects) assessing <em>efficacy against competing drugs</em> for <strong>market approval</strong>. The definitive evidence phase.</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: COMPARISONS                                              -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="kme-section" id="tab-comparisons">
+    <p class="kme-section-label">Design Comparisons</p>
+
+    <!-- RCT Pros vs Cons -->
+    <div class="kme-table-block">
+      <div class="kme-table-title">Randomized Clinical Trials — Pros vs. Cons</div>
+      <div class="kme-table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th class="kme-col-pro">✓ Advantage</th>
+              <th class="kme-col-con">✗ Disadvantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Accuracy</td>
+              <td class="kme-col-pro">Highest available</td>
+              <td class="kme-col-con">Highly expensive</td>
+            </tr>
+            <tr>
+              <td>Selection Bias</td>
+              <td class="kme-col-pro">Minimized via randomization</td>
+              <td class="kme-col-con">High time consumption</td>
+            </tr>
+            <tr>
+              <td>Observation Bias</td>
+              <td class="kme-col-pro">Minimized via blinding</td>
+              <td class="kme-col-con">Ethical approval difficulties</td>
+            </tr>
+            <tr>
+              <td>Confounders</td>
+              <td class="kme-col-pro">Controls confounding factors</td>
+              <td class="kme-col-con">Risk of non-compliance</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Parallel vs Crossover -->
+    <div class="kme-table-block">
+      <div class="kme-table-title">Parallel vs. Crossover Design</div>
+      <div class="kme-table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="kme-col-a">Parallel (A)</th>
+              <th class="kme-col-b">Crossover (B)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Treatment Timing</td>
+              <td class="kme-col-a">Concurrent</td>
+              <td class="kme-col-b">Sequential</td>
+            </tr>
+            <tr>
+              <td>Treatment Volume</td>
+              <td class="kme-col-a">One per group</td>
+              <td class="kme-col-b">Multiple per group</td>
+            </tr>
+            <tr>
+              <td>Washout Period</td>
+              <td class="kme-col-a">Never required</td>
+              <td class="kme-col-b">Strictly required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Simple vs Factorial -->
+    <div class="kme-table-block">
+      <div class="kme-table-title">Simple vs. Factorial Design</div>
+      <div class="kme-table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="kme-col-a">Simple Trial</th>
+              <th class="kme-col-b">Factorial Trial</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Treatments Given</td>
+              <td class="kme-col-a">Single intervention</td>
+              <td class="kme-col-b">Multiple interventions</td>
+            </tr>
+            <tr>
+              <td>Effects Measured</td>
+              <td class="kme-col-a">Separate effects only</td>
+              <td class="kme-col-b">Combined + separate effects</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: MATH FORMULAS                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="kme-section" id="tab-formulas">
+    <p class="kme-section-label">Formulas &amp; Calculations</p>
+
+    <!-- Core Formulas -->
+    <div class="kme-math-box">
+      <div class="kme-formula-label">Absolute Risk Reduction</div>
+      <div class="kme-formula-expr">ARR = | EER − CER |</div>
+      <div class="kme-formula-note">EER = Experimental Event Rate · CER = Control Event Rate</div>
+    </div>
+
+    <div class="kme-math-box">
+      <div class="kme-formula-label">Relative Risk Reduction</div>
+      <div class="kme-formula-expr">RRR = | EER − CER | / CER</div>
+      <div class="kme-formula-note">Always divide by <strong>CER</strong> — never by EER (common trap!)</div>
+    </div>
+
+    <div class="kme-math-box">
+      <div class="kme-formula-label">Number Needed to Treat</div>
+      <div class="kme-formula-expr">NNT = 1 / ARR</div>
+      <div class="kme-formula-note">Always round <strong>up</strong>. Smaller NNT = more effective drug.</div>
+    </div>
+
+    <div class="kme-spacer"></div>
+    <p class="kme-section-label">Worked Clinical Scenarios</p>
+
+    <!-- Scenario 1 -->
+    <div class="kme-scenario-box">
+      <div class="kme-scenario-title">Scenario 1 — Antihypertensive Drug (Stroke)</div>
+      <div class="kme-scenario-desc">CER (stroke in control) = 0.40 · EER (stroke on drug) = 0.10</div>
+      <details class="kme-steps-toggle">
+        <summary>
+          Show Steps
+          <svg class="kme-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="kme-steps-body">
+          <div class="kme-step"><div class="kme-step-num">1</div><div>ARR = |0.10 − 0.40| = <span class="kme-step-val">0.30</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">2</div><div>RRR = 0.30 / 0.40 = <span class="kme-step-val">0.75 (75% efficacy)</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">3</div><div>NNT = 1 / 0.30 = 3.33 → <span class="kme-step-val">Round up to 4 patients</span></div></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Scenario 2 -->
+    <div class="kme-scenario-box">
+      <div class="kme-scenario-title">Scenario 2 — Diabetic Medication (Nephropathy)</div>
+      <div class="kme-scenario-desc">CER (nephropathy in control) = 0.50 · EER (on drug) = 0.25</div>
+      <details class="kme-steps-toggle">
+        <summary>
+          Show Steps
+          <svg class="kme-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="kme-steps-body">
+          <div class="kme-step"><div class="kme-step-num">1</div><div>ARR = |0.25 − 0.50| = <span class="kme-step-val">0.25</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">2</div><div>RRR = 0.25 / 0.50 = <span class="kme-step-val">0.50 (50% efficacy)</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">3</div><div>NNT = 1 / 0.25 = <span class="kme-step-val">4 patients</span></div></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Scenario 3 -->
+    <div class="kme-scenario-box">
+      <div class="kme-scenario-title">Scenario 3 — Investigational Vaccine (Infection)</div>
+      <div class="kme-scenario-desc">CER (infection in control) = 0.10 · EER (vaccinated) = 0.02</div>
+      <details class="kme-steps-toggle">
+        <summary>
+          Show Steps
+          <svg class="kme-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="kme-steps-body">
+          <div class="kme-step"><div class="kme-step-num">1</div><div>ARR = |0.02 − 0.10| = <span class="kme-step-val">0.08</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">2</div><div>RRR = 0.08 / 0.10 = <span class="kme-step-val">0.80 (80% efficacy)</span></div></div>
+          <div class="kme-step"><div class="kme-step-num">3</div><div>NNT = 1 / 0.08 = 12.5 → <span class="kme-step-val">Round up to 13 patients</span></div></div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: EXAM TRAPS                                               -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="kme-section" id="tab-traps">
+    <p class="kme-section-label">Common Exam Traps</p>
+
+    <!-- SVG warning icon (inline, reused via JS) -->
+    <template id="kme-warn-icon">
+      <svg class="kme-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </template>
+
+    <div id="kme-traps-container"></div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: MCQs                                                     -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="kme-section" id="tab-mcqs">
+
+    <div class="kme-quiz-header">
+      <div class="kme-quiz-progress-ring">
+        <span id="kme-q-count">0 / 20 answered</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="kme-score-badge" id="kme-score-badge">Score: 0</div>
+        <button class="kme-quiz-reset-btn" id="kme-reset-btn">Reset Quiz</button>
+      </div>
+    </div>
+
+    <!-- Score summary (shown when all done) -->
+    <div class="kme-score-summary" id="kme-score-summary" style="display:none">
+      <div class="kme-score-big" id="kme-final-score">0/20</div>
+      <div class="kme-score-label" id="kme-final-label">Complete the quiz to see your score</div>
+      <div class="kme-score-bar-track">
+        <div class="kme-score-bar-fill" id="kme-score-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="kme-mcq-list"></div>
+  </section>
+
+</div><!-- /kme-wrapper -->
+
+<footer class="kme-footer">
+  <p>KME · Experimental Studies · Mansoura University</p>
+</footer>
+
+<!-- ─────────────────────────────────────────────────────────────── -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ─────────────────────────────────────────────────────────────── -->
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════════════ */
+const KME_TRAPS = [
+  {
+    num: "TRAP 01",
+    text: "<strong>Phase I healthy-volunteer assumption:</strong> Severely ill patients (e.g., cancer) are used for drugs with severe side effects when testing on healthy volunteers is unethical."
+  },
+  {
+    num: "TRAP 02",
+    text: "<strong>Randomization ≠ Blinding:</strong> Randomization eliminates <em>selection bias</em>, whereas blinding eliminates <em>observation/assessment bias</em>. These are distinct mechanisms."
+  },
+  {
+    num: "TRAP 03",
+    text: "<strong>Washout period in Parallel designs:</strong> Washout periods are exclusively used in Crossover designs, never in Parallel trials."
+  },
+  {
+    num: "TRAP 04",
+    text: "<strong>Cohort ≠ Experimental:</strong> Cohort studies observe natural exposure. Experimental studies intentionally assign the intervention. Do not confuse them."
+  },
+  {
+    num: "TRAP 05",
+    text: "<strong>Quasi-experimental lacks randomization:</strong> These studies rely on pre-post measurements, not random allocation. They are weaker than true RCTs."
+  },
+  {
+    num: "TRAP 06",
+    text: "<strong>RRR formula denominator:</strong> Always divide the absolute difference by <em>CER</em>, not EER. RRR = |EER − CER| / CER."
+  },
+  {
+    num: "TRAP 07",
+    text: "<strong>Phase III vs. Phase IV:</strong> Phase III compares drugs for <em>initial market approval</em>. Phase IV monitors <em>long-term surveillance post-approval</em>."
+  },
+  {
+    num: "TRAP 08",
+    text: "<strong>High NNT ≠ Success:</strong> A <em>small NNT</em> (e.g., 2–4) indicates a highly effective intervention. A high NNT (e.g., 1,000) means the drug barely helps."
+  }
+];
+
+const KME_MCQS = [
+  {
+    q: "Which study design intentionally introduces a treatment to observe a specific outcome?",
+    opts: ["Cohort study","Case-control study","Experimental study","Ecological study","Cross-sectional study"],
+    ans: 2,
+    exp: "<strong>C — Experimental studies</strong> intentionally introduce treatments to observe outcomes, unlike cohort or case-control studies which observe natural exposure."
+  },
+  {
+    q: "What is the primary purpose of a \"washout period\" in a crossover trial?",
+    opts: ["Eliminate selection bias","Prevent drug accumulation effects between treatments","Improve patient compliance","Decrease the cost of the trial","Randomize the patient population"],
+    ans: 1,
+    exp: "<strong>B — Washout periods</strong> ensure the previous treatment's pharmacological effects fully resolve before the next treatment begins, preventing carryover bias."
+  },
+  {
+    q: "A trial testing a prophylactic agent given to healthy individuals aims to prevent disease occurrence. This is classified as:",
+    opts: ["Therapeutic trial","Preventive trial","Phase IV trial","Simple trial","Quasi-experimental trial"],
+    ans: 1,
+    exp: "<strong>B — Preventive trials</strong> provide prophylactic agents to healthy individuals to stop disease from occurring, distinct from therapeutic trials treating existing disease."
+  },
+  {
+    q: "Which drug trial phase uses a small group of healthy volunteers (20–100) to determine basic safety and pharmacokinetics?",
+    opts: ["Stage 1 (Pre-clinical)","Phase I","Phase II","Phase III","Phase IV"],
+    ans: 1,
+    exp: "<strong>B — Phase I</strong> trials test safety and pharmacokinetics in small groups of 20–100 healthy volunteers. Pre-clinical is in-vitro/animal work before any human testing."
+  },
+  {
+    q: "Under what circumstance would a Phase I trial utilize diseased patients instead of healthy volunteers?",
+    opts: ["When testing vitamins","When the drug has mild side effects","When the drug has serious side effects (e.g., cytotoxics)","To reduce research costs","When phase II has already been completed"],
+    ans: 2,
+    exp: "<strong>C — Drugs with severe toxicity</strong> (cytotoxics, antineoplastics) are tested directly on patients who have failed other therapies, as exposing healthy volunteers would be unethical."
+  },
+  {
+    q: "Which trial phase provides the definitive scientific evidence required for new drug marketing approval?",
+    opts: ["Phase I","Phase II","Phase III","Phase IV","Pre-clinical"],
+    ans: 2,
+    exp: "<strong>C — Phase III</strong> trials provide large-scale RCT evidence (500–1500 subjects) comparing the new drug against existing drugs, which regulatory bodies require for market approval."
+  },
+  {
+    q: "Post-marketing surveillance to identify rare side effects and drug interactions occurs in:",
+    opts: ["Phase I","Phase II","Phase III","Phase IV","Phase V"],
+    ans: 3,
+    exp: "<strong>D — Phase IV</strong> is post-marketing surveillance conducted after a drug is approved, monitoring for rare or long-term adverse effects in the general population."
+  },
+  {
+    q: "A study assesses students' knowledge before and after a health education session without randomly assigning participants. What is this design?",
+    opts: ["Randomized controlled trial","Crossover trial","Quasi-experimental study","Factorial trial","Community trial"],
+    ans: 2,
+    exp: "<strong>C — Quasi-experimental studies</strong> use pre/post measurements without random allocation, making them weaker than true RCTs but more feasible in some settings."
+  },
+  {
+    q: "What is the primary method to eliminate selection bias in an experimental study?",
+    opts: ["Blinding","Placebo administration","Randomization","Stratification","Cross-over"],
+    ans: 2,
+    exp: "<strong>C — Randomization</strong> ensures unbiased treatment assignment, directly eliminating selection bias. Blinding eliminates observation bias — a separate concept."
+  },
+  {
+    q: "A clinical trial ensures the patient, the clinician, and the data analyst are unaware of the treatment allocation. This is known as:",
+    opts: ["Single-blind","Double-blind","Triple-blind","Unblinded","Quasi-blinded"],
+    ans: 2,
+    exp: "<strong>C — Triple-blinding</strong> conceals allocation from the subject, the treating investigator, and the data monitoring/analysis committee — all three parties."
+  },
+  {
+    q: "What inert substance is frequently used in clinical trials to ensure effective blinding?",
+    opts: ["Active comparator","Adjuvant","Placebo","Vaccine","Antibiotic"],
+    ans: 2,
+    exp: "<strong>C — A placebo</strong> is a pharmacologically inactive substitute (e.g., sugar pill) used to maintain blinding and ensure both groups behave identically except for the intervention."
+  },
+  {
+    q: "The absolute difference between the experimental event rate (EER) and the control event rate (CER) is the:",
+    opts: ["Relative Risk Reduction","Absolute Risk Reduction","Number Needed to Treat","Odds Ratio","Efficacy"],
+    ans: 1,
+    exp: "<strong>B — Absolute Risk Reduction (ARR)</strong> = |EER − CER|. It is the raw difference in event rates and forms the basis for calculating NNT."
+  },
+  {
+    q: "Which value indicates a highly effective intervention when calculating Number Needed to Treat (NNT)?",
+    opts: ["An NNT of 1,000","An NNT of 0","A negative NNT","A very small NNT (e.g., 2)","A constantly fluctuating NNT"],
+    ans: 3,
+    exp: "<strong>D — A small NNT</strong> means fewer patients must be treated to prevent one additional bad outcome. An NNT of 2 is excellent; an NNT of 1,000 means the drug barely works."
+  },
+  {
+    q: "What design allows investigators to test the separate and combined effects of two or more agents simultaneously?",
+    opts: ["Parallel design","Crossover design","Simple trial","Factorial trial","Community trial"],
+    ans: 3,
+    exp: "<strong>D — Factorial trials</strong> assign multiple treatments per group, enabling assessment of both individual and combined (interaction) effects within a single trial."
+  },
+  {
+    q: "What is the main goal of adding fluoridation to water supplies in an entire town and observing dental caries?",
+    opts: ["Phase I trial","Individual trial","Community trial","Therapeutic trial","Double-blind trial"],
+    ans: 2,
+    exp: "<strong>C — Community trials</strong> allocate interventions (like water fluoridation) to entire populations or communities rather than to individuals."
+  },
+  {
+    q: "What does a high Relative Risk Reduction (RRR) indicate?",
+    opts: ["Low drug efficacy","High drug efficacy","Increased selection bias","High incidence of side effects","Poor patient compliance"],
+    ans: 1,
+    exp: "<strong>B — A high RRR</strong> indicates the drug substantially reduces the event rate compared to control, reflecting a highly effective intervention."
+  },
+  {
+    q: "Which is a primary disadvantage of a Randomized Controlled Trial?",
+    opts: ["High risk of observation bias","Difficulties establishing temporal relationships","Inability to calculate incidence","Expensive and time-consuming","Highly susceptible to confounding variables"],
+    ans: 3,
+    exp: "<strong>D — RCTs</strong> provide the highest accuracy but are heavily restricted by high costs, long durations, ethical approval hurdles, and logistics of maintaining randomization."
+  },
+  {
+    q: "What step immediately follows the formulation of a hypothesis in an RCT?",
+    opts: ["Measuring outcomes","Obtaining informed consent","Establishing specific eligibility criteria","Administering the treatment protocol","Randomizing the participants"],
+    ans: 2,
+    exp: "<strong>C — After hypothesizing</strong>, investigators must define clear inclusion and exclusion eligibility criteria before recruiting, consenting, or randomizing any subjects."
+  },
+  {
+    q: "Which calculation accurately represents Relative Risk Reduction (RRR)?",
+    opts: ["1 / ARR","|EER − CER|","|CER − EER| / EER","|EER − CER| / CER","EER / CER"],
+    ans: 3,
+    exp: "<strong>D — RRR = |EER − CER| / CER.</strong> The denominator is always CER. Dividing by EER (option C) is a common exam trap."
+  },
+  {
+    q: "What is an alternative explanation for an observed outcome beyond the experimental variable?",
+    opts: ["Randomization","Confounding","Blinding","Stratification","Efficacy"],
+    ans: 1,
+    exp: "<strong>B — A confounding variable</strong> is an external factor associated with both the exposure and the outcome, which can distort the apparent treatment–outcome relationship."
+  }
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   STATE (localStorage)
+═══════════════════════════════════════════════════════════════════ */
+const LS_KEY  = 'kme_exp_studies_v1';
+const LS_TAB  = 'kme_exp_tab_v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveState(s) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch {}
+}
+function loadTab() {
+  return localStorage.getItem(LS_TAB) || 'concepts';
+}
+function saveTab(t) {
+  try { localStorage.setItem(LS_TAB, t); } catch {}
+}
+
+let quizState = loadState();  // { qIdx: chosenOptionIdx, ... }
+
+/* ══════════════════════════════════════════════════════════════════
+   NAV TABS
+═══════════════════════════════════════════════════════════════════ */
+const navBtns = document.querySelectorAll('.kme-nav-btn');
+const sections = document.querySelectorAll('.kme-section');
+
+function activateTab(tabId) {
+  navBtns.forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tabId);
+    b.setAttribute('aria-selected', b.dataset.tab === tabId);
+  });
+  sections.forEach(s => {
+    s.classList.toggle('active', s.id === 'tab-' + tabId);
+  });
+  saveTab(tabId);
+}
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+});
+
+// Restore last tab
+activateTab(loadTab());
+
+/* ══════════════════════════════════════════════════════════════════
+   EXAM TRAPS
+═══════════════════════════════════════════════════════════════════ */
+const trapsContainer = document.getElementById('kme-traps-container');
+const warnTemplate   = document.getElementById('kme-warn-icon');
+
+KME_TRAPS.forEach(trap => {
+  const div = document.createElement('div');
+  div.className = 'kme-alert-danger';
+
+  const iconClone = warnTemplate.content.cloneNode(true);
+  div.appendChild(iconClone);
+
+  const body = document.createElement('div');
+  body.className = 'kme-alert-body';
+  body.innerHTML = `<div class="kme-trap-label">${trap.num}</div><div class="kme-alert-text">${trap.text}</div>`;
+  div.appendChild(body);
+
+  trapsContainer.appendChild(div);
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   MCQ QUIZ
+═══════════════════════════════════════════════════════════════════ */
+const mcqList     = document.getElementById('kme-mcq-list');
+const qCountEl    = document.getElementById('kme-q-count');
+const scoreBadge  = document.getElementById('kme-score-badge');
+const scoreSummary= document.getElementById('kme-score-summary');
+const finalScore  = document.getElementById('kme-final-score');
+const finalLabel  = document.getElementById('kme-final-label');
+const scoreBar    = document.getElementById('kme-score-bar');
+const resetBtn    = document.getElementById('kme-reset-btn');
+
+const KEYS = ['A','B','C','D','E'];
+
+function buildMCQ(mcq, idx) {
+  const container = document.createElement('div');
+  container.className = 'kme-mcq-container';
+  container.id = `kme-mcq-${idx}`;
+
+  const saved = quizState[idx];
+  const answered = saved !== undefined;
+  if (answered) container.classList.add('answered');
+
+  container.innerHTML = `
+    <div class="kme-mcq-num">QUESTION ${String(idx+1).padStart(2,'0')} / ${KME_MCQS.length}</div>
+    <div class="kme-mcq-q">${mcq.q}</div>
+    <ul class="kme-options-list" id="kme-opts-${idx}"></ul>
+    <div class="kme-explanation${answered ? ' visible' : ''}" id="kme-exp-${idx}">
+      ${mcq.exp}
+    </div>
+  `;
+
+  const optList = container.querySelector(`#kme-opts-${idx}`);
+
+  mcq.opts.forEach((opt, oIdx) => {
+    const li = document.createElement('li');
+    const label = document.createElement('label');
+    label.className = 'kme-option-label';
+
+    // Determine class from saved state
+    if (answered) {
+      label.classList.add('disabled');
+      if (oIdx === saved && oIdx === mcq.ans) label.classList.add('selected-correct');
+      else if (oIdx === saved && oIdx !== mcq.ans) label.classList.add('selected-wrong');
+      else if (oIdx === mcq.ans) label.classList.add('correct-reveal');
+    }
+
+    label.innerHTML = `
+      <input type="radio" name="q${idx}" value="${oIdx}" ${answered ? 'disabled' : ''} />
+      <span class="kme-option-key">${KEYS[oIdx]}</span>
+      <span class="kme-option-text">${opt}</span>
+    `;
+
+    if (!answered) {
+      label.addEventListener('click', () => handleAnswer(idx, oIdx));
+    }
+
+    li.appendChild(label);
+    optList.appendChild(li);
+  });
+
+  return container;
+}
+
+function handleAnswer(qIdx, chosenIdx) {
+  if (quizState[qIdx] !== undefined) return;
+
+  quizState[qIdx] = chosenIdx;
+  saveState(quizState);
+
+  const mcq = KME_MCQS[qIdx];
+  const container = document.getElementById(`kme-mcq-${qIdx}`);
+  container.classList.add('answered');
+
+  const labels = container.querySelectorAll('.kme-option-label');
+  labels.forEach((label, oIdx) => {
+    label.classList.add('disabled');
+    const inp = label.querySelector('input');
+    if (inp) inp.disabled = true;
+
+    if (oIdx === chosenIdx && oIdx === mcq.ans) label.classList.add('selected-correct');
+    else if (oIdx === chosenIdx && oIdx !== mcq.ans) label.classList.add('selected-wrong');
+    else if (oIdx === mcq.ans) label.classList.add('correct-reveal');
+  });
+
+  const expEl = document.getElementById(`kme-exp-${qIdx}`);
+  if (expEl) expEl.classList.add('visible');
+
+  updateScoreUI();
+}
+
+function updateScoreUI() {
+  const answered = Object.keys(quizState).length;
+  let correct = 0;
+  Object.entries(quizState).forEach(([idx, chosen]) => {
+    if (parseInt(chosen) === KME_MCQS[parseInt(idx)].ans) correct++;
+  });
+
+  qCountEl.textContent = `${answered} / ${KME_MCQS.length} answered`;
+  scoreBadge.textContent = `Score: ${correct}`;
+
+  if (answered === KME_MCQS.length) {
+    scoreSummary.style.display = 'block';
+    finalScore.textContent = `${correct}/${KME_MCQS.length}`;
+    const pct = Math.round((correct / KME_MCQS.length) * 100);
+    finalLabel.textContent = pct >= 80 ? `Excellent! ${pct}% — Keep it up, Khaled 🏆` :
+                             pct >= 60 ? `Good effort! ${pct}% — Review the traps.` :
+                             `${pct}% — Revisit the concepts and try again.`;
+    setTimeout(() => { scoreBar.style.width = pct + '%'; }, 100);
+    scoreSummary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    scoreSummary.style.display = 'none';
+  }
+}
+
+function renderMCQs() {
+  mcqList.innerHTML = '';
+  KME_MCQS.forEach((mcq, idx) => {
+    mcqList.appendChild(buildMCQ(mcq, idx));
+  });
+  updateScoreUI();
+}
+
+resetBtn.addEventListener('click', () => {
+  if (!confirm('Reset all quiz answers?')) return;
+  quizState = {};
+  saveState(quizState);
+  scoreSummary.style.display = 'none';
+  scoreBar.style.width = '0%';
+  renderMCQs();
+});
+
+// Initial render
+renderMCQs();
+</script>
+</body>
+</html>

@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KME - Mortality Statistics Study Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================
+           CSS CUSTOM PROPERTIES
+           ============================ */
+        :root {
+            /* Light Theme */
+            --kme-bg-primary: #f4f6fb;
+            --kme-bg-secondary: #ffffff;
+            --kme-bg-tertiary: #e8ecf4;
+            --kme-text-primary: #1a1d29;
+            --kme-text-secondary: #4a5068;
+            --kme-text-muted: #7a8099;
+            --kme-accent-blue: #3b6cf5;
+            --kme-accent-blue-light: #e8eeff;
+            --kme-accent-green: #22c55e;
+            --kme-accent-green-light: #e7faf0;
+            --kme-accent-red: #ef4444;
+            --kme-accent-red-light: #fef2f2;
+            --kme-accent-orange: #f59e0b;
+            --kme-accent-orange-light: #fffbeb;
+            --kme-accent-purple: #8b5cf6;
+            --kme-accent-purple-light: #f3f0ff;
+            --kme-accent-teal: #14b8a6;
+            --kme-accent-teal-light: #e6faf8;
+            --kme-border-color: #e2e6ef;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05);
+            --kme-radius-sm: 8px;
+            --kme-radius-md: 12px;
+            --kme-radius-lg: 16px;
+            --kme-radius-xl: 20px;
+            --kme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --kme-font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, sans-serif;
+            --kme-font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f1119;
+            --kme-bg-secondary: #1a1d2e;
+            --kme-bg-tertiary: #252940;
+            --kme-text-primary: #e8eaf0;
+            --kme-text-secondary: #b0b5cc;
+            --kme-text-muted: #6b7199;
+            --kme-accent-blue: #6b8ff8;
+            --kme-accent-blue-light: #1e2a4a;
+            --kme-accent-green: #4ade80;
+            --kme-accent-green-light: #132a1e;
+            --kme-accent-red: #f87171;
+            --kme-accent-red-light: #2d1518;
+            --kme-accent-orange: #fbbf24;
+            --kme-accent-orange-light: #2d2410;
+            --kme-accent-purple: #a78bfa;
+            --kme-accent-purple-light: #1e1640;
+            --kme-accent-teal: #2dd4bf;
+            --kme-accent-teal-light: #0d2926;
+            --kme-border-color: #2a2f45;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        /* ============================
+           GLOBAL RESET & BASE
+           ============================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--kme-font-body);
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.65;
+            transition: var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ============================
+           HEADER & NAVIGATION
+           ============================ */
+        .kme-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            box-shadow: var(--kme-shadow-sm);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .kme-header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kme-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kme-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--kme-accent-blue), var(--kme-accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .kme-logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-logo-text span {
+            color: var(--kme-text-muted);
+            font-weight: 400;
+            font-size: 0.8rem;
+            display: block;
+            line-height: 1.1;
+            margin-top: 1px;
+        }
+
+        .kme-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Dark Mode Toggle */
+        .kme-theme-toggle {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--kme-bg-tertiary);
+            border-radius: var(--kme-radius-sm);
+            color: var(--kme-text-secondary);
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* Progress Bar */
+        .kme-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--kme-accent-blue), var(--kme-accent-purple));
+            border-radius: 0 2px 2px 0;
+            transition: width 0.2s ease;
+            width: 0%;
+        }
+
+        /* ============================
+           TAB NAVIGATION
+           ============================ */
+        .kme-tab-nav {
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            position: sticky;
+            top: 62px;
+            z-index: 90;
+        }
+
+        .kme-tab-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 8px;
+        }
+
+        .kme-tab-nav-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-tab-btn {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--kme-text-muted);
+            font-family: var(--kme-font-body);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: var(--kme-transition);
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kme-tab-btn i {
+            font-size: 0.9rem;
+        }
+
+        .kme-tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2.5px;
+            background: var(--kme-accent-blue);
+            border-radius: 2px 2px 0 0;
+            transition: width 0.3s ease;
+        }
+
+        .kme-tab-btn.kme-active {
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-tab-btn.kme-active::after {
+            width: 70%;
+        }
+
+        .kme-tab-btn:hover {
+            color: var(--kme-text-primary);
+        }
+
+        /* ============================
+           MAIN LAYOUT
+           ============================ */
+        .kme-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 100px;
+        }
+
+        .kme-section {
+            display: none;
+            animation: kme-fadeIn 0.4s ease;
+        }
+
+        .kme-section.kme-active {
+            display: block;
+        }
+
+        @keyframes kme-fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Title */
+        .kme-section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--kme-text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .kme-section-subtitle {
+            font-size: 0.9rem;
+            color: var(--kme-text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* ============================
+           CONCEPT CARDS
+           ============================ */
+        .kme-concept-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kme-concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .kme-concept-card:nth-child(odd)::before {
+            background: linear-gradient(180deg, var(--kme-accent-blue), var(--kme-accent-teal));
+        }
+        .kme-concept-card:nth-child(even)::before {
+            background: linear-gradient(180deg, var(--kme-accent-purple), var(--kme-accent-blue));
+        }
+
+        .kme-concept-card:hover {
+            box-shadow: var(--kme-shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .kme-concept-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .kme-concept-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-concept-icon.kme-blue {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+        }
+        .kme-concept-icon.kme-green {
+            background: var(--kme-accent-green-light);
+            color: var(--kme-accent-green);
+        }
+        .kme-concept-icon.kme-purple {
+            background: var(--kme-accent-purple-light);
+            color: var(--kme-accent-purple);
+        }
+        .kme-concept-icon.kme-teal {
+            background: var(--kme-accent-teal-light);
+            color: var(--kme-accent-teal);
+        }
+        .kme-concept-icon.kme-orange {
+            background: var(--kme-accent-orange-light);
+            color: var(--kme-accent-orange);
+        }
+        .kme-concept-icon.kme-red {
+            background: var(--kme-accent-red-light);
+            color: var(--kme-accent-red);
+        }
+
+        .kme-concept-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            line-height: 1.3;
+        }
+
+        .kme-concept-card p {
+            color: var(--kme-text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+            padding-left: 52px;
+        }
+
+        .kme-concept-card .kme-highlight {
+            color: var(--kme-accent-blue);
+            font-weight: 600;
+        }
+
+        .kme-concept-card .kme-keyword {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        /* ============================
+           COMPARISON TABLES
+           ============================ */
+        .kme-table-responsive {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-lg);
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-table-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kme-table-header-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .kme-table-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--kme-border-color) transparent;
+        }
+
+        .kme-table-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .kme-table-scroll::-webkit-scrollbar-thumb {
+            background: var(--kme-border-color);
+            border-radius: 4px;
+        }
+
+        .kme-table {
+            width: 100%;
+            min-width: 420px;
+            border-collapse: collapse;
+        }
+
+        .kme-table thead th {
+            background: var(--kme-bg-tertiary);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--kme-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--kme-border-color);
+            white-space: nowrap;
+        }
+
+        .kme-table tbody td {
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            vertical-align: top;
+        }
+
+        .kme-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .kme-table tbody tr:hover {
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-table td:first-child {
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            white-space: nowrap;
+        }
+
+        .kme-table .kme-cell-highlight-a {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
+
+        .kme-table .kme-cell-highlight-b {
+            background: var(--kme-accent-purple-light);
+            color: var(--kme-accent-purple);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
+
+        /* ============================
+           MATH / FORMULA BOXES
+           ============================ */
+        .kme-math-box {
+            background: linear-gradient(135deg, var(--kme-accent-teal-light), var(--kme-accent-blue-light));
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        [data-theme="dark"] .kme-math-box {
+            background: linear-gradient(135deg, var(--kme-accent-teal-light), var(--kme-bg-tertiary));
+        }
+
+        .kme-math-box-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .kme-math-box-header i {
+            font-size: 1.1rem;
+            color: var(--kme-accent-teal);
+        }
+
+        .kme-math-box-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-formula {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            padding: 14px 18px;
+            font-family: var(--kme-font-mono);
+            font-size: 0.88rem;
+            color: var(--kme-accent-teal);
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .kme-math-box details {
+            margin-top: 8px;
+        }
+
+        .kme-math-box summary {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--kme-accent-blue);
+            cursor: pointer;
+            transition: var(--kme-transition);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .kme-math-box summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-math-box summary::before {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .kme-math-box details[open] summary::before {
+            transform: rotate(180deg);
+        }
+
+        .kme-math-box summary:hover {
+            background: var(--kme-accent-blue-light);
+        }
+
+        .kme-math-box .kme-steps {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-top: none;
+            border-radius: 0 0 var(--kme-radius-sm) var(--kme-radius-sm);
+            padding: 14px 18px;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.8;
+            animation: kme-fadeIn 0.3s ease;
+        }
+
+        .kme-steps .kme-step-line {
+            margin-bottom: 4px;
+        }
+
+        .kme-steps .kme-step-result {
+            color: var(--kme-accent-green);
+            font-weight: 700;
+            font-family: var(--kme-font-mono);
+        }
+
+        /* ============================
+           EXAM TRAPS (ALERTS)
+           ============================ */
+        .kme-alert-danger {
+            background: var(--kme-accent-red-light);
+            border: 1px solid var(--kme-accent-red);
+            border-left: 4px solid var(--kme-accent-red);
+            border-radius: var(--kme-radius-md);
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+        }
+
+        .kme-alert-danger:hover {
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .kme-alert-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--kme-accent-red);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .kme-alert-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--kme-accent-red);
+        }
+
+        .kme-alert-danger p {
+            color: var(--kme-text-primary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+            padding-left: 38px;
+        }
+
+        .kme-alert-danger .kme-trap-keyword {
+            font-weight: 700;
+            color: var(--kme-accent-red);
+        }
+
+        /* ============================
+           MCQ QUIZ SECTION
+           ============================ */
+        .kme-mcq-container {
+            margin-bottom: 24px;
+        }
+
+        .kme-mcq-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-md);
+        }
+
+        .kme-mcq-progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--kme-text-secondary);
+        }
+
+        .kme-mcq-progress-text span {
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-mcq-score {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .kme-score-correct {
+            color: var(--kme-accent-green);
+        }
+
+        .kme-score-divider {
+            color: var(--kme-text-muted);
+        }
+
+        .kme-score-wrong {
+            color: var(--kme-accent-red);
+        }
+
+        .kme-mcq-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-card.kme-answered-correct {
+            border-color: var(--kme-accent-green);
+            box-shadow: 0 0 0 1px var(--kme-accent-green);
+        }
+
+        .kme-mcq-card.kme-answered-wrong {
+            border-color: var(--kme-accent-red);
+            box-shadow: 0 0 0 1px var(--kme-accent-red);
+        }
+
+        .kme-mcq-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .kme-mcq-question {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        .kme-mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .kme-mcq-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 2px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            min-height: 48px;
+            user-select: none;
+        }
+
+        .kme-mcq-option:hover:not(.kme-disabled) {
+            border-color: var(--kme-accent-blue);
+            background: var(--kme-accent-blue-light);
+        }
+
+        .kme-mcq-option.kme-disabled {
+            cursor: default;
+            opacity: 0.65;
+        }
+
+        .kme-mcq-option.kme-selected-correct {
+            border-color: var(--kme-accent-green);
+            background: var(--kme-accent-green-light);
+            opacity: 1 !important;
+        }
+
+        .kme-mcq-option.kme-selected-wrong {
+            border-color: var(--kme-accent-red);
+            background: var(--kme-accent-red-light);
+            opacity: 1 !important;
+        }
+
+        .kme-mcq-option.kme-correct-answer {
+            border-color: var(--kme-accent-green);
+            background: var(--kme-accent-green-light);
+            opacity: 1 !important;
+        }
+
+        .kme-mcq-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--kme-border-color);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-option:hover:not(.kme-disabled) .kme-mcq-radio {
+            border-color: var(--kme-accent-blue);
+        }
+
+        .kme-mcq-option.kme-selected-correct .kme-mcq-radio {
+            border-color: var(--kme-accent-green);
+            background: var(--kme-accent-green);
+        }
+
+        .kme-mcq-option.kme-selected-correct .kme-mcq-radio::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.6rem;
+            color: #fff;
+        }
+
+        .kme-mcq-option.kme-selected-wrong .kme-mcq-radio {
+            border-color: var(--kme-accent-red);
+            background: var(--kme-accent-red);
+        }
+
+        .kme-mcq-option.kme-selected-wrong .kme-mcq-radio::after {
+            content: '\f00d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.65rem;
+            color: #fff;
+        }
+
+        .kme-mcq-option.kme-correct-answer .kme-mcq-radio {
+            border-color: var(--kme-accent-green);
+            background: var(--kme-accent-green);
+        }
+
+        .kme-mcq-option.kme-correct-answer .kme-mcq-radio::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.6rem;
+            color: #fff;
+        }
+
+        .kme-mcq-option-letter {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--kme-text-muted);
+            min-width: 14px;
+        }
+
+        .kme-mcq-option-text {
+            font-size: 0.9rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Explanation */
+        .kme-explanation {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: var(--kme-radius-sm);
+            font-size: 0.87rem;
+            line-height: 1.6;
+            animation: kme-fadeIn 0.35s ease;
+        }
+
+        .kme-explanation.kme-show {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kme-explanation.kme-correct {
+            background: var(--kme-accent-green-light);
+            border: 1px solid var(--kme-accent-green);
+            color: var(--kme-text-primary);
+        }
+
+        .kme-explanation.kme-wrong {
+            background: var(--kme-accent-red-light);
+            border: 1px solid var(--kme-accent-red);
+            color: var(--kme-text-primary);
+        }
+
+        .kme-explanation i {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .kme-explanation.kme-correct i {
+            color: var(--kme-accent-green);
+        }
+
+        .kme-explanation.kme-wrong i {
+            color: var(--kme-accent-red);
+        }
+
+        /* Reset Quiz Button */
+        .kme-reset-quiz {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--kme-accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--kme-radius-sm);
+            font-family: var(--kme-font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            margin-top: 8px;
+        }
+
+        .kme-reset-quiz:hover {
+            background: #2a57d4;
+            transform: translateY(-1px);
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-reset-quiz:active {
+            transform: scale(0.97);
+        }
+
+        /* ============================
+           BACK TO TOP BUTTON
+           ============================ */
+        .kme-back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--kme-accent-blue);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: var(--kme-shadow-lg);
+            transition: var(--kme-transition);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            z-index: 80;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-back-to-top.kme-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .kme-back-to-top:hover {
+            background: #2a57d4;
+            transform: translateY(-2px);
+        }
+
+        /* ============================
+           RESPONSIVE ADJUSTMENTS
+           ============================ */
+        @media (min-width: 640px) {
+            .kme-main {
+                padding: 28px 24px 100px;
+            }
+
+            .kme-section-title {
+                font-size: 1.75rem;
+            }
+
+            .kme-concept-card {
+                padding: 24px;
+            }
+
+            .kme-mcq-card {
+                padding: 24px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .kme-header-inner {
+                padding: 14px 24px;
+            }
+
+            .kme-tab-btn {
+                padding: 14px 20px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ============================
+           UTILITY: SMOOTH SCROLLBAR
+           ============================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--kme-border-color);
+            border-radius: 4px;
+        }
+
+        /* ============================
+           PRINT STYLES
+           ============================ */
+        @media print {
+            .kme-header, .kme-tab-nav, .kme-back-to-top, .kme-theme-toggle {
+                display: none !important;
+            }
+            .kme-section {
+                display: block !important;
+            }
+            body {
+                background: #fff;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================
+         HEADER
+         ============================ -->
+    <header class="kme-header">
+        <div class="kme-header-inner">
+            <div class="kme-logo">
+                <div class="kme-logo-icon">KME</div>
+                <div class="kme-logo-text">
+                    Mortality Statistics
+                    <span>Community Medicine Study Guide</span>
+                </div>
+            </div>
+            <div class="kme-header-actions">
+                <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+        <div class="kme-progress-bar" id="kmeProgressBar"></div>
+    </header>
+
+    <!-- ============================
+         TAB NAVIGATION
+         ============================ -->
+    <nav class="kme-tab-nav">
+        <div class="kme-tab-nav-inner" id="kmeTabNav">
+            <button class="kme-tab-btn kme-active" data-tab="concepts">
+                <i class="fas fa-book-open"></i> Concepts
+            </button>
+            <button class="kme-tab-btn" data-tab="comparisons">
+                <i class="fas fa-columns"></i> Compare
+            </button>
+            <button class="kme-tab-btn" data-tab="formulas">
+                <i class="fas fa-calculator"></i> Formulas
+            </button>
+            <button class="kme-tab-btn" data-tab="traps">
+                <i class="fas fa-exclamation-triangle"></i> Traps
+            </button>
+            <button class="kme-tab-btn" data-tab="quiz">
+                <i class="fas fa-question-circle"></i> Quiz
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================
+         MAIN CONTENT
+         ============================ -->
+    <main class="kme-main">
+
+        <!-- ========== CORE CONCEPTS SECTION ========== -->
+        <section class="kme-section kme-active" id="kme-concepts">
+            <h1 class="kme-section-title">Core Concepts</h1>
+            <p class="kme-section-subtitle">Essential mortality metrics every medical student needs to master for exams and clinical practice.</p>
+
+            <!-- Concept 1 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-blue">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Mortality Statistics</h3>
+                </div>
+                <p>Essential metrics for calculating <strong>death rates</strong>, crucial for planning and decision-making in <span class="kme-keyword">health-related policies</span>.</p>
+            </div>
+
+            <!-- Concept 2 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-teal">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Crude Death Rate</h3>
+                </div>
+                <p>Measures <strong>overall mortality</strong> by dividing <span class="kme-keyword">total deaths</span> by the <span class="kme-keyword">estimated mid-year population</span>. This gives a broad picture of mortality across the entire population.</p>
+            </div>
+
+            <!-- Concept 3 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-red">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Maternal Mortality Rate</h3>
+                </div>
+                <p>Deaths of mothers due to causes <strong>related to or aggravated by</strong> pregnancy, labor, and puerperium. Key causes include <span class="kme-keyword">hemorrhage</span>, <span class="kme-keyword">eclampsia</span>, and <span class="kme-keyword">sepsis</span>.</p>
+            </div>
+
+            <!-- Concept 4 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-purple">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Infant Mortality Rate</h3>
+                </div>
+                <p>Divided into <span class="kme-keyword">neonatal</span> (under 28 days) and <span class="kme-keyword">post-neonatal</span> (28 days to 1 year) death rates, both using <strong>total live births</strong> as the denominator.</p>
+            </div>
+
+            <!-- Concept 5 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-orange">
+                        <i class="fas fa-virus"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Case Fatality Rate</h3>
+                </div>
+                <p>Evaluates <strong>disease severity/virulence</strong> by determining the percentage of deaths among all <span class="kme-keyword">diagnosed cases</span> of a specific disease.</p>
+            </div>
+
+            <!-- Concept 6 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-green">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Proportionate Mortality Rate</h3>
+                </div>
+                <p>Identifies the <strong>burden of a specific disease</strong> by calculating the percentage of <span class="kme-keyword">total deaths</span> caused by that specific condition.</p>
+            </div>
+
+            <!-- Concept 7 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-blue">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Child (1–4 years) Mortality Rate</h3>
+                </div>
+                <p>Measures deaths of children aged <strong>1 to 4 years old</strong>, using the <span class="kme-keyword">total number of children in that specific age group</span> as the denominator.</p>
+            </div>
+
+            <!-- Concept 8 -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-teal">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="kme-concept-card-title">Global Mortality Trends</h3>
+                </div>
+                <p>Currently impacted by <span class="kme-keyword">COVID-19</span>, aging populations, infectious diseases, mental health issues, and rising <strong>chronic/obesity-related diseases</strong>.</p>
+            </div>
+        </section>
+
+        <!-- ========== COMPARISONS SECTION ========== -->
+        <section class="kme-section" id="kme-comparisons">
+            <h1 class="kme-section-title">Key Comparisons</h1>
+            <p class="kme-section-subtitle">Side-by-side analysis of commonly confused mortality metrics. Master these distinctions for exam success.</p>
+
+            <!-- Comparison Table 1 -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-header">
+                    <div class="kme-table-header-icon kme-concept-icon kme-purple">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <h3>Neonatal vs. Post-Neonatal Mortality</h3>
+                </div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Neonatal</th>
+                                <th>Post-Neonatal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Timeframe</td>
+                                <td><span class="kme-cell-highlight-a">&lt; 28 days</span></td>
+                                <td><span class="kme-cell-highlight-b">28 days to 1 year</span></td>
+                            </tr>
+                            <tr>
+                                <td>Denominator</td>
+                                <td>Total births</td>
+                                <td>Total births</td>
+                            </tr>
+                            <tr>
+                                <td>Top Causes</td>
+                                <td><span class="kme-cell-highlight-a">Prematurity / Birth injuries</span></td>
+                                <td><span class="kme-cell-highlight-b">Infections / PEM</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comparison Table 2 -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-header">
+                    <div class="kme-table-header-icon kme-concept-icon kme-orange">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3>Case Fatality Rate vs. Proportionate Mortality Rate</h3>
+                </div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Case Fatality</th>
+                                <th>Proportionate Mortality</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Measures</td>
+                                <td><span class="kme-cell-highlight-a">Disease severity</span></td>
+                                <td><span class="kme-cell-highlight-b">Cause contribution</span></td>
+                            </tr>
+                            <tr>
+                                <td>Denominator</td>
+                                <td><span class="kme-cell-highlight-a">Total cases</span></td>
+                                <td><span class="kme-cell-highlight-b">Total deaths</span></td>
+                            </tr>
+                            <tr>
+                                <td>Multiplier</td>
+                                <td>× 100</td>
+                                <td>× 100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comparison Table 3 -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-header">
+                    <div class="kme-table-header-icon kme-concept-icon kme-teal">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Crude Death Rate vs. Cause-Specific Mortality Rate</h3>
+                </div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Crude Death Rate</th>
+                                <th>Cause-Specific</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Scope</td>
+                                <td><span class="kme-cell-highlight-a">All causes</span></td>
+                                <td><span class="kme-cell-highlight-b">Specific cause</span></td>
+                            </tr>
+                            <tr>
+                                <td>Denominator</td>
+                                <td>Mid-year population</td>
+                                <td>Mid-year population</td>
+                            </tr>
+                            <tr>
+                                <td>Multiplier</td>
+                                <td><span class="kme-cell-highlight-a">× 1,000</span></td>
+                                <td><span class="kme-cell-highlight-b">× 100,000</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FORMULAS SECTION ========== -->
+        <section class="kme-section" id="kme-formulas">
+            <h1 class="kme-section-title">Formulas & Calculations</h1>
+            <p class="kme-section-subtitle">Key formulas with interactive clinical scenarios. Click "Show Steps" to reveal worked solutions.</p>
+
+            <!-- Formula 1: Crude Mortality Rate -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-header">
+                    <i class="fas fa-square-root-variable"></i>
+                    <h3>Crude Mortality Rate</h3>
+                </div>
+                <div class="kme-formula">
+                    (Total Deaths ÷ Estimated Mid-Year Population) × 1,000
+                </div>
+                <details>
+                    <summary>Show Steps — Clinical Scenario</summary>
+                    <div class="kme-steps">
+                        <div class="kme-step-line"><strong>Scenario:</strong> A city has an estimated mid-year population of 500,000. In one year, 2,500 people die from all causes.</div>
+                        <br>
+                        <div class="kme-step-line"><strong>Step 1:</strong> Identify numerator → Total deaths = 2,500</div>
+                        <div class="kme-step-line"><strong>Step 2:</strong> Identify denominator → Mid-year population = 500,000</div>
+                        <div class="kme-step-line"><strong>Step 3:</strong> Apply formula → (2,500 ÷ 500,000) × 1,000</div>
+                        <div class="kme-step-line"><strong>Step 4:</strong> Calculate → 0.005 × 1,000</div>
+                        <br>
+                        <div class="kme-step-line kme-step-result">✅ Answer: 5 deaths per 1,000 population</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Formula 2: Infant Mortality Rate -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-header">
+                    <i class="fas fa-square-root-variable"></i>
+                    <h3>Infant Mortality Rate</h3>
+                </div>
+                <div class="kme-formula">
+                    (Deaths &lt; 1 Year ÷ Total Births) × 1,000
+                </div>
+                <details>
+                    <summary>Show Steps — Clinical Scenario</summary>
+                    <div class="kme-steps">
+                        <div class="kme-step-line"><strong>Scenario:</strong> A hospital reports 10,000 live births in a year. During that same year, 150 infants die before reaching 1 year of age.</div>
+                        <br>
+                        <div class="kme-step-line"><strong>Step 1:</strong> Identify numerator → Infant deaths = 150</div>
+                        <div class="kme-step-line"><strong>Step 2:</strong> Identify denominator → Total live births = 10,000</div>
+                        <div class="kme-step-line"><strong>Step 3:</strong> Apply formula → (150 ÷ 10,000) × 1,000</div>
+                        <div class="kme-step-line"><strong>Step 4:</strong> Calculate → 0.015 × 1,000</div>
+                        <br>
+                        <div class="kme-step-line kme-step-result">✅ Answer: 15 deaths per 1,000 live births</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Formula 3: Maternal Mortality Rate -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-header">
+                    <i class="fas fa-square-root-variable"></i>
+                    <h3>Maternal Mortality Rate</h3>
+                </div>
+                <div class="kme-formula">
+                    (Maternal Deaths ÷ Females 15–49 Years) × 100,000
+                </div>
+                <details>
+                    <summary>Show Steps — Clinical Scenario</summary>
+                    <div class="kme-steps">
+                        <div class="kme-step-line"><strong>Scenario:</strong> A region has 200,000 females of childbearing age (15–49). In one year, 40 women die from pregnancy-related hemorrhage.</div>
+                        <br>
+                        <div class="kme-step-line"><strong>Step 1:</strong> Identify numerator → Maternal deaths = 40</div>
+                        <div class="kme-step-line"><strong>Step 2:</strong> Identify denominator → Females 15–49 = 200,000</div>
+                        <div class="kme-step-line"><strong>Step 3:</strong> Apply formula → (40 ÷ 200,000) × 100,000</div>
+                        <div class="kme-step-line"><strong>Step 4:</strong> Calculate → 0.0002 × 100,000</div>
+                        <br>
+                        <div class="kme-step-line kme-step-result">✅ Answer: 20 deaths per 100,000 females</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Formula 4: Case Fatality Rate -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-header">
+                    <i class="fas fa-square-root-variable"></i>
+                    <h3>Case Fatality Rate</h3>
+                </div>
+                <div class="kme-formula">
+                    (Deaths from Specific Cause ÷ Total Cases) × 100
+                </div>
+                <details>
+                    <summary>Show Steps — Clinical Scenario</summary>
+                    <div class="kme-steps">
+                        <div class="kme-step-line"><strong>Scenario:</strong> In a local outbreak, 400 patients contract a novel respiratory virus. Of those infected, 20 die from the disease.</div>
+                        <br>
+                        <div class="kme-step-line"><strong>Step 1:</strong> Identify numerator → Deaths = 20</div>
+                        <div class="kme-step-line"><strong>Step 2:</strong> Identify denominator → Total cases = 400</div>
+                        <div class="kme-step-line"><strong>Step 3:</strong> Apply formula → (20 ÷ 400) × 100</div>
+                        <div class="kme-step-line"><strong>Step 4:</strong> Calculate → 0.05 × 100</div>
+                        <br>
+                        <div class="kme-step-line kme-step-result">✅ Answer: 5%</div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ========== EXAM TRAPS SECTION ========== -->
+        <section class="kme-section" id="kme-traps">
+            <h1 class="kme-section-title">⚠️ Exam Traps</h1>
+            <p class="kme-section-subtitle">High-yield pitfalls that commonly appear on exams. Study these carefully to avoid losing easy marks.</p>
+
+            <!-- Trap 1 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 1 — Infant Mortality Denominator</span>
+                </div>
+                <p>Confusing denominators for Infant Mortality. It strictly uses <span class="kme-trap-keyword">total live births</span>, <strong>not</strong> the mid-year population or total infant population.</p>
+            </div>
+
+            <!-- Trap 2 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 2 — Case Fatality vs. Proportionate Mortality</span>
+                </div>
+                <p>Confusing denominators: Case Fatality uses <span class="kme-trap-keyword">total cases</span>, while Proportionate Mortality uses <span class="kme-trap-keyword">total deaths from all causes</span>.</p>
+            </div>
+
+            <!-- Trap 3 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 3 — Multiplier Mix-up</span>
+                </div>
+                <p>Misremembering the multiplier: Both Case Fatality Rate and Proportionate Mortality Rate use <span class="kme-trap-keyword">× 100</span> (percentages), unlike most mortality rates which use 1,000 or 100,000.</p>
+            </div>
+
+            <!-- Trap 4 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 4 — Maternal Death Causes</span>
+                </div>
+                <p>Misclassifying causes: <span class="kme-trap-keyword">Hemorrhage</span> is the <strong>most important/common</strong> cause in Egypt, but <span class="kme-trap-keyword">Puerperal Sepsis</span> is the <strong>most preventable</strong> cause.</p>
+            </div>
+
+            <!-- Trap 5 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 5 — Maternal Mortality Denominator</span>
+                </div>
+                <p>Failing to restrict the denominator: It only includes <span class="kme-trap-keyword">females aged 15–49 years</span> (childbearing period), <strong>not</strong> the entire female population.</p>
+            </div>
+
+            <!-- Trap 6 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 6 — Infant vs. Child Age Limits</span>
+                </div>
+                <p>Blurring the lines: <span class="kme-trap-keyword">Infant</span> refers to <strong>&lt;1 year</strong>, while <span class="kme-trap-keyword">Child</span> specifically refers to <strong>1–4 years</strong> of age.</p>
+            </div>
+
+            <!-- Trap 7 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <span class="kme-alert-label">Trap 7 — Child Mortality Denominator</span>
+                </div>
+                <p>Unlike Infant Mortality (which uses total births), Child Mortality uses the <span class="kme-trap-keyword">total children in that specific age group</span> (1–4 years).</p>
+            </div>
+        </section>
+
+        <!-- ========== MCQ QUIZ SECTION ========== -->
+        <section class="kme-section" id="kme-quiz">
+            <h1 class="kme-section-title">Practice Quiz</h1>
+            <p class="kme-section-subtitle">Test your knowledge with 20 exam-style MCQs. Select an answer to reveal the explanation.</p>
+
+            <!-- Progress & Score -->
+            <div class="kme-mcq-progress">
+                <div class="kme-mcq-progress-text">
+                    Answered: <span id="kmeAnsweredCount">0</span> / <span>20</span>
+                </div>
+                <div class="kme-mcq-score">
+                    <span class="kme-score-correct"><i class="fas fa-check-circle"></i> <span id="kmeCorrectCount">0</span></span>
+                    <span class="kme-score-divider">|</span>
+                    <span class="kme-score-wrong"><i class="fas fa-times-circle"></i> <span id="kmeWrongCount">0</span></span>
+                </div>
+            </div>
+
+            <!-- MCQ Cards rendered by JS -->
+            <div id="kmeMcqList"></div>
+
+            <button class="kme-reset-quiz" id="kmeResetQuiz">
+                <i class="fas fa-redo-alt"></i> Reset Quiz
+            </button>
+        </section>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button class="kme-back-to-top" id="kmeBackToTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+
+    <!-- ============================
+         JAVASCRIPT
+         ============================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================
+        // MCQ DATA
+        // ============================
+        const mcqData = [
+            {
+                id: 1,
+                question: "What is the correct denominator for calculating the crude death rate?",
+                options: [
+                    { letter: "A", text: "Total live births" },
+                    { letter: "B", text: "Estimated mid-year population" },
+                    { letter: "C", text: "Total female population" },
+                    { letter: "D", text: "Total cases of a disease" },
+                    { letter: "E", text: "Total deaths from all causes" }
+                ],
+                correct: "B",
+                explanation: "Crude death rate uses the estimated mid-year population as its denominator."
+            },
+            {
+                id: 2,
+                question: "What is identified as the most important cause of maternal mortality in Egypt?",
+                options: [
+                    { letter: "A", text: "Puerperal sepsis" },
+                    { letter: "B", text: "Hypertensive disease of pregnancy" },
+                    { letter: "C", text: "Hemorrhage" },
+                    { letter: "D", text: "Rheumatic heart disease" },
+                    { letter: "E", text: "Chronic glomerulonephritis" }
+                ],
+                correct: "C",
+                explanation: "Hemorrhage is the most important cause of maternal mortality in Egypt."
+            },
+            {
+                id: 3,
+                question: "Which condition is considered the most preventable cause of maternal mortality?",
+                options: [
+                    { letter: "A", text: "Hemorrhage" },
+                    { letter: "B", text: "Pre-eclampsia" },
+                    { letter: "C", text: "Uncontrolled Diabetes Mellitus" },
+                    { letter: "D", text: "Puerperal sepsis" },
+                    { letter: "E", text: "Rheumatic heart disease" }
+                ],
+                correct: "D",
+                explanation: "Puerperal sepsis is considered the most preventable cause of maternal death."
+            },
+            {
+                id: 4,
+                question: "Which age group defines the neonatal mortality rate?",
+                options: [
+                    { letter: "A", text: "Less than 1 year" },
+                    { letter: "B", text: "28 days to 1 year" },
+                    { letter: "C", text: "Less than 28 days" },
+                    { letter: "D", text: "1 to 4 years" },
+                    { letter: "E", text: "Birth to 6 months" }
+                ],
+                correct: "C",
+                explanation: "Neonatal mortality counts deaths less than 28 days of age."
+            },
+            {
+                id: 5,
+                question: "What is the denominator used to calculate the infant mortality rate?",
+                options: [
+                    { letter: "A", text: "Estimated mid-year population" },
+                    { letter: "B", text: "Total births at the same year and location" },
+                    { letter: "C", text: "Total number of infant deaths" },
+                    { letter: "D", text: "Total female population aged 15-49" },
+                    { letter: "E", text: "Total children aged 0-1" }
+                ],
+                correct: "B",
+                explanation: "Infant mortality uses total births as the denominator."
+            },
+            {
+                id: 6,
+                question: "Which statistic explicitly measures the severity or virulence of a disease?",
+                options: [
+                    { letter: "A", text: "Crude death rate" },
+                    { letter: "B", text: "Cause-specific mortality rate" },
+                    { letter: "C", text: "Case fatality rate" },
+                    { letter: "D", text: "Proportionate mortality rate" },
+                    { letter: "E", text: "Sex-specific death rate" }
+                ],
+                correct: "C",
+                explanation: "Case fatality rate measures the percentage of patients with a disease who die from it."
+            },
+            {
+                id: 7,
+                question: "Which of the following is a primary cause of neonatal mortality?",
+                options: [
+                    { letter: "A", text: "Severe nutritional deficiency" },
+                    { letter: "B", text: "Acute respiratory infections" },
+                    { letter: "C", text: "Prematurity" },
+                    { letter: "D", text: "Measles" },
+                    { letter: "E", text: "Accidents" }
+                ],
+                correct: "C",
+                explanation: "Prematurity is a top cause of neonatal mortality."
+            },
+            {
+                id: 8,
+                question: "What is the precise timeframe defining the post-neonatal mortality rate?",
+                options: [
+                    { letter: "A", text: "Birth to 28 days" },
+                    { letter: "B", text: "28 days to 1 year" },
+                    { letter: "C", text: "1 to 4 years" },
+                    { letter: "D", text: "Birth to 1 year" },
+                    { letter: "E", text: "6 months to 1 year" }
+                ],
+                correct: "B",
+                explanation: "Post-neonatal mortality applies to deaths from 28 days to 1 year of age."
+            },
+            {
+                id: 9,
+                question: "Which of the following is a leading cause of post-neonatal mortality?",
+                options: [
+                    { letter: "A", text: "Congenital malformations" },
+                    { letter: "B", text: "Infective diarrheal diseases" },
+                    { letter: "C", text: "Birth injuries" },
+                    { letter: "D", text: "Prematurity" },
+                    { letter: "E", text: "Low birth weight" }
+                ],
+                correct: "B",
+                explanation: "Infective diarrheal diseases frequently cause post-neonatal deaths."
+            },
+            {
+                id: 10,
+                question: "What is the denominator for the maternal mortality rate?",
+                options: [
+                    { letter: "A", text: "Total number of live births" },
+                    { letter: "B", text: "Total mid-year population" },
+                    { letter: "C", text: "Females in the childbearing period (15–49 years)" },
+                    { letter: "D", text: "Total pregnancies" },
+                    { letter: "E", text: "Total female population" }
+                ],
+                correct: "C",
+                explanation: "Maternal mortality calculates deaths per females aged 15-49 years."
+            },
+            {
+                id: 11,
+                question: "What is the standard multiplier for calculating the case fatality rate?",
+                options: [
+                    { letter: "A", text: "100" },
+                    { letter: "B", text: "1,000" },
+                    { letter: "C", text: "10,000" },
+                    { letter: "D", text: "100,000" },
+                    { letter: "E", text: "1,000,000" }
+                ],
+                correct: "A",
+                explanation: "Case fatality rate is calculated as a percentage, multiplied by 100."
+            },
+            {
+                id: 12,
+                question: "Which pre-existing disease is known to be aggravated by pregnancy, causing maternal mortality?",
+                options: [
+                    { letter: "A", text: "Peptic ulcer disease" },
+                    { letter: "B", text: "Asthma" },
+                    { letter: "C", text: "Migraine" },
+                    { letter: "D", text: "Rheumatic heart disease" },
+                    { letter: "E", text: "Osteoarthritis" }
+                ],
+                correct: "D",
+                explanation: "Rheumatic heart disease is a chronic condition that aggravates maternal mortality."
+            },
+            {
+                id: 13,
+                question: "What age range correctly defines the child mortality rate?",
+                options: [
+                    { letter: "A", text: "Birth to 1 year" },
+                    { letter: "B", text: "Birth to 5 years" },
+                    { letter: "C", text: "1 to 4 years" },
+                    { letter: "D", text: "5 to 10 years" },
+                    { letter: "E", text: "1 to 12 years" }
+                ],
+                correct: "C",
+                explanation: "Child mortality rate strictly measures deaths between 1 to 4 years of age."
+            },
+            {
+                id: 14,
+                question: "What is the denominator for calculating the proportionate mortality rate?",
+                options: [
+                    { letter: "A", text: "Estimated mid-year population" },
+                    { letter: "B", text: "Total cases of the specific disease" },
+                    { letter: "C", text: "Total births" },
+                    { letter: "D", text: "Total deaths from all causes" },
+                    { letter: "E", text: "Total children aged 1-4" }
+                ],
+                correct: "D",
+                explanation: "Proportionate mortality rate divides deaths from a specific cause by total deaths from all causes."
+            },
+            {
+                id: 15,
+                question: "Which recent global trend significantly impacted mortality via healthcare system strain?",
+                options: [
+                    { letter: "A", text: "HIV/AIDS" },
+                    { letter: "B", text: "COVID-19" },
+                    { letter: "C", text: "Tuberculosis" },
+                    { letter: "D", text: "Malaria" },
+                    { letter: "E", text: "Osteoporosis" }
+                ],
+                correct: "B",
+                explanation: "COVID-19 impacted mortality directly and via secondary healthcare system strain."
+            },
+            {
+                id: 16,
+                question: "What is the standard multiplier used for the cause-specific mortality rate?",
+                options: [
+                    { letter: "A", text: "100" },
+                    { letter: "B", text: "1,000" },
+                    { letter: "C", text: "10,000" },
+                    { letter: "D", text: "100,000" },
+                    { letter: "E", text: "1,000,000" }
+                ],
+                correct: "D",
+                explanation: "Cause-specific mortality is calculated per 100,000 estimated mid-year population."
+            },
+            {
+                id: 17,
+                question: "What is the denominator used to calculate the child (1-4 years) mortality rate?",
+                options: [
+                    { letter: "A", text: "Total mid-year population" },
+                    { letter: "B", text: "Total live births" },
+                    { letter: "C", text: "Total deaths in children aged 1-4" },
+                    { letter: "D", text: "Total children in the same age group" },
+                    { letter: "E", text: "Total female population" }
+                ],
+                correct: "D",
+                explanation: "Child mortality divides deaths by the total children in the same age group."
+            },
+            {
+                id: 18,
+                question: "Which non-communicable disease trend is currently rising and impacting mortality in higher-income nations?",
+                options: [
+                    { letter: "A", text: "Pertussis" },
+                    { letter: "B", text: "Measles" },
+                    { letter: "C", text: "Obesity-related deaths" },
+                    { letter: "D", text: "Malaria" },
+                    { letter: "E", text: "Cholera" }
+                ],
+                correct: "C",
+                explanation: "Chronic non-communicable and obesity-related deaths are rising in higher-income nations."
+            },
+            {
+                id: 19,
+                question: "What is the multiplier for the proportionate mortality rate?",
+                options: [
+                    { letter: "A", text: "100" },
+                    { letter: "B", text: "1,000" },
+                    { letter: "C", text: "10,000" },
+                    { letter: "D", text: "100,000" },
+                    { letter: "E", text: "1,000,000" }
+                ],
+                correct: "A",
+                explanation: "Proportionate mortality is expressed as a percentage, multiplying by 100."
+            },
+            {
+                id: 20,
+                question: "Which condition causes death in both the post-neonatal period and the 1-4 years age group?",
+                options: [
+                    { letter: "A", text: "Birth injuries" },
+                    { letter: "B", text: "Congenital malformations" },
+                    { letter: "C", text: "Eclampsia" },
+                    { letter: "D", text: "Prematurity" },
+                    { letter: "E", text: "Severe nutritional deficiency (PEM)" }
+                ],
+                correct: "E",
+                explanation: "Severe nutritional deficiency, like PEM, is a common cause in both groups."
+            }
+        ];
+
+        // ============================
+        // DOM REFERENCES
+        // ============================
+        const themeToggleBtn = document.getElementById('kmeThemeToggle');
+        const tabNav = document.getElementById('kmeTabNav');
+        const tabButtons = tabNav.querySelectorAll('.kme-tab-btn');
+        const sections = document.querySelectorAll('.kme-section');
+        const progressBar = document.getElementById('kmeProgressBar');
+        const backToTopBtn = document.getElementById('kmeBackToTop');
+        const mcqListEl = document.getElementById('kmeMcqList');
+        const answeredCountEl = document.getElementById('kmeAnsweredCount');
+        const correctCountEl = document.getElementById('kmeCorrectCount');
+        const wrongCountEl = document.getElementById('kmeWrongCount');
+        const resetQuizBtn = document.getElementById('kmeResetQuiz');
+
+        // ============================
+        // THEME MANAGEMENT
+        // ============================
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('kme-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('kme-theme', next);
+            updateThemeIcon(next);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = themeToggleBtn.querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        loadTheme();
+
+        // ============================
+        // TAB NAVIGATION
+        // ============================
+        function loadActiveTab() {
+            const savedTab = localStorage.getItem('kme-active-tab') || 'concepts';
+            switchTab(savedTab);
+        }
+
+        function switchTab(tabId) {
+            // Update buttons
+            tabButtons.forEach(btn => {
+                btn.classList.toggle('kme-active', btn.dataset.tab === tabId);
+            });
+
+            // Update sections
+            sections.forEach(section => {
+                section.classList.toggle('kme-active', section.id === 'kme-' + tabId);
+            });
+
+            // Persist
+            localStorage.setItem('kme-active-tab', tabId);
+
+            // Scroll to top of content area
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        tabNav.addEventListener('click', function(e) {
+            const btn = e.target.closest('.kme-tab-btn');
+            if (!btn) return;
+            switchTab(btn.dataset.tab);
+
+            // Scroll the active tab button into view within the nav
+            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+
+        loadActiveTab();
+
+        // ============================
+        // SCROLL PROGRESS BAR
+        // ============================
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateProgressBar, { passive: true });
+
+        // ============================
+        // BACK TO TOP BUTTON
+        // ============================
+        function updateBackToTop() {
+            backToTopBtn.classList.toggle('kme-visible', window.scrollY > 300);
+        }
+
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ============================
+        // MCQ QUIZ ENGINE
+        // ============================
+
+        // Quiz state
+        let quizState = loadQuizState();
+
+        function loadQuizState() {
+            try {
+                const saved = localStorage.getItem('kme-quiz-state');
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch (e) {
+                // ignore
+            }
+            return { answers: {}, correct: 0, wrong: 0 };
+        }
+
+        function saveQuizState() {
+            localStorage.setItem('kme-quiz-state', JSON.stringify(quizState));
+        }
+
+        function renderMCQs() {
+            mcqListEl.innerHTML = '';
+
+            mcqData.forEach(function(q) {
+                const card = document.createElement('div');
+                card.className = 'kme-mcq-card';
+                card.id = 'kme-mcq-' + q.id;
+
+                const answered = quizState.answers[q.id];
+                if (answered) {
+                    card.classList.add(answered.isCorrect ? 'kme-answered-correct' : 'kme-answered-wrong');
+                }
+
+                // Number badge
+                const numberEl = document.createElement('div');
+                numberEl.className = 'kme-mcq-number';
+                numberEl.textContent = q.id;
+                card.appendChild(numberEl);
+
+                // Question
+                const questionEl = document.createElement('div');
+                questionEl.className = 'kme-mcq-question';
+                questionEl.textContent = q.question;
+                card.appendChild(questionEl);
+
+                // Options
+                const optionsEl = document.createElement('div');
+                optionsEl.className = 'kme-mcq-options';
+
+                q.options.forEach(function(opt) {
+                    const optionEl = document.createElement('div');
+                    optionEl.className = 'kme-mcq-option';
+                    optionEl.dataset.letter = opt.letter;
+                    optionEl.dataset.questionId = q.id;
+
+                    if (answered) {
+                        optionEl.classList.add('kme-disabled');
+                        if (answered.selected === opt.letter) {
+                            optionEl.classList.add(answered.isCorrect ? 'kme-selected-correct' : 'kme-selected-wrong');
+                        }
+                        if (!answered.isCorrect && opt.letter === q.correct) {
+                            optionEl.classList.add('kme-correct-answer');
+                        }
+                    }
+
+                    // Radio circle
+                    const radioEl = document.createElement('div');
+                    radioEl.className = 'kme-mcq-radio';
+                    optionEl.appendChild(radioEl);
+
+                    // Letter
+                    const letterEl = document.createElement('span');
+                    letterEl.className = 'kme-mcq-option-letter';
+                    letterEl.textContent = opt.letter + ')';
+                    optionEl.appendChild(letterEl);
+
+                    // Text
+                    const textEl = document.createElement('span');
+                    textEl.className = 'kme-mcq-option-text';
+                    textEl.textContent = opt.text;
+                    optionEl.appendChild(textEl);
+
+                    if (!answered) {
+                        optionEl.addEventListener('click', function() {
+                            handleAnswer(q.id, opt.letter);
+                        });
+                    }
+
+                    optionsEl.appendChild(optionEl);
+                });
+
+                card.appendChild(optionsEl);
+
+                // Explanation
+                const explanationEl = document.createElement('div');
+                explanationEl.className = 'kme-explanation';
+                explanationEl.id = 'kme-explanation-' + q.id;
+
+                if (answered) {
+                    explanationEl.classList.add('kme-show');
+                    explanationEl.classList.add(answered.isCorrect ? 'kme-correct' : 'kme-wrong');
+
+                    const iconEl = document.createElement('i');
+                    iconEl.className = answered.isCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle';
+                    explanationEl.appendChild(iconEl);
+
+                    const expTextEl = document.createElement('span');
+                    expTextEl.textContent = answered.isCorrect
+                        ? 'Correct! ' + q.explanation
+                        : 'Incorrect. ' + q.explanation;
+                    explanationEl.appendChild(expTextEl);
+                }
+
+                card.appendChild(explanationEl);
+                mcqListEl.appendChild(card);
+            });
+
+            updateScoreDisplay();
+        }
+
+        function handleAnswer(questionId, selectedLetter) {
+            const q = mcqData.find(m => m.id === questionId);
+            if (!q) return;
+
+            // Already answered?
+            if (quizState.answers[questionId]) return;
+
+            const isCorrect = selectedLetter === q.correct;
+
+            // Save state
+            quizState.answers[questionId] = {
+                selected: selectedLetter,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                quizState.correct++;
+            } else {
+                quizState.wrong++;
+            }
+
+            saveQuizState();
+
+            // Update UI for this card
+            const card = document.getElementById('kme-mcq-' + questionId);
+            card.classList.add(isCorrect ? 'kme-answered-correct' : 'kme-answered-wrong');
+
+            // Update all options in this card
+            const options = card.querySelectorAll('.kme-mcq-option');
+            options.forEach(function(optEl) {
+                optEl.classList.add('kme-disabled');
+                const letter = optEl.dataset.letter;
+
+                if (letter === selectedLetter) {
+                    optEl.classList.add(isCorrect ? 'kme-selected-correct' : 'kme-selected-wrong');
+                }
+
+                if (!isCorrect && letter === q.correct) {
+                    optEl.classList.add('kme-correct-answer');
+                }
+
+                // Remove click handlers by cloning (clean approach)
+                const newOpt = optEl.cloneNode(true);
+                optEl.parentNode.replaceChild(newOpt, optEl);
+            });
+
+            // Show explanation
+            const explanationEl = document.getElementById('kme-explanation-' + questionId);
+            explanationEl.className = 'kme-explanation kme-show ' + (isCorrect ? 'kme-correct' : 'kme-wrong');
+            explanationEl.innerHTML = '';
+
+            const iconEl = document.createElement('i');
+            iconEl.className = isCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle';
+            explanationEl.appendChild(iconEl);
+
+            const expTextEl = document.createElement('span');
+            expTextEl.textContent = isCorrect
+                ? 'Correct! ' + q.explanation
+                : 'Incorrect. ' + q.explanation;
+            explanationEl.appendChild(expTextEl);
+
+            updateScoreDisplay();
+        }
+
+        function updateScoreDisplay() {
+            const answeredCount = Object.keys(quizState.answers).length;
+            answeredCountEl.textContent = answeredCount;
+            correctCountEl.textContent = quizState.correct;
+            wrongCountEl.textContent = quizState.wrong;
+        }
+
+        function resetQuiz() {
+            quizState = { answers: {}, correct: 0, wrong: 0 };
+            saveQuizState();
+            renderMCQs();
+            // Scroll to top of quiz section
+            const quizSection = document.getElementById('kme-quiz');
+            if (quizSection) {
+                quizSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        resetQuizBtn.addEventListener('click', resetQuiz);
+
+        // Initial render
+        renderMCQs();
+
+    })();
+    </script>
+</body>
+</html>

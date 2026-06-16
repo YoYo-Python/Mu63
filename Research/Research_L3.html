@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KME | Cohort Study Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES & THEME SYSTEM
+           ============================================ */
+        :root {
+            /* Light Theme (Default) */
+            --kme-bg-primary: #f0f2f5;
+            --kme-bg-secondary: #ffffff;
+            --kme-bg-tertiary: #f8f9fa;
+            --kme-text-primary: #1a1a2e;
+            --kme-text-secondary: #4a4a6a;
+            --kme-text-muted: #6c757d;
+            --kme-accent-primary: #4361ee;
+            --kme-accent-secondary: #3a0ca3;
+            --kme-accent-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --kme-border-color: #e0e0e0;
+            --kme-border-radius: 16px;
+            --kme-border-radius-sm: 10px;
+            --kme-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --kme-shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --kme-shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --kme-danger-bg: #fff5f5;
+            --kme-danger-border: #fc8181;
+            --kme-danger-text: #c53030;
+            --kme-danger-icon: #e53e3e;
+            --kme-success-bg: #f0fff4;
+            --kme-success-border: #68d391;
+            --kme-success-text: #276749;
+            --kme-wrong-bg: #fff5f5;
+            --kme-wrong-border: #fc8181;
+            --kme-wrong-text: #c53030;
+            --kme-math-bg: #eef2ff;
+            --kme-math-border: #a5b4fc;
+            --kme-table-header-bg: #4361ee;
+            --kme-table-header-text: #ffffff;
+            --kme-table-stripe: #f8f9ff;
+            --kme-table-highlight-a: #fff7ed;
+            --kme-table-highlight-b: #eff6ff;
+            --kme-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --kme-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f0f1a;
+            --kme-bg-secondary: #1a1a2e;
+            --kme-bg-tertiary: #16213e;
+            --kme-text-primary: #e8e8f0;
+            --kme-text-secondary: #b0b0cc;
+            --kme-text-muted: #8888aa;
+            --kme-accent-primary: #6c83f7;
+            --kme-accent-secondary: #5a3fd6;
+            --kme-accent-gradient: linear-gradient(135deg, #6c83f7, #5a3fd6);
+            --kme-border-color: #2a2a4a;
+            --kme-shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --kme-shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+            --kme-shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+            --kme-danger-bg: #2d1b1b;
+            --kme-danger-border: #9b2c2c;
+            --kme-danger-text: #feb2b2;
+            --kme-danger-icon: #fc8181;
+            --kme-success-bg: #1b2d1b;
+            --kme-success-border: #276749;
+            --kme-success-text: #9ae6b4;
+            --kme-wrong-bg: #2d1b1b;
+            --kme-wrong-border: #9b2c2c;
+            --kme-wrong-text: #feb2b2;
+            --kme-math-bg: #1a1a3e;
+            --kme-math-border: #4a4a8a;
+            --kme-table-header-bg: #2a2a5e;
+            --kme-table-header-text: #e8e8f0;
+            --kme-table-stripe: #1e1e3a;
+            --kme-table-highlight-a: #2a2520;
+            --kme-table-highlight-b: #1a2530;
+        }
+
+        /* ============================================
+           GLOBAL RESET & BASE STYLES
+           ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--kme-font-family);
+            background: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.7;
+            transition: background var(--kme-transition), color var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================
+           HEADER & NAVIGATION
+           ============================================ */
+        .kme-header {
+            background: var(--kme-accent-gradient);
+            color: white;
+            padding: 20px 16px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .kme-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .kme-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kme-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .kme-logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .kme-logo-sub {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            font-weight: 400;
+            display: block;
+            margin-top: -2px;
+        }
+
+        /* Dark Mode Toggle Button */
+        .kme-theme-toggle {
+            width: 44px;
+            height: 44px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--kme-transition);
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.05);
+        }
+
+        .kme-theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Section Navigation Tabs */
+        .kme-nav-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .kme-nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-nav-tab {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.85);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            white-space: nowrap;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            letter-spacing: 0.3px;
+        }
+
+        .kme-nav-tab:hover,
+        .kme-nav-tab.kme-active {
+            background: rgba(255,255,255,0.95);
+            color: var(--kme-accent-secondary);
+        }
+
+        /* ============================================
+           MAIN CONTENT CONTAINER
+           ============================================ */
+        .kme-main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 14px 100px;
+        }
+
+        /* ============================================
+           SECTION TITLES
+           ============================================ */
+        .kme-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-top: 10px;
+        }
+
+        .kme-section-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-section-icon.kme-icon-concepts {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+        }
+
+        .kme-section-icon.kme-icon-compare {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .kme-section-icon.kme-icon-math {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .kme-section-icon.kme-icon-traps {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .kme-section-icon.kme-icon-quiz {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .kme-section-title h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .kme-section-title h2 span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--kme-text-muted);
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           CONCEPT CARD SECTION
+           ============================================ */
+        .kme-concept-card {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius);
+            padding: 22px 20px;
+            margin-bottom: 28px;
+            box-shadow: var(--kme-shadow-md);
+            border: 1px solid var(--kme-border-color);
+            transition: background var(--kme-transition), border var(--kme-transition);
+        }
+
+        .kme-concept-list {
+            list-style: none;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding: 14px 14px 14px 42px;
+            margin-bottom: 6px;
+            border-radius: var(--kme-border-radius-sm);
+            transition: background var(--kme-transition);
+            font-size: 0.92rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.65;
+        }
+
+        .kme-concept-list li:hover {
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-concept-list li::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--kme-accent-primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .kme-concept-list li strong {
+            color: var(--kme-text-primary);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           RESPONSIVE TABLE SECTION
+           ============================================ */
+        .kme-table-responsive {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius);
+            margin-bottom: 28px;
+            box-shadow: var(--kme-shadow-md);
+            border: 1px solid var(--kme-border-color);
+            overflow: hidden;
+            transition: background var(--kme-transition), border var(--kme-transition);
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .kme-table-scroll table {
+            width: 100%;
+            min-width: 520px;
+            border-collapse: collapse;
+        }
+
+        .kme-table-scroll thead {
+            background: var(--kme-table-header-bg);
+        }
+
+        .kme-table-scroll thead th {
+            color: var(--kme-table-header-text);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 14px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .kme-table-scroll tbody td {
+            padding: 13px 16px;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            vertical-align: top;
+        }
+
+        .kme-table-scroll tbody tr:nth-child(even) {
+            background: var(--kme-table-stripe);
+        }
+
+        .kme-table-scroll tbody td:first-child {
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            white-space: nowrap;
+            font-size: 0.82rem;
+        }
+
+        /* Visual highlight for Case-Control vs Cohort columns */
+        .kme-table-scroll tbody td.kme-col-cc {
+            background: var(--kme-table-highlight-a);
+        }
+
+        .kme-table-scroll tbody td.kme-col-co {
+            background: var(--kme-table-highlight-b);
+        }
+
+        .kme-table-hint {
+            padding: 10px 16px;
+            font-size: 0.75rem;
+            color: var(--kme-text-muted);
+            text-align: center;
+            border-top: 1px solid var(--kme-border-color);
+        }
+
+        .kme-table-hint i {
+            margin-right: 4px;
+        }
+
+        /* ============================================
+           MATH BOX SECTION
+           ============================================ */
+        .kme-math-box {
+            background: var(--kme-math-bg);
+            border: 2px solid var(--kme-math-border);
+            border-radius: var(--kme-border-radius);
+            padding: 22px 20px;
+            margin-bottom: 28px;
+            transition: background var(--kme-transition), border var(--kme-transition);
+        }
+
+        .kme-math-box-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kme-formula-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .kme-formula-item {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius-sm);
+            padding: 14px 16px;
+            border: 1px solid var(--kme-border-color);
+            font-size: 0.9rem;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-formula-item:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-formula-label {
+            font-weight: 700;
+            color: var(--kme-accent-primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .kme-formula-expr {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--kme-text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Scenario Details/Summary */
+        .kme-scenario {
+            margin-bottom: 14px;
+        }
+
+        .kme-scenario summary {
+            cursor: pointer;
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius-sm);
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--kme-text-primary);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .kme-scenario summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-scenario summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.75rem;
+            color: var(--kme-accent-primary);
+            transition: transform var(--kme-transition);
+        }
+
+        .kme-scenario[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        .kme-scenario summary:hover {
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-scenario-content {
+            padding: 16px 18px;
+            margin-top: 6px;
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius-sm);
+        }
+
+        .kme-scenario-desc {
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            background: var(--kme-bg-tertiary);
+            border-radius: 8px;
+            border-left: 3px solid var(--kme-accent-primary);
+            line-height: 1.6;
+        }
+
+        .kme-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+        }
+
+        .kme-step-badge {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--kme-accent-gradient);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kme-step-text {
+            padding-top: 3px;
+        }
+
+        .kme-step-text code {
+            background: var(--kme-bg-tertiary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--kme-accent-primary);
+            border: 1px solid var(--kme-border-color);
+        }
+
+        .kme-step-result {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--kme-success-bg);
+            border: 1px solid var(--kme-success-border);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--kme-success-text);
+        }
+
+        /* ============================================
+           ALERT / DANGER SECTION (EXAM TRAPS)
+           ============================================ */
+        .kme-alert-danger {
+            background: var(--kme-danger-bg);
+            border: 2px solid var(--kme-danger-border);
+            border-radius: var(--kme-border-radius);
+            padding: 22px 20px;
+            margin-bottom: 28px;
+            transition: background var(--kme-transition), border var(--kme-transition);
+        }
+
+        .kme-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .kme-alert-icon {
+            font-size: 1.4rem;
+            color: var(--kme-danger-icon);
+        }
+
+        .kme-alert-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--kme-danger-text);
+        }
+
+        .kme-trap-list {
+            list-style: none;
+        }
+
+        .kme-trap-item {
+            position: relative;
+            padding: 14px 14px 14px 16px;
+            margin-bottom: 10px;
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius-sm);
+            border-left: 4px solid var(--kme-danger-border);
+            font-size: 0.9rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-trap-item:hover {
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-trap-item strong {
+            color: var(--kme-danger-text);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.88rem;
+        }
+
+        .kme-trap-item .kme-correct-answer {
+            font-weight: 700;
+            color: var(--kme-success-text);
+            background: var(--kme-success-bg);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        /* ============================================
+           MCQ QUIZ SECTION
+           ============================================ */
+        .kme-mcq-container {
+            margin-bottom: 28px;
+        }
+
+        .kme-quiz-progress {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius);
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--kme-shadow-sm);
+            border: 1px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .kme-progress-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .kme-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .kme-stat-correct {
+            color: var(--kme-success-text);
+        }
+
+        .kme-stat-wrong {
+            color: var(--kme-danger-text);
+        }
+
+        .kme-stat-remaining {
+            color: var(--kme-text-muted);
+        }
+
+        .kme-progress-bar-wrapper {
+            width: 100%;
+            height: 6px;
+            background: var(--kme-bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .kme-progress-bar {
+            height: 100%;
+            background: var(--kme-accent-gradient);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .kme-quiz-reset {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--kme-border-color);
+            background: var(--kme-bg-tertiary);
+            color: var(--kme-text-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-quiz-reset:hover {
+            background: var(--kme-accent-primary);
+            color: white;
+            border-color: var(--kme-accent-primary);
+        }
+
+        .kme-question-card {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            border: 1px solid var(--kme-border-color);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-question-card.kme-answered-correct {
+            border-color: var(--kme-success-border);
+        }
+
+        .kme-question-card.kme-answered-wrong {
+            border-color: var(--kme-wrong-border);
+        }
+
+        .kme-question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .kme-q-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--kme-accent-gradient);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kme-q-number.kme-q-correct {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .kme-q-number.kme-q-wrong {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .kme-question-text {
+            font-size: 0.93rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.55;
+            padding-top: 4px;
+        }
+
+        .kme-options-list {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .kme-option {
+            position: relative;
+        }
+
+        .kme-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .kme-option label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: var(--kme-border-radius-sm);
+            border: 2px solid var(--kme-border-color);
+            background: var(--kme-bg-tertiary);
+            cursor: pointer;
+            transition: all var(--kme-transition);
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            -webkit-tap-highlight-color: transparent;
+            min-height: 48px;
+        }
+
+        .kme-option label:hover {
+            border-color: var(--kme-accent-primary);
+            background: var(--kme-bg-secondary);
+        }
+
+        .kme-option label:active {
+            transform: scale(0.99);
+        }
+
+        .kme-option-radio {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--kme-transition);
+            margin-top: 1px;
+        }
+
+        .kme-option-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: transparent;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-option input[type="radio"]:checked ~ label .kme-option-radio {
+            border-color: var(--kme-accent-primary);
+        }
+
+        .kme-option input[type="radio"]:checked ~ label .kme-option-radio::after {
+            background: var(--kme-accent-primary);
+        }
+
+        .kme-option-letter {
+            font-weight: 700;
+            color: var(--kme-text-muted);
+            font-size: 0.82rem;
+            min-width: 18px;
+        }
+
+        /* Answered states */
+        .kme-option.kme-selected-correct label {
+            border-color: var(--kme-success-border);
+            background: var(--kme-success-bg);
+            color: var(--kme-success-text);
+        }
+
+        .kme-option.kme-selected-correct .kme-option-radio {
+            border-color: var(--kme-success-border);
+            background: var(--kme-success-bg);
+        }
+
+        .kme-option.kme-selected-correct .kme-option-radio::after {
+            background: #059669;
+        }
+
+        .kme-option.kme-selected-wrong label {
+            border-color: var(--kme-wrong-border);
+            background: var(--kme-wrong-bg);
+            color: var(--kme-wrong-text);
+        }
+
+        .kme-option.kme-selected-wrong .kme-option-radio {
+            border-color: var(--kme-wrong-border);
+            background: var(--kme-wrong-bg);
+        }
+
+        .kme-option.kme-selected-wrong .kme-option-radio::after {
+            background: #dc2626;
+        }
+
+        .kme-option.kme-show-correct label {
+            border-color: var(--kme-success-border);
+            background: var(--kme-success-bg);
+        }
+
+        .kme-option.kme-disabled label {
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .kme-option.kme-selected-correct.kme-disabled label,
+        .kme-option.kme-selected-wrong.kme-disabled label,
+        .kme-option.kme-show-correct.kme-disabled label {
+            opacity: 1;
+        }
+
+        /* Explanation */
+        .kme-explanation {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: var(--kme-border-radius-sm);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            animation: kme-fadeIn 0.4s ease;
+        }
+
+        .kme-explanation.kme-show {
+            display: block;
+        }
+
+        .kme-explanation.kme-correct-explanation {
+            background: var(--kme-success-bg);
+            border: 1px solid var(--kme-success-border);
+            color: var(--kme-success-text);
+        }
+
+        .kme-explanation.kme-wrong-explanation {
+            background: var(--kme-wrong-bg);
+            border: 1px solid var(--kme-wrong-border);
+            color: var(--kme-wrong-text);
+        }
+
+        .kme-explanation i {
+            margin-right: 6px;
+        }
+
+        @keyframes kme-fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           SCROLL-TO-TOP BUTTON
+           ============================================ */
+        .kme-scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 18px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--kme-accent-gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 16px rgba(67, 97, 238, 0.4);
+            z-index: 999;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-scroll-top.kme-visible {
+            display: flex;
+        }
+
+        .kme-scroll-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(67, 97, 238, 0.5);
+        }
+
+        .kme-scroll-top:active {
+            transform: scale(0.92);
+        }
+
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (min-width: 480px) {
+            .kme-main {
+                padding: 24px 20px 100px;
+            }
+
+            .kme-concept-card,
+            .kme-math-box,
+            .kme-alert-danger,
+            .kme-question-card {
+                padding: 26px 24px;
+            }
+
+            .kme-formula-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .kme-header {
+                padding: 24px 24px 18px;
+            }
+
+            .kme-main {
+                padding: 28px 24px 100px;
+            }
+
+            .kme-section-title h2 {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ============================================
+           UTILITY: SECTION VISIBILITY FOR TABS
+           ============================================ */
+        .kme-section {
+            scroll-margin-top: 130px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         HEADER WITH NAVIGATION
+         ============================================ -->
+    <header class="kme-header">
+        <div class="kme-header-top">
+            <div class="kme-logo">
+                <div class="kme-logo-icon">
+                    <i class="fas fa-book-medical"></i>
+                </div>
+                <div>
+                    <div class="kme-logo-text">KME Study Hub</div>
+                    <span class="kme-logo-sub">Cohort Study — Complete Guide</span>
+                </div>
+            </div>
+            <!-- Dark Mode Toggle -->
+            <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <!-- Section Navigation Tabs -->
+        <nav class="kme-nav-tabs" id="kmeNavTabs">
+            <button class="kme-nav-tab kme-active" data-target="kme-sec-concepts">
+                <i class="fas fa-lightbulb"></i>&nbsp; Concepts
+            </button>
+            <button class="kme-nav-tab" data-target="kme-sec-compare">
+                <i class="fas fa-columns"></i>&nbsp; Comparison
+            </button>
+            <button class="kme-nav-tab" data-target="kme-sec-math">
+                <i class="fas fa-calculator"></i>&nbsp; Formulas
+            </button>
+            <button class="kme-nav-tab" data-target="kme-sec-traps">
+                <i class="fas fa-exclamation-triangle"></i>&nbsp; Traps
+            </button>
+            <button class="kme-nav-tab" data-target="kme-sec-quiz">
+                <i class="fas fa-question-circle"></i>&nbsp; Quiz (20 Qs)
+            </button>
+        </nav>
+    </header>
+
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <main class="kme-main">
+
+        <!-- ========== CORE CONCEPTS SECTION ========== -->
+        <section class="kme-section" id="kme-sec-concepts">
+            <div class="kme-section-title">
+                <div class="kme-section-icon kme-icon-concepts">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h2>Core Concepts <span>Essential definitions & principles</span></h2>
+            </div>
+
+            <div class="kme-concept-card">
+                <ul class="kme-concept-list">
+                    <li><strong>Cohort Study:</strong> An observational, analytic, prospective (longitudinal) study comparing disease incidence over time.</li>
+                    <li><strong>Cohort:</strong> A group of individuals sharing a common characteristic (e.g., all smokers).</li>
+                    <li><strong>Exposed Group:</strong> Individuals possessing the specific risk factor under investigation.</li>
+                    <li><strong>Non-Exposed (Control) Group:</strong> Individuals lacking the specific risk factor.</li>
+                    <li><strong>Initial Step:</strong> All participants must be entirely free of the investigated disease at the study's onset.</li>
+                    <li><strong>Indication (Rare Exposure):</strong> Highly efficient for studying rare exposures (e.g., industrial chemicals).</li>
+                    <li><strong>Indication (Multiple Outcomes):</strong> Ideal for evaluating multiple disease outcomes arising from a single exposure.</li>
+                    <li><strong>Key Output:</strong> Calculates precise Incidence Rates, Relative Risk (RR), and Attributable Risk (AR).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========== COMPARISONS SECTION ========== -->
+        <section class="kme-section" id="kme-sec-compare">
+            <div class="kme-section-title">
+                <div class="kme-section-icon kme-icon-compare">
+                    <i class="fas fa-columns"></i>
+                </div>
+                <h2>Comparison Table <span>Case-Control vs Cohort at a glance</span></h2>
+            </div>
+
+            <div class="kme-table-responsive">
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Case-Control</th>
+                                <th>Cohort</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Starting Point</td>
+                                <td class="kme-col-cc">Disease outcome</td>
+                                <td class="kme-col-co">Exposure factor</td>
+                            </tr>
+                            <tr>
+                                <td>Time Direction</td>
+                                <td class="kme-col-cc">Retrospective</td>
+                                <td class="kme-col-co">Prospective</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison Groups</td>
+                                <td class="kme-col-cc">Diseased vs Healthy</td>
+                                <td class="kme-col-co">Exposed vs Unexposed</td>
+                            </tr>
+                            <tr>
+                                <td>Best Used For</td>
+                                <td class="kme-col-cc">Rare diseases</td>
+                                <td class="kme-col-co">Rare exposures</td>
+                            </tr>
+                            <tr>
+                                <td>Analysis Strength</td>
+                                <td class="kme-col-cc">Multiple risk factors</td>
+                                <td class="kme-col-co">Multiple disease outcomes</td>
+                            </tr>
+                            <tr>
+                                <td>Calculated Risk</td>
+                                <td class="kme-col-cc">Odds Ratio</td>
+                                <td class="kme-col-co">Relative Risk</td>
+                            </tr>
+                            <tr>
+                                <td>Major Pro</td>
+                                <td class="kme-col-cc">Cheap, highly rapid</td>
+                                <td class="kme-col-co">Standardized, less bias</td>
+                            </tr>
+                            <tr>
+                                <td>Major Con</td>
+                                <td class="kme-col-cc">Recall bias liability</td>
+                                <td class="kme-col-co">Expensive, dropout risk</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kme-table-hint">
+                    <i class="fas fa-hand-pointer"></i> Swipe horizontally to see full table on mobile
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MATH FORMULAS SECTION ========== -->
+        <section class="kme-section" id="kme-sec-math">
+            <div class="kme-section-title">
+                <div class="kme-section-icon kme-icon-math">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h2>Formulas & Calculations <span>Key equations with worked examples</span></h2>
+            </div>
+
+            <div class="kme-math-box">
+                <div class="kme-math-box-title">
+                    <i class="fas fa-square-root-alt"></i> Key Formulas
+                </div>
+
+                <div class="kme-formula-grid">
+                    <div class="kme-formula-item">
+                        <span class="kme-formula-label">Overall Incidence</span>
+                        <span class="kme-formula-expr">(a + c) / (a + b + c + d)</span>
+                    </div>
+                    <div class="kme-formula-item">
+                        <span class="kme-formula-label">Incidence Exposed (Ie)</span>
+                        <span class="kme-formula-expr">a / (a + b)</span>
+                    </div>
+                    <div class="kme-formula-item">
+                        <span class="kme-formula-label">Incidence Non-Exposed (In)</span>
+                        <span class="kme-formula-expr">c / (c + d)</span>
+                    </div>
+                    <div class="kme-formula-item">
+                        <span class="kme-formula-label">Relative Risk (RR)</span>
+                        <span class="kme-formula-expr">Ie / In</span>
+                    </div>
+                    <div class="kme-formula-item">
+                        <span class="kme-formula-label">Attributable Risk (AR)</span>
+                        <span class="kme-formula-expr">Ie − In</span>
+                    </div>
+                </div>
+
+                <!-- Scenario 1 -->
+                <details class="kme-scenario">
+                    <summary>
+                        <span><i class="fas fa-smoking"></i>&nbsp; Scenario 1: Smoking & CHD</span>
+                    </summary>
+                    <div class="kme-scenario-content">
+                        <div class="kme-scenario-desc">
+                            100 smokers and 100 non-smokers are followed. <strong>60 smokers</strong> develop CHD. <strong>20 non-smokers</strong> develop CHD. Calculate RR and AR.
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">1</div>
+                            <div class="kme-step-text">Ie (Incidence in Exposed) = <code>60 / 100 = 0.6</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">2</div>
+                            <div class="kme-step-text">In (Incidence in Non-Exposed) = <code>20 / 100 = 0.2</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">3</div>
+                            <div class="kme-step-text">RR = Ie / In = <code>0.6 / 0.2 = 3</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">4</div>
+                            <div class="kme-step-text">AR = Ie − In = <code>0.6 − 0.2 = 0.4</code></div>
+                        </div>
+                        <div class="kme-step-result">
+                            <i class="fas fa-check-circle"></i> RR = 3 (Smokers have 3× the risk) &nbsp;|&nbsp; AR = 40/100 attributed to smoking
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Scenario 2 -->
+                <details class="kme-scenario">
+                    <summary>
+                        <span><i class="fas fa-pills"></i>&nbsp; Scenario 2: OCP & Breast Cancer</span>
+                    </summary>
+                    <div class="kme-scenario-content">
+                        <div class="kme-scenario-desc">
+                            100 OCP users and 100 non-users followed for 10 years. <strong>20 OCP users</strong> get breast cancer. <strong>15 non-users</strong> get breast cancer. Calculate Overall Incidence and RR.
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">1</div>
+                            <div class="kme-step-text">Overall Incidence = <code>(20 + 15) / (100 + 100) = 35 / 200</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">2</div>
+                            <div class="kme-step-text">Ie = <code>20 / 100</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">3</div>
+                            <div class="kme-step-text">In = <code>15 / 100</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">4</div>
+                            <div class="kme-step-text">RR = Ie / In = <code>(20/100) / (15/100) = 4/3 ≈ 1.33</code></div>
+                        </div>
+                        <div class="kme-step-result">
+                            <i class="fas fa-check-circle"></i> Overall Incidence = 35/200 &nbsp;|&nbsp; RR = 4/3
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Scenario 3 -->
+                <details class="kme-scenario">
+                    <summary>
+                        <span><i class="fas fa-utensils"></i>&nbsp; Scenario 3: Diet & Obesity</span>
+                    </summary>
+                    <div class="kme-scenario-content">
+                        <div class="kme-scenario-desc">
+                            50 individuals eat a specific high-calorie food, 50 do not. <strong>20 exposed</strong> become obese, <strong>10 unexposed</strong> become obese. Calculate AR.
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">1</div>
+                            <div class="kme-step-text">Ie = <code>20 / 50 = 0.4</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">2</div>
+                            <div class="kme-step-text">In = <code>10 / 50 = 0.2</code></div>
+                        </div>
+                        <div class="kme-step">
+                            <div class="kme-step-badge">3</div>
+                            <div class="kme-step-text">AR = Ie − In = <code>0.4 − 0.2 = 0.2</code></div>
+                        </div>
+                        <div class="kme-step-result">
+                            <i class="fas fa-check-circle"></i> AR = 10/50 = 20% of obesity cases attributed to the dietary exposure
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ========== EXAM TRAPS SECTION ========== -->
+        <section class="kme-section" id="kme-sec-traps">
+            <div class="kme-section-title">
+                <div class="kme-section-icon kme-icon-traps">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2>Exam Traps <span>High-yield pitfalls to avoid</span></h2>
+            </div>
+
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <i class="fas fa-exclamation-circle kme-alert-icon"></i>
+                    <span class="kme-alert-title">Common Exam Pitfalls — Don't Fall For These!</span>
+                </div>
+                <ul class="kme-trap-list">
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-ban"></i> The "Zero" Trap</strong>
+                        Students often mistakenly think no association means RR = 0. The correct value for no association is <span class="kme-correct-answer">RR = 1</span>.
+                    </li>
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-user-slash"></i> The Baseline Trap</strong>
+                        You <em>must</em> exclude anyone who already has the disease at the start of a cohort study. Participants must be <span class="kme-correct-answer">completely disease-free</span>.
+                    </li>
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-exchange-alt"></i> The "Rare" Reversal</strong>
+                        Case-control is for rare <em>diseases</em>; Cohort is for rare <em>exposures</em>. <span class="kme-correct-answer">Do not swap these</span>.
+                    </li>
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-project-diagram"></i> The Multiple vs. Single Trap</strong>
+                        Cohort studies track one exposure to find <em>multiple outcomes</em> (like branches on a tree). Case-control studies track one outcome backward to find <em>multiple exposures</em>.
+                    </li>
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-brain"></i> The Bias Trap</strong>
+                        The most critical bias in Cohort studies is <span class="kme-correct-answer">"Loss to follow-up"</span> (dropouts), while Case-control suffers from <span class="kme-correct-answer">"Recall bias"</span>.
+                    </li>
+                    <li class="kme-trap-item">
+                        <strong><i class="fas fa-users"></i> The "Cohort" Definition Trick</strong>
+                        The word "cohort" on an exam doesn't just mean the study type; it strictly translates to <span class="kme-correct-answer">"a group with a common characteristic"</span> (like military troops).
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========== MCQ QUIZ SECTION ========== -->
+        <section class="kme-section" id="kme-sec-quiz">
+            <div class="kme-section-title">
+                <div class="kme-section-icon kme-icon-quiz">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h2>Practice Quiz <span>20 multiple-choice questions</span></h2>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="kme-quiz-progress" id="kmeQuizProgress">
+                <div>
+                    <div class="kme-progress-stats">
+                        <span class="kme-stat kme-stat-correct">
+                            <i class="fas fa-check-circle"></i> <span id="kmeCorrectCount">0</span>
+                        </span>
+                        <span class="kme-stat kme-stat-wrong">
+                            <i class="fas fa-times-circle"></i> <span id="kmeWrongCount">0</span>
+                        </span>
+                        <span class="kme-stat kme-stat-remaining">
+                            <i class="fas fa-circle-notch"></i> <span id="kmeRemainingCount">20</span> left
+                        </span>
+                    </div>
+                    <div class="kme-progress-bar-wrapper">
+                        <div class="kme-progress-bar" id="kmeProgressBar"></div>
+                    </div>
+                </div>
+                <button class="kme-quiz-reset" id="kmeQuizReset">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+
+            <!-- MCQ Container -->
+            <div class="kme-mcq-container" id="kmeMcqContainer">
+                <!-- Questions will be injected via JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scroll-to-Top Button -->
+    <button class="kme-scroll-top" id="kmeScrollTop" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ============================================
+         JAVASCRIPT — STATE MANAGEMENT & INTERACTIVITY
+         ============================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        /* ============================================
+           MCQ DATA — All 20 questions with answers
+           ============================================ */
+        const KME_QUESTIONS = [
+            {
+                id: 1,
+                text: "In a cohort study, an exposure is assessed and then participants are:",
+                options: [
+                    "followed prospectively to observe development of the outcome.",
+                    "asked retrospectively to check occurrence of the outcome.",
+                    "divided into groups according to outcome.",
+                    "treated from the outcome.",
+                    "randomly divided into groups."
+                ],
+                correct: 0,
+                explanation: "Cohort studies begin with exposure and track forward to observe disease development."
+            },
+            {
+                id: 2,
+                text: "Cohort Studies generally look at which of the following?",
+                options: [
+                    "Determining the sensitivity and specificity of diagnostic methods.",
+                    "Identifying patient characteristics or risk factors associated with a disease or outcome.",
+                    "Variations among the clinical manifestations of patients with a disease.",
+                    "The impact of blinding or masking a study population.",
+                    "Impact of intervention on the outcome."
+                ],
+                correct: 1,
+                explanation: "They track forward to identify how patient characteristics/exposures associate with future outcomes."
+            },
+            {
+                id: 3,
+                text: "A Study involved 100 contraceptive pill users and 100 non-users, followed for 10 years to study OCPs and breast cancer. 20 cases were reported in users, 15 in non-users. The correct relative risk is:",
+                options: [
+                    "3/4",
+                    "1/2",
+                    "4/3",
+                    "1/5",
+                    "2/5"
+                ],
+                correct: 2,
+                explanation: "RR = Incidence exposed (20/100) divided by Incidence non-exposed (15/100), equating to 4/3."
+            },
+            {
+                id: 4,
+                text: "Using the same study data from Question 3, the correct overall incidence is:",
+                options: [
+                    "20/100",
+                    "15/100",
+                    "35/100",
+                    "35/200",
+                    "5/100"
+                ],
+                correct: 3,
+                explanation: "Overall incidence combines all cases (35) over the total study population (200)."
+            },
+            {
+                id: 5,
+                text: "Using the same study data from Question 3, the correct attributable risk is:",
+                options: [
+                    "20/100",
+                    "15/100",
+                    "35/100",
+                    "35/200",
+                    "5/100"
+                ],
+                correct: 4,
+                explanation: "Attributable risk is Ie (20/100) minus In (15/100), which equals 5/100."
+            },
+            {
+                id: 6,
+                text: 'Which statement best defines a "cohort"?',
+                options: [
+                    "Individuals chosen based on disease presence.",
+                    "A group having a common characteristic.",
+                    "A randomized intervention group.",
+                    "Patients evaluated retrospectively.",
+                    "A single case report."
+                ],
+                correct: 1,
+                explanation: "A cohort is defined strictly as a group sharing a common characteristic, such as being a smoker."
+            },
+            {
+                id: 7,
+                text: "The primary weakness or major bias source in a prolonged cohort study is:",
+                options: [
+                    "Recall bias.",
+                    "Interviewer bias.",
+                    "Loss to follow-up (dropouts).",
+                    "Selection bias of controls.",
+                    "Lead-time bias."
+                ],
+                correct: 2,
+                explanation: "Prolonged follow-up in cohort studies inherently leads to participant dropout, causing bias."
+            },
+            {
+                id: 8,
+                text: "If an exposure is extremely rare, the most efficient epidemiological study design is:",
+                options: [
+                    "Case-control",
+                    "Cross-sectional",
+                    "Cohort",
+                    "Case series",
+                    "Clinical trial"
+                ],
+                correct: 2,
+                explanation: "Because you select based on exposure status, cohort studies are highly efficient for rare exposures."
+            },
+            {
+                id: 9,
+                text: "A study calculates a Relative Risk (RR) of 1. This indicates:",
+                options: [
+                    "Increased exposure accompanies increased outcome.",
+                    "Exposure is protective against the outcome.",
+                    "Exposure is not associated with the outcome.",
+                    "The disease is extremely rare.",
+                    "Perfect causation is established."
+                ],
+                correct: 2,
+                explanation: "An RR of exactly 1 means the incidence is identical in both groups, showing zero association."
+            },
+            {
+                id: 10,
+                text: "Which study design proceeds from outcome (disease) to cause (risk factor)?",
+                options: [
+                    "Prospective Cohort",
+                    "Case-Control",
+                    "Randomized Controlled Trial",
+                    "Cross-sectional",
+                    "Descriptive Correlational"
+                ],
+                correct: 1,
+                explanation: "Case-control studies start with the disease (outcome) and look backward at past risk factors."
+            },
+            {
+                id: 11,
+                text: "What is the fundamental first step when recruiting participants for a cohort study?",
+                options: [
+                    "Ensure all have the disease.",
+                    "Exclude existing cases of the disease under investigation.",
+                    "Ask about past exposures.",
+                    "Randomize them into placebo and treatment.",
+                    "Measure the odds ratio."
+                ],
+                correct: 1,
+                explanation: "To measure new incident cases, all subjects must be free of the disease at the start of the timeline."
+            },
+            {
+                id: 12,
+                text: "Attributable Risk (AR) answers which of the following questions?",
+                options: [
+                    "How many times more likely is the exposed person to get sick?",
+                    "What is the overall prevalence of the disease?",
+                    "How much of the studied disease can be specifically attributed to the exposure?",
+                    "What are the odds of exposure given the disease?",
+                    "Is the study statistically significant?"
+                ],
+                correct: 2,
+                explanation: "AR physically subtracts baseline risk to show the exact disease volume caused solely by the exposure."
+            },
+            {
+                id: 13,
+                text: "The Framingham Heart Study is a classic example of a:",
+                options: [
+                    "Case-control study",
+                    "Cross-sectional study",
+                    "Cohort study",
+                    "Experimental trial",
+                    "Case series"
+                ],
+                correct: 2,
+                explanation: "Initiated in 1948, Framingham followed an entire town's population over time to identify CVD risks."
+            },
+            {
+                id: 14,
+                text: "A key advantage of a case-control study over a cohort study is that it:",
+                options: [
+                    "Can calculate precise incidence rates.",
+                    "Is less prone to bias.",
+                    "Can study several outcomes from one exposure.",
+                    "Is cheap, quick, and requires a smaller sample.",
+                    "Analyzes prospective data over decades."
+                ],
+                correct: 3,
+                explanation: "By looking backward from already diseased patients, case-control avoids long, expensive follow-up periods."
+            },
+            {
+                id: 15,
+                text: "If a Relative Risk (RR) is less than 1 (RR < 1), this indicates:",
+                options: [
+                    "A positive association (increased risk).",
+                    "No association.",
+                    "A negative association (protective effect).",
+                    "A computational error.",
+                    "100% disease incidence."
+                ],
+                correct: 2,
+                explanation: "An RR < 1 means the exposed group has a lower incidence, indicating the exposure is protective."
+            },
+            {
+                id: 16,
+                text: "Which study design is inherently retrospective?",
+                options: [
+                    "Case-Control",
+                    "Cohort",
+                    "Prevention Trial",
+                    "Clinical Trial",
+                    "Case Report"
+                ],
+                correct: 0,
+                explanation: "Case-control tracks backward from current outcome to past exposure, making it retrospective."
+            },
+            {
+                id: 17,
+                text: "Which study design allows the calculation of an Odds Ratio (OR) rather than a true Relative Risk (RR)?",
+                options: [
+                    "Prospective Cohort",
+                    "Retrospective Cohort",
+                    "Experimental Trial",
+                    "Case-Control",
+                    "Cross-sectional"
+                ],
+                correct: 3,
+                explanation: "Case-control studies estimate risk using Odds Ratios, while Cohort studies allow true RR calculation."
+            },
+            {
+                id: 18,
+                text: "In a cohort study investigating smoking, 10 out of 50 smokers develop cancer, and 5 out of 50 non-smokers develop cancer. What is the Incidence in the non-exposed (In)?",
+                options: [
+                    "10/50",
+                    "5/50",
+                    "15/100",
+                    "10/100",
+                    "5/10"
+                ],
+                correct: 1,
+                explanation: "The incidence in the non-exposed group is the diseased non-smokers (5) over total non-smokers (50)."
+            },
+            {
+                id: 19,
+                text: "You want to examine multiple distinct disease outcomes (e.g., lung cancer, COPD, heart disease) arising from a single risk factor (e.g., vaping). The best design is:",
+                options: [
+                    "Cohort Study",
+                    "Case-Control Study",
+                    "Cross-sectional Study",
+                    "Case Series",
+                    "Case Report"
+                ],
+                correct: 0,
+                explanation: "Cohorts follow one exposed group forward, allowing researchers to document multiple resulting outcomes."
+            },
+            {
+                id: 20,
+                text: "A researcher wants to examine multiple different risk factors (e.g., diet, exercise, genetics) that may have contributed to a single rare disease. The best design is:",
+                options: [
+                    "Cohort Study",
+                    "Case-Control Study",
+                    "Cross-sectional Study",
+                    "Prevention Trial",
+                    "Longitudinal Follow-up"
+                ],
+                correct: 1,
+                explanation: "Case-control starts with one disease group and queries them about numerous potential past risk factors."
+            }
+        ];
+
+        const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+        const TOTAL_QUESTIONS = KME_QUESTIONS.length;
+
+        /* ============================================
+           DOM REFERENCES
+           ============================================ */
+        const themeToggleBtn = document.getElementById('kmeThemeToggle');
+        const navTabs = document.querySelectorAll('.kme-nav-tab');
+        const mcqContainer = document.getElementById('kmeMcqContainer');
+        const correctCountEl = document.getElementById('kmeCorrectCount');
+        const wrongCountEl = document.getElementById('kmeWrongCount');
+        const remainingCountEl = document.getElementById('kmeRemainingCount');
+        const progressBar = document.getElementById('kmeProgressBar');
+        const resetBtn = document.getElementById('kmeQuizReset');
+        const scrollTopBtn = document.getElementById('kmeScrollTop');
+
+        /* ============================================
+           THEME (DARK MODE) MANAGEMENT
+           ============================================ */
+        function getStoredTheme() {
+            return localStorage.getItem('kme-theme') || 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('kme-theme', theme);
+            const icon = themeToggleBtn.querySelector('i');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        // Initialize theme from localStorage
+        setTheme(getStoredTheme());
+
+        themeToggleBtn.addEventListener('click', function() {
+            const current = getStoredTheme();
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        /* ============================================
+           TAB NAVIGATION — Smooth scroll to sections
+           ============================================ */
+        function setActiveTab(targetId) {
+            navTabs.forEach(function(tab) {
+                tab.classList.remove('kme-active');
+                if (tab.getAttribute('data-target') === targetId) {
+                    tab.classList.add('kme-active');
+                }
+            });
+            localStorage.setItem('kme-active-tab', targetId);
+        }
+
+        navTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                    setActiveTab(targetId);
+                }
+            });
+        });
+
+        // Restore active tab from localStorage
+        const storedTab = localStorage.getItem('kme-active-tab');
+        if (storedTab) {
+            setActiveTab(storedTab);
+        }
+
+        // Update active tab on scroll using IntersectionObserver
+        const sections = document.querySelectorAll('.kme-section');
+        const sectionObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    setActiveTab(entry.target.id);
+                }
+            });
+        }, {
+            rootMargin: '-140px 0px -60% 0px',
+            threshold: 0
+        });
+
+        sections.forEach(function(sec) {
+            sectionObserver.observe(sec);
+        });
+
+        /* ============================================
+           SCROLL-TO-TOP BUTTON
+           ============================================ */
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add('kme-visible');
+            } else {
+                scrollTopBtn.classList.remove('kme-visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        /* ============================================
+           QUIZ STATE MANAGEMENT
+           ============================================ */
+        function getQuizState() {
+            try {
+                const stored = localStorage.getItem('kme-quiz-state');
+                return stored ? JSON.parse(stored) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveQuizState(state) {
+            localStorage.setItem('kme-quiz-state', JSON.stringify(state));
+        }
+
+        function clearQuizState() {
+            localStorage.removeItem('kme-quiz-state');
+        }
+
+        /* ============================================
+           BUILD QUIZ HTML
+           ============================================ */
+        function buildQuiz() {
+            const state = getQuizState();
+            let html = '';
+
+            KME_QUESTIONS.forEach(function(q) {
+                const answered = state[q.id] !== undefined;
+                const userAnswer = answered ? state[q.id] : null;
+                const isCorrect = answered ? (userAnswer === q.correct) : null;
+
+                // Card classes
+                let cardClass = 'kme-question-card';
+                if (answered) {
+                    cardClass += isCorrect ? ' kme-answered-correct' : ' kme-answered-wrong';
+                }
+
+                // Q number badge class
+                let qNumClass = 'kme-q-number';
+                if (answered) {
+                    qNumClass += isCorrect ? ' kme-q-correct' : ' kme-q-wrong';
+                }
+
+                html += '<div class="' + cardClass + '" data-qid="' + q.id + '">';
+                html += '  <div class="kme-question-header">';
+                html += '    <div class="' + qNumClass + '">' + q.id + '</div>';
+                html += '    <div class="kme-question-text">' + q.text + '</div>';
+                html += '  </div>';
+                html += '  <ul class="kme-options-list">';
+
+                q.options.forEach(function(opt, idx) {
+                    let optionClass = 'kme-option';
+
+                    if (answered) {
+                        optionClass += ' kme-disabled';
+                        if (idx === userAnswer && isCorrect) {
+                            optionClass += ' kme-selected-correct';
+                        } else if (idx === userAnswer && !isCorrect) {
+                            optionClass += ' kme-selected-wrong';
+                        }
+                        if (!isCorrect && idx === q.correct) {
+                            optionClass += ' kme-show-correct';
+                        }
+                    }
+
+                    const radioName = 'kme-q' + q.id;
+                    const radioId = 'kme-q' + q.id + '-opt' + idx;
+                    const checked = (answered && idx === userAnswer) ? ' checked' : '';
+
+                    html += '    <li class="' + optionClass + '">';
+                    html += '      <input type="radio" name="' + radioName + '" id="' + radioId + '" value="' + idx + '"' + checked + (answered ? ' disabled' : '') + '>';
+                    html += '      <label for="' + radioId + '">';
+                    html += '        <span class="kme-option-radio"></span>';
+                    html += '        <span class="kme-option-letter">' + OPTION_LETTERS[idx] + ')</span>';
+                    html += '        <span>' + opt + '</span>';
+                    html += '      </label>';
+                    html += '    </li>';
+                });
+
+                html += '  </ul>';
+
+                // Explanation
+                let explClass = 'kme-explanation';
+                if (answered) {
+                    explClass += ' kme-show';
+                    explClass += isCorrect ? ' kme-correct-explanation' : ' kme-wrong-explanation';
+                }
+
+                const explIcon = (answered && isCorrect) ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+                const explPrefix = (answered && isCorrect) ? '<strong>Correct!</strong> ' : '<strong>Incorrect.</strong> ';
+
+                html += '  <div class="' + explClass + '">';
+                if (answered) {
+                    html += explIcon + ' ' + explPrefix + q.explanation;
+                } else {
+                    html += q.explanation;
+                }
+                html += '  </div>';
+
+                html += '</div>';
+            });
+
+            mcqContainer.innerHTML = html;
+            updateProgress();
+            attachQuizListeners();
+        }
+
+        /* ============================================
+           ATTACH EVENT LISTENERS TO QUIZ OPTIONS
+           ============================================ */
+        function attachQuizListeners() {
+            const allRadios = mcqContainer.querySelectorAll('input[type="radio"]:not([disabled])');
+
+            allRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    const questionCard = this.closest('.kme-question-card');
+                    const qid = parseInt(questionCard.getAttribute('data-qid'));
+                    const selectedIdx = parseInt(this.value);
+                    const question = KME_QUESTIONS.find(function(q) { return q.id === qid; });
+
+                    if (!question) return;
+
+                    const isCorrect = selectedIdx === question.correct;
+
+                    // Save state
+                    const state = getQuizState();
+                    state[qid] = selectedIdx;
+                    saveQuizState(state);
+
+                    // Update card visual
+                    questionCard.classList.add(isCorrect ? 'kme-answered-correct' : 'kme-answered-wrong');
+
+                    // Update question number badge
+                    const qNum = questionCard.querySelector('.kme-q-number');
+                    qNum.classList.add(isCorrect ? 'kme-q-correct' : 'kme-q-wrong');
+
+                    // Update all options in this question
+                    const options = questionCard.querySelectorAll('.kme-option');
+                    options.forEach(function(optLi, idx) {
+                        optLi.classList.add('kme-disabled');
+                        const radioInput = optLi.querySelector('input[type="radio"]');
+                        radioInput.disabled = true;
+
+                        if (idx === selectedIdx && isCorrect) {
+                            optLi.classList.add('kme-selected-correct');
+                        } else if (idx === selectedIdx && !isCorrect) {
+                            optLi.classList.add('kme-selected-wrong');
+                        }
+                        if (!isCorrect && idx === question.correct) {
+                            optLi.classList.add('kme-show-correct');
+                        }
+                    });
+
+                    // Show explanation
+                    const explDiv = questionCard.querySelector('.kme-explanation');
+                    explDiv.classList.add('kme-show');
+                    explDiv.classList.add(isCorrect ? 'kme-correct-explanation' : 'kme-wrong-explanation');
+                    const explIcon = isCorrect ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+                    const explPrefix = isCorrect ? '<strong>Correct!</strong> ' : '<strong>Incorrect.</strong> ';
+                    explDiv.innerHTML = explIcon + ' ' + explPrefix + question.explanation;
+
+                    updateProgress();
+                });
+            });
+        }
+
+        /* ============================================
+           UPDATE PROGRESS BAR & COUNTERS
+           ============================================ */
+        function updateProgress() {
+            const state = getQuizState();
+            let correct = 0;
+            let wrong = 0;
+
+            KME_QUESTIONS.forEach(function(q) {
+                if (state[q.id] !== undefined) {
+                    if (state[q.id] === q.correct) {
+                        correct++;
+                    } else {
+                        wrong++;
+                    }
+                }
+            });
+
+            const answered = correct + wrong;
+            const remaining = TOTAL_QUESTIONS - answered;
+            const percent = (answered / TOTAL_QUESTIONS) * 100;
+
+            correctCountEl.textContent = correct;
+            wrongCountEl.textContent = wrong;
+            remainingCountEl.textContent = remaining;
+            progressBar.style.width = percent + '%';
+        }
+
+        /* ============================================
+           RESET QUIZ
+           ============================================ */
+        resetBtn.addEventListener('click', function() {
+            if (confirm('Reset all quiz answers? This cannot be undone.')) {
+                clearQuizState();
+                buildQuiz();
+                // Scroll to quiz section
+                const quizSection = document.getElementById('kme-sec-quiz');
+                if (quizSection) {
+                    quizSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        /* ============================================
+           INITIALIZE QUIZ ON PAGE LOAD
+           ============================================ */
+        buildQuiz();
+
+    })();
+    </script>
+</body>
+</html>

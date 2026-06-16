@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KME - Medical Statistics Study Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES & THEME SYSTEM
+           ============================================ */
+        :root {
+            /* Light theme (default) */
+            --kme-bg-primary: #f0f2f5;
+            --kme-bg-secondary: #ffffff;
+            --kme-bg-tertiary: #f8f9fa;
+            --kme-text-primary: #1a1a2e;
+            --kme-text-secondary: #4a4a6a;
+            --kme-text-muted: #6c757d;
+            --kme-accent-blue: #2563eb;
+            --kme-accent-blue-light: #dbeafe;
+            --kme-accent-green: #059669;
+            --kme-accent-green-light: #d1fae5;
+            --kme-accent-red: #dc2626;
+            --kme-accent-red-light: #fee2e2;
+            --kme-accent-orange: #d97706;
+            --kme-accent-orange-light: #fef3c7;
+            --kme-accent-purple: #7c3aed;
+            --kme-accent-purple-light: #ede9fe;
+            --kme-border-color: #e2e8f0;
+            --kme-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --kme-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --kme-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --kme-radius-sm: 8px;
+            --kme-radius-md: 12px;
+            --kme-radius-lg: 16px;
+            --kme-radius-xl: 20px;
+            --kme-math-bg: #fef9e7;
+            --kme-math-border: #f0d85e;
+            --kme-danger-bg: #fef2f2;
+            --kme-danger-border: #fca5a5;
+            --kme-correct-bg: #ecfdf5;
+            --kme-correct-border: #6ee7b7;
+            --kme-incorrect-bg: #fef2f2;
+            --kme-incorrect-border: #fca5a5;
+            --kme-option-hover: #f1f5f9;
+            --kme-header-gradient-start: #1e3a5f;
+            --kme-header-gradient-end: #2563eb;
+            --kme-scrollbar-track: #f1f1f1;
+            --kme-scrollbar-thumb: #c1c1c1;
+            --kme-table-header-bg: #f1f5f9;
+            --kme-table-stripe: #f8fafc;
+            --kme-tab-inactive-bg: #e2e8f0;
+            --kme-tab-inactive-text: #64748b;
+        }
+
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f172a;
+            --kme-bg-secondary: #1e293b;
+            --kme-bg-tertiary: #334155;
+            --kme-text-primary: #f1f5f9;
+            --kme-text-secondary: #cbd5e1;
+            --kme-text-muted: #94a3b8;
+            --kme-accent-blue: #3b82f6;
+            --kme-accent-blue-light: #1e3a5f;
+            --kme-accent-green: #10b981;
+            --kme-accent-green-light: #064e3b;
+            --kme-accent-red: #ef4444;
+            --kme-accent-red-light: #450a0a;
+            --kme-accent-orange: #f59e0b;
+            --kme-accent-orange-light: #451a03;
+            --kme-accent-purple: #8b5cf6;
+            --kme-accent-purple-light: #2e1065;
+            --kme-border-color: #334155;
+            --kme-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --kme-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --kme-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --kme-math-bg: #2a2520;
+            --kme-math-border: #a3841e;
+            --kme-danger-bg: #2a1515;
+            --kme-danger-border: #7f1d1d;
+            --kme-correct-bg: #052e16;
+            --kme-correct-border: #166534;
+            --kme-incorrect-bg: #2a1515;
+            --kme-incorrect-border: #7f1d1d;
+            --kme-option-hover: #334155;
+            --kme-header-gradient-start: #0f172a;
+            --kme-header-gradient-end: #1e40af;
+            --kme-scrollbar-track: #1e293b;
+            --kme-scrollbar-thumb: #475569;
+            --kme-table-header-bg: #334155;
+            --kme-table-stripe: #1e293b;
+            --kme-tab-inactive-bg: #334155;
+            --kme-tab-inactive-text: #94a3b8;
+        }
+
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--kme-scrollbar-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--kme-scrollbar-thumb);
+            border-radius: 3px;
+        }
+
+        /* ============================================
+           HEADER & NAVIGATION
+           ============================================ */
+        .kme-header {
+            background: linear-gradient(135deg, var(--kme-header-gradient-start), var(--kme-header-gradient-end));
+            color: #ffffff;
+            padding: 1rem 1rem 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kme-header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kme-header-title h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .kme-header-title .kme-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kme-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kme-theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover,
+        .kme-theme-toggle:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Progress Bar */
+        .kme-progress-bar {
+            max-width: 900px;
+            margin: 0.6rem auto 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kme-progress-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .kme-progress-fill {
+            height: 100%;
+            background: #34d399;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .kme-progress-text {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           NAVIGATION TABS
+           ============================================ */
+        .kme-nav {
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .kme-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            padding: 0.5rem 0.75rem;
+            gap: 0.4rem;
+        }
+
+        .kme-tab {
+            flex-shrink: 0;
+            padding: 0.5rem 0.85rem;
+            border: none;
+            border-radius: var(--kme-radius-sm);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            background: var(--kme-tab-inactive-bg);
+            color: var(--kme-tab-inactive-text);
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .kme-tab i {
+            font-size: 0.85rem;
+        }
+
+        .kme-tab.kme-tab-active {
+            background: var(--kme-accent-blue);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .kme-tab:not(.kme-tab-active):hover {
+            background: var(--kme-option-hover);
+        }
+
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .kme-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .kme-section {
+            display: none;
+            animation: kmeSlideIn 0.35s ease;
+        }
+
+        .kme-section.kme-section-active {
+            display: block;
+        }
+
+        @keyframes kmeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Title */
+        .kme-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--kme-border-color);
+        }
+
+        .kme-section-title-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-section-title h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .kme-section-title p {
+            font-size: 0.8rem;
+            color: var(--kme-text-muted);
+            margin-top: 0.1rem;
+        }
+
+        /* ============================================
+           CORE CONCEPTS CARD
+           ============================================ */
+        .kme-concept-card {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-radius-md);
+            border: 1px solid var(--kme-border-color);
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--kme-shadow-sm);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .kme-concept-card:hover {
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-concept-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .kme-concept-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .kme-concept-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            line-height: 1.35;
+        }
+
+        .kme-concept-card p {
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.65;
+            margin-left: 0;
+        }
+
+        .kme-concept-card .kme-key-term {
+            font-weight: 700;
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-concept-card .kme-formula-inline {
+            font-family: 'Courier New', Courier, monospace;
+            background: var(--kme-accent-purple-light);
+            color: var(--kme-accent-purple);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* Concept list inside card */
+        .kme-concept-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 0.5rem;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding: 0.35rem 0 0.35rem 1.2rem;
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.55;
+        }
+
+        .kme-concept-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--kme-accent-blue);
+        }
+
+        /* ============================================
+           COMPARISON TABLES (Responsive)
+           ============================================ */
+        .kme-table-responsive {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-radius-md);
+            border: 1px solid var(--kme-border-color);
+            margin-bottom: 1rem;
+            box-shadow: var(--kme-shadow-sm);
+            overflow: hidden;
+        }
+
+        .kme-table-title {
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            border-bottom: 1px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .kme-table-scroll table {
+            width: 100%;
+            min-width: 360px;
+            border-collapse: collapse;
+        }
+
+        .kme-table-scroll thead th {
+            background: var(--kme-table-header-bg);
+            padding: 0.7rem 0.85rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--kme-text-muted);
+            text-align: left;
+            border-bottom: 2px solid var(--kme-border-color);
+            white-space: nowrap;
+        }
+
+        .kme-table-scroll tbody td {
+            padding: 0.7rem 0.85rem;
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            vertical-align: top;
+        }
+
+        .kme-table-scroll tbody tr:nth-child(even) {
+            background: var(--kme-table-stripe);
+        }
+
+        .kme-table-scroll tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .kme-table-highlight {
+            display: inline-block;
+            padding: 0.15rem 0.55rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .kme-highlight-blue {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-highlight-green {
+            background: var(--kme-accent-green-light);
+            color: var(--kme-accent-green);
+        }
+
+        .kme-highlight-purple {
+            background: var(--kme-accent-purple-light);
+            color: var(--kme-accent-purple);
+        }
+
+        .kme-highlight-orange {
+            background: var(--kme-accent-orange-light);
+            color: var(--kme-accent-orange);
+        }
+
+        /* ============================================
+           MATH / FORMULA BOX
+           ============================================ */
+        .kme-math-box {
+            background: var(--kme-math-bg);
+            border: 2px solid var(--kme-math-border);
+            border-radius: var(--kme-radius-md);
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.85rem;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-math-box-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            margin-bottom: 0.6rem;
+        }
+
+        .kme-math-box-title i {
+            color: var(--kme-accent-orange);
+        }
+
+        .kme-math-formula {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1rem;
+            color: var(--kme-text-primary);
+            line-height: 1.7;
+            padding: 0.5rem 0;
+        }
+
+        .kme-math-formula .kme-formula-block {
+            display: block;
+            padding: 0.3rem 0 0.3rem 0.75rem;
+            border-left: 3px solid var(--kme-accent-orange);
+            margin: 0.3rem 0;
+            font-weight: 600;
+        }
+
+        /* Details/Summary for step-by-step */
+        .kme-math-details {
+            margin-top: 0.75rem;
+            border-top: 1px dashed var(--kme-math-border);
+            padding-top: 0.5rem;
+        }
+
+        .kme-math-details summary {
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--kme-accent-blue);
+            padding: 0.5rem 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .kme-math-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-math-details summary::before {
+            content: '\f054';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.7rem;
+            transition: transform 0.2s ease;
+        }
+
+        .kme-math-details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .kme-math-steps {
+            padding: 0.5rem 0 0.25rem 1.4rem;
+            animation: kmeSlideIn 0.3s ease;
+        }
+
+        .kme-math-step {
+            position: relative;
+            padding: 0.4rem 0 0.4rem 1rem;
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+            border-left: 2px solid var(--kme-accent-orange);
+            margin-bottom: 0.35rem;
+        }
+
+        .kme-math-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -12px;
+            top: 0.35rem;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--kme-accent-orange);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kme-math-scenario {
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+            padding: 0.5rem 0.75rem;
+            background: var(--kme-bg-tertiary);
+            border-radius: var(--kme-radius-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .kme-math-scenario strong {
+            color: var(--kme-text-primary);
+        }
+
+        .kme-math-answer {
+            font-weight: 700;
+            color: var(--kme-accent-green);
+            font-size: 0.9rem;
+            padding-top: 0.35rem;
+        }
+
+        /* ============================================
+           EXAM TRAPS (Alert Cards)
+           ============================================ */
+        .kme-alert-danger {
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            border-left: 4px solid var(--kme-accent-red);
+            border-radius: var(--kme-radius-md);
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.7rem;
+            box-shadow: var(--kme-shadow-sm);
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+        }
+
+        .kme-alert-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--kme-accent-red);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .kme-alert-content {
+            flex: 1;
+        }
+
+        .kme-alert-content .kme-trap-number {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--kme-accent-red);
+            margin-bottom: 0.2rem;
+        }
+
+        .kme-alert-content p {
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+        }
+
+        .kme-alert-content strong {
+            color: var(--kme-text-primary);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           MCQ INTERACTIVE QUIZ
+           ============================================ */
+        .kme-mcq-container {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-radius-md);
+            border: 1px solid var(--kme-border-color);
+            margin-bottom: 1rem;
+            box-shadow: var(--kme-shadow-sm);
+            overflow: hidden;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .kme-mcq-header {
+            padding: 1rem 1.1rem 0.75rem;
+            border-bottom: 1px solid var(--kme-border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .kme-mcq-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--kme-accent-blue);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .kme-mcq-question {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.55;
+        }
+
+        .kme-mcq-options {
+            padding: 0.5rem 0.75rem 0.75rem;
+        }
+
+        .kme-mcq-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.65rem 0.75rem;
+            margin-bottom: 0.35rem;
+            border-radius: var(--kme-radius-sm);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 2px solid transparent;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+        }
+
+        .kme-mcq-option:hover:not(.kme-disabled) {
+            background: var(--kme-option-hover);
+        }
+
+        .kme-mcq-option:active:not(.kme-disabled) {
+            transform: scale(0.99);
+        }
+
+        .kme-mcq-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .kme-radio-custom {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--kme-border-color);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-top: 0.05rem;
+        }
+
+        .kme-radio-custom::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: transparent;
+            transition: background 0.15s ease;
+        }
+
+        .kme-mcq-option-text {
+            font-size: 0.86rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .kme-mcq-option-letter {
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            margin-right: 0.15rem;
+        }
+
+        /* Selected state */
+        .kme-mcq-option.kme-selected .kme-radio-custom {
+            border-color: var(--kme-accent-blue);
+        }
+
+        .kme-mcq-option.kme-selected .kme-radio-custom::after {
+            background: var(--kme-accent-blue);
+        }
+
+        /* Correct answer */
+        .kme-mcq-option.kme-correct {
+            background: var(--kme-correct-bg);
+            border-color: var(--kme-correct-border);
+        }
+
+        .kme-mcq-option.kme-correct .kme-radio-custom {
+            border-color: var(--kme-accent-green);
+            background: var(--kme-accent-green);
+        }
+
+        .kme-mcq-option.kme-correct .kme-radio-custom::after {
+            background: #ffffff;
+        }
+
+        .kme-mcq-option.kme-correct .kme-mcq-option-text {
+            color: var(--kme-accent-green);
+            font-weight: 600;
+        }
+
+        /* Incorrect answer */
+        .kme-mcq-option.kme-incorrect {
+            background: var(--kme-incorrect-bg);
+            border-color: var(--kme-incorrect-border);
+        }
+
+        .kme-mcq-option.kme-incorrect .kme-radio-custom {
+            border-color: var(--kme-accent-red);
+            background: var(--kme-accent-red);
+        }
+
+        .kme-mcq-option.kme-incorrect .kme-radio-custom::after {
+            background: #ffffff;
+        }
+
+        .kme-mcq-option.kme-incorrect .kme-mcq-option-text {
+            color: var(--kme-accent-red);
+        }
+
+        /* Disabled options after answer */
+        .kme-mcq-option.kme-disabled {
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
+        .kme-mcq-option.kme-correct.kme-disabled,
+        .kme-mcq-option.kme-incorrect.kme-disabled {
+            opacity: 1;
+        }
+
+        /* Explanation box */
+        .kme-explanation {
+            display: none;
+            padding: 0.75rem 1.1rem;
+            background: var(--kme-bg-tertiary);
+            border-top: 1px solid var(--kme-border-color);
+            animation: kmeSlideIn 0.3s ease;
+        }
+
+        .kme-explanation.kme-visible {
+            display: block;
+        }
+
+        .kme-explanation-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .kme-explanation-icon {
+            color: var(--kme-accent-green);
+            font-size: 0.9rem;
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .kme-explanation p {
+            font-size: 0.84rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.55;
+        }
+
+        .kme-explanation strong {
+            color: var(--kme-accent-green);
+        }
+
+        /* Quiz Score Summary */
+        .kme-quiz-score {
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-radius-md);
+            border: 2px solid var(--kme-accent-blue);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-quiz-score h3 {
+            font-size: 1rem;
+            color: var(--kme-text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .kme-quiz-score .kme-score-display {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-quiz-score .kme-score-label {
+            font-size: 0.82rem;
+            color: var(--kme-text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .kme-quiz-reset {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding: 0.55rem 1.2rem;
+            background: var(--kme-accent-blue);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--kme-radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.15s ease;
+        }
+
+        .kme-quiz-reset:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (min-width: 600px) {
+            .kme-main {
+                padding: 1.25rem 1.5rem;
+            }
+
+            .kme-header-title h1 {
+                font-size: 1.35rem;
+            }
+
+            .kme-section-title h2 {
+                font-size: 1.35rem;
+            }
+
+            .kme-concept-card {
+                padding: 1.25rem 1.5rem;
+            }
+
+            .kme-mcq-header {
+                padding: 1.15rem 1.35rem 0.85rem;
+            }
+
+            .kme-mcq-options {
+                padding: 0.65rem 1rem 1rem;
+            }
+
+            .kme-alert-danger {
+                padding: 1rem 1.25rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .kme-nav-inner {
+                justify-content: center;
+            }
+
+            .kme-tab {
+                padding: 0.55rem 1.1rem;
+                font-size: 0.83rem;
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .kme-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .kme-mb-0 { margin-bottom: 0 !important; }
+        .kme-mt-1 { margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header class="kme-header">
+        <div class="kme-header-inner">
+            <div class="kme-header-title">
+                <h1><i class="fa-solid fa-stethoscope"></i> Medical Statistics</h1>
+                <span class="kme-badge">Study Guide</span>
+            </div>
+            <div class="kme-header-actions">
+                <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+                    <i class="fa-solid fa-moon" id="kmeThemeIcon"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Progress Bar for Quiz -->
+        <div class="kme-progress-bar" id="kmeProgressBar" style="display: none;">
+            <div class="kme-progress-track">
+                <div class="kme-progress-fill" id="kmeProgressFill"></div>
+            </div>
+            <span class="kme-progress-text" id="kmeProgressText">0/20 answered</span>
+        </div>
+    </header>
+
+    <!-- ============================================
+         NAVIGATION TABS
+         ============================================ -->
+    <nav class="kme-nav" role="tablist">
+        <div class="kme-nav-inner">
+            <button class="kme-tab kme-tab-active" data-target="concepts" role="tab" aria-selected="true">
+                <i class="fa-solid fa-book-open"></i> Concepts
+            </button>
+            <button class="kme-tab" data-target="comparisons" role="tab" aria-selected="false">
+                <i class="fa-solid fa-arrows-left-right"></i> Compare
+            </button>
+            <button class="kme-tab" data-target="formulas" role="tab" aria-selected="false">
+                <i class="fa-solid fa-calculator"></i> Formulas
+            </button>
+            <button class="kme-tab" data-target="traps" role="tab" aria-selected="false">
+                <i class="fa-solid fa-triangle-exclamation"></i> Traps
+            </button>
+            <button class="kme-tab" data-target="quiz" role="tab" aria-selected="false">
+                <i class="fa-solid fa-clipboard-question"></i> Quiz
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <main class="kme-main">
+
+        <!-- ==========================================
+             SECTION: CORE CONCEPTS
+             ========================================== -->
+        <section class="kme-section kme-section-active" id="kmeSectionConcepts" role="tabpanel">
+            <div class="kme-section-title">
+                <div class="kme-section-title-icon" style="background: var(--kme-accent-blue-light); color: var(--kme-accent-blue);">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h2>Core Concepts</h2>
+                    <p>Foundational definitions and principles</p>
+                </div>
+            </div>
+
+            <!-- Card 1: Data Distribution Types -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-blue-light); color: var(--kme-accent-blue);">
+                        <i class="fa-solid fa-chart-area"></i>
+                    </div>
+                    <h3>Data Distribution Types</h3>
+                </div>
+                <p>Medical statistics primarily categorizes data distributions into <span class="kme-key-term">normal (symmetrical)</span> and <span class="kme-key-term">non-normal (skewed)</span> distributions.</p>
+            </div>
+
+            <!-- Card 2: Normal Distribution -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-green-light); color: var(--kme-accent-green);">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h3>Normal Distribution</h3>
+                </div>
+                <p>A symmetrical, <span class="kme-key-term">bell-shaped</span> probability curve where the <span class="kme-formula-inline">Mean = Median = Mode</span> and all are located at the exact midpoint of the base.</p>
+            </div>
+
+            <!-- Card 3: Skewed Distribution -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-orange-light); color: var(--kme-accent-orange);">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Skewed Distribution</h3>
+                </div>
+                <p>An asymmetrical curve indicating non-normal data:</p>
+                <ul class="kme-concept-list">
+                    <li><span class="kme-key-term">Positive Skew:</span> Tail extends to the right — <span class="kme-formula-inline">Mean > Median > Mode</span></li>
+                    <li><span class="kme-key-term">Negative Skew:</span> Tail extends to the left — <span class="kme-formula-inline">Mean < Median < Mode</span></li>
+                </ul>
+            </div>
+
+            <!-- Card 4: Null Hypothesis -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-purple-light); color: var(--kme-accent-purple);">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <h3>Null Hypothesis (H₀)</h3>
+                </div>
+                <p>A fundamental statistical assumption proposing that there is <span class="kme-key-term">no difference</span> or <span class="kme-key-term">no association</span> between the tested groups.</p>
+            </div>
+
+            <!-- Card 5: Alternative Hypothesis -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-green-light); color: var(--kme-accent-green);">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <h3>Alternative Hypothesis (H₁)</h3>
+                </div>
+                <p>The counterpart to the null hypothesis, proposing that a <span class="kme-key-term">measurable difference</span> or <span class="kme-key-term">association truly exists</span> between the groups.</p>
+            </div>
+
+            <!-- Card 6: P-value -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-red-light); color: var(--kme-accent-red);">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <h3>P-value Interpretation</h3>
+                </div>
+                <p>A calculation representing the probability that an observed difference happened <span class="kme-key-term">by chance</span>. A threshold of <span class="kme-formula-inline">p &lt; 0.05</span> is used to reject H₀ and accept H₁.</p>
+            </div>
+
+            <!-- Card 7: Student t-test -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-blue-light); color: var(--kme-accent-blue);">
+                        <i class="fa-solid fa-t"></i>
+                    </div>
+                    <h3>Student t-test (Independent)</h3>
+                </div>
+                <p>Indicated specifically for comparing the <span class="kme-key-term">means of two distinct groups</span> when the variable is <span class="kme-key-term">quantitative</span> and <span class="kme-key-term">normally distributed</span>.</p>
+            </div>
+
+            <!-- Card 8: Chi-square -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-orange-light); color: var(--kme-accent-orange);">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </div>
+                    <h3>Chi-square Test (χ²)</h3>
+                </div>
+                <p>Indicated for evaluating the association or comparing frequencies of <span class="kme-key-term">qualitative (categorical)</span> variables among two or more groups.</p>
+                <ul class="kme-concept-list">
+                    <li>Total observations must be <span class="kme-formula-inline">> 20</span></li>
+                    <li>Expected cell frequencies must be <span class="kme-formula-inline">> 5</span></li>
+                </ul>
+            </div>
+
+            <!-- Card 9: Fisher Exact Test -->
+            <div class="kme-concept-card kme-mb-0">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon" style="background: var(--kme-accent-purple-light); color: var(--kme-accent-purple);">
+                        <i class="fa-solid fa-fish"></i>
+                    </div>
+                    <h3>Fisher Exact Test</h3>
+                </div>
+                <p>Indicated as an alternative for qualitative categorical data when the sample is <span class="kme-key-term">small</span> — specifically when <span class="kme-formula-inline">≥ 2 expected cell frequencies (or 50% of cells) are &lt; 5</span>.</p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION: COMPARISONS
+             ========================================== -->
+        <section class="kme-section" id="kmeSectionComparisons" role="tabpanel">
+            <div class="kme-section-title">
+                <div class="kme-section-title-icon" style="background: var(--kme-accent-green-light); color: var(--kme-accent-green);">
+                    <i class="fa-solid fa-arrows-left-right"></i>
+                </div>
+                <div>
+                    <h2>Comparisons</h2>
+                    <p>Side-by-side visual comparisons</p>
+                </div>
+            </div>
+
+            <!-- Table 1: Normal vs Skewed -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title">
+                    <i class="fa-solid fa-chart-area" style="color: var(--kme-accent-blue);"></i>
+                    Normal vs. Skewed Data
+                </div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Normal</th>
+                                <th>Positive Skew</th>
+                                <th>Negative Skew</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Shape</strong></td>
+                                <td><span class="kme-table-highlight kme-highlight-green">Symmetrical</span></td>
+                                <td><span class="kme-table-highlight kme-highlight-orange">Right tail</span></td>
+                                <td><span class="kme-table-highlight kme-highlight-purple">Left tail</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Relationship</strong></td>
+                                <td>Mean = Median = Mode</td>
+                                <td>Mean > Median > Mode</td>
+                                <td>Mean < Median < Mode</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tail Direction</strong></td>
+                                <td>None (balanced)</td>
+                                <td>Extends toward positive values</td>
+                                <td>Extends toward negative values</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 2: Student T-test vs Chi-Square -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title">
+                    <i class="fa-solid fa-flask" style="color: var(--kme-accent-purple);"></i>
+                    Student T-test vs. Chi-Square Test
+                </div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criterion</th>
+                                <th>Student T-test</th>
+                                <th>Chi-Square Test</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Data Type</strong></td>
+                                <td><span class="kme-table-highlight kme-highlight-blue">Quantitative</span></td>
+                                <td><span class="kme-table-highlight kme-highlight-orange">Qualitative</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Purpose</strong></td>
+                                <td>Compares two means</td>
+                                <td>Compares categorical frequencies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribution</strong></td>
+                                <td>Requires normal distribution</td>
+                                <td>No distribution assumption</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 3: Chi-Square vs Fisher -->
+            <div class="kme-table-responsive kme-mb-0">
+                <div class="kme-table-title">
+                    <i class="fa-solid fa-scale-balanced" style="color: var(--kme-accent-orange);"></i>
+                    Chi-Square vs. Fisher Exact Test
+                </div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criterion</th>
+                                <th>Chi-Square</th>
+                                <th>Fisher Exact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Expected Cells</strong></td>
+                                <td><span class="kme-table-highlight kme-highlight-green">> 5</span></td>
+                                <td><span class="kme-table-highlight kme-highlight-orange">< 5</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sample Size</strong></td>
+                                <td>Large total sample (&gt;20)</td>
+                                <td>Small total sample</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Use Case</strong></td>
+                                <td>Standard categorical comparison</td>
+                                <td>Alternative when Chi-square invalid</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION: MATH FORMULAS
+             ========================================== -->
+        <section class="kme-section" id="kmeSectionFormulas" role="tabpanel">
+            <div class="kme-section-title">
+                <div class="kme-section-title-icon" style="background: var(--kme-accent-orange-light); color: var(--kme-accent-orange);">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h2>Formulas & Calculations</h2>
+                    <p>Key formulas with worked examples</p>
+                </div>
+            </div>
+
+            <!-- Formula Box: SD Rules -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-title">
+                    <i class="fa-solid fa-square-root-variable"></i>
+                    Normal Distribution SD Ranges
+                </div>
+                <div class="kme-math-formula">
+                    <span class="kme-formula-block">Mean ± 1 SD = <strong>68.2%</strong> of the data</span>
+                    <span class="kme-formula-block">Mean ± 2 SD = <strong>95.45%</strong> of the data</span>
+                    <span class="kme-formula-block">Mean ± 3 SD = <strong>99.73%</strong> of the data</span>
+                </div>
+            </div>
+
+            <!-- Scenario 1 -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-title">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Scenario 1: Calculating 1 SD Range
+                </div>
+                <div class="kme-math-scenario">
+                    <strong>Clinical Scenario:</strong> You are observing 1,000 men with a mean systolic blood pressure (SBP) of 120 mmHg and an SD of 10 mmHg. How many men have a pressure between 110 and 130 mmHg?
+                </div>
+                <details class="kme-math-details">
+                    <summary><i class="fa-solid fa-eye"></i> Show Steps</summary>
+                    <div class="kme-math-steps">
+                        <div class="kme-math-step" data-step="1">
+                            <strong>Identify the range:</strong> 110 = (120 − 10) and 130 = (120 + 10), which corresponds to <strong>Mean ± 1 SD</strong>.
+                        </div>
+                        <div class="kme-math-step" data-step="2">
+                            <strong>Recall the rule:</strong> Mean ± 1 SD encompasses roughly <strong>68%</strong> of the data.
+                        </div>
+                        <div class="kme-math-step" data-step="3">
+                            <strong>Calculate:</strong> 0.68 × 1,000 = <strong>680 men</strong>.
+                        </div>
+                    </div>
+                    <div class="kme-math-answer">✓ Answer: 680 men</div>
+                </details>
+            </div>
+
+            <!-- Scenario 2 -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-title">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Scenario 2: Calculating 2 SD Intervals
+                </div>
+                <div class="kme-math-scenario">
+                    <strong>Clinical Scenario:</strong> Serum cholesterol in a population is normally distributed with a mean of 170 mg/dl and an SD of 8 mg/dl. What interval encompasses approximately 95% of the values?
+                </div>
+                <details class="kme-math-details">
+                    <summary><i class="fa-solid fa-eye"></i> Show Steps</summary>
+                    <div class="kme-math-steps">
+                        <div class="kme-math-step" data-step="1">
+                            <strong>Identify the percentage rule:</strong> 95% of data corresponds to <strong>Mean ± 2 SD</strong>.
+                        </div>
+                        <div class="kme-math-step" data-step="2">
+                            <strong>Multiply SD by 2:</strong> 2 × 8 = <strong>16</strong>.
+                        </div>
+                        <div class="kme-math-step" data-step="3">
+                            <strong>Apply to mean:</strong> (170 − 16) to (170 + 16) = <strong>154 to 186 mg/dl</strong>.
+                        </div>
+                    </div>
+                    <div class="kme-math-answer">✓ Answer: 154 – 186 mg/dl</div>
+                </details>
+            </div>
+
+            <!-- Scenario 3 -->
+            <div class="kme-math-box kme-mb-0">
+                <div class="kme-math-box-title">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Scenario 3: Total Affected Population
+                </div>
+                <div class="kme-math-scenario">
+                    <strong>Clinical Scenario:</strong> Out of 1,000 men with a mean SBP of 120 mmHg and an SD of 10 mmHg, how many are expected to have an SBP ranging from 100 to 140 mmHg?
+                </div>
+                <details class="kme-math-details">
+                    <summary><i class="fa-solid fa-eye"></i> Show Steps</summary>
+                    <div class="kme-math-steps">
+                        <div class="kme-math-step" data-step="1">
+                            <strong>Identify the range:</strong> 100 = (120 − 20) and 140 = (120 + 20), representing exactly <strong>Mean ± 2 SD</strong>.
+                        </div>
+                        <div class="kme-math-step" data-step="2">
+                            <strong>Recall the rule:</strong> Mean ± 2 SD encompasses <strong>95%</strong> of the population.
+                        </div>
+                        <div class="kme-math-step" data-step="3">
+                            <strong>Calculate:</strong> 0.95 × 1,000 = <strong>950 men</strong>.
+                        </div>
+                    </div>
+                    <div class="kme-math-answer">✓ Answer: 950 men</div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION: EXAM TRAPS
+             ========================================== -->
+        <section class="kme-section" id="kmeSectionTraps" role="tabpanel">
+            <div class="kme-section-title">
+                <div class="kme-section-title-icon" style="background: var(--kme-accent-red-light); color: var(--kme-accent-red);">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h2>Exam Traps</h2>
+                    <p>Common pitfalls and how to avoid them</p>
+                </div>
+            </div>
+
+            <!-- Trap 1 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #1</div>
+                    <p><strong>Confusing Test Indications:</strong> Never apply the Student t-test to categorical (qualitative) outcome frequencies like "improved vs. not improved"; always use the <strong>Chi-square test</strong> for categorical variables.</p>
+                </div>
+            </div>
+
+            <!-- Trap 2 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #2</div>
+                    <p><strong>Misinterpreting Borderline P-values:</strong> A p-value of exactly <strong>0.06</strong> is greater than the standard 0.05 threshold; you must strictly accept the null hypothesis and declare the result <strong>statistically non-significant</strong>.</p>
+                </div>
+            </div>
+
+            <!-- Trap 3 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #3</div>
+                    <p><strong>Misidentifying Skew Direction:</strong> The term "positive skew" describes the direction of the <strong>elongated tail</strong> pointing toward positive values on the right, not where the main bulk/peak of the data resides.</p>
+                </div>
+            </div>
+
+            <!-- Trap 4 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #4</div>
+                    <p><strong>Mixing Mean/Median/Mode Orders:</strong> Remember that extreme outliers pull the mean the hardest; thus, in a positively skewed dataset, the <strong>Mean is always the highest value</strong> (Mean > Median > Mode).</p>
+                </div>
+            </div>
+
+            <!-- Trap 5 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #5</div>
+                    <p><strong>Ignoring Expected Cell Count Limits:</strong> Blindly applying the Chi-square test to small tables is a common trap; if any expected cell frequency falls below 5, you must pivot to the <strong>Fisher Exact test</strong>.</p>
+                </div>
+            </div>
+
+            <!-- Trap 6 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #6</div>
+                    <p><strong>SD Percentage Confusion:</strong> Mixing up standard deviation empirical rules is common; memorize exactly <strong>68.2%</strong> for 1 SD, <strong>95.5%</strong> for 2 SD, and <strong>99.7%</strong> for 3 SD.</p>
+                </div>
+            </div>
+
+            <!-- Trap 7 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #7</div>
+                    <p><strong>Raw Number vs. Percentage Trap:</strong> Skimming questions too fast and selecting a percentage (e.g., "95%") when the exam explicitly asks for the <strong>absolute number</strong> of affected individuals (e.g., "950 out of 1000").</p>
+                </div>
+            </div>
+
+            <!-- Trap 8 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #8</div>
+                    <p><strong>Misunderstanding the Null Hypothesis:</strong> Students often mistake the researcher's clinical goal (the Alternative hypothesis) for the Null; the Null hypothesis <strong>always conservatively asserts "no difference"</strong> or "no association".</p>
+                </div>
+            </div>
+
+            <!-- Trap 9 -->
+            <div class="kme-alert-danger kme-mb-0">
+                <div class="kme-alert-icon">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div class="kme-alert-content">
+                    <div class="kme-trap-number">Trap #9</div>
+                    <p><strong>Failing to Spot Non-Normal Data via SD:</strong> If a clinical scenario provides a Standard Deviation value that is significantly <strong>larger than the Mean</strong>, this is a hidden clue that the data is highly dispersed and <strong>non-normally distributed</strong> (skewed).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION: MCQ QUIZ
+             ========================================== -->
+        <section class="kme-section" id="kmeSectionQuiz" role="tabpanel">
+            <div class="kme-section-title">
+                <div class="kme-section-title-icon" style="background: var(--kme-accent-purple-light); color: var(--kme-accent-purple);">
+                    <i class="fa-solid fa-clipboard-question"></i>
+                </div>
+                <div>
+                    <h2>Practice Quiz</h2>
+                    <p>20 MCQs — test your knowledge</p>
+                </div>
+            </div>
+
+            <!-- Quiz Score Summary -->
+            <div class="kme-quiz-score" id="kmeQuizScore">
+                <h3><i class="fa-solid fa-trophy"></i> Your Score</h3>
+                <div class="kme-score-display" id="kmeScoreDisplay">0/20</div>
+                <div class="kme-score-label" id="kmeScoreLabel">Answer all questions to see your final score</div>
+                <button class="kme-quiz-reset" id="kmeQuizReset">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Quiz
+                </button>
+            </div>
+
+            <!-- Quiz Questions Container -->
+            <div id="kmeQuizContainer">
+                <!-- Questions will be injected by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================================
+        // MCQ DATA
+        // ============================================
+        const KME_QUIZ_DATA = [
+            {
+                id: 1,
+                question: 'Which of the following accurately defines the "null hypothesis" in a clinical trial comparing two surgical techniques?',
+                options: [
+                    { letter: 'A', text: 'It assumes the newer technique is superior.' },
+                    { letter: 'B', text: 'It assumes there is no difference in outcomes between the techniques.' },
+                    { letter: 'C', text: 'It assumes the p-value will be exactly 0.05.' },
+                    { letter: 'D', text: 'It assumes the data is non-normally distributed.' },
+                    { letter: 'E', text: 'It assumes the older technique is superior.' }
+                ],
+                correct: 'B',
+                explanation: 'The null hypothesis inherently assumes there is no difference between the tested groups.'
+            },
+            {
+                id: 2,
+                question: 'An investigator evaluates a new hypertension drug and notes a p-value of 0.06. What is the correct interpretation of this result?',
+                options: [
+                    { letter: 'A', text: 'Statistically significant results, null hypothesis is rejected.' },
+                    { letter: 'B', text: 'Statistically significant results, null hypothesis is accepted.' },
+                    { letter: 'C', text: 'Statistically non-significant results, alternative hypothesis is accepted.' },
+                    { letter: 'D', text: 'Statistically non-significant results, null hypothesis is accepted.' },
+                    { letter: 'E', text: 'Statistically non-significant results, null hypothesis is rejected.' }
+                ],
+                correct: 'D',
+                explanation: 'A p-value > 0.05 is non-significant, requiring the acceptance of the null hypothesis.'
+            },
+            {
+                id: 3,
+                question: 'In a perfectly normal, bell-shaped distribution, what percentage of the data falls within ±1 standard deviation of the mean?',
+                options: [
+                    { letter: 'A', text: '50%' },
+                    { letter: 'B', text: '68.2%' },
+                    { letter: 'C', text: '95.5%' },
+                    { letter: 'D', text: '99.7%' },
+                    { letter: 'E', text: '100%' }
+                ],
+                correct: 'B',
+                explanation: 'Exactly 68.2% of normally distributed data falls within one standard deviation of the mean.'
+            },
+            {
+                id: 4,
+                question: 'If a dataset of patient weights is positively skewed, which of the following mathematical relationships is true?',
+                options: [
+                    { letter: 'A', text: 'Mean = Median = Mode' },
+                    { letter: 'B', text: 'Mean < Median < Mode' },
+                    { letter: 'C', text: 'Mean > Median > Mode' },
+                    { letter: 'D', text: 'Mode > Mean > Median' },
+                    { letter: 'E', text: 'Median > Mean > Mode' }
+                ],
+                correct: 'C',
+                explanation: 'In a positive skew, the tail extends to the right, heavily pulling the mean so that Mean > Median > Mode.'
+            },
+            {
+                id: 5,
+                question: 'A researcher wants to compare the mean serum cholesterol levels (a quantitative variable) between two independent groups of patients. Which statistical test is most appropriate?',
+                options: [
+                    { letter: 'A', text: 'Chi-square test' },
+                    { letter: 'B', text: 'Fisher exact test' },
+                    { letter: 'C', text: 'Independent Student t-test' },
+                    { letter: 'D', text: 'Mantel Haenszel test' },
+                    { letter: 'E', text: 'ANOVA' }
+                ],
+                correct: 'C',
+                explanation: 'The Student t-test is specifically used to compare the quantitative means of two different samples.'
+            },
+            {
+                id: 6,
+                question: 'A study examines the association between maternal iron intake (Yes/No) and the incidence of low birth weight (<2500g or >2500g). Which statistical test is indicated?',
+                options: [
+                    { letter: 'A', text: 'Paired t-test' },
+                    { letter: 'B', text: 'Independent t-test' },
+                    { letter: 'C', text: 'Analysis of variance' },
+                    { letter: 'D', text: 'Chi-square test' },
+                    { letter: 'E', text: 'Pearson correlation' }
+                ],
+                correct: 'D',
+                explanation: 'The Chi-square test evaluates the association between categorical (qualitative) variables like intake status and birth weight groups.'
+            },
+            {
+                id: 7,
+                question: 'When analyzing an association using categorical data, what test is mandatory if the expected frequency in any cell of the contingency table is less than 5?',
+                options: [
+                    { letter: 'A', text: 'Student t-test' },
+                    { letter: 'B', text: 'Chi-square test' },
+                    { letter: 'C', text: 'Fisher exact test' },
+                    { letter: 'D', text: 'Paired t-test' },
+                    { letter: 'E', text: 'Alternative hypothesis test' }
+                ],
+                correct: 'C',
+                explanation: 'The Fisher exact test is an alternative to Chi-square that must be used when expected cell frequencies fall below 5.'
+            },
+            {
+                id: 8,
+                question: 'In a negatively skewed distribution, where does the asymmetrical tail extend?',
+                options: [
+                    { letter: 'A', text: 'Towards positive values' },
+                    { letter: 'B', text: 'Towards the exact mean' },
+                    { letter: 'C', text: 'Towards negative values' },
+                    { letter: 'D', text: 'Evenly in both directions' },
+                    { letter: 'E', text: 'Upwards to the peak' }
+                ],
+                correct: 'C',
+                explanation: 'A negative skew is defined by its tail extending in the direction of the negative values on the left.'
+            },
+            {
+                id: 9,
+                question: 'In a population of 1,000 men, the mean systolic blood pressure is 120 mmHg with a standard deviation of 10. How many men are expected to have an SBP between 100 and 140 mmHg?',
+                options: [
+                    { letter: 'A', text: '680' },
+                    { letter: 'B', text: '950' },
+                    { letter: 'C', text: '997' },
+                    { letter: 'D', text: '500' },
+                    { letter: 'E', text: '1000' }
+                ],
+                correct: 'B',
+                explanation: 'The range 100–140 mmHg represents Mean ± 2 SD, which includes 95% of the data; 0.95 × 1,000 = 950 men.'
+            },
+            {
+                id: 10,
+                question: 'What is indicated if a dataset\'s standard deviation is substantially larger than its mean (e.g., Mean = 124, SD = 146)?',
+                options: [
+                    { letter: 'A', text: 'A perfectly symmetrical normal distribution' },
+                    { letter: 'B', text: 'The data represents nominal variables' },
+                    { letter: 'C', text: 'The data has a non-normal (skewed) distribution' },
+                    { letter: 'D', text: 'The p-value must be significant' },
+                    { letter: 'E', text: 'The sample size is excessively large' }
+                ],
+                correct: 'C',
+                explanation: 'An SD larger than the mean signifies high dispersion and a non-normal, heavily skewed distribution.'
+            },
+            {
+                id: 11,
+                question: 'The p-value functions as a cutoff for statistical significance. What is the standard threshold to reject the null hypothesis?',
+                options: [
+                    { letter: 'A', text: 'p < 0.10' },
+                    { letter: 'B', text: 'p < 0.05' },
+                    { letter: 'C', text: 'p > 0.05' },
+                    { letter: 'D', text: 'p = 0.50' },
+                    { letter: 'E', text: 'p = 1.00' }
+                ],
+                correct: 'B',
+                explanation: 'A p-value less than 0.05 signifies statistical significance, prompting the rejection of the null hypothesis.'
+            },
+            {
+                id: 12,
+                question: 'What is the total area under a perfect normal distribution curve?',
+                options: [
+                    { letter: 'A', text: '0.05' },
+                    { letter: 'B', text: '0.50' },
+                    { letter: 'C', text: '1.00 (100%)' },
+                    { letter: 'D', text: '2.00' },
+                    { letter: 'E', text: '3.00' }
+                ],
+                correct: 'C',
+                explanation: 'The total area under the normal distribution curve equates to unity, or exactly 100%.'
+            },
+            {
+                id: 13,
+                question: 'Serum cholesterol in a group of young adults is normally distributed with a mean of 170 mg/dl and SD of 8 mg/dl. Which interval includes approximately 68% of the serum cholesterol levels?',
+                options: [
+                    { letter: 'A', text: '140–200 mg/dl' },
+                    { letter: 'B', text: '154–186 mg/dl' },
+                    { letter: 'C', text: '150–190 mg/dl' },
+                    { letter: 'D', text: '162–178 mg/dl' },
+                    { letter: 'E', text: '160–180 mg/dl' }
+                ],
+                correct: 'D',
+                explanation: '68% corresponds to Mean ± 1 SD, which calculates to 170 ± 8, yielding an interval of 162 to 178 mg/dl.'
+            },
+            {
+                id: 14,
+                question: 'The alternative hypothesis (H₁) formulated by a medical researcher typically states that:',
+                options: [
+                    { letter: 'A', text: 'There is absolutely no difference between the comparison groups.' },
+                    { letter: 'B', text: 'The collected sample size is inadequate.' },
+                    { letter: 'C', text: 'A true difference or association exists between the groups.' },
+                    { letter: 'D', text: 'The results are strictly due to chance.' },
+                    { letter: 'E', text: 'The data is parametric.' }
+                ],
+                correct: 'C',
+                explanation: 'The alternative hypothesis claims that a measurable difference or association exists between the evaluated groups.'
+            },
+            {
+                id: 15,
+                question: 'Which of the following is a strict mathematical requirement for utilizing the Chi-square test?',
+                options: [
+                    { letter: 'A', text: 'The data must be quantitative and continuous.' },
+                    { letter: 'B', text: 'The total number of observations must be greater than 20.' },
+                    { letter: 'C', text: 'The mean must equal the median perfectly.' },
+                    { letter: 'D', text: 'The expected frequency in any one cell must be less than 5.' },
+                    { letter: 'E', text: 'The distribution must be positively skewed.' }
+                ],
+                correct: 'B',
+                explanation: 'The Chi-square test requires categorical frequency data with total observations exceeding 20.'
+            },
+            {
+                id: 16,
+                question: 'If an investigator tests whether a new surgical technique reduces wound infection rates compared to an older technique, what is the precise null hypothesis?',
+                options: [
+                    { letter: 'A', text: 'The new technique drastically reduces infection rates.' },
+                    { letter: 'B', text: 'The older technique prevents infections better.' },
+                    { letter: 'C', text: 'Rates of wound infection are exactly the same with both techniques.' },
+                    { letter: 'D', text: 'The new technique causes more side effects.' },
+                    { letter: 'E', text: 'The p-value of the final data is < 0.05.' }
+                ],
+                correct: 'C',
+                explanation: 'The null hypothesis must assume no difference exists between the new and old surgical techniques.'
+            },
+            {
+                id: 17,
+                question: 'In a perfectly symmetrical normal distribution curve, the median is located exactly:',
+                options: [
+                    { letter: 'A', text: 'At the extreme positive tail.' },
+                    { letter: 'B', text: 'At the extreme negative tail.' },
+                    { letter: 'C', text: 'At the midpoint of the base, equal to the mean and mode.' },
+                    { letter: 'D', text: 'Below the modal value.' },
+                    { letter: 'E', text: 'Above the calculated mean.' }
+                ],
+                correct: 'C',
+                explanation: 'In a normal distribution, the curve peaks at the precise midpoint where the mean, median, and mode converge.'
+            },
+            {
+                id: 18,
+                question: 'What specific percentage of normally distributed data is expected to fall within ±3 standard deviations of the mean?',
+                options: [
+                    { letter: 'A', text: '50.0%' },
+                    { letter: 'B', text: '68.2%' },
+                    { letter: 'C', text: '95.5%' },
+                    { letter: 'D', text: '99.7%' },
+                    { letter: 'E', text: '100.0%' }
+                ],
+                correct: 'D',
+                explanation: 'Approximately 99.73% of normal data values fall within three standard deviations from the mean.'
+            },
+            {
+                id: 19,
+                question: 'A study evaluates improvement outcomes (Improved vs. Not Improved) for a disease using two different antibiotics. Which test assesses this qualitative data?',
+                options: [
+                    { letter: 'A', text: 'Independent Student t-test' },
+                    { letter: 'B', text: 'Chi-square test' },
+                    { letter: 'C', text: 'Paired t-test' },
+                    { letter: 'D', text: 'Analysis of variance' },
+                    { letter: 'E', text: 'Mantel Haenszel test' }
+                ],
+                correct: 'B',
+                explanation: 'The Chi-square test is the designated tool for comparing the frequencies of categorical (qualitative) outcome variables.'
+            },
+            {
+                id: 20,
+                question: 'If p = 0.01 is yielded by a Chi-square test comparing two drugs, what is the mandatory statistical action?',
+                options: [
+                    { letter: 'A', text: 'Accept the null hypothesis completely.' },
+                    { letter: 'B', text: 'Reject the alternative hypothesis.' },
+                    { letter: 'C', text: 'Reject the null hypothesis.' },
+                    { letter: 'D', text: 'Switch to the Fisher exact test immediately.' },
+                    { letter: 'E', text: 'Declare the variables non-normally distributed.' }
+                ],
+                correct: 'C',
+                explanation: 'Since the p-value is less than 0.05, the result is statistically significant, requiring the rejection of the null hypothesis.'
+            }
+        ];
+
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        const KME_STORAGE_KEY = 'kme_app_state';
+
+        /**
+         * Load state from localStorage
+         * Returns default state if nothing is stored
+         */
+        function kmeLoadState() {
+            try {
+                const saved = localStorage.getItem(KME_STORAGE_KEY);
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn('KME: Could not load state from localStorage', e);
+            }
+            // Default state
+            return {
+                theme: 'light',
+                activeTab: 'concepts',
+                quizAnswers: {} // { questionId: selectedLetter }
+            };
+        }
+
+        /**
+         * Save state to localStorage
+         */
+        function kmeSaveState(state) {
+            try {
+                localStorage.setItem(KME_STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.warn('KME: Could not save state to localStorage', e);
+            }
+        }
+
+        // Initialize state
+        let kmeState = kmeLoadState();
+
+        // ============================================
+        // THEME MANAGEMENT
+        // ============================================
+        const kmeThemeToggle = document.getElementById('kmeThemeToggle');
+        const kmeThemeIcon = document.getElementById('kmeThemeIcon');
+
+        function kmeApplyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                kmeThemeIcon.classList.remove('fa-moon');
+                kmeThemeIcon.classList.add('fa-sun');
+            } else {
+                kmeThemeIcon.classList.remove('fa-sun');
+                kmeThemeIcon.classList.add('fa-moon');
+            }
+            kmeState.theme = theme;
+            kmeSaveState(kmeState);
+        }
+
+        // Apply saved theme on load
+        kmeApplyTheme(kmeState.theme);
+
+        kmeThemeToggle.addEventListener('click', function() {
+            const newTheme = kmeState.theme === 'light' ? 'dark' : 'light';
+            kmeApplyTheme(newTheme);
+        });
+
+        // ============================================
+        // TAB NAVIGATION
+        // ============================================
+        const kmeTabs = document.querySelectorAll('.kme-tab');
+        const kmeSections = document.querySelectorAll('.kme-section');
+        const kmeProgressBar = document.getElementById('kmeProgressBar');
+
+        // Map tab targets to section IDs
+        const kmeTabToSection = {
+            'concepts': 'kmeSectionConcepts',
+            'comparisons': 'kmeSectionComparisons',
+            'formulas': 'kmeSectionFormulas',
+            'traps': 'kmeSectionTraps',
+            'quiz': 'kmeSectionQuiz'
+        };
+
+        function kmeActivateTab(target) {
+            // Update tab buttons
+            kmeTabs.forEach(function(tab) {
+                if (tab.getAttribute('data-target') === target) {
+                    tab.classList.add('kme-tab-active');
+                    tab.setAttribute('aria-selected', 'true');
+                } else {
+                    tab.classList.remove('kme-tab-active');
+                    tab.setAttribute('aria-selected', 'false');
+                }
+            });
+
+            // Update sections
+            kmeSections.forEach(function(section) {
+                section.classList.remove('kme-section-active');
+            });
+
+            var sectionId = kmeTabToSection[target];
+            if (sectionId) {
+                document.getElementById(sectionId).classList.add('kme-section-active');
+            }
+
+            // Show/hide progress bar for quiz
+            if (target === 'quiz') {
+                kmeProgressBar.style.display = 'flex';
+            } else {
+                kmeProgressBar.style.display = 'none';
+            }
+
+            // Save active tab
+            kmeState.activeTab = target;
+            kmeSaveState(kmeState);
+
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Attach click listeners to tabs
+        kmeTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                kmeActivateTab(this.getAttribute('data-target'));
+            });
+        });
+
+        // Apply saved active tab on load
+        kmeActivateTab(kmeState.activeTab);
+
+        // ============================================
+        // QUIZ RENDERING
+        // ============================================
+        const kmeQuizContainer = document.getElementById('kmeQuizContainer');
+
+        function kmeRenderQuiz() {
+            var html = '';
+
+            KME_QUIZ_DATA.forEach(function(q) {
+                var answered = kmeState.quizAnswers.hasOwnProperty(q.id);
+                var selectedLetter = answered ? kmeState.quizAnswers[q.id] : null;
+                var isCorrect = selectedLetter === q.correct;
+
+                html += '<div class="kme-mcq-container" data-qid="' + q.id + '">';
+
+                // Question header
+                html += '<div class="kme-mcq-header">';
+                html += '<div class="kme-mcq-number">' + q.id + '</div>';
+                html += '<div class="kme-mcq-question">' + kmeEscapeHTML(q.question) + '</div>';
+                html += '</div>';
+
+                // Options
+                html += '<div class="kme-mcq-options">';
+                q.options.forEach(function(opt) {
+                    var optionClasses = 'kme-mcq-option';
+
+                    if (answered) {
+                        optionClasses += ' kme-disabled';
+                        if (opt.letter === q.correct) {
+                            optionClasses += ' kme-correct';
+                        } else if (opt.letter === selectedLetter && opt.letter !== q.correct) {
+                            optionClasses += ' kme-incorrect';
+                        }
+                    }
+
+                    if (opt.letter === selectedLetter) {
+                        optionClasses += ' kme-selected';
+                    }
+
+                    html += '<label class="' + optionClasses + '" data-qid="' + q.id + '" data-letter="' + opt.letter + '">';
+                    html += '<input type="radio" name="kme_q' + q.id + '" value="' + opt.letter + '"' + (opt.letter === selectedLetter ? ' checked' : '') + (answered ? ' disabled' : '') + '>';
+                    html += '<span class="kme-radio-custom"></span>';
+                    html += '<span class="kme-mcq-option-text"><span class="kme-mcq-option-letter">' + opt.letter + '.</span> ' + kmeEscapeHTML(opt.text) + '</span>';
+                    html += '</label>';
+                });
+                html += '</div>';
+
+                // Explanation
+                var explanationClasses = 'kme-explanation';
+                if (answered) {
+                    explanationClasses += ' kme-visible';
+                }
+                html += '<div class="' + explanationClasses + '" data-explanation="' + q.id + '">';
+                html += '<div class="kme-explanation-inner">';
+                html += '<i class="fa-solid fa-lightbulb kme-explanation-icon"></i>';
+                html += '<p><strong>Correct: ' + q.correct + '.</strong> ' + kmeEscapeHTML(q.explanation) + '</p>';
+                html += '</div>';
+                html += '</div>';
+
+                html += '</div>'; // end kme-mcq-container
+            });
+
+            kmeQuizContainer.innerHTML = html;
+
+            // Attach event listeners to options
+            kmeAttachQuizListeners();
+
+            // Update progress and score
+            kmeUpdateProgress();
+            kmeUpdateScore();
+        }
+
+        function kmeEscapeHTML(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function kmeAttachQuizListeners() {
+            var options = kmeQuizContainer.querySelectorAll('.kme-mcq-option:not(.kme-disabled)');
+            options.forEach(function(opt) {
+                opt.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var qid = parseInt(this.getAttribute('data-qid'));
+                    var letter = this.getAttribute('data-letter');
+                    kmeHandleAnswer(qid, letter);
+                });
+            });
+        }
+
+        function kmeHandleAnswer(qid, selectedLetter) {
+            // Prevent re-answering
+            if (kmeState.quizAnswers.hasOwnProperty(qid)) return;
+
+            // Save answer
+            kmeState.quizAnswers[qid] = selectedLetter;
+            kmeSaveState(kmeState);
+
+            // Find the question data
+            var qData = KME_QUIZ_DATA.find(function(q) { return q.id === qid; });
+            if (!qData) return;
+
+            // Get all options for this question
+            var container = kmeQuizContainer.querySelector('.kme-mcq-container[data-qid="' + qid + '"]');
+            if (!container) return;
+
+            var allOpts = container.querySelectorAll('.kme-mcq-option');
+            allOpts.forEach(function(opt) {
+                var optLetter = opt.getAttribute('data-letter');
+                var radio = opt.querySelector('input[type="radio"]');
+
+                // Disable all
+                opt.classList.add('kme-disabled');
+                radio.disabled = true;
+
+                // Mark selected
+                if (optLetter === selectedLetter) {
+                    opt.classList.add('kme-selected');
+                    radio.checked = true;
+                }
+
+                // Mark correct
+                if (optLetter === qData.correct) {
+                    opt.classList.add('kme-correct');
+                }
+
+                // Mark incorrect (only the selected wrong one)
+                if (optLetter === selectedLetter && optLetter !== qData.correct) {
+                    opt.classList.add('kme-incorrect');
+                }
+            });
+
+            // Show explanation
+            var explanation = container.querySelector('.kme-explanation');
+            if (explanation) {
+                explanation.classList.add('kme-visible');
+            }
+
+            // Update progress and score
+            kmeUpdateProgress();
+            kmeUpdateScore();
+        }
+
+        function kmeUpdateProgress() {
+            var answered = Object.keys(kmeState.quizAnswers).length;
+            var total = KME_QUIZ_DATA.length;
+            var percentage = (answered / total) * 100;
+
+            var progressFill = document.getElementById('kmeProgressFill');
+            var progressText = document.getElementById('kmeProgressText');
+
+            if (progressFill) progressFill.style.width = percentage + '%';
+            if (progressText) progressText.textContent = answered + '/' + total + ' answered';
+        }
+
+        function kmeUpdateScore() {
+            var answered = Object.keys(kmeState.quizAnswers).length;
+            var total = KME_QUIZ_DATA.length;
+            var correct = 0;
+
+            KME_QUIZ_DATA.forEach(function(q) {
+                if (kmeState.quizAnswers[q.id] === q.correct) {
+                    correct++;
+                }
+            });
+
+            var scoreDisplay = document.getElementById('kmeScoreDisplay');
+            var scoreLabel = document.getElementById('kmeScoreLabel');
+
+            if (scoreDisplay) scoreDisplay.textContent = correct + '/' + total;
+
+            if (scoreLabel) {
+                if (answered === 0) {
+                    scoreLabel.textContent = 'Answer all questions to see your final score';
+                } else if (answered < total) {
+                    scoreLabel.textContent = answered + ' of ' + total + ' answered — keep going!';
+                } else {
+                    var pct = Math.round((correct / total) * 100);
+                    if (pct >= 90) {
+                        scoreLabel.textContent = 'Excellent! You scored ' + pct + '% 🎉';
+                    } else if (pct >= 70) {
+                        scoreLabel.textContent = 'Good job! You scored ' + pct + '% 👍';
+                    } else if (pct >= 50) {
+                        scoreLabel.textContent = 'Keep reviewing! You scored ' + pct + '% 📚';
+                    } else {
+                        scoreLabel.textContent = 'Needs improvement. You scored ' + pct + '% — review the concepts.';
+                    }
+                }
+            }
+        }
+
+        // Quiz reset button
+        var kmeQuizResetBtn = document.getElementById('kmeQuizReset');
+        kmeQuizResetBtn.addEventListener('click', function() {
+            kmeState.quizAnswers = {};
+            kmeSaveState(kmeState);
+            kmeRenderQuiz();
+            // Scroll to top of quiz
+            document.getElementById('kmeSectionQuiz').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Render quiz on load
+        kmeRenderQuiz();
+
+    })();
+    </script>
+
+</body>
+</html>

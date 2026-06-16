@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧫 Toxoplasmosis — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070c18;
+  --bg2: #0d1526;
+  --bg3: #121d35;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --teal: #00d4b8;
+  --teal2: #00b5a0;
+  --emerald: #10d9a0;
+  --amber: #f59e0b;
+  --red: #f43f5e;
+  --violet: #8b5cf6;
+  --blue: #3b82f6;
+  --sky: #0ea5e9;
+  --text: #e8edf5;
+  --text2: #8b9ab5;
+  --text3: #5a6a85;
+  --correct: #10b981;
+  --wrong: #ef4444;
+  --r: 12px;
+  --r2: 20px;
+  --glow: 0 0 40px rgba(0,212,184,0.15);
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BG ANIMATION ── */
+.bg-orbs {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); opacity: 0.18;
+  animation: drift 20s ease-in-out infinite;
+}
+.orb1 { width: 600px; height: 600px; background: var(--teal); top: -200px; left: -150px; animation-duration: 22s; }
+.orb2 { width: 500px; height: 500px; background: var(--violet); bottom: -100px; right: -100px; animation-duration: 18s; animation-delay: -8s; }
+.orb3 { width: 300px; height: 300px; background: var(--emerald); top: 40%; left: 50%; animation-duration: 15s; animation-delay: -4s; }
+
+@keyframes drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(30px,-20px) scale(1.05); }
+  66% { transform: translate(-20px,30px) scale(0.95); }
+}
+
+/* ── LAYOUT ── */
+#app { position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+header {
+  padding: 24px 32px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  display: grid; place-items: center; font-size: 24px;
+  box-shadow: 0 4px 20px rgba(0,212,184,0.4);
+}
+.logo-text h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo-text p { font-size: 12px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.stat-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text2);
+}
+.stat-pill span.val { color: var(--teal); font-weight: 700; font-family: 'DM Mono', monospace; }
+
+/* ── SEARCH ── */
+.search-wrap {
+  padding: 20px 32px 0;
+}
+.search-inner {
+  position: relative; max-width: 480px;
+}
+.search-inner input {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: 50px;
+  padding: 10px 20px 10px 44px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 14px; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-inner input::placeholder { color: var(--text3); }
+.search-inner input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,212,184,0.1); }
+.search-inner svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
+#search-results {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 100;
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r);
+  max-height: 320px; overflow-y: auto; display: none;
+  box-shadow: var(--shadow);
+}
+#search-results.open { display: block; }
+.search-item {
+  padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.search-item:hover { background: var(--surface2); }
+.search-item .s-tag { font-size: 11px; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; }
+.search-item .s-text { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.search-item strong { color: var(--text); }
+
+/* ── TABS ── */
+.tab-bar {
+  padding: 20px 32px 0;
+  display: flex; gap: 4px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  background: none; border: none; cursor: pointer;
+  padding: 9px 16px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--text3);
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: var(--surface2); color: var(--text2); }
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  color: #000; font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0,212,184,0.3);
+}
+
+/* ── MAIN CONTENT ── */
+main { padding: 24px 32px 60px; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  margin-bottom: 6px;
+}
+.section-sub { color: var(--text3); font-size: 14px; margin-bottom: 28px; }
+
+/* ── GRID UTILITIES ── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.card.glow:hover { box-shadow: var(--glow), var(--shadow); }
+
+.card-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.card-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: grid; place-items: center; font-size: 18px; flex-shrink: 0;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 50px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.badge-teal { background: rgba(0,212,184,0.12); color: var(--teal); border: 1px solid rgba(0,212,184,0.2); }
+.badge-amber { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.badge-red { background: rgba(244,63,94,0.12); color: var(--red); border: 1px solid rgba(244,63,94,0.2); }
+.badge-violet { background: rgba(139,92,246,0.12); color: var(--violet); border: 1px solid rgba(139,92,246,0.2); }
+.badge-blue { background: rgba(59,130,246,0.12); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+
+/* ── OVERVIEW ── */
+.overview-hero {
+  background: linear-gradient(135deg, rgba(0,212,184,0.08), rgba(16,217,160,0.04));
+  border: 1px solid rgba(0,212,184,0.2);
+  border-radius: var(--r2);
+  padding: 28px; margin-bottom: 24px;
+}
+.overview-hero h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.overview-hero p { color: var(--text2); line-height: 1.7; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+.timeline::before {
+  content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--emerald), transparent);
+}
+.tl-item { position: relative; margin-bottom: 20px; }
+.tl-dot {
+  position: absolute; left: -26px; top: 4px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--teal); border: 3px solid var(--bg);
+  box-shadow: 0 0 12px rgba(0,212,184,0.5);
+}
+.tl-item h4 { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.tl-item p { color: var(--text2); font-size: 13px; }
+
+/* Key Signs Grid */
+.sign-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.sign-item:hover { border-color: var(--teal); background: rgba(0,212,184,0.05); }
+.sign-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.sign-item p { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
+
+/* ══════════════════════════════════════
+   QUIZ
+══════════════════════════════════════ */
+.quiz-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
+}
+.quiz-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.quiz-score-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px; padding: 6px 14px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 50px; color: var(--text2);
+}
+.quiz-score-badge b { color: var(--teal); }
+
+.progress-bar-wrap { margin-bottom: 24px; }
+.progress-bar-track {
+  height: 6px; background: var(--surface2);
+  border-radius: 50px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--emerald));
+  border-radius: 50px;
+  transition: width 0.4s ease;
+}
+.progress-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--text3); }
+
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.question-number { font-size: 11px; color: var(--teal); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.question-text { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  padding: 14px 18px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer; font-size: 14px;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 12px;
+  position: relative; overflow: hidden;
+}
+.option-letter {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--bg3); display: grid; place-items: center;
+  font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600;
+  flex-shrink: 0; transition: all 0.2s;
+}
+.option:hover:not(.locked) { border-color: var(--teal); background: rgba(0,212,184,0.05); }
+.option:hover:not(.locked) .option-letter { background: rgba(0,212,184,0.2); color: var(--teal); }
+.option.correct { border-color: var(--correct) !important; background: rgba(16,185,129,0.1) !important; animation: pulse-correct 0.4s ease; }
+.option.correct .option-letter { background: var(--correct); color: #fff; }
+.option.wrong { border-color: var(--wrong) !important; background: rgba(239,68,68,0.1) !important; animation: shake 0.4s ease; }
+.option.wrong .option-letter { background: var(--wrong); color: #fff; }
+.option.reveal-correct { border-color: var(--correct) !important; opacity: 0.7; }
+.option.locked { cursor: default; }
+
+@keyframes pulse-correct { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.explanation {
+  margin-top: 14px; padding: 14px 16px;
+  background: rgba(0,212,184,0.06); border-left: 3px solid var(--teal);
+  border-radius: 0 var(--r) var(--r) 0; font-size: 13px; color: var(--text2);
+  line-height: 1.6; display: none;
+}
+.explanation.show { display: block; animation: fadeIn 0.3s ease; }
+.explanation strong { color: var(--text); }
+
+.quiz-nav {
+  display: flex; gap: 12px; align-items: center;
+  justify-content: space-between; margin-top: 20px;
+}
+.btn {
+  padding: 10px 22px; border-radius: 50px;
+  border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  color: #000; box-shadow: 0 4px 16px rgba(0,212,184,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,184,0.4); }
+.btn-secondary {
+  background: var(--surface2); border: 1px solid var(--border2); color: var(--text2);
+}
+.btn-secondary:hover { background: var(--surface); color: var(--text); }
+.btn-danger {
+  background: rgba(244,63,94,0.12); border: 1px solid rgba(244,63,94,0.3); color: var(--red);
+}
+.btn-danger:hover { background: rgba(244,63,94,0.2); }
+
+.quiz-complete {
+  text-align: center; padding: 60px 32px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r2);
+}
+.quiz-complete .score-ring {
+  width: 120px; height: 120px; margin: 0 auto 24px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #000;
+  box-shadow: 0 8px 40px rgba(0,212,184,0.4);
+}
+.quiz-complete h2 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.quiz-complete p { color: var(--text2); margin-bottom: 24px; }
+
+/* ══════════════════════════════════════
+   FLASHCARDS
+══════════════════════════════════════ */
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+
+.flashcard {
+  height: 200px; cursor: pointer;
+  perspective: 1000px;
+}
+.flashcard-inner {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--r2);
+  padding: 20px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; gap: 8px;
+  border: 1px solid var(--border);
+}
+.flashcard-front {
+  background: var(--surface);
+}
+.flashcard-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, rgba(0,212,184,0.08), rgba(16,217,160,0.04));
+  border-color: rgba(0,212,184,0.2);
+}
+.flashcard-front .fc-q { font-size: 14px; font-weight: 600; color: var(--text2); }
+.flashcard-front .fc-hint { font-size: 11px; color: var(--text3); margin-top: 6px; }
+.flashcard-back .fc-a { font-size: 13px; color: var(--text); line-height: 1.5; }
+.flashcard-cat {
+  font-size: 11px; color: var(--teal); text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 700;
+}
+.fc-emoji { font-size: 28px; }
+
+.fc-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+
+/* ══════════════════════════════════════
+   CLINICAL CASES
+══════════════════════════════════════ */
+.case-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r2); overflow: hidden; margin-bottom: 20px;
+}
+.case-header {
+  padding: 20px 24px; background: rgba(0,212,184,0.06);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.case-num {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  display: grid; place-items: center;
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #000;
+  flex-shrink: 0;
+}
+.case-header h3 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; }
+.case-header p { font-size: 13px; color: var(--teal); margin-top: 2px; font-weight: 500; }
+.case-body { padding: 24px; }
+.vignette {
+  background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15);
+  border-radius: var(--r); padding: 16px; margin-bottom: 20px;
+  font-size: 14px; line-height: 1.7; color: var(--text);
+}
+.case-questions { display: flex; flex-direction: column; gap: 16px; }
+.case-q { font-weight: 600; font-size: 14px; color: var(--text2); }
+.reveal-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 50px;
+  background: rgba(0,212,184,0.08); border: 1px solid rgba(0,212,184,0.2);
+  color: var(--teal); font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; margin-top: 8px;
+}
+.reveal-btn:hover { background: rgba(0,212,184,0.16); }
+.case-answer {
+  display: none; margin-top: 10px; padding: 12px 16px;
+  background: rgba(16,185,129,0.07); border-left: 3px solid var(--correct);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+}
+.case-answer.show { display: block; animation: fadeIn 0.3s ease; }
+.case-answer strong { color: var(--text); }
+
+/* ══════════════════════════════════════
+   PATHOPHYSIOLOGY
+══════════════════════════════════════ */
+.patho-grid-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.patho-grid-item:hover, .patho-grid-item.open {
+  border-color: var(--teal);
+  background: rgba(0,212,184,0.05);
+}
+.patho-grid-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.patho-grid-item .icon { font-size: 22px; margin-bottom: 6px; }
+.patho-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease;
+  font-size: 13px; color: var(--text2);
+}
+.patho-grid-item.open .patho-detail { max-height: 200px; margin-top: 8px; }
+
+/* Flow chart */
+.flow-chart {
+  display: flex; flex-direction: column; gap: 0;
+  margin: 24px 0;
+}
+.flow-step {
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.flow-connector {
+  display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+}
+.flow-circle {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  display: grid; place-items: center;
+  font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; color: #000;
+  flex-shrink: 0; box-shadow: 0 0 16px rgba(0,212,184,0.3);
+}
+.flow-line {
+  width: 2px; flex: 1; min-height: 24px;
+  background: linear-gradient(to bottom, var(--teal), rgba(0,212,184,0.1));
+  margin: 2px 0;
+}
+.flow-content { padding: 8px 0 16px; }
+.flow-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.flow-content p { font-size: 13px; color: var(--text3); }
+
+/* ══════════════════════════════════════
+   DIAGNOSIS
+══════════════════════════════════════ */
+.dx-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dx-table th {
+  background: rgba(0,212,184,0.08); color: var(--teal);
+  padding: 10px 14px; text-align: left; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(0,212,184,0.2);
+}
+.dx-table td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+.dx-table tr:hover td { background: var(--surface2); }
+.dx-table td:first-child { color: var(--text); font-weight: 500; }
+
+.algo-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px; border-radius: var(--r);
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.algo-arrow {
+  text-align: center; font-size: 20px; color: var(--teal); padding: 2px 0 2px 20px;
+  margin-bottom: 4px;
+}
+.algo-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--sky), var(--blue));
+  display: grid; place-items: center; font-family: 'DM Mono', monospace;
+  font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.algo-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.algo-text p { font-size: 12px; color: var(--text3); }
+
+/* ══════════════════════════════════════
+   TREATMENT
+══════════════════════════════════════ */
+.tx-card {
+  border-radius: var(--r2); padding: 20px; margin-bottom: 16px;
+}
+.tx-emergency {
+  background: rgba(244,63,94,0.06); border: 1.5px solid rgba(244,63,94,0.2);
+}
+.tx-standard {
+  background: rgba(59,130,246,0.06); border: 1.5px solid rgba(59,130,246,0.2);
+}
+.tx-special {
+  background: rgba(245,158,11,0.06); border: 1.5px solid rgba(245,158,11,0.2);
+}
+.tx-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.tx-header h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+.tx-badge {
+  padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.tx-emergency .tx-badge { background: rgba(244,63,94,0.15); color: var(--red); }
+.tx-standard .tx-badge { background: rgba(59,130,246,0.15); color: var(--blue); }
+.tx-special .tx-badge { background: rgba(245,158,11,0.15); color: var(--amber); }
+
+.drug-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.drug-row:last-child { border-bottom: none; }
+.drug-name { font-weight: 600; font-size: 14px; min-width: 140px; }
+.drug-info { font-size: 13px; color: var(--text2); }
+
+/* ══════════════════════════════════════
+   MNEMONICS
+══════════════════════════════════════ */
+.mnemonic-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r2); overflow: hidden; margin-bottom: 16px;
+}
+.mnemonic-header {
+  padding: 16px 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.2s;
+}
+.mnemonic-header:hover { background: var(--surface2); }
+.mnemonic-header h3 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+.mnemonic-header .expand-icon {
+  transition: transform 0.3s; font-size: 18px; color: var(--text3);
+}
+.mnemonic-card.open .expand-icon { transform: rotate(180deg); }
+.mnemonic-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+  padding: 0 20px;
+}
+.mnemonic-card.open .mnemonic-body { max-height: 600px; padding: 0 20px 20px; }
+.mnemonic-letter {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.mnemonic-letter:last-child { border-bottom: none; }
+.ml-char {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--teal), var(--emerald));
+  display: grid; place-items: center;
+  font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+  color: #000; flex-shrink: 0;
+}
+.ml-text h4 { font-size: 14px; font-weight: 600; }
+.ml-text p { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 640px) {
+  header, .search-wrap, .tab-bar, main { padding-left: 16px; padding-right: 16px; }
+  .section-title { font-size: 22px; }
+  .question-text { font-size: 15px; }
+  .quiz-nav { flex-direction: column; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 50px; }
+
+/* ── utility ── */
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+.mb8 { margin-bottom: 8px; }
+.mb16 { margin-bottom: 16px; }
+.label { font-size: 11px; color: var(--teal); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+.highlight { color: var(--teal); font-weight: 600; }
+.warn { color: var(--amber); font-weight: 600; }
+.danger { color: var(--red); font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🧫</div>
+      <div class="logo-text">
+        <h1>Toxoplasmosis</h1>
+        <p>Medical Parasitology · Interactive Study Platform</p>
+      </div>
+    </div>
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-pill">🧠 Quiz Score <span class="val" id="stat-score">0/0</span></div>
+      <div class="stat-pill">🔥 Streak <span class="val" id="stat-streak">0</span></div>
+      <div class="stat-pill">📈 Progress <span class="val" id="stat-progress">0%</span></div>
+      <div class="stat-pill">🃏 Cards Seen <span class="val" id="stat-cards">0</span></div>
+    </div>
+  </header>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-inner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search any concept, drug, or sign..." autocomplete="off">
+      <div id="search-results"></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="overview">🏠 Overview</button>
+    <button class="tab-btn" data-tab="quiz">🎯 Quiz Mode</button>
+    <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+    <button class="tab-btn" data-tab="cases">🩺 Clinical Cases</button>
+    <button class="tab-btn" data-tab="patho">🔬 Pathophysiology</button>
+    <button class="tab-btn" data-tab="diagnosis">🧪 Diagnosis</button>
+    <button class="tab-btn" data-tab="treatment">💊 Treatment</button>
+    <button class="tab-btn" data-tab="mnemonics">🧠 Mnemonics</button>
+  </div>
+
+  <main>
+
+    <!-- ══════════════ OVERVIEW ══════════════ -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="section-title">Overview</div>
+      <p class="section-sub">Key facts, life cycle timeline, and high-yield clinical signs at a glance.</p>
+
+      <div class="overview-hero">
+        <h2>🦠 Toxoplasma gondii — The Essentials</h2>
+        <p>An obligate intracellular parasite infecting <strong>up to 1/3 of the global human population</strong>. Cats are the <span class="highlight">definitive hosts</span> (sexual cycle); humans and other warm-blooded mammals serve as <span class="highlight">intermediate hosts</span> (asexual cycle). Largely asymptomatic in immunocompetent adults, but can be <span class="danger">life-threatening</span> in immunocompromised patients and devastating in congenital infection.</p>
+        <div class="tag-row">
+          <span class="badge badge-red">⚠️ High-Yield</span>
+          <span class="badge badge-amber">Exam Favourite</span>
+          <span class="badge badge-teal">USMLE / PLAB</span>
+          <span class="badge badge-violet">Opportunistic Pathogen</span>
+          <span class="badge badge-blue">TORCH Infection</span>
+        </div>
+      </div>
+
+      <!-- Key Facts Cards -->
+      <div class="label">Quick Summary Cards</div>
+      <div class="grid-3 mb16">
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(0,212,184,0.15)">🐈</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Definitive Host</div>
+              <div style="font-weight:700">Felids (Cats)</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Sexual cycle occurs in the cat's intestine. Millions of oocysts shed daily in feces. Humans/animals = intermediate hosts (asexual cycle only).</p>
+        </div>
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(244,63,94,0.15)">☣️</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Transmission Routes</div>
+              <div style="font-weight:700">Multiple Pathways</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Raw/undercooked meat (tissue cysts), contaminated water/food (oocysts), transplacental, blood transfusion, organ transplant, lab accidents.</p>
+        </div>
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(245,158,11,0.15)">🤰</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Congenital Triad</div>
+              <div style="font-weight:700 ">CHC — Classic!</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)"><span class="highlight">C</span>horioretinitis + <span class="highlight">H</span>ydrocephalus + <span class="highlight">C</span>erebral Calcification. Worst outcomes in 1st trimester. ⚠️ Exam favourite.</p>
+        </div>
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(139,92,246,0.15)">🧠</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Immunocompromised</div>
+              <div style="font-weight:700">AIDS / Transplant</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">3rd leading cause of death in AIDS patients. Reactivation of bradyzoites → meningoencephalitis. Classic MRI: ring-enhancing brain lesions.</p>
+        </div>
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(59,130,246,0.15)">💊</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Key Drug Fact</div>
+              <div style="font-weight:700">Atovaquone = Cysts</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Only <span class="highlight">Atovaquone</span> targets encysted bradyzoites. All other drugs (Pyrimethamine, Sulfadiazine) only kill tachyzoites. ⚠️ Exam favourite.</p>
+        </div>
+        <div class="card glow">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(16,217,160,0.15)">🥚</div>
+            <div>
+              <div style="font-size:12px;color:var(--text3)">Oocyst Maturation</div>
+              <div style="font-weight:700">1–2 Weeks in Soil</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Freshly shed oocysts are non-infectious. They require 1–2 weeks of environmental sporulation to become infective (disporocystic tetrazoic).</p>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="label mt24">Life Cycle Timeline</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>🐈 Sexual Cycle — Definitive Host (Cat)</h4>
+          <p>Cat ingests tissue cysts. Sexual reproduction in the intestine. Millions of unsporulated, non-infectious oocysts shed daily in feces.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>🌱 Environmental Sporulation (1–2 weeks in soil)</h4>
+          <p>Oocysts mature into the infective <em>disporocystic tetrazoic</em> form — 2 sporocysts, each with 4 sporozoites. Now highly infectious.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>🧑 Intermediate Host Ingestion (Human)</h4>
+          <p>Human ingests sporulated oocysts (contaminated food/water) or tissue cysts (raw meat). Parasites released in the intestine.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>⚡ Acute Phase — Tachyzoites (Pseudocysts)</h4>
+          <p>Parasites transform into rapidly multiplying tachyzoites (6×3 µm, crescent-shaped). They invade nucleated cells (especially macrophages), forming pseudocysts (no true wall). Widespread dissemination.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>🛡️ Immune Response Mounted</h4>
+          <p>The host immune system attacks tachyzoites. The parasite evades by transforming into slow-replicating bradyzoites and migrating to immune-privileged sites.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <h4>😴 Chronic Phase — Bradyzoites (True Cysts)</h4>
+          <p>Bradyzoites enclosed in true cyst wall (50–100 µm) reside lifelong in CNS, muscle, and eyes. Dormant unless immunosuppression occurs. Targeted ONLY by Atovaquone.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--red)"></div>
+          <h4 style="color:var(--red)">🔴 Reactivation (Immunocompromised)</h4>
+          <p>If immunity falls (AIDS, transplant), cysts rupture. Bradyzoites revert to tachyzoites → severe meningoencephalitis, ring-enhancing brain lesions.</p>
+        </div>
+      </div>
+
+      <!-- Key Clinical Signs Grid -->
+      <div class="label mt24">Key Clinical Signs & Pearls</div>
+      <div class="grid-3">
+        <div class="sign-item">
+          <h4>🟢 Asymptomatic (Immunocompetent)</h4>
+          <p>>80% have no symptoms. Mild flu-like illness or cervical lymphadenopathy in 10–20%.</p>
+          <div class="tag-row"><span class="badge badge-teal">High-Yield</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>💡 Cervical Lymphadenopathy</h4>
+          <p>Most common symptomatic presentation in immunocompetent acquired toxoplasmosis.</p>
+          <div class="tag-row"><span class="badge badge-blue">Clinical Pearl</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>🧠 Ring-Enhancing Brain Lesions</h4>
+          <p>Classic MRI finding in reactivated CNS toxoplasmosis in AIDS patients. Multiple, bilateral.</p>
+          <div class="tag-row"><span class="badge badge-red">⚠️ High-Yield</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>👁️ Chorioretinitis</h4>
+          <p>Eye inflammation. Part of congenital triad. May also occur with reactivation. Treat with corticosteroids.</p>
+          <div class="tag-row"><span class="badge badge-amber">Exam Favourite</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>💧 Hydrocephalus (Congenital)</h4>
+          <p>CSF flow obstruction due to cerebral damage by tachyzoites crossing the placenta in 1st trimester.</p>
+          <div class="tag-row"><span class="badge badge-red">⚠️ Congenital Triad</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>🪨 Cerebral Calcifications</h4>
+          <p>Intracranial calcifications visible on CT/X-ray in congenital toxoplasmosis. Part of the classic triad.</p>
+          <div class="tag-row"><span class="badge badge-red">⚠️ Congenital Triad</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>🧬 Neuropsychiatric Disorders</h4>
+          <p>Latent infection linked to neuropsychiatric manifestations. Heavily affects the CNS in immunocompromised patients.</p>
+          <div class="tag-row"><span class="badge badge-violet">Clinical Pearl</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>🤱 Congenital — 1st Trimester = Worst</h4>
+          <p>Early infection → abortion, stillbirth, or severe triad. Late pregnancy: more frequent but less severe defects.</p>
+          <div class="tag-row"><span class="badge badge-amber">Exam Favourite</span></div>
+        </div>
+        <div class="sign-item">
+          <h4>💀 3rd Cause of Death in AIDS</h4>
+          <p>Reactivated toxoplasmosis is the 3rd leading cause of AIDS-related mortality. Prophylaxis with TMP-SMX when CD4 &lt;100.</p>
+          <div class="tag-row"><span class="badge badge-red">⚠️ High-Yield</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ QUIZ ══════════════ -->
+    <div class="tab-panel" id="tab-quiz">
+      <div class="section-title">🎯 Quiz Mode</div>
+      <p class="section-sub">25 USMLE-style MCQs — test everything. Immediate feedback with explanations.</p>
+
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <div class="quiz-score-badge">Score: <b id="qScore">0</b> / <b id="qTotal">25</b></div>
+          <div class="quiz-score-badge">🔥 Streak: <b id="qStreak">0</b></div>
+          <div class="quiz-score-badge">❓ <b id="qCurrent">1</b> of 25</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="shuffleAndReset()">🔀 Shuffle</button>
+          <button class="btn btn-danger" onclick="resetQuiz()">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="quizBar" style="width:0%"></div></div>
+        <div class="progress-label"><span id="pLabel">0% Complete</span><span id="pCorrect">0 Correct</span></div>
+      </div>
+
+      <div id="quizContainer"></div>
+      <div id="quizComplete" class="quiz-complete" style="display:none">
+        <div class="score-ring" id="finalScoreRing">0%</div>
+        <h2 id="finalMsg">Quiz Complete! 🎉</h2>
+        <p id="finalSub">Here's how you did.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+          <button class="btn btn-primary" onclick="resetQuiz()">🔄 Try Again</button>
+          <button class="btn btn-secondary" onclick="shuffleAndReset()">🔀 Shuffled Round</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ FLASHCARDS ══════════════ -->
+    <div class="tab-panel" id="tab-flashcards">
+      <div class="section-title">🃏 Flashcards</div>
+      <p class="section-sub">Click any card to flip and reveal the answer. 24 key concepts covered.</p>
+
+      <div class="fc-controls">
+        <button class="btn btn-secondary" onclick="filterCards('all')">All</button>
+        <button class="btn btn-secondary" onclick="filterCards('morphology')">🔬 Morphology</button>
+        <button class="btn btn-secondary" onclick="filterCards('clinical')">🩺 Clinical</button>
+        <button class="btn btn-secondary" onclick="filterCards('treatment')">💊 Treatment</button>
+        <button class="btn btn-secondary" onclick="filterCards('diagnosis')">🧪 Diagnosis</button>
+        <button class="btn btn-secondary" onclick="resetCards()">↺ Reset All</button>
+      </div>
+
+      <div class="flashcard-grid" id="flashcardGrid"></div>
+    </div>
+
+    <!-- ══════════════ CLINICAL CASES ══════════════ -->
+    <div class="tab-panel" id="tab-cases">
+      <div class="section-title">🩺 Clinical Cases</div>
+      <p class="section-sub">6 exam-style vignettes covering all presentations. Reveal answers step by step.</p>
+      <div id="casesContainer"></div>
+    </div>
+
+    <!-- ══════════════ PATHOPHYSIOLOGY ══════════════ -->
+    <div class="tab-panel" id="tab-patho">
+      <div class="section-title">🔬 Pathophysiology</div>
+      <p class="section-sub">Interactive parasite forms and the step-by-step life cycle mechanism.</p>
+
+      <div class="label">Click to Explore: Parasite Forms</div>
+      <div class="grid-3 mb16" id="pathoGrid"></div>
+
+      <hr class="divider">
+      <div class="label">Life Cycle Flowchart — Step by Step</div>
+      <div class="flow-chart" id="lifeCycleFlow"></div>
+
+      <hr class="divider">
+      <div class="label">Host Spectrum</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(0,212,184,0.15)">🐈</div>
+            <div>
+              <div style="font-weight:700">Definitive Host</div>
+              <div style="font-size:12px;color:var(--text3)">Sexual reproduction occurs</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Domestic and wild <strong>felids (cats)</strong>. Sexual cycle in intestinal epithelium. Sheds oocysts in feces. Up to millions per day during active infection.</p>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:rgba(245,158,11,0.15)">🧑‍🤝‍🧑</div>
+            <div>
+              <div style="font-weight:700">Intermediate Hosts</div>
+              <div style="font-size:12px;color:var(--text3)">Asexual reproduction only</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">Humans, warm-blooded mammals, birds. Asexual cycle: tachyzoites → bradyzoites. Up to 1/3 of the human population is estimated to carry latent infection.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ DIAGNOSIS ══════════════ -->
+    <div class="tab-panel" id="tab-diagnosis">
+      <div class="section-title">🧪 Diagnosis</div>
+      <p class="section-sub">Diagnostic criteria, test comparison, and step-by-step algorithm.</p>
+
+      <div class="label">Diagnostic Tests Comparison</div>
+      <div style="overflow-x:auto;margin-bottom:24px">
+        <table class="dx-table">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>What it Detects</th>
+              <th>Best Used For</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>🔬 Giemsa Stain</td><td>Tachyzoites (direct)</td><td>Acute infection, tissue samples</td><td>Visualises crescent-shaped tachyzoites</td></tr>
+            <tr><td>🟣 PAS Stain</td><td>Parasites in tissue</td><td>Histology of biopsy</td><td>Periodic acid-Schiff</td></tr>
+            <tr><td>🩸 Sabin-Feldman Dye Test</td><td>Antibodies (specific)</td><td>Serological confirmation</td><td>⚠️ Gold standard serology — Exam favourite</td></tr>
+            <tr><td>🧫 IgM ELISA</td><td>IgM antibodies</td><td>Acute / recent infection</td><td>Positive IgM = acute; rising IgG = seroconversion</td></tr>
+            <tr><td>🧬 PCR</td><td>T. gondii DNA</td><td>Blood, CSF, tissues, amniotic fluid</td><td>Best for congenital dx (amniotic fluid) & AIDS</td></tr>
+            <tr><td>🐭 Animal Inoculation</td><td>Live parasite</td><td>Research / isolation</td><td>Inject mouse intraperitoneally; harvest tachyzoites</td></tr>
+            <tr><td>🧲 CT / MRI Brain</td><td>Ring-enhancing lesions</td><td>Immunocompromised CNS disease</td><td>Multiple bilateral lesions = pathognomonic in AIDS</td></tr>
+            <tr><td>📷 X-Ray / CT Brain</td><td>Calcifications</td><td>Congenital toxoplasmosis</td><td>Intracranial calcifications on imaging</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider">
+      <div class="label">Diagnostic Algorithm — Step by Step</div>
+      <div id="dxAlgo"></div>
+
+      <hr class="divider">
+      <div class="label">Investigation Badges by Scenario</div>
+      <div class="grid-2">
+        <div class="card">
+          <h4 style="margin-bottom:10px">👶 Congenital Toxoplasmosis</h4>
+          <div class="tag-row">
+            <span class="badge badge-teal">PCR – Amniotic Fluid</span>
+            <span class="badge badge-blue">IgM ELISA</span>
+            <span class="badge badge-amber">CT Head (calcifications)</span>
+            <span class="badge badge-red">Ophthalmoscopy (chorioretinitis)</span>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="margin-bottom:10px">🦠 AIDS / Immunocompromised</h4>
+          <div class="tag-row">
+            <span class="badge badge-teal">MRI Brain (ring-enhancing)</span>
+            <span class="badge badge-blue">PCR – Blood/CSF</span>
+            <span class="badge badge-amber">Sabin-Feldman Dye Test</span>
+            <span class="badge badge-violet">Empirical Treatment Trial</span>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="margin-bottom:10px">🤰 Pregnant Woman (Acute)</h4>
+          <div class="tag-row">
+            <span class="badge badge-teal">IgM ELISA (positive = acute)</span>
+            <span class="badge badge-blue">IgG Avidity Test</span>
+            <span class="badge badge-amber">PCR – Amniotic Fluid</span>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="margin-bottom:10px">💪 Immunocompetent Adult</h4>
+          <div class="tag-row">
+            <span class="badge badge-teal">Sabin-Feldman Dye Test</span>
+            <span class="badge badge-blue">IgG/IgM ELISA</span>
+            <span class="badge badge-amber">Lymph Node Biopsy (if needed)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TREATMENT ══════════════ -->
+    <div class="tab-panel" id="tab-treatment">
+      <div class="section-title">💊 Treatment</div>
+      <p class="section-sub">Regimens by urgency and patient group. Drug comparison table included.</p>
+
+      <!-- Emergency -->
+      <div class="tx-card tx-emergency">
+        <div class="tx-header">
+          <span class="tx-badge">🚨 Active / Acute Infection</span>
+          <h3>First-Line Regimen</h3>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--red)">Pyrimethamine</div>
+          <div class="drug-info">Antifolate — inhibits DHFR. Kills tachyzoites. The backbone of standard therapy. <span class="badge badge-red" style="font-size:10px">Tachyzoites only</span></div>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--red)">Sulfadiazine</div>
+          <div class="drug-info">Sulfonamide — synergistic with Pyrimethamine. Inhibits folate synthesis. Kills tachyzoites. <span class="badge badge-red" style="font-size:10px">Tachyzoites only</span></div>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--amber)">Folinic Acid (Leucovorin)</div>
+          <div class="drug-info">Added to prevent bone marrow suppression from Pyrimethamine. Does NOT reduce efficacy against parasite.</div>
+        </div>
+        <div class="mt8"><span class="badge badge-red">⚠️ Key Combination: Pyrimethamine + Sulfadiazine + Folinic Acid</span></div>
+      </div>
+
+      <!-- Special populations -->
+      <div class="tx-card tx-special">
+        <div class="tx-header">
+          <span class="tx-badge">🤰 Pregnancy</span>
+          <h3>Prevent Trans-Placental Transmission</h3>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--amber)">Spiramycin</div>
+          <div class="drug-info">Macrolide antibiotic. Concentrates in placenta. Reduces risk of transplacental transmission to the fetus. <strong>Duration: 4 weeks.</strong> Cannot be replaced by Pyrimethamine (teratogenic in 1st trimester). <span class="badge badge-amber" style="font-size:10px">⚠️ Exam Favourite</span></div>
+        </div>
+      </div>
+
+      <!-- Chronic -->
+      <div class="tx-card tx-standard">
+        <div class="tx-header">
+          <span class="tx-badge">😴 Chronic / Encysted Forms</span>
+          <h3>Targeting Bradyzoites</h3>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--blue)">Atovaquone</div>
+          <div class="drug-info">The <strong>ONLY drug effective against encysted bradyzoites</strong> (true cysts). All other drugs are inactive against the cyst stage. Mechanism: inhibits mitochondrial electron transport. <span class="badge badge-blue" style="font-size:10px">⚠️ Exam Favourite</span></div>
+        </div>
+      </div>
+
+      <!-- Adjunctive -->
+      <div class="tx-card" style="background:rgba(139,92,246,0.06);border:1.5px solid rgba(139,92,246,0.2)">
+        <div class="tx-header">
+          <span class="tx-badge" style="background:rgba(139,92,246,0.15);color:var(--violet)">👁️ Adjunctive Therapy</span>
+          <h3>Managing Inflammation</h3>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--violet)">Systemic Corticosteroids</div>
+          <div class="drug-info">Added to anti-parasitic regimen to alleviate severe inflammation, specifically <strong>chorioretinitis</strong>. Do NOT kill parasites. Do NOT use alone.</div>
+        </div>
+      </div>
+
+      <!-- Neonates -->
+      <div class="tx-card tx-emergency">
+        <div class="tx-header">
+          <span class="tx-badge">👶 Neonates — Congenital Toxoplasmosis</span>
+          <h3>Extended Treatment</h3>
+        </div>
+        <div class="drug-row">
+          <div class="drug-name" style="color:var(--red)">Pyrimethamine + Sulfadiazine + Folinic Acid</div>
+          <div class="drug-info">Standard combination, but for <strong>one full year</strong> in neonates. Spiramycin is for the mother, NOT the neonate. ⚠️ Exam distinction.</div>
+        </div>
+      </div>
+
+      <!-- Drug Comparison Table -->
+      <hr class="divider">
+      <div class="label">Drug Summary Table</div>
+      <div style="overflow-x:auto">
+        <table class="dx-table">
+          <thead>
+            <tr><th>Drug</th><th>Target</th><th>Used In</th><th>Key Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Pyrimethamine</td><td>Tachyzoites</td><td>Active infection, neonates</td><td>Paired with Sulfadiazine + Folinic Acid</td></tr>
+            <tr><td>Sulfadiazine</td><td>Tachyzoites</td><td>Active infection, neonates</td><td>Synergistic with Pyrimethamine</td></tr>
+            <tr><td>Folinic Acid</td><td>Host (protective)</td><td>Always with Pyrimethamine</td><td>Prevents bone marrow toxicity</td></tr>
+            <tr><td>Spiramycin</td><td>Tachyzoites (placenta)</td><td>Pregnant women</td><td>4 weeks; prevents fetal transmission</td></tr>
+            <tr><td>Atovaquone</td><td>Bradyzoites (cysts)</td><td>Chronic/encysted infection</td><td>⚠️ ONLY drug hitting cysts</td></tr>
+            <tr><td>Corticosteroids</td><td>Host inflammation</td><td>Chorioretinitis, adjunctive</td><td>Never use alone; manage inflammation</td></tr>
+            <tr><td>TMP-SMX</td><td>Prophylaxis</td><td>AIDS (CD4 &lt;100)</td><td>Primary prophylaxis against reactivation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ MNEMONICS ══════════════ -->
+    <div class="tab-panel" id="tab-mnemonics">
+      <div class="section-title">🧠 Mnemonics</div>
+      <p class="section-sub">7 custom mnemonics built from exam-favourite content. Click to expand.</p>
+      <div id="mnemonicsContainer"></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//   DATA
+// ════════════════════════════════════════
+
+const QUESTIONS = [
+  {
+    q: "Which of the following serves as the definitive host for Toxoplasma gondii?",
+    opts: ["Humans","Cattle","Rodents","Felids (Cats)","Birds"],
+    ans: 3,
+    why: "Cats (felids) are the definitive hosts where the SEXUAL cycle of the parasite takes place. Humans, cattle, rodents, and birds are all intermediate hosts where only the asexual cycle occurs.",
+    tag: "Host Biology"
+  },
+  {
+    q: "What is the active, rapidly multiplying stage of Toxoplasma gondii during ACUTE infection?",
+    opts: ["Bradyzoite","Tachyzoite","Sporozoite","Oocyst","Macrogamete"],
+    ans: 1,
+    why: "The tachyzoite (trophozoite) is the proliferative, crescent-shaped (6×3 µm) form responsible for acute widespread infection and rapid multiplication inside host cells (macrophages). Bradyzoites are slow; oocysts are the environmental form.",
+    tag: "Morphology"
+  },
+  {
+    q: "How long does it take for an oocyst shed in cat feces to sporulate and become infectious in the soil?",
+    opts: ["1–2 hours","1–2 days","1–2 weeks","1–2 months","It is immediately infectious"],
+    ans: 2,
+    why: "Freshly shed oocysts are UNSPORULATED and non-infectious. They require 1–2 weeks in the soil environment to mature into the infective disporocystic tetrazoic oocyst. This is why immediate disposal of cat litter dramatically reduces risk.",
+    tag: "Life Cycle"
+  },
+  {
+    q: "Which morphological form of T. gondii lacks a true cyst wall and consists of a host macrophage containing parasites?",
+    opts: ["True cyst","Oocyst","Pseudocyst","Sporocyst","Tachyzoite"],
+    ans: 2,
+    why: "A pseudocyst is a host macrophage cell containing rapidly multiplying tachyzoites WITHOUT a true cyst wall — it is the host cell membrane that contains them. True cysts have a genuine cyst wall and contain bradyzoites.",
+    tag: "Morphology"
+  },
+  {
+    q: "What triggers the transformation of tachyzoites into bradyzoites within a human host?",
+    opts: ["Antimalarial drugs","The host's immune system response","Drop in body temperature","High oxygen environments","Ingestion by a definitive host"],
+    ans: 1,
+    why: "As the immune system mounts a response and attacks tachyzoites, the parasite evades destruction by transforming into slow-replicating bradyzoites inside true cysts, migrating to immune-privileged areas (CNS, muscle, eyes).",
+    tag: "Pathophysiology"
+  },
+  {
+    q: "Reactivation of a latent Toxoplasma infection in an immunocompromised patient typically results in which severe condition?",
+    opts: ["Chronic diarrhea","Meningoencephalitis","Hepatic failure","Renal calcification","Pulmonary fibrosis"],
+    ans: 1,
+    why: "In immunocompromised patients (AIDS, transplant), the brain is the primary target. Dormant bradyzoites reactivate into multiplying tachyzoites causing meningoencephalitis and neuropsychiatric manifestations. T. gondii is the 3rd leading cause of AIDS-related death.",
+    tag: "Clinical"
+  },
+  {
+    q: "In congenital toxoplasmosis, infection during which period of pregnancy results in the most SEVERE fetal consequences?",
+    opts: ["First trimester (early pregnancy)","Second trimester","Third trimester","During delivery","Post-partum"],
+    ans: 0,
+    why: "First trimester infection is more SEVERE — often leads to abortion, stillbirth, or the full clinical triad. Third trimester infections are more FREQUENT (higher transmission rate) but generally less anatomically destructive since organogenesis is complete.",
+    tag: "Congenital"
+  },
+  {
+    q: "Which of the following clinical signs makes up the CLASSIC TRIAD of congenital toxoplasmosis?",
+    opts: ["Deafness, cataracts, cardiac defects","Chorioretinitis, cerebral calcification, hydrocephalus","Hepatosplenomegaly, jaundice, rash","Microcephaly, macroglossia, umbilical hernia","Pneumonia, myocarditis, encephalitis"],
+    ans: 1,
+    why: "The classic CHC triad: Chorioretinitis + Hydrocephalus + Cerebral Calcification. Remember: Deafness/cataracts/cardiac = Rubella (also a TORCH infection). This triad is a top exam favourite.",
+    tag: "Congenital"
+  },
+  {
+    q: "Which of the following tests is specifically highlighted as detecting Toxoplasma ANTIBODIES?",
+    opts: ["PCR","Sabin-Feldman Dye Test","Periodic acid-Schiff stain","Animal inoculation","Tissue culture"],
+    ans: 1,
+    why: "The Sabin-Feldman Dye Test is a specific SEROLOGICAL test detecting Toxoplasma antibodies (IgG). Living tachyzoites fail to stain with methylene blue in the presence of immune serum. PCR detects DNA; PAS is a tissue stain; animal inoculation isolates the organism.",
+    tag: "Diagnosis"
+  },
+  {
+    q: "Which drug is uniquely noted for having an effect on the ENCYSTED (bradyzoite) forms of T. gondii?",
+    opts: ["Pyrimethamine","Sulfadiazine","Spiramycin","Atovaquone","Folinic acid"],
+    ans: 3,
+    why: "Atovaquone is the ONLY drug effective against encysted bradyzoites in true tissue cysts. Pyrimethamine, Sulfadiazine, and Spiramycin only target tachyzoites. Folinic acid is purely protective against drug side effects. This is a high-yield exam point.",
+    tag: "Treatment"
+  },
+  {
+    q: "What is the recommended treatment to reduce trans-placental transmission in a newly infected PREGNANT woman?",
+    opts: ["Pyrimethamine","Sulfadiazine","Spiramycin","Atovaquone","Systemic corticosteroids"],
+    ans: 2,
+    why: "Spiramycin (a macrolide) for 4 weeks is used in pregnant women — it concentrates in placental tissue and reduces the risk of fetal transmission. Pyrimethamine is avoided in 1st trimester due to teratogenicity. Corticosteroids only treat inflammation.",
+    tag: "Treatment"
+  },
+  {
+    q: "What structure characterizes the fully sporulated, mature oocyst found in the soil?",
+    opts: ["Disporocystic tetrazoic","Monosporocystic dizoic","Tetrasporocystic dizoic","Naked pseudocyst","Unsporulated single mass"],
+    ans: 0,
+    why: "The mature oocyst is 'disporocystic tetrazoic' — meaning it contains 2 sporocysts, each with 4 sporozoites (2×4=8 sporozoites total). This specific mathematical arrangement is characteristic of Toxoplasma and a classic exam question.",
+    tag: "Morphology"
+  },
+  {
+    q: "In which host does the sexual cycle of Toxoplasma gondii take place?",
+    opts: ["Human intestine","Cat intestine","Mouse brain","Human brain","Cattle muscle"],
+    ans: 1,
+    why: "The sexual cycle (gametogony) occurs strictly in the cat's intestinal epithelium, producing oocysts. All other animals (humans, mice, cattle) only harbour the asexual cycle (schizogony in tissues).",
+    tag: "Life Cycle"
+  },
+  {
+    q: "How does a human typically become infected with Toxoplasma gondii BRADYZOITES?",
+    opts: ["Mosquito bite","Ingesting sporulated oocysts from cat feces","Ingesting raw flesh containing tissue cysts","Blood transfusion","Inhaling respiratory droplets"],
+    ans: 2,
+    why: "Bradyzoites reside inside TRUE TISSUE CYSTS in the flesh of intermediate hosts (cattle, pigs, sheep). Humans acquire them by eating raw or undercooked meat. Cat feces contain OOCYSTS, not tissue cysts.",
+    tag: "Transmission"
+  },
+  {
+    q: "Why are systemic corticosteroids sometimes added to the therapeutic regimen for Toxoplasmosis?",
+    opts: ["To kill bradyzoites","To stimulate the immune system","To alleviate chorioretinitis","To prevent trans-placental transmission","To promote oocyst shedding"],
+    ans: 2,
+    why: "Corticosteroids are added adjunctively to anti-parasitic treatment specifically to alleviate the severe ocular inflammation of chorioretinitis. They do NOT kill the parasite and should never be used alone.",
+    tag: "Treatment"
+  },
+  {
+    q: "During acute toxoplasmosis, where do tachyzoites primarily reside and multiply?",
+    opts: ["Extracellularly in blood plasma","Inside the cyst wall of an oocyst","Inside nucleated cells like macrophages (forming pseudocysts)","In the lumen of the large intestine","Inside mature red blood cells"],
+    ans: 2,
+    why: "Tachyzoites are OBLIGATE INTRACELLULAR parasites of nucleated cells. They preferentially invade macrophages and form pseudocysts (no true wall). Red blood cells lack a nucleus, making them an impossible host.",
+    tag: "Pathophysiology"
+  },
+  {
+    q: "Which morphological form is crescent-shaped with one pointed end and one rounded end?",
+    opts: ["Oocyst","Tachyzoite","Bradyzoite","Sporozoite","Macrogametocyte"],
+    ans: 1,
+    why: "The TACHYZOITE (trophozoite) is explicitly crescent-shaped with one pointed and one rounded end, measuring 6×3 µm. This crescent/banana shape on Giemsa stain is diagnostic of the acute phase.",
+    tag: "Morphology"
+  },
+  {
+    q: "What is the incubation period for acquired toxoplasmosis in an immunocompetent individual?",
+    opts: ["1–2 days","1–2 weeks","1–2 months","6–12 months","> 1 year"],
+    ans: 1,
+    why: "The incubation period is 1–2 weeks in immunocompetent hosts after ingestion of oocysts or tissue cysts. Most (>80%) remain asymptomatic after this period, though some develop cervical lymphadenopathy or mild flu-like illness.",
+    tag: "Clinical"
+  },
+  {
+    q: "Which test is considered valuable for diagnosing T. gondii DNA in AMNIOTIC FLUID in cases of congenital infection?",
+    opts: ["Sabin-Feldman dye test","IgM ELISA","Molecular diagnosis (PCR)","Direct microscopy with Giemsa","MRI"],
+    ans: 2,
+    why: "PCR is the method for detecting Toxoplasma DNA in blood, CSF, tissues, and crucially AMNIOTIC FLUID for prenatal diagnosis of congenital infection. Serological tests detect antibodies, not DNA. MRI detects brain lesions.",
+    tag: "Diagnosis"
+  },
+  {
+    q: "What is the estimated global prevalence of Toxoplasma infection in humans?",
+    opts: ["<1%","5%","10%","Up to 1/3 (33%)","90%"],
+    ans: 3,
+    why: "Up to ONE THIRD of the world's human population is estimated to carry a latent Toxoplasma infection. Despite this massive prevalence, most infections are completely asymptomatic in immunocompetent individuals.",
+    tag: "Epidemiology"
+  },
+  {
+    q: "A patient receives an organ transplant and develops severe encephalitis. Which T. gondii stage was likely transmitted in the transplanted organ?",
+    opts: ["Oocyst","True cyst (bradyzoites)","Tachyzoite","Sporocyst","Macrogamete"],
+    ans: 1,
+    why: "Solid organs from a chronically infected donor harbour dormant TRUE TISSUE CYSTS containing bradyzoites. When transplanted into an immunosuppressed host (on immunosuppressants), these cysts reactivate into lethal tachyzoites.",
+    tag: "Transmission"
+  },
+  {
+    q: "What mechanism causes tachyzoites to form true cysts in human tissue?",
+    opts: ["Acidic pH in the stomach","Evasion of the activated host immune system","Exposure to anti-parasitic drugs","Carnivory by a feline host","Sporulation in the soil"],
+    ans: 1,
+    why: "As the immune system mounts an effective attack, tachyzoites undergo IMMUNE EVASION — converting to slow-replicating bradyzoites surrounded by a true cyst wall and retreating to immune-privileged sites (CNS, eyes, muscle).",
+    tag: "Pathophysiology"
+  },
+  {
+    q: "Which of the following is NOT a valid preventive measure against T. gondii?",
+    opts: ["Washing raw vegetables thoroughly","Wearing gloves with raw meat","Proper cooking and freezing of meat","Boiling water specifically to destroy tachyzoites","Cleaning cat litter daily"],
+    ans: 3,
+    why: "Water contamination involves OOCYSTS, not tachyzoites. While clean water is important, framing it as 'boiling to destroy tachyzoites' is inaccurate. The other options (washing vegetables, gloves, cooking meat, daily litter disposal) are all correct preventive measures.",
+    tag: "Prevention"
+  },
+  {
+    q: "A healthy adult acquires T. gondii. What is the most likely LONG-TERM outcome?",
+    opts: ["Fatal meningoencephalitis","Spontaneous complete clearance of all parasites","Dormant bradyzoites persisting for life in tissue cysts","Chronic shedding of oocysts in feces","Severe chorioretinitis within a month"],
+    ans: 2,
+    why: "In immunocompetent hosts, tachyzoites are forced into dormant bradyzoites in true cysts — these PERSIST FOR LIFE without causing symptomatic disease unless immunity fails. The immune system suppresses but never fully eliminates the parasite. Only cats shed oocysts.",
+    tag: "Clinical"
+  },
+  {
+    q: "Neonates born with congenital toxoplasmosis require which treatment regimen?",
+    opts: ["Spiramycin alone for 4 weeks","Pyrimethamine + Sulfadiazine + Folinic Acid for ONE YEAR","Atovaquone for 6 months","Systemic corticosteroids alone","No treatment is necessary"],
+    ans: 1,
+    why: "Neonates with congenital toxoplasmosis are treated with Pyrimethamine + Sulfadiazine + Folinic Acid for a FULL YEAR. Spiramycin is for the pregnant mother (to prevent transmission), NOT for the neonate. Corticosteroids may be added for chorioretinitis but not alone.",
+    tag: "Treatment"
+  }
+];
+
+const FLASHCARDS = [
+  { cat:"morphology", emoji:"🔬", q:"What shape and size is the tachyzoite?", a:"Crescent-shaped (banana-shaped), 6×3 µm. One pointed end, one rounded end. The active, acute-phase form." },
+  { cat:"morphology", emoji:"🛡️", q:"What is a PSEUDOCYST in toxoplasmosis?", a:"A host macrophage cell containing rapidly multiplying tachyzoites. Has NO true cyst wall — the host cell membrane is the 'wall'. Present in ACUTE infection." },
+  { cat:"morphology", emoji:"💤", q:"What is a TRUE CYST in toxoplasmosis?", a:"A dormant stage with a genuine cyst wall (50–100 µm) containing BRADYZOITES. Located in immune-privileged areas: CNS, muscle, eyes. Present in CHRONIC infection." },
+  { cat:"morphology", emoji:"🥚", q:"Describe the FULLY MATURED oocyst structure.", a:"Disporocystic tetrazoic = 2 sporocysts, each containing 4 sporozoites (8 total). Requires 1–2 weeks in soil to sporulate from unsporulated, non-infectious form." },
+  { cat:"morphology", emoji:"😴", q:"What are BRADYZOITES and where do they live?", a:"Slowly multiplying dormant forms inside TRUE CYSTS in immune-privileged tissues (CNS, eyes, skeletal muscle). The chronic-phase parasite. Only Atovaquone can target them." },
+  { cat:"life-cycle", emoji:"🐈", q:"What type of cycle occurs in the CAT (definitive host)?", a:"The SEXUAL CYCLE (gametogony) occurs in the cat's intestinal epithelium. Produces millions of unsporulated oocysts shed daily in feces." },
+  { cat:"life-cycle", emoji:"🌱", q:"How long do oocysts take to become infectious in the environment?", a:"1–2 WEEKS in the soil for sporulation. Freshly shed oocysts are non-infectious. After sporulation → disporocystic tetrazoic oocyst = highly infectious." },
+  { cat:"clinical", emoji:"💪", q:"What is the typical outcome in an IMMUNOCOMPETENT adult?", a:">80% asymptomatic. 10–20% may develop mild flu-like illness or cervical lymphadenopathy (1–2 week incubation). Parasite persists lifelong as dormant bradyzoites in true cysts." },
+  { cat:"clinical", emoji:"🦠", q:"What is the classic MRI finding in AIDS-related toxoplasmosis?", a:"Multiple bilateral RING-ENHANCING LESIONS in the brain. Caused by reactivation of latent bradyzoites → meningoencephalitis." },
+  { cat:"clinical", emoji:"👶", q:"What is the classic CONGENITAL TOXOPLASMOSIS TRIAD?", a:"CHC Triad: Chorioretinitis + Hydrocephalus + Cerebral Calcification. ⚠️ Top exam favourite! First trimester = most severe outcomes." },
+  { cat:"clinical", emoji:"😰", q:"Why is first-trimester congenital infection more severe?", a:"During organogenesis — tachyzoites crossing the placenta cause maximal developmental damage: abortion, stillbirth, or full CHC triad. Third trimester = more frequent but less destructive." },
+  { cat:"clinical", emoji:"💀", q:"What rank does toxoplasmosis hold in AIDS mortality?", a:"3rd leading cause of death in AIDS patients. Reactivated T. gondii causes severe CNS disease (meningoencephalitis) and neuropsychiatric disorders in immunocompromised hosts." },
+  { cat:"diagnosis", emoji:"🩸", q:"What does the SABIN-FELDMAN DYE TEST detect?", a:"Detects Toxoplasma-specific ANTIBODIES. Living tachyzoites fail to stain with methylene blue in the presence of specific immune serum. The gold standard serological test. ⚠️ Exam favourite." },
+  { cat:"diagnosis", emoji:"🧬", q:"When is PCR specifically most valuable in toxoplasmosis?", a:"Detecting T. gondii DNA in AMNIOTIC FLUID (prenatal diagnosis), blood, CSF, and tissues — especially in immunocompromised patients and congenital infection." },
+  { cat:"diagnosis", emoji:"🧫", q:"Which STAINS are used for direct microscopy of T. gondii?", a:"Giemsa stain (visualises the crescent-shaped tachyzoites) and PAS (Periodic Acid-Schiff) stain in histological sections." },
+  { cat:"diagnosis", emoji:"🧲", q:"What imaging reveals brain lesions in CNS toxoplasmosis?", a:"CT or MRI brain showing ring-enhancing lesions. In congenital cases, CT/X-ray shows intracranial CALCIFICATIONS. MRI is superior for soft tissue detail." },
+  { cat:"treatment", emoji:"💊", q:"What is the first-line treatment for ACTIVE toxoplasmosis?", a:"Pyrimethamine + Sulfadiazine + Folinic Acid. Pyrimethamine + Sulfadiazine are synergistic antifolates. Folinic Acid prevents bone marrow toxicity. All target tachyzoites only." },
+  { cat:"treatment", emoji:"🤰", q:"Which drug is used for Toxoplasma infection in PREGNANCY?", a:"Spiramycin (macrolide antibiotic). Given for 4 weeks. Concentrates in placenta, reduces transplacental transmission. Pyrimethamine is avoided (teratogenic in 1st trimester)." },
+  { cat:"treatment", emoji:"🎯", q:"Which is the ONLY drug effective against bradyzoites in true cysts?", a:"ATOVAQUONE — uniquely targets encysted bradyzoite forms. All other drugs (Pyrimethamine, Sulfadiazine, Spiramycin) are active ONLY against tachyzoites. ⚠️ Top exam fact." },
+  { cat:"treatment", emoji:"👁️", q:"When are corticosteroids added in toxoplasmosis management?", a:"Adjunctively when severe CHORIORETINITIS is present. Reduces ocular inflammation. Never used alone — must always be combined with anti-parasitic therapy." },
+  { cat:"treatment", emoji:"👶", q:"How is congenital toxoplasmosis treated in neonates?", a:"Pyrimethamine + Sulfadiazine + Folinic Acid for ONE FULL YEAR. Note: Spiramycin is for the mother, NOT the neonate. Corticosteroids added for chorioretinitis." },
+  { cat:"prevention", emoji:"🥩", q:"Which food preparation prevents bradyzoite transmission from meat?", a:"Proper COOKING (high heat kills cysts) and FREEZING (−20°C kills cysts). Wearing gloves when handling raw meat also reduces direct contact risk." },
+  { cat:"prevention", emoji:"🗑️", q:"How does IMMEDIATE litter disposal protect against toxoplasmosis?", a:"Freshly shed oocysts are non-infectious. Immediate daily disposal prevents the 1–2 week soil sporulation needed for the oocysts to become infective. Wear gloves when cleaning." },
+  { cat:"morphology", emoji:"🔄", q:"What is endodyogeny in T. gondii?", a:"The asexual reproductive mechanism inside the host cell. Two daughter cells form within the parent cell — the primary method by which tachyzoites rapidly multiply inside macrophages (pseudocysts)." }
+];
+
+const CASES = [
+  {
+    title: "The Lab Accident",
+    subtitle: "Direct Inoculation Case",
+    vignette: "A 32-year-old laboratory technician accidentally pricks their finger with a needle contaminated with blood from a patient with acute toxoplasmosis. They are otherwise healthy and immunocompetent. Two weeks later, they develop mild cervical lymphadenopathy and low-grade fever.",
+    questions: [
+      {
+        q: "1. Which parasite stage was directly inoculated into the bloodstream?",
+        a: "<strong>Tachyzoites</strong> — the active, rapidly multiplying form present during acute infection. Blood from an acutely infected patient contains circulating tachyzoites, which were introduced directly into the bloodstream, bypassing the normal intestinal phase."
+      },
+      {
+        q: "2. What happened after inoculation, and why did symptoms appear 2 weeks later?",
+        a: "The tachyzoites invaded nucleated cells (macrophages), multiplied rapidly via endodyogeny, forming pseudocysts. This acute dissemination phase produces symptoms after the typical <strong>1–2 week incubation period</strong>. The immune system then mounted a response, which will force the parasite into dormant cysts."
+      },
+      {
+        q: "3. What is the likely long-term outcome for this immunocompetent worker?",
+        a: "The immune system will successfully suppress the parasite, converting tachyzoites into dormant <strong>bradyzoites in true tissue cysts</strong>. The patient will likely remain asymptomatic long-term, carrying a lifelong latent infection — but at risk of reactivation if ever immunocompromised."
+      }
+    ]
+  },
+  {
+    title: "Ring Lesions & AIDS",
+    subtitle: "CNS Reactivation in Immunocompromised Host",
+    vignette: "A 38-year-old male HIV-positive patient (CD4 count 45 cells/µL, not on ART) presents with 3 weeks of progressive confusion, headache, and right-sided weakness. MRI brain shows multiple bilateral ring-enhancing lesions with surrounding edema. He had a positive Toxoplasma IgG serology from 5 years ago.",
+    questions: [
+      {
+        q: "1. What is the most likely diagnosis and the mechanism driving this presentation?",
+        a: "<strong>CNS Toxoplasmosis (reactivation)</strong>. His CD4 count is critically low (&lt;100), so his immune system can no longer contain the dormant bradyzoites in true cysts. The cysts rupture, bradyzoites revert to actively multiplying <strong>tachyzoites</strong>, causing meningoencephalitis and the classic ring-enhancing lesions seen on MRI."
+      },
+      {
+        q: "2. The previous positive IgG is important — why?",
+        a: "Positive IgG from years ago confirms <strong>prior exposure and latent infection</strong>. This is not a new primary infection but <strong>reactivation of dormant cysts</strong>. In AIDS patients with a positive Toxoplasma serology and ring-enhancing lesions, toxoplasmosis is the presumptive diagnosis — empirical treatment is started immediately."
+      },
+      {
+        q: "3. What treatment should be initiated?",
+        a: "<strong>Pyrimethamine + Sulfadiazine + Folinic Acid</strong> — the standard regimen targeting tachyzoites. Corticosteroids may be added for severe cerebral edema. ART should be initiated to restore immune function. TMP-SMX prophylaxis should have been started when CD4 &lt;100."
+      }
+    ]
+  },
+  {
+    title: "The Pregnant Cat Owner",
+    subtitle: "Congenital Risk Assessment & Management",
+    vignette: "A 28-year-old woman at 12 weeks gestation presents with mild flu-like symptoms. She owns two indoor cats, cleans their litter daily (without immediate disposal), and frequently eats medium-rare beef. She has no prior Toxoplasma serology on record. IgM ELISA returns POSITIVE; IgG is also positive but with low avidity.",
+    questions: [
+      {
+        q: "1. What does her serology indicate?",
+        a: "<strong>Acute/recent primary infection</strong>. Positive IgM = active immune response to new infection. Positive IgG with LOW avidity = recently acquired antibodies (avidity increases over months). This combination is consistent with a primary Toxoplasma infection acquired within the past 3–4 months — dangerous during pregnancy."
+      },
+      {
+        q: "2. What are her likely sources of infection?",
+        a: "Two sources: (1) <strong>Sporulated oocysts from cat litter</strong> — if the feces sat in the box for >2 weeks, oocysts had time to sporulate and become infectious. (2) <strong>Tissue cysts from undercooked beef</strong> — medium-rare beef may not reach temperatures to kill bradyzoites in true cysts."
+      },
+      {
+        q: "3. What treatment should she receive and why not Pyrimethamine?",
+        a: "<strong>Spiramycin</strong> for 4 weeks — concentrates in placental tissue to reduce transplacental transmission. Pyrimethamine is <strong>contraindicated in the 1st trimester</strong> due to teratogenicity (it is an antifolate). PCR of amniotic fluid (amniocentesis) at 18 weeks should be offered to check if the fetus is already infected."
+      }
+    ]
+  },
+  {
+    title: "The Rare Steak",
+    subtitle: "Oral Transmission via Tissue Cysts",
+    vignette: "A 25-year-old immunocompetent male eats an undercooked, rare beef steak at a restaurant. Two weeks later, he develops painless cervical lymph node swelling, mild fatigue, and night sweats. He is otherwise healthy with no fever. Blood tests: positive Toxoplasma IgM and IgG.",
+    questions: [
+      {
+        q: "1. What infectious stage did he ingest, and what happened in his body?",
+        a: "He ingested <strong>true tissue cysts containing bradyzoites</strong>. In the stomach and intestine, the cyst wall is digested, releasing bradyzoites that rapidly convert to <strong>tachyzoites</strong>. These invade macrophages and disseminate through blood and lymphatics — explaining the lymphadenopathy."
+      },
+      {
+        q: "2. What is the prognosis for this healthy young man?",
+        a: "Excellent. As an immunocompetent host, his immune system will contain the infection. After the acute phase (1–2 weeks), tachyzoites will be forced into dormant <strong>bradyzoites in true cysts</strong> in immune-privileged sites. He will carry a lifelong latent infection — asymptomatic in >80% of immunocompetent adults."
+      },
+      {
+        q: "3. Does this patient require treatment?",
+        a: "Treatment is <strong>generally not required</strong> in immunocompetent adults with acquired toxoplasmosis, as the infection is self-limiting. However, if symptoms are severe or prolonged, Pyrimethamine + Sulfadiazine may be considered. Monitoring is important — document seropositivity for future reference."
+      }
+    ]
+  },
+  {
+    title: "The Newborn with the Triad",
+    subtitle: "Classic Congenital Toxoplasmosis",
+    vignette: "A full-term neonate is born to a 22-year-old mother who seroconverted to Toxoplasma during her first trimester. At birth, the neonate is found to have bilateral chorioretinitis on ophthalmoscopy. Cranial ultrasound reveals periventricular calcifications and hydrocephalus. PCR of CSF is positive for T. gondii DNA.",
+    questions: [
+      {
+        q: "1. What is the diagnosis and which classic triad does this present?",
+        a: "<strong>Congenital Toxoplasmosis</strong> presenting with the complete CHC Triad: <strong>C</strong>horioretinitis + <strong>H</strong>ydrocephalus + <strong>C</strong>erebral Calcifications. The mother's first-trimester primary infection allowed tachyzoites to cross the placenta during the most vulnerable period of organogenesis."
+      },
+      {
+        q: "2. Why was first-trimester infection particularly devastating?",
+        a: "First-trimester infection occurs during <strong>active organogenesis</strong>. Tachyzoites crossing the placenta cause direct cytolytic damage to developing organs — especially the brain and eyes. This results in the most severe outcomes: hydrocephalus from CSF flow obstruction, periventricular calcifications, and chorioretinitis."
+      },
+      {
+        q: "3. What is the neonatal treatment regimen?",
+        a: "<strong>Pyrimethamine + Sulfadiazine + Folinic Acid for ONE FULL YEAR</strong>. Note: Spiramycin was for the mother to prevent transmission; it is NOT used in neonatal treatment. Corticosteroids are added specifically for active chorioretinitis. Regular ophthalmological follow-up is essential."
+      }
+    ]
+  },
+  {
+    title: "The Long Integrative Case",
+    subtitle: "Multi-system Clinical Reasoning",
+    vignette: "A 28-year-old woman presents at 12 weeks gestation with mild flu-like symptoms. She owns two indoor cats (cleans litter without gloves), eats undercooked beef frequently, and has not been tested for Toxoplasma before. Serology: IgM positive, IgG positive (low avidity). She is started on Spiramycin. At 20 weeks, amniocentesis PCR returns POSITIVE for T. gondii DNA, confirming fetal infection.",
+    questions: [
+      {
+        q: "1. At what stage did maternal transmission to the fetus likely occur, and via which parasite form?",
+        a: "<strong>During the tachyzoite phase of acute maternal infection</strong> (acute phase = rapid multiplication). Tachyzoites are the ONLY form that can cross the placenta. They do so during maternal parasitaemia (the tachyzoite blood phase), establishing infection in the fetus before the mother's immune system fully controls the parasite."
+      },
+      {
+        q: "2. The fetal infection is confirmed. What is the immediate management change?",
+        a: "Escalate from Spiramycin to <strong>Pyrimethamine + Sulfadiazine + Folinic Acid</strong> now that fetal infection is confirmed (amniocentesis PCR positive). Spiramycin is for prevention of transmission; once transmission has occurred, the more potent combination regimen is indicated. Folinic acid is essential to protect against drug-induced folate deficiency."
+      },
+      {
+        q: "3. What monitoring and intervention does the baby need after birth?",
+        a: "Neonatal management: <strong>Pyrimethamine + Sulfadiazine + Folinic Acid for 1 year</strong>. Monitor with serial ophthalmological exams (chorioretinitis can worsen or recur). Neurodevelopmental assessment and brain imaging (calcifications, hydrocephalus). Add corticosteroids if active chorioretinitis present. Lifelong follow-up for visual and neurological sequelae."
+      }
+    ]
+  }
+];
+
+const PATHO_ITEMS = [
+  { icon:"🦠", title:"Tachyzoite (Trophozoite)", detail:"The ACUTE phase form. Crescent-shaped, 6×3 µm. Rapidly multiplies by endodyogeny inside nucleated cells (macrophages). Forms pseudocysts (no true wall). Responsible for tissue damage, placental crossing, and acute symptoms. Killed by Pyrimethamine + Sulfadiazine." },
+  { icon:"💤", title:"Bradyzoite (in True Cyst)", detail:"The CHRONIC phase form. Slowly multiplying, enclosed in a true cyst wall (50–100 µm). Resides in immune-privileged sites (CNS, retina, muscle). Persists lifelong. Reactivates if immune system fails. ONLY Atovaquone can target this form." },
+  { icon:"🥚", title:"Oocyst (Environmental)", detail:"Environmental stage shed by cats. UNSPORULATED = non-infectious when fresh. After 1–2 weeks in soil → sporulated (disporocystic tetrazoic: 2 sporocysts × 4 sporozoites). Source of water/food/soil contamination. Destroyed by boiling and extreme desiccation." },
+  { icon:"🔴", title:"Pseudocyst", detail:"NOT a true cyst — it is a host macrophage cell bulging with rapidly multiplying tachyzoites. No parasite-derived cyst wall. The host cell membrane serves as the boundary. Marker of ACUTE infection. Ruptures to release tachyzoites and spread infection." },
+  { icon:"🧫", title:"Sporocyst", detail:"The sub-unit within a sporulated oocyst. Each mature oocyst contains 2 sporocysts, each holding 4 sporozoites. Sporozoites are released in the intestine after ingestion and differentiate into tachyzoites." },
+  { icon:"🐈", title:"Oocyst Shedding", detail:"Cats shed millions of oocysts per day during the sexual cycle in their intestinal epithelium. A single cat can contaminate enormous areas of soil. Shedding typically occurs for 1–2 weeks after primary infection in the cat. Repeat infections usually cause less shedding." },
+  { icon:"⚡", title:"Endodyogeny", detail:"The asexual replication mechanism. Two daughter tachyzoites form WITHIN the parent cell before it bursts. This allows exponential multiplication inside macrophages. Each daughter can repeat the process, causing rapid tissue invasion." },
+  { icon:"🛡️", title:"Immune Evasion", detail:"Tachyzoites resist phagolysosomal fusion inside macrophages — they prevent the host from digesting them. As immunity mounts, they transform into bradyzoites in true cysts within immune-privileged sites (blood-brain barrier, retina) where immune surveillance is limited." },
+  { icon:"🧠", title:"CNS Tropism", detail:"The brain (particularly basal ganglia), retina, and muscle are the preferred sites for true cyst formation. These immune-privileged zones allow bradyzoites to persist lifelong undetected. In AIDS, cysts rupture → tachyzoites cause ring-enhancing lesions predominantly in basal ganglia." }
+];
+
+const LIFE_CYCLE = [
+  { title:"Sexual Cycle in Cat (Definitive Host)", detail:"Cat ingests tissue cysts from prey. Bradyzoites released in intestine → sexual reproduction (micro and macrogametocytes) → zygote → unsporulated oocysts shed in feces (millions/day)." },
+  { title:"Environmental Sporulation (1–2 Weeks)", detail:"Unsporulated oocysts are non-infectious. In warm, moist soil: oocysts divide → 2 sporocysts, each with 4 sporozoites = disporocystic tetrazoic oocyst. Now fully infectious." },
+  { title:"Ingestion by Intermediate Host", detail:"Human ingests contaminated food/water (oocysts) or eats raw/undercooked meat (tissue cysts with bradyzoites). Stomach acid begins digestion of cyst walls." },
+  { title:"Intestinal Release & Invasion", detail:"Sporozoites/bradyzoites released in small intestine → penetrate intestinal epithelium → enter macrophages and other nucleated cells in the lamina propria." },
+  { title:"Tachyzoite Phase (Acute) — Pseudocysts Form", detail:"Parasites differentiate into tachyzoites. Rapidly multiply by endodyogeny inside macrophages → pseudocysts (no true cyst wall). Rupture and infect neighbouring cells. Enter bloodstream → disseminate to all organs." },
+  { title:"Immune Response Mounted", detail:"T-cell mediated immunity activates macrophages. IFN-γ and TNF-α production. Immune system begins controlling tachyzoite replication." },
+  { title:"Chronic Phase — True Cysts / Bradyzoites", detail:"Tachyzoites evade immunity by converting to bradyzoites surrounded by a true cyst wall (50–100 µm). Migrate to immune-privileged sites: CNS, retina, skeletal muscle. Lifelong persistence." },
+  { title:"(Optional) Reactivation in Immunocompromised Host", detail:"If CD4 falls (AIDS) or immunosuppression occurs: cysts rupture, bradyzoites → tachyzoites → meningoencephalitis, ring-enhancing lesions. EMERGENCY: treat with Pyrimethamine + Sulfadiazine." },
+  { title:"Cycle Continues via Carnivory", detail:"Cat ingests tissue cysts from infected prey (birds, rodents, or undercooked meat) → sexual cycle restarts in feline intestine → oocysts shed → environmental contamination perpetuated." }
+];
+
+const DX_ALGO = [
+  { title:"Clinical Suspicion", detail:"Immunocompromised + neurological signs? Pregnant + fever/lymphadenopathy? Newborn with triad? → Investigate for Toxoplasma." },
+  { title:"Serology First — IgM & IgG ELISA", detail:"IgM positive = acute/recent infection. IgG positive = prior exposure (latent). Rising IgG = seroconversion. Low IgG avidity = recent infection (<4 months)." },
+  { title:"Sabin-Feldman Dye Test", detail:"Gold standard antibody test. Confirms Toxoplasma-specific IgG. Tachyzoites fail to take up methylene blue in presence of specific immune serum." },
+  { title:"PCR for DNA Detection", detail:"Blood, CSF, tissues, amniotic fluid. Especially useful: (1) immunocompromised (can't mount antibody response) and (2) prenatal diagnosis via amniocentesis." },
+  { title:"Direct Microscopy (Giemsa / PAS)", detail:"Giemsa stain on blood smear, BAL, or tissue biopsy. Visualises crescent-shaped tachyzoites. PAS stain on tissue sections." },
+  { title:"Imaging — CT / MRI Brain", detail:"Ring-enhancing lesions (immunocompromised CNS disease). Intracranial calcifications (congenital). MRI superior for early lesion detection." },
+  { title:"Animal Inoculation (Research)", detail:"Intraperitoneal injection of clinical specimen into mice. Harvest ascites/brain tissue after 4–6 weeks. Used for parasite isolation. Not routine clinical practice." }
+];
+
+const MNEMONICS = [
+  {
+    word: "C·A·T·S",
+    subtitle: "Who hosts what?",
+    color: "var(--teal)",
+    letters: [
+      { ch:"C", word:"Cats are the Definitive Host", note:"Sexual cycle occurs exclusively in the feline intestine" },
+      { ch:"A", word:"Asexual cycle in humans (intermediate hosts)", note:"Tachyzoites → Bradyzoites — asexual only" },
+      { ch:"T", word:"Tachyzoites cause Tissue damage (Acute phase)", note:"Crescent-shaped, 6×3 µm, rapidly multiplying" },
+      { ch:"S", word:"Sexual cycle = cat Sheds oocysts in feces", note:"Millions of oocysts per day during active infection" }
+    ]
+  },
+  {
+    word: "C·H·C Triad",
+    subtitle: "Congenital Toxoplasmosis Classic Presentation",
+    color: "var(--red)",
+    letters: [
+      { ch:"C", word:"Chorioretinitis", note:"Bilateral eye inflammation — can lead to blindness" },
+      { ch:"H", word:"Hydrocephalus", note:"CSF flow obstruction from cerebral damage" },
+      { ch:"C", word:"Cerebral Calcifications", note:"Periventricular calcifications on CT/X-ray" }
+    ]
+  },
+  {
+    word: "P·S·F → Active",
+    subtitle: "First-Line Treatment for Active Infection",
+    color: "var(--amber)",
+    letters: [
+      { ch:"P", word:"Pyrimethamine", note:"Anti-DHFR antifolate — kills tachyzoites" },
+      { ch:"S", word:"Sulfadiazine", note:"Sulfonamide — synergistic antifolate, kills tachyzoites" },
+      { ch:"F", word:"Folinic Acid (Leucovorin)", note:"Protects host bone marrow from antifolate toxicity" }
+    ]
+  },
+  {
+    word: "OWL Rule",
+    subtitle: "Oocyst Maturation Timeline",
+    color: "var(--violet)",
+    letters: [
+      { ch:"O", word:"Oocyst shed fresh = non-infectious", note:"Unsporulated = harmless when freshly passed" },
+      { ch:"W", word:"Weeks 1–2 in soil → Sporulates", note:"Environmental maturation essential for infectivity" },
+      { ch:"L", word:"Lethal once sporulated (disporocystic tetrazoic)", note:"2 sporocysts × 4 sporozoites = 8 sporozoites total" }
+    ]
+  },
+  {
+    word: "B·R·A·D = Chronic",
+    subtitle: "Remember what bradyzoites do",
+    color: "var(--blue)",
+    letters: [
+      { ch:"B", word:"Bradyzoite = Buried in cysts", note:"True cyst wall, 50–100 µm" },
+      { ch:"R", word:"Resides in immune-privileged sites", note:"CNS, retina, skeletal muscle" },
+      { ch:"A", word:"Atovaquone is the ONLY drug that works against them", note:"All other drugs are inactive against cysts" },
+      { ch:"D", word:"Dormant — reactivates if immunity drops", note:"AIDS, transplant → meningoencephalitis" }
+    ]
+  },
+  {
+    word: "SPIRO → Pregnancy",
+    subtitle: "Drug choice in pregnant mothers",
+    color: "var(--emerald)",
+    letters: [
+      { ch:"S", word:"Spiramycin — the safe pregnancy drug", note:"Macrolide antibiotic used for 4 weeks" },
+      { ch:"P", word:"Placenta — where it concentrates", note:"Prevents trans-placental fetal transmission" },
+      { ch:"I", word:"Instead of Pyrimethamine", note:"Pyrimethamine is teratogenic in 1st trimester" },
+      { ch:"R", word:"Reduces fetal transmission risk", note:"Start immediately on diagnosis of maternal infection" },
+      { ch:"O", word:"One month (4 weeks) course", note:"Then reassess and consider amniocentesis at 18 weeks" }
+    ]
+  },
+  {
+    word: "SAFE·DX",
+    subtitle: "Diagnosing Toxoplasmosis",
+    color: "var(--sky)",
+    letters: [
+      { ch:"S", word:"Sabin-Feldman Dye Test (antibodies — gold standard)", note:"Specific serology — ⚠️ exam favourite" },
+      { ch:"A", word:"Antigen/Antibody: IgM ELISA (acute), IgG (chronic)", note:"IgM = acute; IgG avidity = timing" },
+      { ch:"F", word:"Floroscopy/Imaging: CT/MRI for ring lesions & calcifications", note:"Ring-enhancing = AIDS; calcifications = congenital" },
+      { ch:"E", word:"Electrophoresis of DNA: PCR for amniotic fluid", note:"Best for prenatal diagnosis and immunocompromised" },
+      { ch:"D", word:"Direct microscopy: Giemsa & PAS stains", note:"Visualise crescent-shaped tachyzoites directly" },
+      { ch:"X", word:"X-animal inoculation: Mouse model for parasite isolation", note:"Research/reference lab use only" }
+    ]
+  }
+];
+
+// ════════════════════════════════════════
+//   STATE
+// ════════════════════════════════════════
+let state = {
+  quizOrder: [...Array(QUESTIONS.length).keys()],
+  currentQ: 0,
+  answered: new Array(QUESTIONS.length).fill(null),
+  score: 0,
+  streak: 0,
+  cardsFlipped: new Set(),
+  activeTab: 'overview'
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('toxo_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state.score = parsed.score || 0;
+      state.streak = parsed.streak || 0;
+      state.currentQ = parsed.currentQ || 0;
+      state.answered = parsed.answered || new Array(QUESTIONS.length).fill(null);
+      state.activeTab = parsed.activeTab || 'overview';
+      state.cardsFlipped = new Set(parsed.cardsFlipped || []);
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('toxo_state', JSON.stringify({
+      score: state.score,
+      streak: state.streak,
+      currentQ: state.currentQ,
+      answered: state.answered,
+      activeTab: state.activeTab,
+      cardsFlipped: [...state.cardsFlipped]
+    }));
+  } catch(e) {}
+}
+
+// ════════════════════════════════════════
+//   UI
+// ════════════════════════════════════════
+function updateStats() {
+  const answered = state.answered.filter(a => a !== null).length;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  document.getElementById('stat-score').textContent = state.score + '/' + answered;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-progress').textContent = pct + '%';
+  document.getElementById('stat-cards').textContent = state.cardsFlipped.size;
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
+  state.activeTab = tab;
+  saveState();
+}
+
+document.getElementById('tabBar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (btn) switchTab(btn.dataset.tab);
+});
+
+// ── QUIZ ──
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  const complete = document.getElementById('quizComplete');
+  const idx = state.quizOrder[state.currentQ];
+  const Q = QUESTIONS[idx];
+
+  if (!Q) {
+    container.style.display = 'none';
+    complete.style.display = 'block';
+    const pct = Math.round((state.score / QUESTIONS.length) * 100);
+    document.getElementById('finalScoreRing').textContent = pct + '%';
+    const msgs = ['Excellent work! 🏆','Great effort! 💪','Keep studying! 📚','You got this! 🚀'];
+    document.getElementById('finalMsg').textContent = pct >= 80 ? 'Outstanding! 🏆' : pct >= 60 ? 'Good work! 💪' : 'Keep practicing! 📚';
+    document.getElementById('finalSub').textContent = `Score: ${state.score}/${QUESTIONS.length} (${pct}%). Streak: ${state.streak} 🔥`;
+    return;
+  }
+
+  container.style.display = 'block';
+  complete.style.display = 'none';
+
+  const answered = state.answered.filter(a => a !== null).length;
+  const correct = state.score;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  document.getElementById('quizBar').style.width = pct + '%';
+  document.getElementById('pLabel').textContent = pct + '% Complete';
+  document.getElementById('pCorrect').textContent = correct + ' Correct';
+  document.getElementById('qCurrent').textContent = state.currentQ + 1;
+  document.getElementById('qScore').textContent = state.score;
+  document.getElementById('qStreak').textContent = state.streak;
+
+  const isAnswered = state.answered[idx] !== null;
+  const userAns = state.answered[idx];
+
+  container.innerHTML = `
+    <div class="question-card">
+      <div class="question-number">Question ${state.currentQ + 1} of ${QUESTIONS.length} · ${Q.tag}</div>
+      <div class="question-text">${Q.q}</div>
+      <div class="options" id="opts">
+        ${Q.opts.map((o, i) => {
+          let cls = '';
+          if (isAnswered) {
+            cls = 'locked ';
+            if (i === Q.ans) cls += 'reveal-correct ';
+            if (i === userAns && userAns !== Q.ans) cls += 'wrong ';
+            if (i === userAns && userAns === Q.ans) cls += 'correct ';
+          }
+          return `<div class="option ${cls}" data-i="${i}">
+            <div class="option-letter">${String.fromCharCode(65+i)}</div>
+            <span>${o}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="explanation ${isAnswered ? 'show' : ''}" id="expl">
+        ${isAnswered ? `<strong>${userAns === Q.ans ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${Q.why}` : ''}
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-secondary" onclick="prevQ()" ${state.currentQ === 0 ? 'disabled' : ''}>← Prev</button>
+      <div style="font-size:13px;color:var(--text3)">${state.currentQ + 1} / ${QUESTIONS.length}</div>
+      <button class="btn btn-primary" onclick="nextQ()" ${state.currentQ >= QUESTIONS.length - 1 ? 'disabled' : ''}>Next →</button>
+    </div>
+  `;
+
+  if (!isAnswered) {
+    document.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => selectAnswer(parseInt(opt.dataset.i)));
+    });
+  }
+}
+
+function selectAnswer(chosen) {
+  const idx = state.quizOrder[state.currentQ];
+  if (state.answered[idx] !== null) return;
+  state.answered[idx] = chosen;
+  const correct = chosen === QUESTIONS[idx].ans;
+  if (correct) {
+    state.score++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+  saveState();
+  updateStats();
+  renderQuiz();
+}
+
+function nextQ() {
+  if (state.currentQ < QUESTIONS.length - 1) {
+    state.currentQ++;
+    saveState();
+    renderQuiz();
+  }
+}
+
+function prevQ() {
+  if (state.currentQ > 0) {
+    state.currentQ--;
+    saveState();
+    renderQuiz();
+  }
+}
+
+function resetQuiz() {
+  state.answered = new Array(QUESTIONS.length).fill(null);
+  state.score = 0;
+  state.streak = 0;
+  state.currentQ = 0;
+  saveState();
+  updateStats();
+  renderQuiz();
+}
+
+function shuffleAndReset() {
+  for (let i = state.quizOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [state.quizOrder[i], state.quizOrder[j]] = [state.quizOrder[j], state.quizOrder[i]];
+  }
+  state.answered = new Array(QUESTIONS.length).fill(null);
+  state.score = 0;
+  state.streak = 0;
+  state.currentQ = 0;
+  saveState();
+  updateStats();
+  renderQuiz();
+}
+
+// ── FLASHCARDS ──
+function renderFlashcards(filter='all') {
+  const grid = document.getElementById('flashcardGrid');
+  const filtered = filter === 'all' ? FLASHCARDS : FLASHCARDS.filter(c => c.cat === filter);
+  grid.innerHTML = filtered.map((c, i) => {
+    const flipped = state.cardsFlipped.has(c.q);
+    return `<div class="flashcard ${flipped ? 'flipped' : ''}" data-key="${c.q}" onclick="flipCard(this,'${c.q}')">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-emoji">${c.emoji}</div>
+          <div class="flashcard-cat">${c.cat}</div>
+          <div class="fc-q">${c.q}</div>
+          <div class="fc-hint">👆 Click to reveal answer</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="flashcard-cat">Answer</div>
+          <div class="fc-a">${c.a}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function flipCard(el, key) {
+  el.classList.toggle('flipped');
+  if (el.classList.contains('flipped')) {
+    state.cardsFlipped.add(key);
+  } else {
+    state.cardsFlipped.delete(key);
+  }
+  saveState();
+  updateStats();
+}
+
+function filterCards(cat) {
+  renderFlashcards(cat);
+}
+
+function resetCards() {
+  state.cardsFlipped.clear();
+  saveState();
+  updateStats();
+  renderFlashcards();
+}
+
+// ── CASES ──
+function renderCases() {
+  const container = document.getElementById('casesContainer');
+  container.innerHTML = CASES.map((c, ci) => `
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-num">${ci + 1}</div>
+        <div>
+          <h3>${c.title}</h3>
+          <p>${c.subtitle}</p>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="vignette">${c.vignette}</div>
+        <div class="case-questions">
+          ${c.questions.map((q, qi) => `
+            <div>
+              <div class="case-q">${q.q}</div>
+              <button class="reveal-btn" onclick="revealAnswer(this)">👁️ Reveal Answer</button>
+              <div class="case-answer">${q.a}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function revealAnswer(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? '🙈 Hide Answer' : '👁️ Reveal Answer';
+}
+
+// ── PATHO ──
+function renderPatho() {
+  document.getElementById('pathoGrid').innerHTML = PATHO_ITEMS.map((item, i) => `
+    <div class="patho-grid-item" onclick="togglePatho(this)">
+      <div class="icon">${item.icon}</div>
+      <h4>${item.title}</h4>
+      <div class="patho-detail">${item.detail}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('lifeCycleFlow').innerHTML = LIFE_CYCLE.map((step, i) => `
+    <div class="flow-step">
+      <div class="flow-connector">
+        <div class="flow-circle">${i+1}</div>
+        ${i < LIFE_CYCLE.length - 1 ? '<div class="flow-line"></div>' : ''}
+      </div>
+      <div class="flow-content">
+        <h4>${step.title}</h4>
+        <p>${step.detail}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function togglePatho(el) {
+  el.classList.toggle('open');
+}
+
+// ── DX ALGO ──
+function renderDxAlgo() {
+  document.getElementById('dxAlgo').innerHTML = DX_ALGO.map((s, i) => `
+    <div class="algo-step">
+      <div class="algo-num">${i+1}</div>
+      <div class="algo-text">
+        <h4>${s.title}</h4>
+        <p>${s.detail}</p>
+      </div>
+    </div>
+    ${i < DX_ALGO.length - 1 ? '<div class="algo-arrow">↓</div>' : ''}
+  `).join('');
+}
+
+// ── MNEMONICS ──
+function renderMnemonics() {
+  document.getElementById('mnemonicsContainer').innerHTML = MNEMONICS.map((m, mi) => `
+    <div class="mnemonic-card" id="mnem-${mi}">
+      <div class="mnemonic-header" onclick="toggleMnem(${mi})">
+        <div>
+          <h3 style="color:${m.color}">${m.word}</h3>
+          <div style="font-size:13px;color:var(--text3);margin-top:3px">${m.subtitle}</div>
+        </div>
+        <span class="expand-icon">▼</span>
+      </div>
+      <div class="mnemonic-body">
+        ${m.letters.map(l => `
+          <div class="mnemonic-letter">
+            <div class="ml-char" style="background:linear-gradient(135deg,${m.color},${m.color}aa)">${l.ch}</div>
+            <div class="ml-text">
+              <h4>${l.word}</h4>
+              <p>${l.note}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleMnem(i) {
+  const card = document.getElementById('mnem-' + i);
+  card.classList.toggle('open');
+}
+
+// ── SEARCH ──
+const SEARCH_DATA = [
+  ...QUESTIONS.map(q => ({ tag:'Quiz', text: q.q, note: q.tag })),
+  ...FLASHCARDS.map(f => ({ tag:'Flashcard', text: f.q, note: f.a.substring(0,80)+'...' })),
+  { tag:'Drug', text:'Pyrimethamine', note:'First-line active infection, kills tachyzoites' },
+  { tag:'Drug', text:'Atovaquone', note:'ONLY drug active against encysted bradyzoites' },
+  { tag:'Drug', text:'Spiramycin', note:'Used in pregnancy, prevents transplacental transmission' },
+  { tag:'Drug', text:'Sulfadiazine', note:'Synergistic with Pyrimethamine, kills tachyzoites' },
+  { tag:'Drug', text:'Folinic Acid', note:'Prevents bone marrow toxicity from Pyrimethamine' },
+  { tag:'Sign', text:'Congenital Triad: Chorioretinitis + Hydrocephalus + Cerebral Calcification', note:'CHC — top exam favourite' },
+  { tag:'Sign', text:'Ring-Enhancing Brain Lesions', note:'Classic MRI finding in AIDS-related CNS toxoplasmosis' },
+  { tag:'Test', text:'Sabin-Feldman Dye Test', note:'Gold standard serology — detects Toxoplasma antibodies' },
+  { tag:'Fact', text:'Oocyst maturation 1–2 weeks in soil', note:'Freshly shed oocysts are non-infectious' },
+  { tag:'Fact', text:'Cats are definitive hosts — sexual cycle', note:'Humans = intermediate hosts (asexual cycle)' },
+  { tag:'Fact', text:'Tachyzoite: crescent-shaped 6×3 µm', note:'Active proliferative form in acute infection' },
+];
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  const res = document.getElementById('search-results');
+  if (!q) { res.classList.remove('open'); return; }
+  const matches = SEARCH_DATA.filter(d =>
+    d.text.toLowerCase().includes(q) || d.note.toLowerCase().includes(q)
+  ).slice(0, 8);
+  if (!matches.length) { res.classList.remove('open'); return; }
+  res.innerHTML = matches.map(m => `
+    <div class="search-item">
+      <div class="s-tag">${m.tag}</div>
+      <div class="s-text"><strong>${highlight(m.text, q)}</strong><br>${highlight(m.note, q)}</div>
+    </div>
+  `).join('');
+  res.classList.add('open');
+});
+
+function highlight(text, q) {
+  return text.replace(new RegExp(`(${q})`, 'gi'), '<mark style="background:rgba(0,212,184,0.25);color:var(--teal);border-radius:2px">$1</mark>');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-inner')) {
+    document.getElementById('search-results').classList.remove('open');
+  }
+});
+
+// ════════════════════════════════════════
+//   INIT
+// ════════════════════════════════════════
+loadState();
+renderQuiz();
+renderFlashcards();
+renderCases();
+renderPatho();
+renderDxAlgo();
+renderMnemonics();
+updateStats();
+switchTab(state.activeTab);
+</script>
+</body>
+</html>

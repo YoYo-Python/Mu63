@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KME — Medical Statistics Study Module</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           CSS CUSTOM PROPERTIES (THEME TOKENS)
+           ============================================================ */
+        :root {
+            /* Light Theme */
+            --kme-bg-primary: #f0f2f5;
+            --kme-bg-card: #ffffff;
+            --kme-bg-card-alt: #f8f9fb;
+            --kme-text-primary: #1a1d23;
+            --kme-text-secondary: #5f6577;
+            --kme-text-muted: #8b90a0;
+            --kme-accent: #4f6ef7;
+            --kme-accent-light: #e8ecff;
+            --kme-accent-dark: #3a56d4;
+            --kme-border: #e2e5eb;
+            --kme-border-light: #eef0f4;
+            --kme-success: #22c55e;
+            --kme-success-bg: #ecfdf5;
+            --kme-success-border: #bbf7d0;
+            --kme-danger: #ef4444;
+            --kme-danger-bg: #fef2f2;
+            --kme-danger-border: #fecaca;
+            --kme-danger-text: #991b1b;
+            --kme-warning: #f59e0b;
+            --kme-warning-bg: #fffbeb;
+            --kme-warning-border: #fde68a;
+            --kme-math-bg: #f0f4ff;
+            --kme-math-border: #c7d2fe;
+            --kme-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --kme-shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+            --kme-radius-sm: 8px;
+            --kme-radius-md: 12px;
+            --kme-radius-lg: 16px;
+            --kme-radius-xl: 20px;
+            --kme-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --kme-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --kme-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Table comparison colors */
+            --kme-compare-a-bg: #eff6ff;
+            --kme-compare-a-border: #bfdbfe;
+            --kme-compare-b-bg: #f0fdf4;
+            --kme-compare-b-border: #bbf7d0;
+            --kme-compare-pro-bg: #ecfdf5;
+            --kme-compare-con-bg: #fef2f2;
+
+            /* MCQ option colors */
+            --kme-option-hover: #f0f4ff;
+            --kme-option-selected: #e8ecff;
+            --kme-option-correct-bg: #ecfdf5;
+            --kme-option-correct-border: #22c55e;
+            --kme-option-wrong-bg: #fef2f2;
+            --kme-option-wrong-border: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f1117;
+            --kme-bg-card: #1a1d27;
+            --kme-bg-card-alt: #22252f;
+            --kme-text-primary: #e8eaed;
+            --kme-text-secondary: #9ca3b4;
+            --kme-text-muted: #6b7280;
+            --kme-accent: #6d8cff;
+            --kme-accent-light: #1e2744;
+            --kme-accent-dark: #8da4ff;
+            --kme-border: #2d3141;
+            --kme-border-light: #252836;
+            --kme-success: #34d399;
+            --kme-success-bg: #0f2922;
+            --kme-success-border: #166534;
+            --kme-danger: #f87171;
+            --kme-danger-bg: #2d1518;
+            --kme-danger-border: #7f1d1d;
+            --kme-danger-text: #fca5a5;
+            --kme-warning: #fbbf24;
+            --kme-warning-bg: #2d2511;
+            --kme-warning-border: #92400e;
+            --kme-math-bg: #1a1f35;
+            --kme-math-border: #2e3a5e;
+            --kme-shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+            --kme-shadow-lg: 0 8px 30px rgba(0,0,0,0.4);
+            --kme-compare-a-bg: #151b2e;
+            --kme-compare-a-border: #1e3a5f;
+            --kme-compare-b-bg: #132218;
+            --kme-compare-b-border: #166534;
+            --kme-compare-pro-bg: #0f2922;
+            --kme-compare-con-bg: #2d1518;
+            --kme-option-hover: #1e2744;
+            --kme-option-selected: #1e2744;
+            --kme-option-correct-bg: #0f2922;
+            --kme-option-correct-border: #34d399;
+            --kme-option-wrong-bg: #2d1518;
+            --kme-option-wrong-border: #f87171;
+        }
+
+        /* ============================================================
+           RESET & BASE STYLES
+           ============================================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--kme-font-sans);
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color var(--kme-transition), color var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================================
+           KME HEADER & NAVIGATION
+           ============================================================ */
+        .kme-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--kme-bg-card);
+            border-bottom: 1px solid var(--kme-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background-color var(--kme-transition), border-color var(--kme-transition);
+        }
+
+        .kme-header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kme-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kme-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--kme-accent), var(--kme-accent-dark));
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .kme-logo-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            line-height: 1.2;
+        }
+
+        .kme-logo-text span {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--kme-text-muted);
+        }
+
+        .kme-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kme-theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--kme-border);
+            background: var(--kme-bg-card-alt);
+            color: var(--kme-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover {
+            background: var(--kme-accent-light);
+            color: var(--kme-accent);
+            border-color: var(--kme-accent);
+        }
+
+        .kme-theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* ============================================================
+           KME TAB NAVIGATION
+           ============================================================ */
+        .kme-tab-nav {
+            background: var(--kme-bg-card);
+            border-bottom: 1px solid var(--kme-border);
+            position: sticky;
+            top: 67px;
+            z-index: 90;
+            transition: background-color var(--kme-transition);
+        }
+
+        .kme-tab-nav-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 12px;
+            gap: 2px;
+        }
+
+        .kme-tab-nav-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-tab-btn {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--kme-text-muted);
+            background: none;
+            border: none;
+            border-bottom: 2.5px solid transparent;
+            cursor: pointer;
+            transition: all var(--kme-transition);
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            font-family: var(--kme-font-sans);
+        }
+
+        .kme-tab-btn i {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        .kme-tab-btn:hover {
+            color: var(--kme-text-secondary);
+        }
+
+        .kme-tab-btn.kme-active {
+            color: var(--kme-accent);
+            border-bottom-color: var(--kme-accent);
+        }
+
+        /* ============================================================
+           KME MAIN CONTAINER
+           ============================================================ */
+        .kme-main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 100px;
+        }
+
+        .kme-section {
+            display: none;
+            animation: kme-fadeIn 0.35s ease;
+        }
+
+        .kme-section.kme-active {
+            display: block;
+        }
+
+        @keyframes kme-fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .kme-section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--kme-text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .kme-section-subtitle {
+            font-size: 14px;
+            color: var(--kme-text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           KME CONCEPT CARDS
+           ============================================================ */
+        .kme-concept-card {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-concept-card:hover {
+            box-shadow: var(--kme-shadow-md);
+            border-color: var(--kme-accent);
+        }
+
+        .kme-concept-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .kme-concept-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .kme-concept-icon.kme-blue { background: #eff6ff; color: #3b82f6; }
+        .kme-concept-icon.kme-purple { background: #f5f3ff; color: #8b5cf6; }
+        .kme-concept-icon.kme-green { background: #ecfdf5; color: #22c55e; }
+        .kme-concept-icon.kme-orange { background: #fff7ed; color: #f97316; }
+        .kme-concept-icon.kme-pink { background: #fdf2f8; color: #ec4899; }
+        .kme-concept-icon.kme-teal { background: #f0fdfa; color: #14b8a6; }
+        .kme-concept-icon.kme-red { background: #fef2f2; color: #ef4444; }
+        .kme-concept-icon.kme-indigo { background: #eef2ff; color: #6366f1; }
+        .kme-concept-icon.kme-cyan { background: #ecfeff; color: #06b6d4; }
+
+        [data-theme="dark"] .kme-concept-icon.kme-blue { background: #1e2d45; }
+        [data-theme="dark"] .kme-concept-icon.kme-purple { background: #2a1f45; }
+        [data-theme="dark"] .kme-concept-icon.kme-green { background: #132218; }
+        [data-theme="dark"] .kme-concept-icon.kme-orange { background: #2d2011; }
+        [data-theme="dark"] .kme-concept-icon.kme-pink { background: #2d1525; }
+        [data-theme="dark"] .kme-concept-icon.kme-teal { background: #112625; }
+        [data-theme="dark"] .kme-concept-icon.kme-red { background: #2d1518; }
+        [data-theme="dark"] .kme-concept-icon.kme-indigo { background: #1a1f45; }
+        [data-theme="dark"] .kme-concept-icon.kme-cyan { background: #112530; }
+
+        .kme-concept-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-concept-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding: 8px 0 8px 24px;
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+            border-bottom: 1px solid var(--kme-border-light);
+        }
+
+        .kme-concept-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .kme-concept-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--kme-accent);
+            opacity: 0.6;
+        }
+
+        .kme-concept-list li strong,
+        .kme-concept-list li b {
+            color: var(--kme-text-primary);
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           KME RESPONSIVE TABLES (COMPARISONS)
+           ============================================================ */
+        .kme-table-responsive {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-table-title {
+            padding: 16px 20px 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            border-bottom: 1px solid var(--kme-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kme-table-title i {
+            color: var(--kme-accent);
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .kme-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 480px;
+        }
+
+        .kme-table thead th {
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--kme-text-muted);
+            background: var(--kme-bg-card-alt);
+            border-bottom: 2px solid var(--kme-border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .kme-table tbody td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-light);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .kme-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .kme-table tbody tr:hover {
+            background: var(--kme-bg-card-alt);
+        }
+
+        .kme-table td strong {
+            color: var(--kme-text-primary);
+            font-weight: 600;
+        }
+
+        .kme-cell-a {
+            background: var(--kme-compare-a-bg);
+            border-left: 3px solid var(--kme-accent) !important;
+        }
+
+        .kme-cell-b {
+            background: var(--kme-compare-b-bg);
+            border-left: 3px solid var(--kme-success) !important;
+        }
+
+        .kme-cell-pro {
+            background: var(--kme-compare-pro-bg);
+        }
+
+        .kme-cell-con {
+            background: var(--kme-compare-con-bg);
+        }
+
+        .kme-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .kme-badge-blue { background: var(--kme-compare-a-bg); color: var(--kme-accent); border: 1px solid var(--kme-compare-a-border); }
+        .kme-badge-green { background: var(--kme-compare-b-bg); color: var(--kme-success); border: 1px solid var(--kme-compare-b-border); }
+
+        /* ============================================================
+           KME MATH BOX (FORMULAS & CLINICAL SCENARIOS)
+           ============================================================ */
+        .kme-math-box {
+            background: var(--kme-math-bg);
+            border: 1px solid var(--kme-math-border);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-math-box-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .kme-math-box-header i {
+            color: var(--kme-accent);
+            font-size: 18px;
+        }
+
+        .kme-math-box-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-formula-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kme-formula-list li {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-sm);
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .kme-formula-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .kme-formula-label {
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            min-width: fit-content;
+            white-space: nowrap;
+        }
+
+        .kme-formula-code {
+            font-family: var(--kme-font-mono);
+            font-size: 13px;
+            color: var(--kme-accent);
+            background: var(--kme-accent-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Clinical Scenario Details/Summary */
+        .kme-scenario-details {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-md);
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-scenario-details[open] {
+            border-color: var(--kme-accent);
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-scenario-details summary {
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            list-style: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color var(--kme-transition);
+            user-select: none;
+        }
+
+        .kme-scenario-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-scenario-details summary::before {
+            content: '\f054';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            color: var(--kme-accent);
+            transition: transform var(--kme-transition);
+            flex-shrink: 0;
+        }
+
+        .kme-scenario-details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .kme-scenario-details summary:hover {
+            background: var(--kme-bg-card-alt);
+        }
+
+        .kme-scenario-details summary .kme-scenario-tag {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 99px;
+            background: var(--kme-accent-light);
+            color: var(--kme-accent);
+        }
+
+        .kme-scenario-body {
+            padding: 0 20px 20px;
+            border-top: 1px solid var(--kme-border-light);
+        }
+
+        .kme-scenario-body p {
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+
+        .kme-scenario-body p strong {
+            color: var(--kme-text-primary);
+        }
+
+        .kme-step-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 14px;
+        }
+
+        .kme-step-list li {
+            position: relative;
+            padding: 10px 14px 10px 44px;
+            margin-bottom: 8px;
+            background: var(--kme-math-bg);
+            border: 1px solid var(--kme-math-border);
+            border-radius: var(--kme-radius-sm);
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+        }
+
+        .kme-step-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .kme-step-num {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 24px;
+            height: 24px;
+            background: var(--kme-accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .kme-solution-highlight {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: var(--kme-success-bg);
+            border: 1px solid var(--kme-success-border);
+            border-radius: var(--kme-radius-sm);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--kme-success);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ============================================================
+           KME ALERT / EXAM TRAPS
+           ============================================================ */
+        .kme-alert-danger {
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            border-radius: var(--kme-radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-alert-danger-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .kme-alert-danger-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--kme-danger);
+            border-radius: var(--kme-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .kme-alert-danger-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--kme-danger-text);
+        }
+
+        [data-theme="dark"] .kme-alert-danger-title {
+            color: var(--kme-danger);
+        }
+
+        .kme-trap-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-left: 4px solid var(--kme-danger);
+            border-radius: var(--kme-radius-sm);
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            line-height: 1.6;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-trap-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .kme-trap-item:hover {
+            border-color: var(--kme-danger);
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-trap-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--kme-danger);
+        }
+
+        .kme-trap-item strong {
+            color: var(--kme-text-primary);
+        }
+
+        /* ============================================================
+           KME MCQ QUIZ
+           ============================================================ */
+        .kme-mcq-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--kme-border);
+            border-radius: 99px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .kme-mcq-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--kme-accent), var(--kme-accent-dark));
+            border-radius: 99px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .kme-mcq-score-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-md);
+            margin-bottom: 20px;
+        }
+
+        .kme-mcq-score-label {
+            font-size: 13px;
+            color: var(--kme-text-muted);
+            font-weight: 500;
+        }
+
+        .kme-mcq-score-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--kme-accent);
+        }
+
+        .kme-mcq-reset-btn {
+            padding: 8px 16px;
+            background: var(--kme-accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--kme-radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--kme-font-sans);
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-mcq-reset-btn:hover {
+            background: var(--kme-accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .kme-mcq-reset-btn:active {
+            transform: scale(0.96);
+        }
+
+        .kme-mcq-container {
+            background: var(--kme-bg-card);
+            border: 1px solid var(--kme-border);
+            border-radius: var(--kme-radius-lg);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-mcq-container.kme-answered-correct {
+            border-color: var(--kme-success);
+        }
+
+        .kme-mcq-container.kme-answered-wrong {
+            border-color: var(--kme-danger);
+        }
+
+        .kme-mcq-question-header {
+            padding: 18px 20px 14px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .kme-mcq-q-num {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--kme-accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .kme-mcq-q-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        .kme-mcq-options {
+            padding: 0 20px 6px;
+            list-style: none;
+        }
+
+        .kme-mcq-option {
+            margin-bottom: 8px;
+        }
+
+        .kme-mcq-option label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1.5px solid var(--kme-border);
+            border-radius: var(--kme-radius-md);
+            cursor: pointer;
+            transition: all var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            min-height: 52px;
+        }
+
+        .kme-mcq-option label:hover {
+            background: var(--kme-option-hover);
+            border-color: var(--kme-accent);
+        }
+
+        .kme-mcq-option label:active {
+            transform: scale(0.99);
+        }
+
+        .kme-mcq-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--kme-border);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all var(--kme-transition);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .kme-mcq-option input[type="radio"]:checked {
+            border-color: var(--kme-accent);
+            background: var(--kme-accent);
+        }
+
+        .kme-mcq-option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .kme-mcq-option-letter {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            background: var(--kme-bg-card-alt);
+            border: 1px solid var(--kme-border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--kme-text-muted);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-mcq-option-text {
+            font-size: 14px;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Answered states */
+        .kme-mcq-option.kme-correct label {
+            background: var(--kme-option-correct-bg);
+            border-color: var(--kme-option-correct-border);
+        }
+
+        .kme-mcq-option.kme-correct .kme-mcq-option-letter {
+            background: var(--kme-success);
+            color: #fff;
+            border-color: var(--kme-success);
+        }
+
+        .kme-mcq-option.kme-correct input[type="radio"] {
+            border-color: var(--kme-success);
+            background: var(--kme-success);
+        }
+
+        .kme-mcq-option.kme-wrong label {
+            background: var(--kme-option-wrong-bg);
+            border-color: var(--kme-option-wrong-border);
+        }
+
+        .kme-mcq-option.kme-wrong .kme-mcq-option-letter {
+            background: var(--kme-danger);
+            color: #fff;
+            border-color: var(--kme-danger);
+        }
+
+        .kme-mcq-option.kme-wrong input[type="radio"] {
+            border-color: var(--kme-danger);
+            background: var(--kme-danger);
+        }
+
+        .kme-mcq-option.kme-disabled label {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .kme-mcq-option.kme-disabled label:hover {
+            background: transparent;
+            border-color: var(--kme-border);
+        }
+
+        /* Explanation box (hidden by default) */
+        .kme-explanation {
+            display: none;
+            margin: 0 20px 16px;
+            padding: 14px 16px;
+            border-radius: var(--kme-radius-sm);
+            font-size: 13px;
+            line-height: 1.6;
+            animation: kme-fadeIn 0.3s ease;
+        }
+
+        .kme-explanation.kme-visible {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kme-explanation.kme-correct-explanation {
+            background: var(--kme-success-bg);
+            border: 1px solid var(--kme-success-border);
+            color: var(--kme-success);
+        }
+
+        .kme-explanation.kme-wrong-explanation {
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            color: var(--kme-danger);
+        }
+
+        .kme-explanation i {
+            font-size: 16px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           SCROLL TO TOP BUTTON
+           ============================================================ */
+        .kme-scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--kme-accent);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--kme-shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all var(--kme-transition);
+            z-index: 80;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-scroll-top.kme-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .kme-scroll-top:active {
+            transform: scale(0.9);
+        }
+
+        /* ============================================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================================ */
+        @media (min-width: 640px) {
+            .kme-main {
+                padding: 28px 24px 100px;
+            }
+
+            .kme-section-title {
+                font-size: 26px;
+            }
+
+            .kme-concept-card {
+                padding: 24px;
+            }
+
+            .kme-tab-btn {
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .kme-tab-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .kme-tab-btn i {
+                display: none;
+            }
+
+            .kme-section-title {
+                font-size: 20px;
+            }
+
+            .kme-concept-card {
+                padding: 16px;
+            }
+
+            .kme-mcq-question-header {
+                padding: 14px 16px 10px;
+            }
+
+            .kme-mcq-options {
+                padding: 0 16px 6px;
+            }
+
+            .kme-mcq-option label {
+                padding: 12px 14px;
+            }
+
+            .kme-explanation.kme-visible {
+                margin: 0 16px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+    <header class="kme-header">
+        <div class="kme-header-inner">
+            <div class="kme-logo">
+                <div class="kme-logo-icon">KME</div>
+                <div class="kme-logo-text">
+                    Medical Statistics
+                    <span>Study Module</span>
+                </div>
+            </div>
+            <div class="kme-header-actions">
+                <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         TAB NAVIGATION
+         ============================================================ -->
+    <nav class="kme-tab-nav">
+        <div class="kme-tab-nav-inner">
+            <button class="kme-tab-btn kme-active" data-tab="concepts">
+                <i class="fas fa-lightbulb"></i>Concepts
+            </button>
+            <button class="kme-tab-btn" data-tab="comparisons">
+                <i class="fas fa-columns"></i>Compare
+            </button>
+            <button class="kme-tab-btn" data-tab="formulas">
+                <i class="fas fa-calculator"></i>Formulas
+            </button>
+            <button class="kme-tab-btn" data-tab="traps">
+                <i class="fas fa-exclamation-triangle"></i>Traps
+            </button>
+            <button class="kme-tab-btn" data-tab="quiz">
+                <i class="fas fa-question-circle"></i>Quiz
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         MAIN CONTENT
+         ============================================================ -->
+    <main class="kme-main">
+
+        <!-- ========== CORE CONCEPTS SECTION ========== -->
+        <section class="kme-section kme-active" id="kme-concepts">
+            <h1 class="kme-section-title">Core Concepts</h1>
+            <p class="kme-section-subtitle">Foundational definitions and classifications in medical statistics.</p>
+
+            <!-- Card 1: Medical Statistics -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-blue"><i class="fas fa-chart-bar"></i></div>
+                    <div class="kme-concept-card-title">Medical Statistics</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Science of <strong>collecting</strong>, <strong>summarizing</strong> (descriptive), and <strong>predicting/testing hypotheses</strong> (inferential) from clinical data.</li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Qualitative Data -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-purple"><i class="fas fa-tags"></i></div>
+                    <div class="kme-concept-card-title">Qualitative Data</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li><strong>Nominal:</strong> Categorical variables with no inherent order (e.g., blood group).</li>
+                    <li><strong>Ordinal:</strong> Categorical variables with a logical ranking (e.g., disease stage).</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Quantitative Data -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-green"><i class="fas fa-hashtag"></i></div>
+                    <div class="kme-concept-card-title">Quantitative Data</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li><strong>Discrete:</strong> Whole numbers only (e.g., number of patients).</li>
+                    <li><strong>Continuous:</strong> Decimals allowed (e.g., serum calcium, height).</li>
+                </ul>
+            </div>
+
+            <!-- Card 4: Central Tendency -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-orange"><i class="fas fa-bullseye"></i></div>
+                    <div class="kme-concept-card-title">Central Tendency</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Identifies the <strong>center</strong> of a data distribution using <strong>Mean</strong>, <strong>Median</strong>, or <strong>Mode</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Card 5: Dispersion -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-pink"><i class="fas fa-expand-arrows-alt"></i></div>
+                    <div class="kme-concept-card-title">Dispersion</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Describes the <strong>spread</strong> of data using <strong>Range</strong>, <strong>Variance</strong>, and <strong>Standard Deviation (SD)</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Card 6: Mean Indications -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-teal"><i class="fas fa-balance-scale"></i></div>
+                    <div class="kme-concept-card-title">Mean Indications</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Exclusively used for summarizing <strong>normally distributed</strong>, <strong>continuous data</strong> lacking extreme outliers.</li>
+                </ul>
+            </div>
+
+            <!-- Card 7: Median Indications -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-indigo"><i class="fas fa-grip-lines"></i></div>
+                    <div class="kme-concept-card-title">Median Indications</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Preferred for <strong>skewed, non-parametric continuous data</strong> with extreme outliers, or <strong>qualitative ordinal data</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Card 8: Histogram Indications -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-red"><i class="fas fa-chart-area"></i></div>
+                    <div class="kme-concept-card-title">Histogram Indications</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Graphing method strictly used for <strong>continuous quantitative variables</strong>, represented by fused bars without gaps.</li>
+                </ul>
+            </div>
+
+            <!-- Card 9: Scatter Diagram Indications -->
+            <div class="kme-concept-card">
+                <div class="kme-concept-card-header">
+                    <div class="kme-concept-icon kme-cyan"><i class="fas fa-braille"></i></div>
+                    <div class="kme-concept-card-title">Scatter Diagram Indications</div>
+                </div>
+                <ul class="kme-concept-list">
+                    <li>Used exclusively to illustrate the <strong>correlation</strong> (positive or negative) between <strong>two quantitative continuous variables</strong>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========== COMPARISONS SECTION ========== -->
+        <section class="kme-section" id="kme-comparisons">
+            <h1 class="kme-section-title">Comparisons</h1>
+            <p class="kme-section-subtitle">Side-by-side contrasts to solidify your understanding.</p>
+
+            <!-- Table 1: Design A vs. Design B -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title"><i class="fas fa-exchange-alt"></i> Design A vs. Design B</div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th><span class="kme-badge kme-badge-blue">A</span></th>
+                                <th><span class="kme-badge kme-badge-green">B</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Mean vs. Median</strong></td>
+                                <td class="kme-cell-a">Uses all data values</td>
+                                <td class="kme-cell-b">Ignores extreme values</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nominal vs. Ordinal</strong></td>
+                                <td class="kme-cell-a">Unordered text labels</td>
+                                <td class="kme-cell-b">Ordered text labels</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete vs. Continuous</strong></td>
+                                <td class="kme-cell-a">Whole numbers only</td>
+                                <td class="kme-cell-b">Accepts decimal fractions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bar Chart vs. Histogram</strong></td>
+                                <td class="kme-cell-a">Categorical with gaps</td>
+                                <td class="kme-cell-b">Continuous without gaps</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Descriptive vs. Inferential</strong></td>
+                                <td class="kme-cell-a">Summarizes given data</td>
+                                <td class="kme-cell-b">Predicts population traits</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Simple vs. Analytical Table</strong></td>
+                                <td class="kme-cell-a">Describes one variable</td>
+                                <td class="kme-cell-b">Compares using P-values</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 2: Pros vs. Cons -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title"><i class="fas fa-thumbs-up"></i><i class="fas fa-thumbs-down" style="color: var(--kme-danger); margin-left: -4px;"></i> Pros vs. Cons</div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Measure</th>
+                                <th>✅ Pro</th>
+                                <th>⚠️ Con</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Mean</strong></td>
+                                <td class="kme-cell-pro">Highly mathematically accurate</td>
+                                <td class="kme-cell-con">Distorted by outliers</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Median</strong></td>
+                                <td class="kme-cell-pro">Resists extreme outliers</td>
+                                <td class="kme-cell-con">Ignores exact values</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mode</strong></td>
+                                <td class="kme-cell-pro">Fits all datatypes</td>
+                                <td class="kme-cell-con">Frequently completely absent</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Range</strong></td>
+                                <td class="kme-cell-pro">Easy fast calculation</td>
+                                <td class="kme-cell-con">Uses only endpoints</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MATH FORMULAS SECTION ========== -->
+        <section class="kme-section" id="kme-formulas">
+            <h1 class="kme-section-title">Formulas & Scenarios</h1>
+            <p class="kme-section-subtitle">Key formulas and step-by-step clinical worked examples.</p>
+
+            <!-- Core Formulas -->
+            <div class="kme-math-box">
+                <div class="kme-math-box-header">
+                    <i class="fas fa-square-root-alt"></i>
+                    <div class="kme-math-box-title">Core Formulas</div>
+                </div>
+                <ul class="kme-formula-list">
+                    <li>
+                        <span class="kme-formula-label">Mean:</span>
+                        <code class="kme-formula-code">x̄ = Σx / n</code>
+                    </li>
+                    <li>
+                        <span class="kme-formula-label">Median Rank (Odd n):</span>
+                        <code class="kme-formula-code">(n + 1) / 2</code>
+                    </li>
+                    <li>
+                        <span class="kme-formula-label">Median Rank (Even n):</span>
+                        <code class="kme-formula-code">Avg of (n/2) &amp; (n/2)+1 positions</code>
+                    </li>
+                    <li>
+                        <span class="kme-formula-label">Variance (S²):</span>
+                        <code class="kme-formula-code">Σ(x − x̄)² / (n − 1)</code>
+                    </li>
+                    <li>
+                        <span class="kme-formula-label">Standard Deviation:</span>
+                        <code class="kme-formula-code">SD = √Variance</code>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Clinical Scenario 1 -->
+            <details class="kme-scenario-details">
+                <summary>
+                    Scenario 1: Calculating Mean
+                    <span class="kme-scenario-tag">Show Steps</span>
+                </summary>
+                <div class="kme-scenario-body">
+                    <p><strong>Scenario:</strong> Pediatric weights (kg): 34, 41, 37, 32, 36.</p>
+                    <ul class="kme-step-list">
+                        <li>
+                            <span class="kme-step-num">1</span>
+                            Sum all values: Σx = 34 + 41 + 37 + 32 + 36 = <strong>180</strong>
+                        </li>
+                        <li>
+                            <span class="kme-step-num">2</span>
+                            Divide by total count: n = <strong>5</strong>
+                        </li>
+                    </ul>
+                    <div class="kme-solution-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        Solution: 180 / 5 = <strong>36 kg</strong>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Clinical Scenario 2 -->
+            <details class="kme-scenario-details">
+                <summary>
+                    Scenario 2: Calculating Median (Odd n)
+                    <span class="kme-scenario-tag">Show Steps</span>
+                </summary>
+                <div class="kme-scenario-body">
+                    <p><strong>Scenario:</strong> Patient ages: 14, 5, 9, 24, 4, 16, 10.</p>
+                    <ul class="kme-step-list">
+                        <li>
+                            <span class="kme-step-num">1</span>
+                            Sort ascending: 4, 5, 9, <strong>10</strong>, 14, 16, 24
+                        </li>
+                        <li>
+                            <span class="kme-step-num">2</span>
+                            Find rank: (7 + 1) / 2 = <strong>4th position</strong>
+                        </li>
+                    </ul>
+                    <div class="kme-solution-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        Solution: The 4th value is <strong>10</strong>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Clinical Scenario 3 -->
+            <details class="kme-scenario-details">
+                <summary>
+                    Scenario 3: Calculating Median (Even n)
+                    <span class="kme-scenario-tag">Show Steps</span>
+                </summary>
+                <div class="kme-scenario-body">
+                    <p><strong>Scenario:</strong> Data values: 3, 4, 6, 10, 13, 19.</p>
+                    <ul class="kme-step-list">
+                        <li>
+                            <span class="kme-step-num">1</span>
+                            Already sorted: 3, 4, <strong>6</strong>, <strong>10</strong>, 13, 19
+                        </li>
+                        <li>
+                            <span class="kme-step-num">2</span>
+                            Middle values are 3rd (6) and 4th (10)
+                        </li>
+                    </ul>
+                    <div class="kme-solution-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        Solution: (6 + 10) / 2 = <strong>8</strong>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Clinical Scenario 4 -->
+            <details class="kme-scenario-details">
+                <summary>
+                    Scenario 4: Calculating Standard Deviation
+                    <span class="kme-scenario-tag">Show Steps</span>
+                </summary>
+                <div class="kme-scenario-body">
+                    <p><strong>Scenario:</strong> Glucose levels: 6, 8, 10, 10, 14 (Mean = 10).</p>
+                    <ul class="kme-step-list">
+                        <li>
+                            <span class="kme-step-num">1</span>
+                            Find deviations from mean: −4, −2, 0, 0, +4
+                        </li>
+                        <li>
+                            <span class="kme-step-num">2</span>
+                            Square each deviation: 16, 4, 0, 0, 16
+                        </li>
+                        <li>
+                            <span class="kme-step-num">3</span>
+                            Sum of squares = <strong>36</strong>
+                        </li>
+                        <li>
+                            <span class="kme-step-num">4</span>
+                            Variance = 36 / (5 − 1) = <strong>9</strong>
+                        </li>
+                    </ul>
+                    <div class="kme-solution-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        Solution: SD = √9 = <strong>±3</strong>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- ========== EXAM TRAPS SECTION ========== -->
+        <section class="kme-section" id="kme-traps">
+            <h1 class="kme-section-title">Exam Traps</h1>
+            <p class="kme-section-subtitle">Common pitfalls designed to trick you. Study these carefully.</p>
+
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <div class="kme-alert-danger-icon">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <div class="kme-alert-danger-title">High-Yield Exam Traps</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">1</div>
+                    <div>Assuming clinical stages (Stage I, II, III) are continuous numbers; they are strictly <strong>qualitative ordinal</strong> data.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">2</div>
+                    <div>Calculating the <strong>mean</strong> for skewed data with extreme outliers instead of the <strong>median</strong>.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">3</div>
+                    <div>Choosing a <strong>histogram</strong> to present nominal or discrete data — histograms are <strong>ONLY</strong> for continuous data.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">4</div>
+                    <div>Forgetting to <strong>arrange raw data in ascending order</strong> before locating the median.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">5</div>
+                    <div>Confusing the mathematical <strong>rank/order</strong> of the median (e.g., "the 4th value") with the <strong>actual median value</strong> itself.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">6</div>
+                    <div>Categorizing "number of patients/children" as continuous; it is always <strong>quantitative discrete</strong> because humans cannot be fractioned.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">7</div>
+                    <div>Confusing <strong>Variance</strong> with <strong>Standard Deviation</strong>; remember SD is always the <strong>square root</strong> of Variance.</div>
+                </div>
+
+                <div class="kme-trap-item">
+                    <div class="kme-trap-number">8</div>
+                    <div>Missing that <strong>analytical tables</strong> always display a <strong>P-value</strong> to test significance, whereas descriptive tables only show frequencies and percentages.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MCQ QUIZ SECTION ========== -->
+        <section class="kme-section" id="kme-quiz">
+            <h1 class="kme-section-title">Quiz</h1>
+            <p class="kme-section-subtitle">Test your knowledge. Select an answer to reveal the explanation.</p>
+
+            <!-- Progress bar -->
+            <div class="kme-mcq-progress-bar">
+                <div class="kme-mcq-progress-fill" id="kmeProgressFill"></div>
+            </div>
+
+            <!-- Score banner -->
+            <div class="kme-mcq-score-banner">
+                <div>
+                    <div class="kme-mcq-score-label">Score</div>
+                    <div class="kme-mcq-score-value" id="kmeScoreDisplay">0 / 20</div>
+                </div>
+                <button class="kme-mcq-reset-btn" id="kmeResetQuiz">
+                    <i class="fas fa-redo-alt"></i> Reset
+                </button>
+            </div>
+
+            <!-- MCQ Container (generated by JS) -->
+            <div id="kmeMcqList"></div>
+        </section>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <button class="kme-scroll-top" id="kmeScrollTop" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+    <script>
+        (function () {
+            'use strict';
+
+            // ====================================================
+            // MCQ DATA
+            // ====================================================
+            const KME_MCQS = [
+                {
+                    id: 1,
+                    question: "What type of data is patient blood group (A, B, AB, O)?",
+                    options: [
+                        { letter: "A", text: "Quantitative continuous" },
+                        { letter: "B", text: "Quantitative discrete" },
+                        { letter: "C", text: "Qualitative nominal" },
+                        { letter: "D", text: "Qualitative ordinal" },
+                        { letter: "E", text: "Quantitative ratio" }
+                    ],
+                    correct: "C",
+                    explanation: "Blood groups are named categories without a logical rank or numerical value."
+                },
+                {
+                    id: 2,
+                    question: "Which measure of central tendency is best for non-parametric, skewed data with extreme values?",
+                    options: [
+                        { letter: "A", text: "Mean" },
+                        { letter: "B", text: "Median" },
+                        { letter: "C", text: "Mode" },
+                        { letter: "D", text: "Range" },
+                        { letter: "E", text: "Variance" }
+                    ],
+                    correct: "B",
+                    explanation: "The median ignores extreme outliers, making it perfect for skewed data."
+                },
+                {
+                    id: 3,
+                    question: "Disease staging (Stage I, II, III, IV) represents which data type?",
+                    options: [
+                        { letter: "A", text: "Qualitative nominal" },
+                        { letter: "B", text: "Qualitative ordinal" },
+                        { letter: "C", text: "Quantitative discrete" },
+                        { letter: "D", text: "Quantitative continuous" },
+                        { letter: "E", text: "Binary" }
+                    ],
+                    correct: "B",
+                    explanation: "Stages have categorical names but follow a strict, logical progression/ranking."
+                },
+                {
+                    id: 4,
+                    question: "Which graph is used exclusively for continuous quantitative data?",
+                    options: [
+                        { letter: "A", text: "Simple bar chart" },
+                        { letter: "B", text: "Pie chart" },
+                        { letter: "C", text: "Histogram" },
+                        { letter: "D", text: "Component bar chart" },
+                        { letter: "E", text: "Cartogram" }
+                    ],
+                    correct: "C",
+                    explanation: "Histograms have no gaps and are designed specifically for continuous numeric ranges."
+                },
+                {
+                    id: 5,
+                    question: "In a scatter diagram, what does the vertical (y) axis typically represent?",
+                    options: [
+                        { letter: "A", text: "Independent variable" },
+                        { letter: "B", text: "Dependent (outcome) variable" },
+                        { letter: "C", text: "Frequency" },
+                        { letter: "D", text: "Percentage" },
+                        { letter: "E", text: "Mean deviation" }
+                    ],
+                    correct: "B",
+                    explanation: "The vertical/y-axis illustrates the outcome that depends on the exposure on the x-axis."
+                },
+                {
+                    id: 6,
+                    question: "What is the standard deviation if the variance of a dataset is 16?",
+                    options: [
+                        { letter: "A", text: "2" },
+                        { letter: "B", text: "4" },
+                        { letter: "C", text: "8" },
+                        { letter: "D", text: "32" },
+                        { letter: "E", text: "256" }
+                    ],
+                    correct: "B",
+                    explanation: "Standard deviation is mathematically the square root of the variance: √16 = 4."
+                },
+                {
+                    id: 7,
+                    question: "Which graph is best to illustrate the relationship between age and blood pressure?",
+                    options: [
+                        { letter: "A", text: "Pie chart" },
+                        { letter: "B", text: "Histogram" },
+                        { letter: "C", text: "Scatter diagram" },
+                        { letter: "D", text: "Frequency polygon" },
+                        { letter: "E", text: "Bar chart" }
+                    ],
+                    correct: "C",
+                    explanation: "Scatter diagrams explicitly plot the correlation between two continuous quantitative variables."
+                },
+                {
+                    id: 8,
+                    question: "If a dataset has an odd number of observations (n=11), which formula gives the rank of the median?",
+                    options: [
+                        { letter: "A", text: "n / 2" },
+                        { letter: "B", text: "(n / 2) + 1" },
+                        { letter: "C", text: "(n + 1) / 2" },
+                        { letter: "D", text: "n − 1" },
+                        { letter: "E", text: "n + 1" }
+                    ],
+                    correct: "C",
+                    explanation: "For an odd sample size, you add 1 to n and divide by 2 to find the exact middle position."
+                },
+                {
+                    id: 9,
+                    question: "Which tabular presentation explicitly compares groups and includes a P-value?",
+                    options: [
+                        { letter: "A", text: "Simple frequency table" },
+                        { letter: "B", text: "Frequency distribution table" },
+                        { letter: "C", text: "Descriptive table" },
+                        { letter: "D", text: "Analytical table" },
+                        { letter: "E", text: "Cumulative frequency table" }
+                    ],
+                    correct: "D",
+                    explanation: "Analytical tables test hypotheses between groups and thus require statistical significance markers like P-values."
+                },
+                {
+                    id: 10,
+                    question: "What measure of dispersion is simply the difference between the largest and smallest observation?",
+                    options: [
+                        { letter: "A", text: "Standard deviation" },
+                        { letter: "B", text: "Variance" },
+                        { letter: "C", text: "Mean deviation" },
+                        { letter: "D", text: "Range" },
+                        { letter: "E", text: "Percentile" }
+                    ],
+                    correct: "D",
+                    explanation: "The range is calculated strictly by subtracting the smallest value from the biggest value."
+                },
+                {
+                    id: 11,
+                    question: "Number of patients admitted to a clinic daily is what type of data?",
+                    options: [
+                        { letter: "A", text: "Continuous" },
+                        { letter: "B", text: "Discrete" },
+                        { letter: "C", text: "Nominal" },
+                        { letter: "D", text: "Ordinal" },
+                        { letter: "E", text: "Descriptive" }
+                    ],
+                    correct: "B",
+                    explanation: "You cannot have a fraction of a patient, making count data inherently discrete."
+                },
+                {
+                    id: 12,
+                    question: "Which chart uses connected midpoints of the upper bases of histogram rectangles?",
+                    options: [
+                        { letter: "A", text: "Smooth curve" },
+                        { letter: "B", text: "Scatter diagram" },
+                        { letter: "C", text: "Frequency polygon" },
+                        { letter: "D", text: "Pie chart" },
+                        { letter: "E", text: "Bar chart" }
+                    ],
+                    correct: "C",
+                    explanation: "A frequency polygon is constructed by plotting lines through the top centers of a histogram's bars."
+                },
+                {
+                    id: 13,
+                    question: "What happens to the mean if an extreme high value (outlier) is added to a dataset?",
+                    options: [
+                        { letter: "A", text: "It decreases" },
+                        { letter: "B", text: "It remains unchanged" },
+                        { letter: "C", text: "It increases heavily" },
+                        { letter: "D", text: "It becomes equal to the median" },
+                        { letter: "E", text: "It turns into the mode" }
+                    ],
+                    correct: "C",
+                    explanation: "The mean acts like a balancing scale and is strongly pulled toward extreme high outliers."
+                },
+                {
+                    id: 14,
+                    question: "A table showing frequencies and percentages of hair color is classified as:",
+                    options: [
+                        { letter: "A", text: "Analytical table" },
+                        { letter: "B", text: "Frequency distribution table" },
+                        { letter: "C", text: "Simple frequency table" },
+                        { letter: "D", text: "Inferential table" },
+                        { letter: "E", text: "Scatter table" }
+                    ],
+                    correct: "C",
+                    explanation: "Qualitative data summarized with numbers and percentages forms a simple frequency descriptive table."
+                },
+                {
+                    id: 15,
+                    question: "What type of graph shows categorical variables using rectangles separated by equal gaps?",
+                    options: [
+                        { letter: "A", text: "Histogram" },
+                        { letter: "B", text: "Bar chart" },
+                        { letter: "C", text: "Smooth curve" },
+                        { letter: "D", text: "Frequency polygon" },
+                        { letter: "E", text: "Scatter diagram" }
+                    ],
+                    correct: "B",
+                    explanation: "Bar charts feature distinct gaps between bars to visually represent separate, discrete categories."
+                },
+                {
+                    id: 16,
+                    question: "Which data type involves fractional or decimal numerical values like serum calcium?",
+                    options: [
+                        { letter: "A", text: "Nominal" },
+                        { letter: "B", text: "Ordinal" },
+                        { letter: "C", text: "Discrete" },
+                        { letter: "D", text: "Continuous" },
+                        { letter: "E", text: "Categorical" }
+                    ],
+                    correct: "D",
+                    explanation: "Continuous data stems from precise measurements allowing infinite fractions between numbers."
+                },
+                {
+                    id: 17,
+                    question: "Which statistical parameter indicates how closely data points cluster around the mean?",
+                    options: [
+                        { letter: "A", text: "Mode" },
+                        { letter: "B", text: "Median" },
+                        { letter: "C", text: "Standard deviation" },
+                        { letter: "D", text: "Range" },
+                        { letter: "E", text: "P-value" }
+                    ],
+                    correct: "C",
+                    explanation: "A small standard deviation directly signifies that individual values are tightly grouped near the average."
+                },
+                {
+                    id: 18,
+                    question: "If a dataset has two most frequent values, it is described as:",
+                    options: [
+                        { letter: "A", text: "Unimodal" },
+                        { letter: "B", text: "Bimodal" },
+                        { letter: "C", text: "Non-parametric" },
+                        { letter: "D", text: "Normal" },
+                        { letter: "E", text: "Skewed" }
+                    ],
+                    correct: "B",
+                    explanation: "Having two distinct modes creates a distribution curve with two peaks, known as bimodal."
+                },
+                {
+                    id: 19,
+                    question: "Which graphic is best for displaying the geographical distribution of a disease?",
+                    options: [
+                        { letter: "A", text: "Scatter diagram" },
+                        { letter: "B", text: "Frequency polygon" },
+                        { letter: "C", text: "Pie chart" },
+                        { letter: "D", text: "Cartogram (Map diagram)" },
+                        { letter: "E", text: "Component bar chart" }
+                    ],
+                    correct: "D",
+                    explanation: "Cartograms use geographic maps to visually distribute data across different physical regions."
+                },
+                {
+                    id: 20,
+                    question: "To find the median of an even number of observations, one must:",
+                    options: [
+                        { letter: "A", text: "Pick the highest value" },
+                        { letter: "B", text: "Pick the most frequent value" },
+                        { letter: "C", text: "Subtract the lowest from the highest value" },
+                        { letter: "D", text: "Take the average of the two middlemost values" },
+                        { letter: "E", text: "Divide the sum by n−1" }
+                    ],
+                    correct: "D",
+                    explanation: "Because there is no single middle number in an even set, you must mathematically average the two central values."
+                }
+            ];
+
+            // ====================================================
+            // STATE MANAGEMENT WITH localStorage
+            // ====================================================
+            const STORAGE_KEYS = {
+                THEME: 'kme-theme',
+                ACTIVE_TAB: 'kme-active-tab',
+                QUIZ_STATE: 'kme-quiz-state'
+            };
+
+            /**
+             * Retrieves saved quiz state from localStorage.
+             * Returns an object mapping question IDs to the user's selected answer.
+             */
+            function getQuizState() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEYS.QUIZ_STATE);
+                    return raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    return {};
+                }
+            }
+
+            /**
+             * Saves quiz state to localStorage.
+             */
+            function saveQuizState(state) {
+                try {
+                    localStorage.setItem(STORAGE_KEYS.QUIZ_STATE, JSON.stringify(state));
+                } catch (e) {
+                    // Storage full or unavailable — fail silently
+                }
+            }
+
+            // ====================================================
+            // THEME TOGGLE
+            // ====================================================
+            const themeToggleBtn = document.getElementById('kmeThemeToggle');
+            const htmlEl = document.documentElement;
+
+            function applyTheme(theme) {
+                htmlEl.setAttribute('data-theme', theme);
+                const icon = themeToggleBtn.querySelector('i');
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+                try {
+                    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+                } catch (e) {}
+            }
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+            applyTheme(savedTheme);
+
+            themeToggleBtn.addEventListener('click', function () {
+                const current = htmlEl.getAttribute('data-theme');
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            });
+
+            // ====================================================
+            // TAB NAVIGATION
+            // ====================================================
+            const tabButtons = document.querySelectorAll('.kme-tab-btn');
+            const sections = document.querySelectorAll('.kme-section');
+
+            function activateTab(tabName) {
+                // Update buttons
+                tabButtons.forEach(function (btn) {
+                    btn.classList.toggle('kme-active', btn.getAttribute('data-tab') === tabName);
+                });
+                // Update sections
+                sections.forEach(function (sec) {
+                    sec.classList.toggle('kme-active', sec.id === 'kme-' + tabName);
+                });
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Save active tab
+                try {
+                    localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, tabName);
+                } catch (e) {}
+            }
+
+            // Load saved tab
+            const savedTab = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB) || 'concepts';
+            activateTab(savedTab);
+
+            tabButtons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    activateTab(this.getAttribute('data-tab'));
+                });
+            });
+
+            // ====================================================
+            // BUILD MCQ QUIZ
+            // ====================================================
+            const mcqListEl = document.getElementById('kmeMcqList');
+            const progressFillEl = document.getElementById('kmeProgressFill');
+            const scoreDisplayEl = document.getElementById('kmeScoreDisplay');
+            const resetBtn = document.getElementById('kmeResetQuiz');
+
+            let quizState = getQuizState();
+
+            /**
+             * Renders all MCQ questions into the DOM.
+             * Restores any previously answered states from localStorage.
+             */
+            function renderMcqs() {
+                mcqListEl.innerHTML = '';
+
+                KME_MCQS.forEach(function (q) {
+                    // Container
+                    const container = document.createElement('div');
+                    container.className = 'kme-mcq-container';
+                    container.setAttribute('data-qid', q.id);
+
+                    // Question header
+                    const header = document.createElement('div');
+                    header.className = 'kme-mcq-question-header';
+                    header.innerHTML =
+                        '<div class="kme-mcq-q-num">' + q.id + '</div>' +
+                        '<div class="kme-mcq-q-text">' + q.question + '</div>';
+                    container.appendChild(header);
+
+                    // Options list
+                    const optionsList = document.createElement('ul');
+                    optionsList.className = 'kme-mcq-options';
+
+                    q.options.forEach(function (opt) {
+                        const li = document.createElement('li');
+                        li.className = 'kme-mcq-option';
+                        li.setAttribute('data-letter', opt.letter);
+
+                        const radioId = 'kme-q' + q.id + '-' + opt.letter;
+                        const label = document.createElement('label');
+                        label.setAttribute('for', radioId);
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = 'kme-q' + q.id;
+                        radio.id = radioId;
+                        radio.value = opt.letter;
+
+                        const letterSpan = document.createElement('span');
+                        letterSpan.className = 'kme-mcq-option-letter';
+                        letterSpan.textContent = opt.letter;
+
+                        const textSpan = document.createElement('span');
+                        textSpan.className = 'kme-mcq-option-text';
+                        textSpan.textContent = opt.text;
+
+                        label.appendChild(radio);
+                        label.appendChild(letterSpan);
+                        label.appendChild(textSpan);
+                        li.appendChild(label);
+                        optionsList.appendChild(li);
+
+                        // Event listener
+                        radio.addEventListener('change', function () {
+                            handleAnswer(q.id, opt.letter, q.correct, q.explanation);
+                        });
+                    });
+
+                    container.appendChild(optionsList);
+
+                    // Explanation (hidden by default)
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.className = 'kme-explanation';
+                    explanationDiv.id = 'kme-exp-' + q.id;
+                    container.appendChild(explanationDiv);
+
+                    mcqListEl.appendChild(container);
+                });
+
+                // Restore saved answers
+                restoreSavedAnswers();
+                updateScoreAndProgress();
+            }
+
+            /**
+             * Handles when a user selects an answer for a question.
+             */
+            function handleAnswer(qId, selectedLetter, correctLetter, explanation) {
+                // Prevent re-answering
+                if (quizState[qId]) return;
+
+                const isCorrect = selectedLetter === correctLetter;
+                quizState[qId] = { selected: selectedLetter, correct: isCorrect };
+                saveQuizState(quizState);
+
+                applyAnswerVisuals(qId, selectedLetter, correctLetter, explanation, isCorrect);
+                updateScoreAndProgress();
+            }
+
+            /**
+             * Applies visual feedback (correct/wrong classes, explanation) to a question.
+             */
+            function applyAnswerVisuals(qId, selectedLetter, correctLetter, explanation, isCorrect) {
+                const container = mcqListEl.querySelector('[data-qid="' + qId + '"]');
+                if (!container) return;
+
+                // Mark container
+                container.classList.add(isCorrect ? 'kme-answered-correct' : 'kme-answered-wrong');
+
+                // Mark options
+                const options = container.querySelectorAll('.kme-mcq-option');
+                options.forEach(function (opt) {
+                    const letter = opt.getAttribute('data-letter');
+                    const radio = opt.querySelector('input[type="radio"]');
+
+                    // Disable all radios
+                    radio.disabled = true;
+                    opt.classList.add('kme-disabled');
+
+                    if (letter === correctLetter) {
+                        opt.classList.add('kme-correct');
+                        radio.checked = true;
+                    }
+                    if (letter === selectedLetter && !isCorrect) {
+                        opt.classList.add('kme-wrong');
+                    }
+                });
+
+                // Show explanation
+                const expDiv = document.getElementById('kme-exp-' + qId);
+                if (expDiv) {
+                    expDiv.className = 'kme-explanation kme-visible ' +
+                        (isCorrect ? 'kme-correct-explanation' : 'kme-wrong-explanation');
+                    const iconClass = isCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle';
+                    expDiv.innerHTML =
+                        '<i class="' + iconClass + '"></i>' +
+                        '<span>' + (isCorrect ? '' : '<strong>Correct: ' + correctLetter + '.</strong> ') + explanation + '</span>';
+                }
+            }
+
+            /**
+             * Restores answers from localStorage on page load.
+             */
+            function restoreSavedAnswers() {
+                Object.keys(quizState).forEach(function (qId) {
+                    const saved = quizState[qId];
+                    const q = KME_MCQS.find(function (m) { return m.id === parseInt(qId); });
+                    if (q) {
+                        // Check the saved radio
+                        const radioId = 'kme-q' + qId + '-' + saved.selected;
+                        const radio = document.getElementById(radioId);
+                        if (radio) radio.checked = true;
+
+                        applyAnswerVisuals(
+                            parseInt(qId),
+                            saved.selected,
+                            q.correct,
+                            q.explanation,
+                            saved.correct
+                        );
+                    }
+                });
+            }
+
+            /**
+             * Updates the score display and progress bar.
+             */
+            function updateScoreAndProgress() {
+                const totalQuestions = KME_MCQS.length;
+                const answeredCount = Object.keys(quizState).length;
+                let correctCount = 0;
+
+                Object.values(quizState).forEach(function (s) {
+                    if (s.correct) correctCount++;
+                });
+
+                scoreDisplayEl.textContent = correctCount + ' / ' + totalQuestions;
+                const percentage = (answeredCount / totalQuestions) * 100;
+                progressFillEl.style.width = percentage + '%';
+            }
+
+            /**
+             * Resets the entire quiz state.
+             */
+            resetBtn.addEventListener('click', function () {
+                quizState = {};
+                saveQuizState(quizState);
+                renderMcqs();
+            });
+
+            // Initial render
+            renderMcqs();
+
+            // ====================================================
+            // SCROLL TO TOP BUTTON
+            // ====================================================
+            const scrollTopBtn = document.getElementById('kmeScrollTop');
+
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.classList.add('kme-visible');
+                } else {
+                    scrollTopBtn.classList.remove('kme-visible');
+                }
+            }, { passive: true });
+
+            scrollTopBtn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+        })();
+    </script>
+</body>
+</html>

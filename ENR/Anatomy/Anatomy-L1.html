@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Female Reproductive Anatomy — Medical Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111520;
+    --surface2: #161b2a;
+    --border: #1e2840;
+    --accent: #c084fc;
+    --accent2: #f472b6;
+    --accent3: #38bdf8;
+    --accent4: #34d399;
+    --gold: #fbbf24;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --card-bg: #0f1420;
+    --glow: rgba(192,132,252,0.15);
+    --glow2: rgba(244,114,182,0.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* Animated background */
+  .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.12;animation:orbFloat 20s ease-in-out infinite}
+  .orb1{width:600px;height:600px;background:radial-gradient(var(--accent),transparent);top:-100px;left:-100px;animation-delay:0s}
+  .orb2{width:500px;height:500px;background:radial-gradient(var(--accent2),transparent);bottom:-100px;right:-100px;animation-delay:-7s}
+  .orb3{width:400px;height:400px;background:radial-gradient(var(--accent3),transparent);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-14s}
+  @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,30px) scale(0.95)}}
+
+  /* Header */
+  .header{position:relative;z-index:10;padding:2rem 2rem 0;text-align:center}
+  .header-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);border-radius:100px;padding:0.4rem 1rem;font-size:0.75rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem}
+  .header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;background:linear-gradient(135deg,#e2e8f0 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
+  .header p{color:var(--text-dim);font-size:1rem;max-width:600px;margin:0 auto 2rem}
+
+  /* Stats bar */
+  .stats-bar{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1rem 2rem;position:relative;z-index:10}
+  .stat{text-align:center}
+  .stat-val{font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--accent)}
+  .stat-label{font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em}
+
+  /* Navigation */
+  .nav{position:sticky;top:0;z-index:100;background:rgba(10,13,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1rem;display:flex;gap:0.25rem;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{flex-shrink:0;padding:1rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;color:var(--text-muted);background:none;border:none;cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;white-space:nowrap}
+  .nav-btn:hover{color:var(--text)}
+  .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+  /* Sections */
+  .section{display:none;padding:2rem;max-width:1200px;margin:0 auto;position:relative;z-index:10}
+  .section.active{display:block;animation:fadeIn 0.3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Cards */
+  .card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:border-color 0.2s,box-shadow 0.2s}
+  .card:hover{border-color:rgba(192,132,252,0.3);box-shadow:0 0 30px var(--glow)}
+  .card-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+  .card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+
+  /* Grid layouts */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
+  .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+
+  /* Section titles */
+  .section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem}
+  .section-sub{color:var(--text-dim);margin-bottom:2rem;font-size:0.9rem}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:2rem 0}
+
+  /* Tags */
+  .tag{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.6rem;border-radius:100px;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+  .tag-red{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.3)}
+  .tag-purple{background:rgba(192,132,252,0.15);color:var(--accent);border:1px solid rgba(192,132,252,0.3)}
+  .tag-green{background:rgba(52,211,153,0.15);color:var(--accent4);border:1px solid rgba(52,211,153,0.3)}
+  .tag-blue{background:rgba(56,189,248,0.15);color:var(--accent3);border:1px solid rgba(56,189,248,0.3)}
+  .tag-gold{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+
+  /* Quiz */
+  .quiz-progress{background:var(--surface);border-radius:100px;height:8px;margin-bottom:2rem;overflow:hidden}
+  .quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.5s ease}
+  .quiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .quiz-score{font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent)}
+  .quiz-streak{font-size:0.85rem;color:var(--gold)}
+  .question-card{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem}
+  .question-num{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem}
+  .question-text{font-size:1.1rem;font-weight:500;line-height:1.6;margin-bottom:1.5rem}
+  .options{display:flex;flex-direction:column;gap:0.75rem}
+  .option{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;cursor:pointer;transition:all 0.2s;font-size:0.95rem;text-align:left;color:var(--text);display:flex;align-items:flex-start;gap:0.75rem}
+  .option:hover:not(.disabled){border-color:var(--accent);background:rgba(192,132,252,0.05)}
+  .option.correct{border-color:var(--accent4);background:rgba(52,211,153,0.1);animation:correctPulse 0.5s ease}
+  .option.wrong{border-color:var(--red);background:rgba(248,113,113,0.1);animation:wrongShake 0.4s ease}
+  .option.show-correct{border-color:var(--accent4);background:rgba(52,211,153,0.05)}
+  .option.disabled{cursor:default}
+  .option-letter{width:28px;height:28px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;font-family:'DM Mono',monospace;flex-shrink:0}
+  @keyframes correctPulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+  @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .explanation{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-top:1rem;font-size:0.9rem;line-height:1.6;display:none}
+  .explanation.show{display:block;animation:fadeIn 0.3s ease}
+  .explanation strong{color:var(--accent4)}
+  .quiz-nav{display:flex;justify-content:space-between;gap:1rem;margin-top:1.5rem}
+  .btn{padding:0.75rem 1.5rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;border:none;transition:all 0.2s}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+  .btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+  .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text-dim)}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* Flashcards */
+  .flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+  .flashcard{perspective:1000px;height:200px;cursor:pointer}
+  .flashcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
+  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+  .flashcard-front,.flashcard-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;justify-content:center}
+  .flashcard-front{background:var(--card-bg);border:1px solid var(--border)}
+  .flashcard-back{background:linear-gradient(135deg,rgba(192,132,252,0.1),rgba(244,114,182,0.1));border:1px solid rgba(192,132,252,0.3);transform:rotateY(180deg)}
+  .flashcard-front p{font-size:0.95rem;font-weight:500;line-height:1.5;color:var(--text)}
+  .flashcard-back p{font-size:0.9rem;line-height:1.6;color:var(--text)}
+  .flashcard-hint{font-size:0.7rem;color:var(--text-muted);text-align:right;margin-top:0.5rem}
+  .fc-category{font-size:0.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem}
+
+  /* Clinical Cases */
+  .case-card{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:2rem}
+  .case-header{background:linear-gradient(135deg,rgba(192,132,252,0.15),rgba(244,114,182,0.15));padding:1.5rem;border-bottom:1px solid var(--border)}
+  .case-num{font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem}
+  .case-scenario{font-size:1rem;line-height:1.7;color:var(--text)}
+  .case-body{padding:1.5rem}
+  .case-question{background:var(--surface);border-radius:12px;padding:1rem;margin-bottom:1rem}
+  .case-q-text{font-size:0.9rem;font-weight:600;color:var(--text-dim);margin-bottom:0.5rem}
+  .case-answer{display:none;background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:1rem;margin-top:0.75rem;font-size:0.9rem;line-height:1.6}
+  .case-answer.show{display:block;animation:fadeIn 0.3s ease}
+  .reveal-btn{padding:0.5rem 1rem;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);border-radius:8px;color:var(--accent);font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+  .reveal-btn:hover{background:rgba(192,132,252,0.2)}
+
+  /* Anatomy structures */
+  .structure-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem}
+  .structure-item{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.25rem;cursor:pointer;transition:all 0.2s}
+  .structure-item:hover,.structure-item.active{border-color:var(--accent);background:rgba(192,132,252,0.05)}
+  .structure-item h4{font-size:0.95rem;font-weight:600;margin-bottom:0.25rem}
+  .structure-item p{font-size:0.8rem;color:var(--text-muted)}
+  .structure-detail{background:var(--card-bg);border:1px solid rgba(192,132,252,0.3);border-radius:16px;padding:1.5rem;display:none}
+  .structure-detail.show{display:block;animation:fadeIn 0.3s ease}
+
+  /* Flow chart */
+  .flowchart{display:flex;flex-direction:column;align-items:center;gap:0;margin:2rem 0}
+  .flow-node{background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:1rem 1.5rem;text-align:center;max-width:500px;width:100%;font-size:0.9rem}
+  .flow-node.highlight{border-color:var(--accent);background:rgba(192,132,252,0.08)}
+  .flow-node.danger{border-color:var(--red);background:rgba(248,113,113,0.08)}
+  .flow-node.success{border-color:var(--accent4);background:rgba(52,211,153,0.08)}
+  .flow-arrow{color:var(--text-muted);font-size:1.5rem;line-height:1;padding:0.25rem}
+
+  /* Mnemonics */
+  .mnemonic-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem}
+  .mnemonic-header{padding:1.25rem 1.5rem;background:linear-gradient(135deg,rgba(192,132,252,0.1),rgba(244,114,182,0.1));cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .mnemonic-title{font-weight:700;font-size:1rem}
+  .mnemonic-acronym{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:900;color:var(--accent);letter-spacing:0.1em}
+  .mnemonic-body{display:none;padding:1.5rem}
+  .mnemonic-body.show{display:block;animation:fadeIn 0.3s ease}
+  .mnemonic-letter{display:flex;gap:1rem;align-items:flex-start;padding:0.5rem 0;border-bottom:1px solid var(--border)}
+  .mnemonic-letter:last-child{border-bottom:none}
+  .letter-char{font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:900;color:var(--accent);min-width:30px}
+
+  /* Table */
+  .table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:0.88rem}
+  th{background:var(--surface);padding:0.85rem 1rem;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-dim);white-space:nowrap}
+  td{padding:0.85rem 1rem;border-top:1px solid var(--border);line-height:1.5;vertical-align:top}
+  tr:hover td{background:rgba(255,255,255,0.02)}
+
+  /* Search */
+  .search-wrap{position:relative;margin-bottom:2rem}
+  .search-input{width:100%;background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:0.9rem 1.25rem 0.9rem 3rem;color:var(--text);font-size:0.95rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+  .search-input:focus{border-color:var(--accent)}
+  .search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:1.1rem;pointer-events:none}
+
+  /* Key fact highlight */
+  .key-fact{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(251,191,36,0.03));border:1px solid rgba(251,191,36,0.25);border-left:4px solid var(--gold);border-radius:12px;padding:1rem 1.25rem;margin:1rem 0;font-size:0.9rem;line-height:1.6}
+  .key-fact strong{color:var(--gold)}
+
+  /* High yield alert */
+  .alert{border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;gap:0.75rem;align-items:flex-start;font-size:0.9rem;line-height:1.6}
+  .alert-exam{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25)}
+  .alert-exam-icon{color:var(--red);font-size:1.1rem;flex-shrink:0;margin-top:0.1rem}
+
+  /* Score screen */
+  .score-screen{text-align:center;padding:3rem 2rem}
+  .score-ring{width:160px;height:160px;border-radius:50%;border:4px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;font-family:'DM Mono',monospace;font-size:2.5rem;font-weight:700;position:relative}
+  .score-ring.good{border-color:var(--accent4);color:var(--accent4);box-shadow:0 0 40px rgba(52,211,153,0.3)}
+  .score-ring.ok{border-color:var(--gold);color:var(--gold);box-shadow:0 0 40px rgba(251,191,36,0.3)}
+  .score-ring.low{border-color:var(--red);color:var(--red);box-shadow:0 0 40px rgba(248,113,113,0.3)}
+
+  /* Responsive */
+  @media(max-width:640px){
+    .section{padding:1rem}
+    .stats-bar{gap:1rem}
+    .quiz-nav{flex-direction:column}
+    .btn{width:100%}
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="header">
+  <div class="header-badge">🎓 Mansoura Faculty of Medicine</div>
+  <h1>Female Reproductive System</h1>
+  <p>Comprehensive anatomy study platform — ovaries, uterus, vagina &amp; more</p>
+</div>
+
+<div class="stats-bar" id="statsBar">
+  <div class="stat"><div class="stat-val" id="statQuiz">0/25</div><div class="stat-label">Quiz Score</div></div>
+  <div class="stat"><div class="stat-val" id="statFC">0</div><div class="stat-label">Cards Reviewed</div></div>
+  <div class="stat"><div class="stat-val" id="statStreak">🔥 0</div><div class="stat-label">Streak</div></div>
+  <div class="stat"><div class="stat-val" id="statPct">0%</div><div class="stat-label">Progress</div></div>
+</div>
+
+<nav class="nav" id="mainNav">
+  <button class="nav-btn active" onclick="showTab('overview')">🔬 Overview</button>
+  <button class="nav-btn" onclick="showTab('quiz')">🎯 Quiz (25 Q)</button>
+  <button class="nav-btn" onclick="showTab('flashcards')">🃏 Flashcards</button>
+  <button class="nav-btn" onclick="showTab('cases')">🏥 Clinical Cases</button>
+  <button class="nav-btn" onclick="showTab('anatomy')">🫀 Anatomy</button>
+  <button class="nav-btn" onclick="showTab('mnemonics')">🧠 Mnemonics</button>
+  <button class="nav-btn" onclick="showTab('tables')">📋 Quick Tables</button>
+</nav>
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<div class="section active" id="tab-overview">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" type="text" placeholder="Search any topic, structure, or concept..." id="searchInput" oninput="doSearch(this.value)">
+  </div>
+  <div id="searchResults" style="display:none;margin-bottom:1.5rem"></div>
+
+  <h2 class="section-title">Topic Overview</h2>
+  <p class="section-sub">Three core topics — all high-yield anatomy for your exam</p>
+
+  <div class="alert alert-exam">
+    <span class="alert-exam-icon">⚠️</span>
+    <div><strong style="color:var(--red)">EXAM CRITICAL:</strong> "Water Under the Bridge" — ureter passes INFERIOR to uterine artery at lateral cervix. Most tested surgical anatomy in this topic.</div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:2rem">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(192,132,252,0.15)">🥚</div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:700">Topic 1: The Ovary</h3>
+          <span class="tag tag-purple">Primary Sex Organ</span>
+        </div>
+      </div>
+      <ul style="font-size:0.88rem;color:var(--text-dim);line-height:2;padding-left:1rem">
+        <li>Attached to broad ligament via <strong style="color:var(--text)">mesovarium</strong></li>
+        <li>Ovarian fossa boundaries (3 walls)</li>
+        <li>Artery: abdominal aorta → IVC/left renal</li>
+        <li>Ureter: <strong style="color:var(--accent)">posterior</strong> to ovary</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(244,114,182,0.15)">🔴</div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:700">Topic 2: Uterus &amp; Support</h3>
+          <span class="tag tag-red">High Yield ⭐</span>
+        </div>
+      </div>
+      <ul style="font-size:0.88rem;color:var(--text-dim);line-height:2;padding-left:1rem">
+        <li>Fundus → Body → Cervix</li>
+        <li>Position: <strong style="color:var(--text)">anteverted + anteflexed</strong></li>
+        <li>3 key ligaments prevent prolapse</li>
+        <li>Uterine a. crosses <em style="color:var(--gold)">over</em> ureter ⚠️</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(56,189,248,0.15)">💙</div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:700">Topic 3: Vagina, Vulva &amp; Urethra</h3>
+          <span class="tag tag-blue">Clinical</span>
+        </div>
+      </div>
+      <ul style="font-size:0.88rem;color:var(--text-dim);line-height:2;padding-left:1rem">
+        <li>Vestibule: urethral → vaginal → Bartholin</li>
+        <li>Urethra: 4 cm long, 2 sphincters</li>
+        <li>Vagina: ant 7 cm / post 8.5–9 cm</li>
+        <li>Pain: lower 1/3 only (pudendal nerve)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1.25rem">⚠️ High-Yield Exam Points</h3>
+
+  <div class="key-fact"><strong>1. Water Under the Bridge:</strong> Uterine artery runs ANTERIOR &amp; SUPERIOR to ureter. The ureter is inferior. During hysterectomy → risk of ureteric ligation → anuria.</div>
+  <div class="key-fact"><strong>2. Left vs Right Ovarian Vein:</strong> Right → IVC directly. Left → Left renal vein (then IVC). Clinically significant in left-sided varicocele-like presentation.</div>
+  <div class="key-fact"><strong>3. Pain-free upper vagina:</strong> Upper 2/3 innervated by autonomic uterovaginal plexus → insensitive to somatic pain. Lower 1/3 → pudendal nerve → pain-sensitive.</div>
+  <div class="key-fact"><strong>4. Three pillar ligaments of uterus:</strong> Transverse cervical (cardinal) + Pubocervical + Uterosacral ligaments = primary ligamentous support against prolapse.</div>
+  <div class="key-fact"><strong>5. Fertilization site:</strong> Ampulla of Fallopian tube (lateral 2/3, widest part). Implantation here = ectopic pregnancy.</div>
+  <div class="key-fact"><strong>6. Lymph drainage of fundus:</strong> Follows ovarian artery → para-aortic &amp; lateral aortic nodes (NOT internal iliac).</div>
+  <div class="key-fact"><strong>7. Round ligament:</strong> Uterus → inguinal canal → labium majus. Stretches in pregnancy → round ligament pain in groin.</div>
+
+  <div class="divider"></div>
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1.25rem">📊 Fallopian Tube — Quick Reference</h3>
+  <div class="grid-4">
+    <div class="card" style="text-align:center;padding:1rem">
+      <div style="font-size:1.5rem margin-bottom:0.5rem">🔴</div>
+      <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Intramural</div>
+      <div style="font-size:0.9rem;font-weight:600">1 cm</div>
+      <div style="font-size:0.75rem;color:var(--text-dim)">Within uterine wall</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem">
+      <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Isthmus</div>
+      <div style="font-size:0.9rem;font-weight:600">2.5 cm</div>
+      <div style="font-size:0.75rem;color:var(--text-dim)">Narrow; drains to inguinal nodes</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem;border-color:rgba(192,132,252,0.4)">
+      <div style="font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Ampulla ⭐</div>
+      <div style="font-size:0.9rem;font-weight:600">5 cm</div>
+      <div style="font-size:0.75rem;color:var(--text-dim)">Fertilization site!</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem">
+      <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Infundibulum</div>
+      <div style="font-size:0.9rem;font-weight:600">Funnel</div>
+      <div style="font-size:0.75rem;color:var(--text-dim)">Fimbriae; opens to peritoneum</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<div class="section" id="tab-quiz">
+  <h2 class="section-title">🎯 Quiz Mode</h2>
+  <p class="section-sub">25 MCQs — mechanisms, structures, and clinical applications</p>
+  <div id="quizContainer"></div>
+</div>
+
+<!-- ═══════════════ FLASHCARDS ═══════════════ -->
+<div class="section" id="tab-flashcards">
+  <h2 class="section-title">🃏 Flashcards</h2>
+  <p class="section-sub">Click any card to flip it — <span id="fcRevCount">0</span> / 25 reviewed</p>
+  <div class="flashcard-grid" id="flashcardGrid"></div>
+</div>
+
+<!-- ═══════════════ CLINICAL CASES ═══════════════ -->
+<div class="section" id="tab-cases">
+  <h2 class="section-title">🏥 Clinical Cases</h2>
+  <p class="section-sub">Exam-style vignettes with structured answers</p>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- ═══════════════ ANATOMY ═══════════════ -->
+<div class="section" id="tab-anatomy">
+  <h2 class="section-title">🫀 Anatomy Deep Dive</h2>
+  <p class="section-sub">Click a structure to expand its details</p>
+
+  <div class="structure-grid" id="structureGrid"></div>
+  <div class="structure-detail" id="structureDetail"></div>
+
+  <div class="divider"></div>
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1.5rem">🔄 Hysterectomy Risk — Step-by-Step Flowchart</h3>
+
+  <div class="flowchart">
+    <div class="flow-node highlight">⚕️ Indication: Severe uterine bleeding → Decision to perform hysterectomy</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">Surgeon ligates the uterine artery (from internal iliac artery)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node danger">⚠️ Danger zone: Uterine artery crosses ANTERIOR to ureter at lateral cervix ("water under the bridge")</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node danger">❌ Ureter inadvertently clamped/ligated instead of (or along with) the uterine artery</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">Urine cannot flow from kidney → ureter → bladder</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node danger">🚨 Post-operative ANURIA → Hydronephrosis → Renal damage if untreated</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node success">✅ Management: Imaging (intravenous urogram) → Surgical correction → Ureteric stenting</div>
+  </div>
+</div>
+
+<!-- ═══════════════ MNEMONICS ═══════════════ -->
+<div class="section" id="tab-mnemonics">
+  <h2 class="section-title">🧠 Mnemonics</h2>
+  <p class="section-sub">Memory aids — click to expand each</p>
+  <div id="mnemonicsContainer"></div>
+</div>
+
+<!-- ═══════════════ TABLES ═══════════════ -->
+<div class="section" id="tab-tables">
+  <h2 class="section-title">📋 Quick Reference Tables</h2>
+  <p class="section-sub">Comparison tables for rapid review</p>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--accent)">Lymphatic Drainage Summary</h3>
+  <div class="table-wrap" style="margin-bottom:2rem">
+    <table>
+      <tr><th>Structure / Region</th><th>Primary Lymph Node Group</th><th>Notes</th></tr>
+      <tr><td>Uterine Fundus + Upper Body</td><td>Para-aortic &amp; Lateral Aortic</td><td>Follows ovarian artery</td></tr>
+      <tr><td>Uterine Lower Body + Cervix</td><td>Internal Iliac, External Iliac, Sacral</td><td>—</td></tr>
+      <tr><td>Uterus (via Round Ligament)</td><td>Superficial Inguinal</td><td>Minor pathway only</td></tr>
+      <tr><td>Ovary</td><td>Para-aortic (Lumbar) nodes</td><td>Follows ovarian vessels to aorta</td></tr>
+      <tr><td>Fallopian Tube (most)</td><td>Internal Iliac + Para-aortic</td><td>—</td></tr>
+      <tr><td>Fallopian Tube Isthmus</td><td>Superficial Inguinal</td><td>⭐ Exam favorite</td></tr>
+      <tr><td>Upper 2/3 Vagina</td><td>Internal Iliac</td><td>—</td></tr>
+      <tr><td>Middle Vagina</td><td>Internal &amp; External Iliac</td><td>—</td></tr>
+      <tr><td>Lower 1/3 Vagina + Vulva</td><td>Superficial Inguinal</td><td>Clinically important</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--accent)">Urethral Sphincters Comparison</h3>
+  <div class="table-wrap" style="margin-bottom:2rem">
+    <table>
+      <tr><th>Feature</th><th>Internal Sphincter</th><th>External Sphincter</th></tr>
+      <tr><td>Muscle Type</td><td>Smooth muscle</td><td>Skeletal muscle</td></tr>
+      <tr><td>Control</td><td>Involuntary (autonomic)</td><td>Voluntary (somatic)</td></tr>
+      <tr><td>Sympathetic</td><td>L1–L2</td><td>—</td></tr>
+      <tr><td>Parasympathetic</td><td>S2–S4</td><td>—</td></tr>
+      <tr><td>Somatic Supply</td><td>—</td><td>Pudendal nerve</td></tr>
+      <tr><td>Location</td><td>Bladder neck</td><td>Perineal membrane</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--accent)">Broad Ligament Subdivisions</h3>
+  <div class="table-wrap" style="margin-bottom:2rem">
+    <table>
+      <tr><th>Subdivision</th><th>Between</th><th>Contains</th></tr>
+      <tr><td>Mesosalpinx</td><td>Fallopian tube &amp; ovarian ligament</td><td>Blood supply to tube</td></tr>
+      <tr><td>Mesovarium</td><td>Ovary &amp; posterior layer</td><td>Ovarian vessels/nerves</td></tr>
+      <tr><td>Mesometrium</td><td>Uterine body &amp; pelvic wall</td><td>Uterine vessels, ureter</td></tr>
+      <tr><td>Suspensory Lig. of Ovary</td><td>Lateral 1/5 of broad lig.</td><td>Ovarian artery &amp; vein, lymphatics, nerves</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--accent)">Vaginal Innervation &amp; Pain Sensitivity</h3>
+  <div class="table-wrap" style="margin-bottom:2rem">
+    <table>
+      <tr><th>Region</th><th>Nerve Supply</th><th>Pain Sensitive?</th><th>Clinical Relevance</th></tr>
+      <tr><td>Upper 2/3</td><td>Uterovaginal plexus (autonomic)</td><td>❌ No</td><td>Procedures can be done without local anaesthetic</td></tr>
+      <tr><td>Lower 1/3</td><td>Pudendal nerve (somatic)</td><td>✅ Yes</td><td>Requires local anaesthetic for procedures</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--accent)">Ovarian Blood Supply vs Uterine</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Vessel</th><th>Origin</th><th>Venous Drainage</th></tr>
+      <tr><td>Ovarian Artery (Right)</td><td>Abdominal Aorta (L2)</td><td>Right Ovarian Vein → IVC</td></tr>
+      <tr><td>Ovarian Artery (Left)</td><td>Abdominal Aorta (L2)</td><td>Left Ovarian Vein → Left Renal Vein → IVC</td></tr>
+      <tr><td>Uterine Artery</td><td>Internal Iliac Artery</td><td>Uterine Veins → Internal Iliac Vein</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────
+const QUESTIONS = [
+  {q:"During a hysterectomy, which anatomical mechanism puts the ureter at highest risk of iatrogenic injury?",opts:["It passes superior to the uterine artery","It travels within the suspensory ligament of the ovary","It passes inferior to the uterine artery on its way to the bladder","It enters the uterus at the lateral angle","It runs between the layers of the mesosalpinx"],ans:2,exp:"The ureter passes INFERIOR to the uterine artery ('water under the bridge') near the lateral cervix — the single most tested fact in this topic."},
+  {q:"What mechanism primarily prevents the uterus from sagging down through the vagina (uterine prolapse)?",opts:["The round ligaments pulling it upward","The integrity of the pelvic diaphragm and perineal body","The suspensory ligament of the ovary","The weight of the intestines on the fundus","The distension of the bladder"],ans:1,exp:"The pelvic diaphragm (levator ani + coccygeus) and perineal body provide the main structural floor support. The round ligaments play a very minor role."},
+  {q:"By what mechanism does the lower one-third of the vagina perceive pain?",opts:["Autonomic fibers from the inferior hypogastric plexus","Sympathetic fibers from L1, L2","Parasympathetic fibers from S2, S3","Somatic fibers from the pudendal nerve","Fibers from the ovarian plexus"],ans:3,exp:"The lower 1/3 of the vagina is pain-sensitive, innervated by the SOMATIC pudendal nerve. The upper 2/3 is supplied by autonomic plexuses and is insensitive to somatic pain."},
+  {q:"How does the LEFT ovarian vein route its venous drainage differently than the right?",opts:["Drains directly into the inferior vena cava","Drains into the internal iliac vein","Drains into the left renal vein","Drains into the uterine venous plexus","Drains into the para-aortic nodes"],ans:2,exp:"The left ovarian vein drains into the left renal vein (then IVC), while the RIGHT drains directly into the IVC. This asymmetry is clinically important."},
+  {q:"Which mechanism describes the collateral blood supply to the uterus via the ovarian artery?",opts:["Vaginal artery anastomosing with internal pudendal","Uterine artery anastomosing with the ovarian artery at the fallopian tube","Ovarian artery anastomosing with the external iliac artery","Uterine artery anastomosing directly with the abdominal aorta","Middle rectal artery branching into the fundus"],ans:1,exp:"The uterine artery turns laterally along the fallopian tube and ANASTOMOSES with the ovarian artery — providing crucial collateral circulation."},
+  {q:"Where do lymphatic vessels from the fundus and upper uterine body primarily drain?",opts:["Internal iliac nodes","Superficial inguinal nodes","External iliac nodes","Pre-aortic and lateral aortic nodes","Sacral nodes"],ans:3,exp:"Lymphatics from the fundus follow the ovarian artery to the para-aortic (pre-aortic and lateral aortic) nodes. Only a few go to superficial inguinal via the round ligament."},
+  {q:"How do the external and internal urethral sphincters differ mechanistically?",opts:["Both voluntary, supplied by different nerves","Internal skeletal (voluntary); External smooth (involuntary)","Internal smooth (involuntary); External skeletal (voluntary)","Internal supplied by pudendal; External by pelvic nerves","Identical nerve supply"],ans:2,exp:"Internal sphincter = smooth muscle = involuntary (sympathetic L1–2, parasympathetic S2–4). External sphincter = skeletal muscle = voluntary (somatic pudendal nerve)."},
+  {q:"Which peritoneal fold connects the ovary to the upper layer of the broad ligament?",opts:["Mesosalpinx","Mesometrium","Mesovarium","Suspensory ligament of the ovary","Round ligament"],ans:2,exp:"The MESOVARIUM is the short peritoneal fold connecting the ovary to the posterior layer of the broad ligament. It transmits blood vessels and nerves to the ovary."},
+  {q:"What structure provides the pathway for blood vessels and nerves to enter the ovary from the lateral pelvic wall?",opts:["Ligament of the ovary","Suspensory ligament of the ovary","Round ligament of the uterus","Uterosacral ligament","Transverse cervical ligament"],ans:1,exp:"The SUSPENSORY LIGAMENT of the ovary (lateral 1/5 of broad ligament) transmits the ovarian artery, vein, lymphatics, and nerve plexus to the ovary."},
+  {q:"What is the anatomical axis mechanism that helps prevent uterine prolapse?",opts:["Retroversion and retroflexion","Anteversion and anteflexion","Direct alignment with the vaginal axis","90 degree extension backward","Complete mobility without fixed angles"],ans:1,exp:"The normal ANTEVERTED (cervix tilts anteriorly relative to vagina) and ANTEFLEXED (fundus bends forward on cervix) position helps prevent the uterus from dropping straight through the vagina."},
+  {q:"Which structure lies immediately posterior to the urethral orifice in the vestibule?",opts:["Clitoris","Mons pubis","Vaginal orifice","Orifices of Bartholin glands","Anus"],ans:2,exp:"Anterior-to-posterior order in the vestibule: (1) Urethral orifice → (2) Vaginal orifice → (3) Bartholin gland orifices at the sides of the vaginal opening."},
+  {q:"What mechanism creates the recto-uterine pouch (Pouch of Douglas)?",opts:["Reflection of peritoneum from the rectum to the posterior wall of the uterus","Peritoneum extending from bladder to anterior uterus","Fusion of the labia minora","Transverse cervical ligaments blocking the pelvic floor","Ligament of the ovary folding over the fallopian tube"],ans:0,exp:"The recto-uterine pouch (Douglas pouch) is formed by peritoneum reflecting from the anterior wall of the rectum onto the posterior wall of the uterus — the lowest point of the peritoneal cavity in females."},
+  {q:"How does lymphatic drainage of the ISTHMUS of the fallopian tube route uniquely?",opts:["Internal iliac nodes","Para-aortic nodes","Superficial inguinal lymph nodes","Renal lymphatic plexus","Sacral nodes"],ans:2,exp:"The isthmus specifically drains to the SUPERFICIAL INGUINAL nodes (via the round ligament pathway), unlike the rest of the tube which drains to internal iliac and para-aortic nodes."},
+  {q:"The pudendal nerve regulates which mechanism?",opts:["Involuntary contraction of the internal urethral sphincter","Voluntary contraction of the external urethral sphincter","Pain sensation in the fundus of the uterus","Sympathetic tone of the vaginal artery","Peristalsis of the fallopian tubes"],ans:1,exp:"The pudendal nerve is SOMATIC: it supplies voluntary control of the external urethral sphincter AND pain sensation in the lower 1/3 of the vagina and perineum."},
+  {q:"In virgin females, what mechanism partially closes the vaginal orifice?",opts:["Transverse cervical ligaments","The fimbriae","The hymen","The perineal body","Skene's ducts"],ans:2,exp:"The hymen is a mucosal fold with a central perforation that partially occludes the vaginal orifice in virgin females. It is ruptured at first intercourse or by tampon use."},
+  {q:"What structures form the anterior and posterior boundaries of the ovarian fossa?",opts:["Ant: Ureter; Post: External iliac vessels","Ant: External iliac vessels; Post: Internal iliac vessels and ureter","Ant: Obturator nerve; Post: Uterine artery","Ant: Broad ligament; Post: Rectum","Ant: Bladder; Post: Pouch of Douglas"],ans:1,exp:"Ovarian fossa boundaries: ANTERIOR = external iliac vessels; POSTERIOR = internal iliac vessels AND ureter; INFERIOR = obturator nerve and vessels."},
+  {q:"Which segment of the Fallopian tube lies WITHIN the uterine wall?",opts:["Infundibulum","Ampulla","Isthmus","Intramural (interstitial) part","Fimbriae"],ans:3,exp:"The INTRAMURAL (interstitial) part (1 cm) lies within the uterine wall and opens into the uterine cavity. Isthmus is outside the wall. Ampulla is the widest part (site of fertilization)."},
+  {q:"What are the correct lengths of the anterior vs posterior vaginal walls?",opts:["Anterior 7 cm, Posterior 8.5–9 cm","Anterior 9 cm, Posterior 7 cm","Anterior 10 cm, Posterior 10 cm","Anterior 4 cm, Posterior 4 cm","Anterior 15 cm, Posterior 12 cm"],ans:0,exp:"Anterior vaginal wall = 7 cm; Posterior vaginal wall = 8.5–9 cm. The posterior wall is longer because the cervix projects into the anterior wall at a higher level."},
+  {q:"From which artery does the uterine artery arise?",opts:["Abdominal aorta","External iliac artery","Ovarian artery","Internal iliac artery","Common iliac artery"],ans:3,exp:"The uterine artery arises from the INTERNAL ILIAC artery (anterior division). It runs medially in the base of the broad ligament (transverse cervical ligament) to reach the uterus."},
+  {q:"A woman at 20 weeks gestation complains of right groin pain that worsens as pregnancy progresses. Which structure is most likely responsible?",opts:["Uterosacral ligament","Ovarian ligament","Round ligament of the uterus","Pubocervical ligament","Mesovarium"],ans:2,exp:"The ROUND LIGAMENT runs from the uterine cornu through the inguinal canal to the labium majus. As the uterus enlarges in pregnancy, it stretches this ligament → right-sided groin pain (round ligament pain)."},
+  {q:"Where exactly does fertilization normally occur in the female reproductive tract?",opts:["Uterine cavity","Isthmus of fallopian tube","Ampulla of fallopian tube","Infundibulum","Intramural part of fallopian tube"],ans:2,exp:"Fertilization occurs in the AMPULLA of the fallopian tube (the widest part, lateral 2/3). If the fertilized ovum implants here instead of migrating to the uterus = ectopic (tubal) pregnancy."},
+  {q:"Which ligament is primarily responsible for maintaining the anteverted position of the uterus?",opts:["Uterosacral ligament","Round ligament","Pubocervical ligament","Transverse cervical ligament","Suspensory ligament of the ovary"],ans:1,exp:"The ROUND LIGAMENT maintains the anteverted position of the uterus by pulling the fundus anteriorly. However, the main SUPPORT against prolapse comes from the transverse cervical, pubocervical, and uterosacral ligaments."},
+  {q:"A patient has cancer of the lower third of the vagina. Which lymph node group is most likely involved first?",opts:["Internal iliac nodes","Para-aortic nodes","External iliac nodes","Deep inguinal nodes","Superficial inguinal nodes"],ans:4,exp:"The lower 1/3 of the vagina drains to SUPERFICIAL INGUINAL lymph nodes — same as the vulva. Upper 2/3 drains to internal/external iliac nodes. This is a classic exam question."},
+  {q:"The ovarian fossa has an INFERIOR boundary formed by which structures?",opts:["External iliac vessels","Ureter and internal iliac vessels","Obturator nerve and vessels","Uterosacral ligament","Peritoneum of the broad ligament"],ans:2,exp:"The INFERIOR boundary of the ovarian fossa is formed by the obturator nerve and vessels. Remember: Anterior = external iliac vessels; Posterior = internal iliac + ureter; Inferior = obturator nerve + vessels."},
+  {q:"After a difficult labour, a multiparous woman develops inability to control urination (stress incontinence). Which structure is most likely damaged?",opts:["Internal urethral sphincter","External urethral sphincter and pelvic floor","Round ligament","Mesovarium","Uterosacral ligament"],ans:1,exp:"Stress incontinence after labour results from damage to the EXTERNAL URETHRAL SPHINCTER (voluntary control) and weakening of the PELVIC FLOOR MUSCLES (levator ani), both of which support continence."}
+];
+
+const FLASHCARDS = [
+  {cat:"Ovary",q:"What fold of peritoneum connects the ovary to the broad ligament?",a:"Mesovarium — a short peritoneal fold from the ovary to the posterior layer of the broad ligament"},
+  {cat:"Ovary",q:"What are the 3 boundaries of the ovarian fossa?",a:"Anterior: external iliac vessels | Posterior: internal iliac vessels + ureter | Inferior: obturator nerve & vessels"},
+  {cat:"Ovary",q:"Where does the LEFT ovarian vein drain vs the RIGHT?",a:"LEFT → Left renal vein (then IVC) | RIGHT → directly into IVC"},
+  {cat:"Ovary",q:"What is the clinical importance of the ureter's position relative to the ovary?",a:"The ureter lies POSTERIOR to the ovary in the ovarian fossa — must be remembered during surgery"},
+  {cat:"Uterus",q:"Name the 3 principal ligamentous supports of the uterus",a:"(1) Transverse cervical (cardinal) ligament | (2) Pubocervical ligament | (3) Uterosacral ligament"},
+  {cat:"Uterus",q:"'Water under the bridge' — what does this mean?",a:"The ureter passes INFERIOR to the uterine artery at the lateral side of the cervix. Ureter = water; Artery = bridge"},
+  {cat:"Uterus",q:"Normal position of the uterus — 2 terms",a:"ANTEVERTED (cervix tilts forward relative to vagina) + ANTEFLEXED (fundus bends forward on cervix)"},
+  {cat:"Uterus",q:"What is the anastomosis of the uterine artery?",a:"The uterine artery runs laterally along the fallopian tube and anastomoses with the OVARIAN ARTERY"},
+  {cat:"Uterus",q:"Which lymph nodes drain the uterine FUNDUS?",a:"Para-aortic (lateral aortic) nodes — following the ovarian vessels"},
+  {cat:"Uterus",q:"Why does the round ligament cause groin pain in pregnancy?",a:"It runs from the uterine cornu through the inguinal canal to labium majus — uterine growth stretches it"},
+  {cat:"Fallopian Tube",q:"Where does fertilization normally occur?",a:"AMPULLA of the fallopian tube — the widest part (5 cm), making up the lateral 2/3"},
+  {cat:"Fallopian Tube",q:"Name the 4 parts of the fallopian tube in order (medial → lateral)",a:"(1) Intramural [1cm] → (2) Isthmus [2.5cm] → (3) Ampulla [5cm] → (4) Infundibulum + Fimbriae"},
+  {cat:"Fallopian Tube",q:"Which part of the fallopian tube has unique lymph drainage to superficial inguinal nodes?",a:"The ISTHMUS — all other parts drain to internal iliac and para-aortic nodes"},
+  {cat:"Vagina",q:"Anterior-to-posterior order of vestibule orifices",a:"(1) Urethral orifice → (2) Vaginal orifice → (3) Bartholin gland orifices (lateral to vaginal opening)"},
+  {cat:"Vagina",q:"Compare anterior vs posterior vaginal wall length",a:"Anterior = 7 cm | Posterior = 8.5–9 cm (longer because cervix projects higher anteriorly)"},
+  {cat:"Vagina",q:"What nerve makes the upper 2/3 of vagina pain-insensitive?",a:"Upper 2/3 is supplied by AUTONOMIC fibers (uterovaginal plexus) — no somatic pain sensation"},
+  {cat:"Vagina",q:"What nerve makes the lower 1/3 of vagina pain-sensitive?",a:"PUDENDAL NERVE (somatic S2–S4) — makes lower 1/3 pain-sensitive, clinically important"},
+  {cat:"Vagina",q:"Where does lower 1/3 vagina and vulva drain lymphatically?",a:"Superficial INGUINAL lymph nodes — cancer here presents with inguinal node enlargement"},
+  {cat:"Urethra",q:"Length of female urethra?",a:"4 cm (compared to 20 cm in males)"},
+  {cat:"Urethra",q:"Internal urethral sphincter: muscle type, control, nerve supply",a:"SMOOTH muscle | Involuntary | Sympathetic L1–2, Parasympathetic S2–4"},
+  {cat:"Urethra",q:"External urethral sphincter: muscle type, control, nerve supply",a:"SKELETAL muscle | Voluntary | Pudendal nerve (somatic)"},
+  {cat:"Clinical",q:"Post-hysterectomy anuria — mechanism?",a:"Ureter was inadvertently ligated instead of (or with) uterine artery due to 'water under the bridge' proximity"},
+  {cat:"Clinical",q:"Multiparous woman with vaginal mass — diagnosis and mechanism?",a:"Uterine PROLAPSE — weakness of pelvic floor, perineal body, and the 3 key cervical ligaments after childbirth"},
+  {cat:"Clinical",q:"Cancer of vaginal lower third — first lymph nodes to check?",a:"Superficial INGUINAL nodes (lower 1/3 vagina drains there)"},
+  {cat:"Clinical",q:"Ectopic pregnancy — most common location?",a:"AMPULLA of the fallopian tube — the normal site of fertilization where the ovum can implant ectopically"}
+];
+
+const CASES = [
+  {
+    num:1,
+    title:"Post-Hysterectomy Anuria",
+    scenario:"A 50-year-old woman undergoes emergency hysterectomy for life-threatening uterine hemorrhage (BP 90/60, HR 120, Hb 6 g/dL). 24 hours post-operatively, nursing staff note she has produced no urine. Ultrasound shows bilateral hydronephrosis.",
+    questions:[
+      {q:"What is the most likely anatomical explanation for this complication?",a:"The ureter was inadvertently ligated during the hysterectomy. The uterine artery passes ANTERIOR and SUPERIOR to the ureter at the lateral side of the cervix ('water under the bridge'). During emergency surgery, the ureter was likely clamped/ligated instead of, or along with, the uterine artery."},
+      {q:"What is the embryological basis for this dangerous surgical relationship?",a:"Both the ureter (mesodermal, from the ureteric bud) and the uterine artery develop in close proximity in the pelvis. The ureter passes posterior to the artery as it descends from the kidney toward the bladder, crossing inferior to the uterine artery at the level of the cervix."},
+      {q:"What investigation would confirm the diagnosis and what findings would you expect?",a:"Intravenous urogram (IVU) / CT urogram: You would expect to see hydronephrosis above the obstruction, non-opacification of the ureter below the obstruction, and possible urinary leak/urinoma if the ureter was cut rather than tied."}
+    ]
+  },
+  {
+    num:2,
+    title:"Uterine Prolapse in a Multiparous Woman",
+    scenario:"A 65-year-old woman (G5P5) presents with a sensation of 'something coming down' from her vagina, worse on standing. Examination reveals grade II uterine prolapse with the cervix visible at the introitus.",
+    questions:[
+      {q:"Which structures have failed to allow this prolapse to occur?",a:"(1) Pelvic diaphragm (levator ani + coccygeus) — forms the main structural floor; (2) Perineal body — central tendinous attachment point; (3) Three key ligaments: Transverse cervical (cardinal), Pubocervical, and Uterosacral ligaments. All are weakened by repeated pregnancy, childbirth, and estrogen loss."},
+      {q:"Why does the normal anteverted/anteflexed position help prevent prolapse?",a:"In anteversion, the cervix points backward and the fundus forward — the uterine axis is NOT aligned with the vaginal axis. This means downward force from intra-abdominal pressure pushes the uterus against the posterior vaginal wall (and the bladder anteriorly) rather than directly down through the vaginal orifice."}
+    ]
+  },
+  {
+    num:3,
+    title:"Round Ligament Pain in Pregnancy",
+    scenario:"A 24-year-old primigravida at 18 weeks gestation presents to the emergency department with sudden onset right lower quadrant/groin pain that radiates to the right labia. The pain is sharp and worsens with position changes. Fetal heart tones are normal. No fever, no vaginal bleeding.",
+    questions:[
+      {q:"What is the diagnosis and describe the anatomical basis?",a:"ROUND LIGAMENT PAIN. The round ligament arises from the superolateral angle of the uterus (below and in front of the fallopian tube insertion), passes anterolaterally through the inguinal canal, and inserts into the subcutaneous tissue of the labium majus. As the uterus enlarges with pregnancy, this ligament is stretched, causing sharp pain along its course from the groin to the labia."},
+      {q:"Why is this more common on the right side?",a:"The uterus naturally rotates slightly to the right (dextrorotation) during pregnancy due to the presence of the sigmoid colon on the left. This puts additional stretch on the right round ligament."}
+    ]
+  },
+  {
+    num:4,
+    title:"Pain-Free vs Pain-Sensitive Vagina",
+    scenario:"A 30-year-old woman undergoes colposcopy and biopsy. The gynecologist takes biopsies from the cervix and upper vagina without any local anesthetic — the patient feels no pain. However, when cleaning the lower vagina and vulva, the patient feels sharp discomfort.",
+    questions:[
+      {q:"Explain the neurological basis for this differential pain sensitivity.",a:"Upper 2/3 of vagina (including cervix): supplied by AUTONOMIC fibers from the uterovaginal nerve plexus (pelvic splanchnic nerves S2–S4 and sympathetic T10–L2). These autonomic fibers do not carry somatic pain → the area is insensitive to sharp/somatic pain.\n\nLower 1/3 of vagina and vulva: supplied by the SOMATIC pudendal nerve (S2–S4) → highly sensitive to sharp pain, pressure, and temperature."},
+      {q:"What are the clinical implications of this anatomical difference?",a:"(1) Cervical biopsies, IUD insertion, and pap smears can be performed without local anesthesia; (2) Procedures on the lower vagina, perineum, and vulva require local/regional anesthesia (pudendal block or local infiltration); (3) The pudendal nerve block (at the ischial spine) provides anesthesia for perineal repair."}
+    ]
+  },
+  {
+    num:5,
+    title:"Ectopic Pregnancy",
+    scenario:"A 28-year-old woman (LMP 7 weeks ago) presents with right-sided pelvic pain and vaginal spotting. She is hemodynamically stable. βhCG = 4500 mIU/mL. Transvaginal ultrasound shows no intrauterine gestational sac but a right adnexal mass of 3 cm with fetal cardiac activity.",
+    questions:[
+      {q:"Identify the anatomical site and explain why fertilization normally occurs there.",a:"The ectopic pregnancy is in the RIGHT FALLOPIAN TUBE, most likely in the AMPULLA. The ampulla is the normal site of fertilization because: (1) It is the widest, most capacious part of the tube; (2) It provides the ideal environment with ciliary currents; (3) The sperm and egg meet here after sperm travel through the uterus and isthmus."},
+      {q:"What happens if the fertilized ovum fails to migrate to the uterus?",a:"The embryo implants in the fallopian tube wall (most commonly the ampulla). As it grows, it stretches the thin tubal wall → (1) Rupture of the tube with massive intraperitoneal hemorrhage (surgical emergency), or (2) Tubal abortion (expulsion through the fimbriated end). Both can be life-threatening."},
+      {q:"What complication follows from this pathology?",a:"TUBAL RUPTURE → hemoperitoneum → hemorrhagic shock. On examination: peritoneal irritation signs, cervical excitation tenderness, posterior fornix fullness (blood in pouch of Douglas). Management: emergency salpingectomy or salpingostomy."}
+    ]
+  },
+  {
+    num:6,
+    title:"Integrative Long Case — Hysterectomy Complication",
+    scenario:"A 50-year-old woman in hemorrhagic shock (BP 90/60, HR 130, Hb 6 g/dL) underwent emergency total abdominal hysterectomy. Post-op Day 1: temperature 38.5°C, no urine output for 12 hours, right flank pain. Bladder catheter is in situ and not draining. Serum creatinine rising.",
+    questions:[
+      {q:"Step 1: What is the first differential to rule in/out — structural vs functional anuria?",a:"STRUCTURAL: Ureteric ligation (most likely given surgical history — 'water under the bridge'). Also consider ureteric transaction or thermal injury from diathermy.\n\nFUNCTIONAL: Hypovolemic shock leading to acute tubular necrosis (ATN) / pre-renal AKI from the hemorrhage and low BP. Both can co-exist!"},
+      {q:"Step 2: What investigation would differentiate ureteric ligation from ATN?",a:"CT UROGRAM (or IVU): Ureteric ligation → hydronephrosis above obstruction, no contrast beyond obstruction, possible urinoma.\n\nATN: Normal ureteric caliber, bilateral reduced contrast excretion, granular nephrogram.\n\nAdditionally: Retrograde pyelography can directly visualize the ureteric obstruction."},
+      {q:"Step 3: What is the broader anatomical principle and how does it guide prevention?",a:"'WATER UNDER THE BRIDGE': The ureter (water = urine-carrying tube) passes INFERIOR to the uterine artery (bridge). During hysterectomy, before ligating the uterine artery at the lateral cervix, surgeons must IDENTIFY and RETRACT the ureter first. This is the most critical step in preventing this iatrogenic complication."}
+    ]
+  }
+];
+
+const STRUCTURES = [
+  {name:"Ovary",emoji:"🥚",brief:"Primary female sex organ",detail:"The ovary is the PRIMARY FEMALE SEX ORGAN. It is attached to the BACK of the broad ligament by the MESOVARIUM. It lies in the OVARIAN FOSSA on the lateral pelvic wall.\n\nBlood supply: Ovarian artery (from abdominal aorta at L2) → runs in suspensory ligament.\nVenous drainage: Right → IVC; Left → Left renal vein.\nLymph: Para-aortic (lateral aortic) nodes.\nNerves: Ovarian plexus from T10.\n\nKey: Ureter lies POSTERIOR to the ovary."},
+  {name:"Fallopian Tube",emoji:"🔄",brief:"Gamete transport; site of fertilization",detail:"4 parts (medial to lateral):\n1. INTRAMURAL (1cm) — within uterine wall\n2. ISTHMUS (2.5cm) — narrow; lymph → superficial inguinal\n3. AMPULLA (5cm) — widest; SITE OF FERTILIZATION\n4. INFUNDIBULUM — funnel-shaped; fimbriae collect the ovum\n\nBlood supply: Uterine artery (medial) + ovarian artery (lateral).\nLymph: Internal iliac + para-aortic (except isthmus → inguinal)."},
+  {name:"Uterus",emoji:"🔴",brief:"Anteverted + anteflexed; 3-part",detail:"Parts: FUNDUS (above tube openings) → BODY → CERVIX.\nNormal position: ANTEVERTED + ANTEFLEXED.\n\nSupport ligaments (3 key):\n• Transverse cervical (cardinal) ligament — strongest\n• Pubocervical ligament — anterior\n• Uterosacral ligament — posterior\n\nOther ligaments:\n• Round ligament → inguinal canal → labium majus (maintains anteversion)\n• Ovarian ligament → connects ovary to uterus\n\nBlood: Uterine a. from internal iliac.\nLymph: Fundus → para-aortic; Lower body/cervix → internal/external iliac."},
+  {name:"Broad Ligament",emoji:"📋",brief:"Double peritoneal fold; 3 subdivisions",detail:"A double layer of peritoneum extending from the uterus to the lateral pelvic wall.\n\n3 subdivisions:\n• MESOSALPINX — between fallopian tube and ovarian ligament\n• MESOVARIUM — connects ovary to broad ligament\n• MESOMETRIUM — uterine body to pelvic wall (largest portion)\n\nLateral 1/5 = SUSPENSORY LIGAMENT OF OVARY — contains ovarian artery, vein, lymphatics, and nerve plexus."},
+  {name:"Vagina",emoji:"💙",brief:"Ant 7cm / Post 8.5-9cm; 2-zone innervation",detail:"Anterior wall: 7 cm | Posterior wall: 8.5–9 cm.\n\nFornices: Posterior fornix is deepest (overlies Pouch of Douglas).\n\nInnervation:\n• Upper 2/3: Uterovaginal plexus (AUTONOMIC) → pain-INSENSITIVE\n• Lower 1/3: Pudendal nerve (SOMATIC) → pain-SENSITIVE\n\nLymph:\n• Upper 2/3 → Internal iliac / External iliac nodes\n• Lower 1/3 → Superficial INGUINAL nodes\n\nPeritoneal relation: Posterior wall only is covered by peritoneum (Pouch of Douglas)."},
+  {name:"Urethra",emoji:"💛",brief:"4cm; 2 sphincters",detail:"Length: 4 cm (female).\nOpens into vestibule, ANTERIOR to vaginal orifice.\n\nSphincters:\n• INTERNAL (smooth muscle, involuntary) — at bladder neck; sympathetic L1–2, parasympathetic S2–4\n• EXTERNAL (skeletal muscle, voluntary) — at perineal membrane; pudendal nerve\n\nClinical: External sphincter damaged in childbirth → stress incontinence."},
+  {name:"Vestibule",emoji:"🔶",brief:"A-P order: urethra → vagina → Bartholin",detail:"Bounded laterally by the labia minora.\n\nOrifices (anterior → posterior):\n1. URETHRAL ORIFICE (most anterior)\n2. VAGINAL ORIFICE (guarded by hymen in virgins)\n3. BARTHOLIN GLAND ORIFICES (beside posterior part of vaginal opening)\n\nAlso contains: openings of Skene's (paraurethral) glands beside urethral orifice."},
+  {name:"Pouch of Douglas",emoji:"🔻",brief:"Recto-uterine pouch; lowest pelvic point",detail:"The RECTO-UTERINE POUCH (Pouch of Douglas) is formed by peritoneum reflecting from the anterior wall of the rectum onto the posterior wall of the uterus.\n\nIt is the LOWEST POINT of the peritoneal cavity in the female pelvis.\n\nClinical significance:\n• Blood/pus collects here in pelvic infections, ectopic rupture\n• Accessible via posterior vaginal fornix (culdocentesis/culdoscopy)\n• Posteriorly related to posterior vaginal fornix"}
+];
+
+const MNEMONICS = [
+  {
+    title:"Ovarian Fossa Boundaries",
+    acronym:"A-P-I",
+    topic:"Where the ovary lives",
+    letters:[
+      {char:"A",meaning:"Anterior = External iliac Artery and vein"},
+      {char:"P",meaning:"Posterior = Internal iliac vessels + ureter (remember: ureter is POSTERIOR to ovary)"},
+      {char:"I",meaning:"Inferior = obturator nerve and vessels (I for Inferior Obturator)"}
+    ]
+  },
+  {
+    title:"3 Key Uterine Support Ligaments",
+    acronym:"PUT",
+    topic:"What holds the uterus up",
+    letters:[
+      {char:"P",meaning:"Pubocervical ligament — anterior support"},
+      {char:"U",meaning:"Uterosacral ligament — posterior support"},
+      {char:"T",meaning:"Transverse cervical (cardinal) ligament — lateral support (the strongest one)"}
+    ]
+  },
+  {
+    title:"Fallopian Tube Parts (medial → lateral)",
+    acronym:"IIAI",
+    topic:"4 segments of the tube",
+    letters:[
+      {char:"I",meaning:"Intramural — 1 cm, inside the uterine wall"},
+      {char:"I",meaning:"Isthmus — 2.5 cm, narrow, inguinal lymph drainage"},
+      {char:"A",meaning:"Ampulla — 5 cm, FERTILIZATION site"},
+      {char:"I",meaning:"Infundibulum — funnel with Fimbriae"}
+    ]
+  },
+  {
+    title:"Vestibule Orifice Order (anterior → posterior)",
+    acronym:"U-V-B",
+    topic:"What's in the vestibule",
+    letters:[
+      {char:"U",meaning:"Urethral orifice — most anterior"},
+      {char:"V",meaning:"Vaginal orifice — middle"},
+      {char:"B",meaning:"Bartholin gland orifices — most posterior (beside vaginal opening)"}
+    ]
+  },
+  {
+    title:"Lymph Drainage of Fundus vs Lower Uterus",
+    acronym:"FAIL",
+    topic:"Which nodes drain where",
+    letters:[
+      {char:"F",meaning:"Fundus → para-aortic (Follows ovarian artery up)"},
+      {char:"A",meaning:"Aortic (lateral aortic) nodes receive fundal lymph"},
+      {char:"I",meaning:"Internal and external Iliac nodes receive cervix/lower body"},
+      {char:"L",meaning:"Lower third vagina + vulva → inguinal Lymph nodes"}
+    ]
+  },
+  {
+    title:"Water Under the Bridge",
+    acronym:"WUB",
+    topic:"The most critical surgical relationship",
+    letters:[
+      {char:"W",meaning:"Water = Ureter (carries urine/water to bladder)"},
+      {char:"U",meaning:"Under = Ureter passes INFERIOR to the artery"},
+      {char:"B",meaning:"Bridge = Uterine artery (runs superior/anterior to ureter)"}
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────
+let state = {
+  quizIdx: 0,
+  quizScore: 0,
+  quizStreak: 0,
+  quizBestStreak: 0,
+  quizAnswered: new Array(QUESTIONS.length).fill(null),
+  quizDone: false,
+  fcReviewed: new Set(),
+  activeTab: 'overview'
+};
+
+function saveState() {
+  try { localStorage.setItem('frs_state', JSON.stringify({...state, fcReviewed: [...state.fcReviewed]})); } catch(e) {}
+}
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('frs_state') || '{}');
+    if (s.quizAnswered) state.quizAnswered = s.quizAnswered;
+    if (s.quizScore !== undefined) state.quizScore = s.quizScore;
+    if (s.quizIdx !== undefined) state.quizIdx = s.quizIdx;
+    if (s.quizStreak !== undefined) state.quizStreak = s.quizStreak;
+    if (s.quizDone !== undefined) state.quizDone = s.quizDone;
+    if (s.fcReviewed) state.fcReviewed = new Set(s.fcReviewed);
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────────────────────
+// TAB NAVIGATION
+// ─────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const tabOrder = ['overview','quiz','flashcards','cases','anatomy','mnemonics','tables'];
+  btns[tabOrder.indexOf(name)].classList.add('active');
+  state.activeTab = name;
+  saveState();
+  updateStats();
+  if (name === 'quiz') renderQuiz();
+  if (name === 'flashcards') renderFlashcards();
+  if (name === 'cases') renderCases();
+  if (name === 'anatomy') renderAnatomy();
+  if (name === 'mnemonics') renderMnemonics();
+}
+
+// ─────────────────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────────────────
+function updateStats() {
+  const answered = state.quizAnswered.filter(x=>x!==null).length;
+  const correct = state.quizAnswered.filter(x=>x===true).length;
+  document.getElementById('statQuiz').textContent = correct + '/' + QUESTIONS.length;
+  document.getElementById('statFC').textContent = state.fcReviewed.size;
+  document.getElementById('statStreak').textContent = '🔥 ' + state.quizStreak;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  document.getElementById('statPct').textContent = pct + '%';
+}
+
+// ─────────────────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────────────────
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  if (state.quizDone) { renderScoreScreen(container); return; }
+  const idx = state.quizIdx;
+  const q = QUESTIONS[idx];
+  const letters = ['A','B','C','D','E'];
+  const pct = Math.round((idx / QUESTIONS.length) * 100);
+
+  container.innerHTML = `
+    <div class="quiz-meta">
+      <div>
+        <span style="font-size:0.8rem;color:var(--text-muted)">Question ${idx+1} of ${QUESTIONS.length}</span>
+        <div class="quiz-score">${state.quizScore} correct</div>
+      </div>
+      <div class="quiz-streak">${state.quizStreak > 1 ? '🔥 '+state.quizStreak+' streak!' : ''}</div>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
+    <div class="question-card">
+      <div class="question-num">Question ${idx+1}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options" id="optionsList">
+        ${q.opts.map((opt,i) => `
+          <button class="option" onclick="selectAnswer(${i})" id="opt_${i}">
+            <span class="option-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation" id="explanation">
+        <strong>✅ Explanation:</strong> ${q.exp}
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-outline" onclick="skipQuestion()">Skip →</button>
+      <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">
+        ${idx === QUESTIONS.length-1 ? '🏁 See Results' : 'Next Question →'}
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(chosen) {
+  if (state.quizAnswered[state.quizIdx] !== null) return;
+  const q = QUESTIONS[state.quizIdx];
+  const correct = chosen === q.ans;
+  state.quizAnswered[state.quizIdx] = correct;
+  if (correct) {
+    state.quizScore++;
+    state.quizStreak++;
+  } else {
+    state.quizStreak = 0;
+  }
+
+  const opts = document.querySelectorAll('.option');
+  opts.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    opt.onclick = null;
+    if (i === q.ans) opt.classList.add('correct');
+    else if (i === chosen && !correct) opt.classList.add('wrong');
+  });
+
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('nextBtn').style.display = 'block';
+  updateStats();
+  saveState();
+}
+
+function nextQuestion() {
+  if (state.quizIdx >= QUESTIONS.length - 1) {
+    state.quizDone = true;
+    saveState();
+    renderScoreScreen(document.getElementById('quizContainer'));
+    return;
+  }
+  state.quizIdx++;
+  saveState();
+  renderQuiz();
+}
+
+function skipQuestion() {
+  if (state.quizAnswered[state.quizIdx] === null) {
+    state.quizAnswered[state.quizIdx] = false;
+    state.quizStreak = 0;
+  }
+  nextQuestion();
+}
+
+function renderScoreScreen(container) {
+  const score = state.quizScore;
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+  const ringClass = pct >= 80 ? 'good' : pct >= 60 ? 'ok' : 'low';
+  const msg = pct >= 80 ? '🎉 Excellent! You\'re ready for the exam!' : pct >= 60 ? '📚 Good work — review the missed questions.' : '💪 Keep studying — you\'ve got this!';
+  container.innerHTML = `
+    <div class="score-screen">
+      <div class="score-ring ${ringClass}">${pct}%</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.5rem">${score} / ${total} Correct</h2>
+      <p style="color:var(--text-dim);margin-bottom:2rem">${msg}</p>
+      <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right:1rem">🔄 Retake Quiz</button>
+    </div>
+  `;
+}
+
+function resetQuiz() {
+  state.quizIdx = 0;
+  state.quizScore = 0;
+  state.quizStreak = 0;
+  state.quizAnswered = new Array(QUESTIONS.length).fill(null);
+  state.quizDone = false;
+  saveState();
+  updateStats();
+  renderQuiz();
+}
+
+// ─────────────────────────────────────────────────────────
+// FLASHCARDS
+// ─────────────────────────────────────────────────────────
+function renderFlashcards() {
+  const grid = document.getElementById('flashcardGrid');
+  const catColors = {
+    'Ovary':'var(--accent)',
+    'Fallopian Tube':'var(--accent2)',
+    'Uterus':'var(--red)',
+    'Vagina':'var(--accent3)',
+    'Urethra':'var(--gold)',
+    'Clinical':'var(--accent4)'
+  };
+  grid.innerHTML = FLASHCARDS.map((fc, i) => `
+    <div class="flashcard ${state.fcReviewed.has(i) ? 'flipped' : ''}" onclick="flipCard(this, ${i})">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-category" style="color:${catColors[fc.cat]||'var(--accent)'}">${fc.cat}</div>
+          <p>${fc.q}</p>
+          <div class="flashcard-hint">Click to reveal ↓</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-category" style="color:${catColors[fc.cat]||'var(--accent)'}">Answer</div>
+          <p>${fc.a}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function flipCard(el, idx) {
+  el.classList.toggle('flipped');
+  if (el.classList.contains('flipped')) {
+    state.fcReviewed.add(idx);
+  } else {
+    state.fcReviewed.delete(idx);
+  }
+  document.getElementById('fcRevCount').textContent = state.fcReviewed.size;
+  updateStats();
+  saveState();
+}
+
+// ─────────────────────────────────────────────────────────
+// CASES
+// ─────────────────────────────────────────────────────────
+function renderCases() {
+  const container = document.getElementById('casesContainer');
+  container.innerHTML = CASES.map((c, ci) => `
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-num">Clinical Case ${c.num}</div>
+        <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:0.75rem">${c.title}</h3>
+        <div class="case-scenario">${c.scenario}</div>
+      </div>
+      <div class="case-body">
+        ${c.questions.map((q, qi) => `
+          <div class="case-question">
+            <div class="case-q-text">❓ ${q.q}</div>
+            <button class="reveal-btn" onclick="revealCaseAnswer(${ci},${qi})">Reveal Answer</button>
+            <div class="case-answer" id="case_${ci}_${qi}">${q.a.replace(/\n/g,'<br>')}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function revealCaseAnswer(ci, qi) {
+  const el = document.getElementById(`case_${ci}_${qi}`);
+  el.classList.toggle('show');
+  const btn = el.previousElementSibling;
+  btn.textContent = el.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+// ─────────────────────────────────────────────────────────
+// ANATOMY
+// ─────────────────────────────────────────────────────────
+function renderAnatomy() {
+  const grid = document.getElementById('structureGrid');
+  grid.innerHTML = STRUCTURES.map((s, i) => `
+    <div class="structure-item" onclick="showStructure(${i})" id="struct_${i}">
+      <h4>${s.emoji} ${s.name}</h4>
+      <p>${s.brief}</p>
+    </div>
+  `).join('');
+}
+
+function showStructure(i) {
+  document.querySelectorAll('.structure-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('struct_'+i).classList.add('active');
+  const s = STRUCTURES[i];
+  const detail = document.getElementById('structureDetail');
+  detail.classList.add('show');
+  detail.innerHTML = `
+    <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem">${s.emoji} ${s.name}</h3>
+    <div style="font-size:0.9rem;line-height:2;white-space:pre-line;color:var(--text-dim)">${s.detail}</div>
+  `;
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ─────────────────────────────────────────────────────────
+// MNEMONICS
+// ─────────────────────────────────────────────────────────
+function renderMnemonics() {
+  const container = document.getElementById('mnemonicsContainer');
+  container.innerHTML = MNEMONICS.map((m, i) => `
+    <div class="mnemonic-card">
+      <div class="mnemonic-header" onclick="toggleMnemonic(${i})">
+        <div>
+          <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.25rem">${m.topic}</div>
+          <div class="mnemonic-title">${m.title}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="mnemonic-acronym">${m.acronym}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">click to expand</div>
+        </div>
+      </div>
+      <div class="mnemonic-body" id="mn_${i}">
+        ${m.letters.map(l => `
+          <div class="mnemonic-letter">
+            <span class="letter-char">${l.char}</span>
+            <span style="font-size:0.9rem;line-height:1.5;color:var(--text-dim)">${l.meaning}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleMnemonic(i) {
+  document.getElementById('mn_'+i).classList.toggle('show');
+}
+
+// ─────────────────────────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────────────────────────
+const searchData = [
+  ...QUESTIONS.map(q => ({type:'Q', text: q.q + ' ' + q.exp, display: q.q, sub: q.exp.slice(0,100)+'...'})),
+  ...FLASHCARDS.map(fc => ({type:'FC', text: fc.q + ' ' + fc.a, display: fc.q, sub: fc.a.slice(0,100)+'...'})),
+  ...STRUCTURES.map(s => ({type:'Anatomy', text: s.name + ' ' + s.detail, display: s.name, sub: s.brief})),
+];
+
+function doSearch(val) {
+  const res = document.getElementById('searchResults');
+  if (!val.trim()) { res.style.display='none'; return; }
+  const q = val.toLowerCase();
+  const matches = searchData.filter(d => d.text.toLowerCase().includes(q)).slice(0,8);
+  if (!matches.length) { res.innerHTML='<div style="color:var(--text-muted);font-size:0.9rem;padding:1rem">No results found</div>'; res.style.display='block'; return; }
+  res.style.display='block';
+  res.innerHTML = `<div style="background:var(--card-bg);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+    ${matches.map(m => `<div style="padding:0.9rem 1.25rem;border-bottom:1px solid var(--border);cursor:default">
+      <span class="tag tag-purple" style="margin-bottom:0.3rem">${m.type}</span>
+      <div style="font-size:0.9rem;font-weight:500;margin:0.25rem 0">${m.display}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted)">${m.sub}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ─────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────
+loadState();
+updateStats();
+renderMnemonics();
+</script>
+</body>
+</html>

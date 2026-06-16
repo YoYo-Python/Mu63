@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedStudy — Male Reproduction & Pelvic Anatomy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Libre+Franklin:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0d14;
+  --bg2: #0f1420;
+  --bg3: #151c2e;
+  --surface: #1a2240;
+  --surface2: #1e2a4a;
+  --border: #2a3a60;
+  --cyan: #00d4e8;
+  --cyan2: #00a8c0;
+  --gold: #f0c040;
+  --rose: #ff6b8a;
+  --green: #40d990;
+  --purple: #a78bfa;
+  --text: #e8eaf2;
+  --text2: #8a9bbf;
+  --text3: #4a5880;
+  --card-r: 14px;
+  --shadow: 0 4px 32px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Libre Franklin',sans-serif;
+  font-weight:300;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── ANIMATED BG ── */
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,232,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,232,.03) 1px, transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;z-index:0;
+}
+.bg-orb{
+  position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;
+  animation:drift 14s ease-in-out infinite alternate;
+}
+.bg-orb1{width:520px;height:520px;background:radial-gradient(circle,rgba(0,212,232,.07),transparent);top:-160px;right:-160px;}
+.bg-orb2{width:420px;height:420px;background:radial-gradient(circle,rgba(167,139,250,.07),transparent);bottom:-100px;left:-100px;animation-delay:-7s;}
+@keyframes drift{from{transform:translate(0,0);}to{transform:translate(30px,30px);}}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,13,20,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;gap:16px;
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;font-weight:700;
+  color:var(--cyan);white-space:nowrap;
+}
+.logo span{color:var(--text2);font-size:.75rem;display:block;font-family:'JetBrains Mono',monospace;letter-spacing:.08em;}
+.stats-bar{
+  display:flex;gap:16px;align-items:center;
+}
+.stat-pill{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:50px;padding:4px 14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;color:var(--text2);
+  display:flex;align-items:center;gap:6px;
+}
+.stat-pill .val{color:var(--cyan);font-size:.85rem;font-weight:600;}
+
+/* ── NAV TABS ── */
+.nav-wrap{
+  max-width:1200px;margin:0 auto;
+  position:sticky;top:64px;z-index:99;
+  background:rgba(10,13,20,.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+}
+.nav-tabs{
+  display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;
+  padding:8px 0;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  background:none;border:none;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.06em;
+  color:var(--text3);
+  padding:8px 16px;border-radius:8px;
+  white-space:nowrap;
+  transition:all .2s;
+  border:1px solid transparent;
+}
+.tab-btn:hover{color:var(--text2);background:var(--surface);}
+.tab-btn.active{
+  color:var(--cyan);background:var(--surface2);
+  border-color:var(--border);
+}
+
+/* ── MAIN ── */
+main{
+  max-width:1200px;margin:0 auto;
+  padding:32px 24px 80px;
+  position:relative;z-index:1;
+}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeUp .3s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── TYPOGRAPHY ── */
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;font-weight:900;
+  color:var(--text);margin-bottom:8px;
+}
+.section-sub{color:var(--text2);font-size:.85rem;margin-bottom:32px;}
+h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:12px;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* ── CARDS ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--card-r);
+  padding:24px;
+  transition:border-color .2s,transform .2s;
+}
+.card:hover{border-color:var(--cyan2);transform:translateY(-2px);}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+
+/* ── TAGS ── */
+.tag{
+  display:inline-block;
+  padding:2px 10px;border-radius:50px;
+  font-size:.65rem;font-family:'JetBrains Mono',monospace;
+  letter-spacing:.05em;font-weight:600;
+}
+.tag-exam{background:rgba(240,192,64,.15);color:var(--gold);border:1px solid rgba(240,192,64,.3);}
+.tag-key{background:rgba(0,212,232,.12);color:var(--cyan);border:1px solid rgba(0,212,232,.25);}
+.tag-warn{background:rgba(255,107,138,.12);color:var(--rose);border:1px solid rgba(255,107,138,.25);}
+.tag-green{background:rgba(64,217,144,.12);color:var(--green);border:1px solid rgba(64,217,144,.25);}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;margin-bottom:24px;}
+.search-wrap input{
+  width:100%;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px 12px 44px;
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;
+  outline:none;transition:border-color .2s;
+}
+.search-wrap input:focus{border-color:var(--cyan);}
+.search-wrap::before{
+  content:'⌕';position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--text3);font-size:1.2rem;pointer-events:none;
+}
+
+/* ── OVERVIEW ── */
+.concept-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:20px;
+  border-left:3px solid var(--cyan);
+}
+.concept-card .cc-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;letter-spacing:.1em;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:8px;
+}
+.concept-card p{font-size:.85rem;line-height:1.7;color:var(--text2);}
+.concept-card .cc-tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;}
+
+.timeline{position:relative;padding-left:28px;margin:24px 0;}
+.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:20px;}
+.tl-dot{
+  position:absolute;left:-28px;top:4px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--cyan);border:2px solid var(--bg);
+  box-shadow:0 0 0 3px rgba(0,212,232,.2);
+}
+.tl-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.08em;margin-bottom:2px;}
+.tl-content{font-size:.82rem;color:var(--text2);line-height:1.6;}
+
+/* ── QUIZ ── */
+.quiz-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
+}
+.quiz-progress-bar{
+  background:var(--surface);border-radius:50px;height:6px;
+  margin-bottom:24px;overflow:hidden;
+}
+.quiz-progress-fill{
+  height:100%;border-radius:50px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transition:width .4s ease;
+}
+.question-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:28px;margin-bottom:20px;
+}
+.q-number{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--text3);letter-spacing:.1em;margin-bottom:12px;
+}
+.q-stem{font-size:.95rem;line-height:1.7;margin-bottom:20px;color:var(--text);}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;
+  text-align:left;cursor:pointer;
+  font-family:'Libre Franklin',sans-serif;font-size:.85rem;
+  color:var(--text2);transition:all .2s;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.option-btn:hover{background:var(--surface2);border-color:var(--cyan2);color:var(--text);}
+.option-btn.correct{background:rgba(64,217,144,.12);border-color:var(--green);color:var(--green);animation:pulse-green .4s ease;}
+.option-btn.wrong{background:rgba(255,107,138,.12);border-color:var(--rose);color:var(--rose);animation:shake .3s ease;}
+.option-btn.dimmed{opacity:.4;}
+.option-letter{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;
+  background:var(--surface);border-radius:5px;
+  padding:2px 7px;flex-shrink:0;margin-top:1px;
+}
+@keyframes pulse-green{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+@keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}100%{transform:translateX(0);}}
+.explanation{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:16px;margin-top:14px;
+  font-size:.82rem;color:var(--text2);line-height:1.7;
+  animation:fadeUp .2s ease;
+}
+.explanation .correct-label{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;margin-bottom:6px;}
+.nav-btns{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 20px;
+  cursor:pointer;font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;letter-spacing:.06em;
+  color:var(--text2);transition:all .2s;
+}
+.btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-primary{background:var(--cyan);border-color:var(--cyan);color:var(--bg);font-weight:600;}
+.btn-primary:hover{background:var(--cyan2);border-color:var(--cyan2);color:var(--bg);}
+
+/* ── FLASHCARDS ── */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.flashcard{perspective:800px;height:180px;cursor:pointer;}
+.fc-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .5s ease;
+  border-radius:var(--card-r);
+}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{
+  position:absolute;inset:0;
+  border-radius:var(--card-r);
+  backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:24px;
+}
+.fc-front{
+  background:var(--surface);
+  border:1px solid var(--border);
+}
+.fc-back{
+  background:linear-gradient(135deg,var(--bg3),var(--surface2));
+  border:1px solid var(--cyan2);
+  transform:rotateY(180deg);
+}
+.fc-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.1em;color:var(--text3);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.fc-text{font-size:.88rem;line-height:1.6;color:var(--text);}
+.fc-hint{font-size:.7rem;color:var(--text3);margin-top:10px;font-style:italic;}
+.fc-answer{font-size:.82rem;line-height:1.65;color:var(--cyan);}
+
+/* ── CLINICAL CASES ── */
+.case-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:28px;margin-bottom:24px;
+}
+.case-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:16px;flex-wrap:wrap;gap:10px;
+}
+.case-number{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--text3);letter-spacing:.12em;
+}
+.case-vignette{
+  background:var(--bg3);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:16px;
+  font-size:.88rem;line-height:1.75;color:var(--text);
+  margin-bottom:20px;
+}
+.case-questions{display:flex;flex-direction:column;gap:14px;}
+.case-q{font-size:.88rem;color:var(--text2);padding-left:12px;border-left:2px solid var(--border);}
+.reveal-btn{
+  margin-top:16px;
+  background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);
+  border-radius:8px;padding:10px 20px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--purple);letter-spacing:.06em;
+  transition:all .2s;width:fit-content;
+}
+.reveal-btn:hover{background:rgba(167,139,250,.22);border-color:var(--purple);}
+.case-answer{
+  display:none;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin-top:14px;
+  animation:fadeUp .3s ease;
+}
+.case-answer.shown{display:block;}
+.case-answer .ans-step{
+  display:flex;gap:12px;margin-bottom:12px;
+  font-size:.82rem;color:var(--text2);line-height:1.65;
+}
+.ans-num{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  background:var(--cyan);color:var(--bg);
+  border-radius:50%;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
+}
+
+/* ── ANATOMY TAB ── */
+.anatomy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:32px;}
+.anat-item{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:18px;cursor:pointer;
+  transition:all .2s;
+}
+.anat-item:hover{border-color:var(--cyan);background:var(--surface2);}
+.anat-item.selected{border-color:var(--cyan);background:var(--surface2);}
+.anat-icon{font-size:1.6rem;margin-bottom:8px;}
+.anat-name{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.06em;margin-bottom:4px;}
+.anat-brief{font-size:.78rem;color:var(--text3);}
+.anat-detail{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:24px;
+  animation:fadeUp .25s ease;
+}
+.flow-chart{display:flex;flex-wrap:wrap;gap:0;align-items:center;margin:24px 0;}
+.flow-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 18px;
+  font-size:.8rem;text-align:center;flex:0 0 auto;
+}
+.flow-arrow{color:var(--cyan);font-size:1.4rem;padding:0 8px;flex:0 0 auto;}
+
+/* ── TREATMENT / DIAGNOSIS ── */
+.dx-algo{display:flex;flex-direction:column;gap:0;}
+.algo-step{
+  display:flex;gap:0;
+}
+.algo-step-content{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px 20px;flex:1;margin-bottom:0;
+}
+.algo-connector{
+  width:2px;background:var(--border);
+  margin:0 auto;height:24px;
+}
+.treat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.treat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:20px;
+  border-top:3px solid;
+}
+.treat-card.urgent{border-top-color:var(--rose);}
+.treat-card.secondary{border-top-color:var(--gold);}
+.treat-card.standard{border-top-color:var(--green);}
+.treat-card .tc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;margin-bottom:10px;}
+.treat-card.urgent .tc-title{color:var(--rose);}
+.treat-card.secondary .tc-title{color:var(--gold);}
+.treat-card.standard .tc-title{color:var(--green);}
+.treat-item{font-size:.82rem;color:var(--text2);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.treat-item:last-child{border-bottom:none;}
+
+/* ── MNEMONICS ── */
+.mnem-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--card-r);padding:24px;
+}
+.mnem-title{
+  font-family:'Playfair Display',serif;font-size:1.4rem;
+  color:var(--gold);margin-bottom:6px;
+}
+.mnem-acronym{
+  font-family:'JetBrains Mono',monospace;font-size:2rem;
+  color:var(--cyan);letter-spacing:.15em;margin-bottom:16px;
+}
+.mnem-list{list-style:none;}
+.mnem-list li{
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:.85rem;color:var(--text2);
+  display:flex;gap:12px;align-items:flex-start;
+}
+.mnem-letter{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.1rem;color:var(--gold);
+  font-weight:600;flex-shrink:0;width:24px;
+}
+.mnem-expand{margin-top:12px;font-size:.8rem;color:var(--text3);font-style:italic;}
+
+/* ── SCORE MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.8);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;display:none;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:20px;padding:40px;
+  max-width:400px;width:90%;text-align:center;
+  animation:fadeUp .3s ease;
+}
+.modal-score{
+  font-family:'Playfair Display',serif;
+  font-size:4rem;color:var(--cyan);
+  line-height:1;margin:16px 0;
+}
+.modal-grade{font-size:1.1rem;color:var(--text2);margin-bottom:24px;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.data-table th{
+  background:var(--surface2);color:var(--cyan);
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.08em;text-align:left;
+  padding:12px 16px;border-bottom:1px solid var(--border);
+}
+.data-table td{
+  padding:10px 16px;border-bottom:1px solid rgba(42,58,96,.5);
+  color:var(--text2);vertical-align:top;
+}
+.data-table tr:hover td{background:var(--surface2);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  .header-inner{gap:8px;}
+  .stats-bar{gap:8px;}
+  .stat-pill{padding:3px 10px;}
+  main{padding:20px 16px 80px;}
+  .section-title{font-size:1.4rem;}
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb1"></div>
+<div class="bg-orb bg-orb2"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      MedStudy
+      <span>Male Reproduction &amp; Pelvic Anatomy · Mansoura FM</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill">Score <span class="val" id="hdr-score">0</span></div>
+      <div class="stat-pill">🔥 <span class="val" id="hdr-streak">0</span></div>
+      <div class="stat-pill">✅ <span class="val" id="hdr-progress">0%</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS NAV -->
+<div class="nav-wrap">
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="overview">📚 Overview</button>
+    <button class="tab-btn" data-tab="quiz">🧠 Quiz</button>
+    <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+    <button class="tab-btn" data-tab="cases">🏥 Clinical Cases</button>
+    <button class="tab-btn" data-tab="anatomy">🔬 Anatomy</button>
+    <button class="tab-btn" data-tab="diagnosis">🔍 Diagnosis</button>
+    <button class="tab-btn" data-tab="treatment">💊 Treatment</button>
+    <button class="tab-btn" data-tab="mnemonics">🧩 Mnemonics</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<div class="tab-panel active" id="tab-overview">
+  <h2 class="section-title">Topic Overview</h2>
+  <p class="section-sub">Male Reproductive System &amp; Pelvic Floor — High-Yield Concepts</p>
+
+  <div class="search-wrap">
+    <input type="text" id="overview-search" placeholder="Search concepts, terms, exam flags..." oninput="filterOverview(this.value)"/>
+  </div>
+
+  <div style="margin-bottom:28px;">
+    <h3>Spermatogenesis Timeline</h3>
+    <div class="timeline" id="overview-timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--purple)"></div>
+        <div class="tl-label">WEEK 7–9</div>
+        <div class="tl-content">Y chromosome activates Sertoli cells → secrete <strong>H-Y antigen</strong> → induces testicular differentiation. Leydig cells appear and begin secreting <strong>testosterone</strong> under HCG influence.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-label">FETAL MONTHS 7–9</div>
+        <div class="tl-content">Testosterone-driven <strong>descent of testes</strong> from abdomen to scrotum. Premature birth before this window → cryptorchidism.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--gold)"></div>
+        <div class="tl-label">PUBERTY</div>
+        <div class="tl-content">Hypothalamus → <strong>GnRH</strong> → Anterior pituitary → LH targets Leydig cells, FSH targets Sertoli cells. Spermatogenesis begins in earnest. Testosterone causes epiphyseal closure and secondary sex characteristics.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--green)"></div>
+        <div class="tl-label">ADULT</div>
+        <div class="tl-content">~120 million sperm/day produced. Spermatogonia → primary spermatocyte → secondary spermatocyte → spermatids → spermatozoa (spermiogenesis). Sperm matured in epididymis, stored in <strong>vas deferens</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Key Concept Cards</h3>
+  <div class="grid-2" id="overview-cards">
+
+    <div class="concept-card" data-search="sertoli fsh blood testis barrier h-y antigen spermiogenesis">
+      <div class="cc-title">Sertoli Cells</div>
+      <p>Large pyramidal cells on basal lamina of seminiferous tubules. Form <em>tight junctions</em> creating the blood-testis barrier. Provide nutrition, mechanical support, and remove excess cytoplasm during spermiogenesis. Secrete inhibin to suppress FSH via negative feedback.</p>
+      <div class="cc-tags">
+        <span class="tag tag-key">FSH-regulated</span>
+        <span class="tag tag-exam">⚠️ Blood-Testis Barrier</span>
+        <span class="tag tag-green">H-Y Antigen Source</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="leydig testosterone hcg lh interstitial spermatogenesis descent">
+      <div class="cc-title">Leydig Cells</div>
+      <p>Interstitial cells between seminiferous tubules. Secrete <em>testosterone</em>. Stimulated by HCG in fetal life, LH at puberty. Essential for secondary sex organs, descent of testes, and driving spermatogenesis via androgen support of spermatogonia division.</p>
+      <div class="cc-tags">
+        <span class="tag tag-exam">⚠️ LH Target</span>
+        <span class="tag tag-key">Testosterone Source</span>
+        <span class="tag tag-warn">HCG → LH switch</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="levator ani muscle pelvic floor sling sphincter puborectalis pubococcygeus">
+      <div class="cc-title">Levator Ani Muscle</div>
+      <p>Major pelvic diaphragm. Three fiber groups: <em>anterior (pubococcygeus)</em> — elevates prostate/vagina, forms sphincter vaginae; <em>intermediate (puborectalis)</em> — sling at anorectal junction; <em>posterior (iliococcygeus)</em> — attaches to coccyx. Injury → uterine prolapse.</p>
+      <div class="cc-tags">
+        <span class="tag tag-exam">⚠️ Always in Exam</span>
+        <span class="tag tag-warn">Episiotomy Risk</span>
+        <span class="tag tag-key">4th Sacral Nerve</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="internal iliac artery anterior posterior division superior gluteal middle rectal uterine pudendal">
+      <div class="cc-title">Internal Iliac Artery Divisions</div>
+      <p><em>Posterior division:</em> Superior gluteal, iliolumbar, lateral sacral ("صالح لازم يصلي"). <em>Anterior division:</em> Obturator, internal pudendal, inferior gluteal, middle rectal, superior vesical, inferior vesical (♂) / vaginal (♀), uterine. <strong>Middle rectal</strong> is a favorite MCQ distractor!</p>
+      <div class="cc-tags">
+        <span class="tag tag-exam">⚠️ Always in Exam</span>
+        <span class="tag tag-warn">⭕ Middle Rectal</span>
+        <span class="tag tag-key">Anterior vs Posterior</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="temperature spermatogenesis dartos pampiniform 33 35 scrotal">
+      <div class="cc-title">Temperature Regulation of Testes</div>
+      <p>Spermatogenesis requires <em>33–35°C</em> (2–4°C below core). Maintained by: scrotal location away from body heat, thin fat-free scrotal skin for radiation, pampiniform plexus (countercurrent heat exchange with testicular artery), and dartos muscle (contracts in cold, relaxes in heat).</p>
+      <div class="cc-tags">
+        <span class="tag tag-key">33–35°C Optimal</span>
+        <span class="tag tag-exam">Pampiniform Plexus</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="cryptorchidism undescended testis premature birth testosterone">
+      <div class="cc-title">Cryptorchidism</div>
+      <p>Undescended testes. Most common cause: <em>premature birth</em> (testes descend in final 2–3 months of gestation under testosterone drive). Management: HCG hormonal therapy to stimulate testosterone, then surgical orchidopexy. Risk if untreated: infertility, malignancy.</p>
+      <div class="cc-tags">
+        <span class="tag tag-exam">⚠️ Most Common Cause = Prematurity</span>
+        <span class="tag tag-warn">Infertility Risk</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="sacral plexus L4 L5 S1 S2 S3 S4 lumbosacral trunk formation">
+      <div class="cc-title">Sacral Plexus Formation</div>
+      <p>Formed by ventral rami of <em>L4, L5, S1, S2, S3, S4</em>. L4+L5 = lumbosacral trunk. Dorsal surface branches: superior gluteal, inferior gluteal, nerve to piriformis. Ventral surface branches: nerve to obturator internus, quadratus femoris. Terminal: sciatic, pudendal nerves.</p>
+      <div class="cc-tags">
+        <span class="tag tag-key">L4–S4</span>
+        <span class="tag tag-exam">Lumbosacral Trunk</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="spermiogenesis spermatids transformation acrosome flagellum excess cytoplasm">
+      <div class="cc-title">Spermiogenesis</div>
+      <p>Transformation of haploid <em>spermatids</em> into spermatozoa. Sertoli cells remove excess cytoplasm. Key changes: acrosome cap forms (contains hydrolytic enzymes for zona pellucida penetration), flagellum develops, mitochondria spiral around midpiece, nucleus condenses. Motility acquired in epididymis.</p>
+      <div class="cc-tags">
+        <span class="tag tag-key">Sertoli removes cytoplasm</span>
+        <span class="tag tag-green">Haploid stage</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="ganglion impar sympathetic trunk pelvis union sacral">
+      <div class="cc-title">Ganglion Impar</div>
+      <p>The two sympathetic trunks descend medial to anterior sacral foramina and <em>unite inferiorly</em> to form the unpaired ganglion impar (also called ganglion of Walther). This is the terminal ganglion of the sympathetic chain. Common exam question in pelvis neuroscience.</p>
+      <div class="cc-tags">
+        <span class="tag tag-exam">Exam Favourite</span>
+        <span class="tag tag-key">Terminal Sympathetic</span>
+      </div>
+    </div>
+
+    <div class="concept-card" data-search="epididymis sperm maturation motility storage vas deferens">
+      <div class="cc-title">Sperm Storage &amp; Maturation</div>
+      <p>Sperm are produced in <em>seminiferous tubules</em>, travel through rete testis → epididymis (primary maturation site, ~12 days) → vas deferens (primary <em>storage</em> site). Sperm acquire forward motility during epididymal transit. Vasectomy interrupts vas deferens.</p>
+      <div class="cc-tags">
+        <span class="tag tag-key">Epididymis = Maturation</span>
+        <span class="tag tag-exam">Vas Deferens = Storage</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:32px;">
+    <h3 style="margin-bottom:16px;">⚠️ High-Yield Exam Flags</h3>
+    <div class="grid-3">
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">CRYPTORCHIDISM</div>
+        <p style="font-size:.82rem;color:var(--text2);">Most common cause = premature birth. Treatment = HCG then surgery.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">LEVATOR ANI</div>
+        <p style="font-size:.82rem;color:var(--text2);">فيش امتحان ياخده منه — No exam exists without it. Pelvic surface = 4th sacral nerve.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">MIDDLE RECTAL</div>
+        <p style="font-size:.82rem;color:var(--text2);">⭕ Circle this word. It is a branch of the <em>anterior division</em> of internal iliac, NOT internal pudendal.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">INTERNAL ILIAC DIVISION</div>
+        <p style="font-size:.82rem;color:var(--text2);">التقسيمه دي مافيش امتحان ياخده منه — Always examined. Memorize both divisions.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">LEYDIG CELLS TIMELINE</div>
+        <p style="font-size:.82rem;color:var(--text2);">Appear and secrete testosterone at 7–9 weeks. HCG controls in fetus, LH at puberty.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;">VITAMIN C → TESTOSTERONE</div>
+        <p style="font-size:.82rem;color:var(--text2);">Vitamin C specifically depresses testosterone synthesis. Vit A → keratinization. Vit E → tubular degeneration.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ QUIZ ════════════════ -->
+<div class="tab-panel" id="tab-quiz">
+  <h2 class="section-title">Quiz Mode</h2>
+  <p class="section-sub">25 MCQs from lecture content — get immediate feedback</p>
+
+  <div class="quiz-header">
+    <div>
+      <span class="mono" style="font-size:.8rem;color:var(--text2);">Question <span id="q-current">1</span> / <span id="q-total">25</span></span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span class="stat-pill">Score <span class="val" id="q-score-disp">0</span></span>
+      <span class="stat-pill">🔥 <span class="val" id="q-streak-disp">0</span></span>
+    </div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="quiz-progress" style="width:4%"></div>
+  </div>
+
+  <div id="question-container"></div>
+
+  <div class="nav-btns" id="quiz-nav" style="display:none;">
+    <button class="btn" id="prev-btn" onclick="quizNav(-1)">← Prev</button>
+    <button class="btn btn-primary" id="next-btn" onclick="quizNav(1)">Next →</button>
+  </div>
+
+  <div id="quiz-complete" style="display:none;">
+    <div class="card" style="text-align:center;padding:40px;">
+      <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:8px;">Quiz Complete!</h3>
+      <div id="final-score" style="font-size:1rem;color:var(--text2);margin-bottom:24px;"></div>
+      <button class="btn btn-primary" onclick="resetQuiz()">🔄 Retake Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ FLASHCARDS ════════════════ -->
+<div class="tab-panel" id="tab-flashcards">
+  <h2 class="section-title">Flashcards</h2>
+  <p class="section-sub">Click any card to flip and reveal the answer</p>
+  <div class="fc-grid" id="fc-grid"></div>
+</div>
+
+<!-- ════════════════ CLINICAL CASES ════════════════ -->
+<div class="tab-panel" id="tab-cases">
+  <h2 class="section-title">Clinical Cases</h2>
+  <p class="section-sub">Exam-style vignettes — reveal answers when ready</p>
+  <div id="cases-container"></div>
+</div>
+
+<!-- ════════════════ ANATOMY ════════════════ -->
+<div class="tab-panel" id="tab-anatomy">
+  <h2 class="section-title">Anatomy &amp; Pathophysiology</h2>
+  <p class="section-sub">Click a structure to explore in detail</p>
+
+  <div class="anatomy-grid" id="anat-grid"></div>
+  <div id="anat-detail" class="anat-detail" style="display:none;margin-bottom:32px;"></div>
+
+  <h3 style="margin-bottom:16px;">Hypothalamic-Pituitary-Testicular Axis</h3>
+  <div class="flow-chart" style="flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px;">
+    <div class="flow-box" style="border-color:var(--purple);color:var(--purple);">Hypothalamus<br><small>GnRH (pulsatile)</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-box" style="border-color:var(--cyan);color:var(--cyan);">Anterior Pituitary<br><small>LH + FSH</small></div>
+    <div class="flow-arrow">↙ ↘</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;max-width:600px;">
+    <div class="flow-box" style="border-color:var(--gold);color:var(--gold);">LH → Leydig Cells<br><small>→ Testosterone</small></div>
+    <div class="flow-box" style="border-color:var(--green);color:var(--green);">FSH → Sertoli Cells<br><small>→ Support spermatogenesis</small></div>
+  </div>
+  <div class="flow-chart">
+    <div class="flow-box" style="border-color:var(--rose);color:var(--rose);">Testosterone &amp; Inhibin<br><small>← Negative Feedback →</small></div>
+    <div class="flow-arrow">↑</div>
+    <div class="flow-box">Suppresses GnRH/LH/FSH<br><small>Inhibin specifically suppresses FSH</small></div>
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:16px;">Spermatogenesis Steps</h3>
+  <div style="overflow-x:auto;padding-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:4px;min-width:700px;">
+      <div class="flow-box" style="border-color:var(--purple);">Type A<br>Spermatogonia<br><small>2n (diploid)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Primary<br>Spermatocyte<br><small>2n</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--gold);">Secondary<br>Spermatocyte<br><small>n (haploid)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Spermatids<br><small>n</small></div>
+      <div class="flow-arrow">→<br><small>spermiogenesis</small></div>
+      <div class="flow-box" style="border-color:var(--green);">Spermatozoa<br><small>n — mature</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DIAGNOSIS ════════════════ -->
+<div class="tab-panel" id="tab-diagnosis">
+  <h2 class="section-title">Diagnostic Approach</h2>
+  <p class="section-sub">Hormonal profiling and differentiating hypogonadism types</p>
+
+  <h3 style="margin-bottom:16px;">Hormone Panel Interpretation</h3>
+  <div style="overflow-x:auto;margin-bottom:32px;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Condition</th>
+          <th>GnRH</th>
+          <th>LH / FSH</th>
+          <th>Testosterone</th>
+          <th>Diagnosis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-exam">Primary Hypogonadism</span></td>
+          <td style="color:var(--green);">Normal / ↑</td>
+          <td style="color:var(--rose);">↑ (compensatory)</td>
+          <td style="color:var(--rose);">↓</td>
+          <td>Testicular failure (e.g., mumps orchitis, radiation)</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-warn">Secondary Hypogonadism</span></td>
+          <td style="color:var(--rose);">↓ or normal</td>
+          <td style="color:var(--rose);">↓</td>
+          <td style="color:var(--rose);">↓</td>
+          <td>Pituitary/hypothalamic failure (long-case scenario)</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-key">Excess Estrogen</span></td>
+          <td style="color:var(--rose);">↓ (feedback)</td>
+          <td style="color:var(--rose);">↓ FSH &amp; LH</td>
+          <td style="color:var(--rose);">↓</td>
+          <td>Exogenous estrogen; inhibited axis</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">Normal</span></td>
+          <td style="color:var(--green);">Pulsatile</td>
+          <td style="color:var(--green);">Normal</td>
+          <td style="color:var(--green);">Normal</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:16px;">Diagnostic Algorithm — Male Infertility</h3>
+  <div class="dx-algo">
+    <div class="algo-step-content" style="border-left:3px solid var(--cyan);">
+      <strong style="color:var(--cyan);">Step 1:</strong> Semen analysis → Count, motility, morphology
+    </div>
+    <div class="algo-connector"></div>
+    <div class="algo-step-content" style="border-left:3px solid var(--cyan);">
+      <strong style="color:var(--cyan);">Step 2:</strong> Hormone panel — FSH, LH, Testosterone, Prolactin
+    </div>
+    <div class="algo-connector"></div>
+    <div class="algo-step-content" style="border-left:3px solid var(--gold);">
+      <strong style="color:var(--gold);">Step 3:</strong> If LH/FSH high + low T → Primary hypogonadism (testicular cause) → Testicular biopsy / ultrasound
+    </div>
+    <div class="algo-connector"></div>
+    <div class="algo-step-content" style="border-left:3px solid var(--purple);">
+      <strong style="color:var(--purple);">Step 4:</strong> If LH/FSH low + low T → Secondary hypogonadism (pituitary/hypothalamic) → MRI pituitary
+    </div>
+    <div class="algo-connector"></div>
+    <div class="algo-step-content" style="border-left:3px solid var(--green);">
+      <strong style="color:var(--green);">Step 5:</strong> Exclude extrinsic factors — fever, radiation, toxins, nutritional deficits (Vit A, C, E, B12)
+    </div>
+    <div class="algo-connector"></div>
+    <div class="algo-step-content" style="border-left:3px solid var(--rose);">
+      <strong style="color:var(--rose);">Step 6:</strong> Temperature-related? → Check for varicocele, cryptorchidism, occupation (hot environments)
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:16px;">Nutritional Factors &amp; Spermatogenesis</h3>
+  <div style="overflow-x:auto;">
+    <table class="data-table">
+      <thead>
+        <tr><th>Nutrient</th><th>Deficiency Effect</th><th>Mechanism</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong style="color:var(--cyan);">Vitamin A</strong></td><td style="color:var(--rose);">Keratinization &amp; atrophy of germinal epithelium</td><td>Impaired cellular differentiation</td></tr>
+        <tr><td><strong style="color:var(--cyan);">Vitamin C</strong></td><td style="color:var(--rose);">↓ Testosterone synthesis → ↓ spermatogenesis</td><td>Required for testosterone biosynthesis</td></tr>
+        <tr><td><strong style="color:var(--cyan);">Vitamin E</strong></td><td style="color:var(--rose);">Tubular degeneration</td><td>Anti-oxidant failure in germinal epithelium</td></tr>
+        <tr><td><strong style="color:var(--cyan);">Vitamin B12</strong></td><td style="color:var(--rose);">Impaired nucleic acid synthesis</td><td>Spermatogonia division halted</td></tr>
+        <tr><td><strong style="color:var(--cyan);">Starvation</strong></td><td style="color:var(--rose);">Global suppression of spermatogenesis</td><td>Hypogonadotropic state; energy deficiency</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ TREATMENT ════════════════ -->
+<div class="tab-panel" id="tab-treatment">
+  <h2 class="section-title">Management &amp; Treatment</h2>
+  <p class="section-sub">Reproductive &amp; pelvic disorder management</p>
+
+  <div class="treat-grid">
+    <div class="treat-card urgent">
+      <div class="tc-title">🔴 CRYPTORCHIDISM — URGENT</div>
+      <div class="treat-item">1st: HCG hormonal therapy (stimulates Leydig cells → testosterone → encourage descent)</div>
+      <div class="treat-item">2nd: Orchidopexy (surgical fixation) if unresponsive</div>
+      <div class="treat-item">Timing: Before age 2 to preserve fertility</div>
+      <div class="treat-item">Untreated risk: Infertility, testicular malignancy</div>
+    </div>
+
+    <div class="treat-card urgent">
+      <div class="tc-title">🔴 SECONDARY HYPOGONADISM</div>
+      <div class="treat-item">Exogenous testosterone replacement therapy</div>
+      <div class="treat-item">Or: Gonadotropin therapy (HCG + FSH) if fertility desired</div>
+      <div class="treat-item">Root cause: Identify pituitary/hypothalamic lesion (MRI)</div>
+      <div class="treat-item">No inherent compensatory mechanism exists</div>
+    </div>
+
+    <div class="treat-card secondary">
+      <div class="tc-title">🟡 UTERINE PROLAPSE (Levator Ani Injury)</div>
+      <div class="treat-item">Conservative: Pelvic floor exercises (Kegel)</div>
+      <div class="treat-item">Pessary ring for temporary support</div>
+      <div class="treat-item">Surgical: Anterior/posterior colporrhaphy</div>
+      <div class="treat-item">Prevention: Proper episiotomy repair; avoid over-widening</div>
+    </div>
+
+    <div class="treat-card secondary">
+      <div class="tc-title">🟡 TEMPERATURE-RELATED INFERTILITY</div>
+      <div class="treat-item">Remove extrinsic heat sources (tight clothing, hot baths)</div>
+      <div class="treat-item">Varicocele: Embolization or ligation</div>
+      <div class="treat-item">Cryptorchidism: See above</div>
+      <div class="treat-item">Recovery: Spermatogenesis recovers in ~3 months</div>
+    </div>
+
+    <div class="treat-card standard">
+      <div class="tc-title">🟢 NUTRITIONAL DEFICIENCY</div>
+      <div class="treat-item">Vitamin A supplementation → reverses germinal keratinization</div>
+      <div class="treat-item">Vitamin C supplementation → restores testosterone synthesis</div>
+      <div class="treat-item">Vitamin E → antioxidant protection of tubules</div>
+      <div class="treat-item">Balanced diet; correct starvation state</div>
+    </div>
+
+    <div class="treat-card standard">
+      <div class="tc-title">🟢 MUMPS ORCHITIS</div>
+      <div class="treat-item">Supportive care (bed rest, scrotal support, NSAIDs)</div>
+      <div class="treat-item">Corticosteroids in severe cases</div>
+      <div class="treat-item">Prevention: MMR vaccine (most effective approach)</div>
+      <div class="treat-item">Prognosis: If bilateral, risk of permanent infertility</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:16px;">Drug Comparison: Gonadotropin Therapy</h3>
+  <div style="overflow-x:auto;">
+    <table class="data-table">
+      <thead>
+        <tr><th>Agent</th><th>Target</th><th>Effect</th><th>Use Case</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>HCG</strong></td><td>Leydig cells (LH receptor)</td><td>↑ Testosterone</td><td>Cryptorchidism; secondary hypogonadism fertility</td></tr>
+        <tr><td><strong>FSH (recombinant)</strong></td><td>Sertoli cells</td><td>↑ Spermatogenesis support</td><td>Combined with HCG for fertility in hypogonadism</td></tr>
+        <tr><td><strong>GnRH analogues</strong></td><td>Anterior pituitary</td><td>Pulsatile → stimulates; continuous → suppresses</td><td>Infertility (pulsatile) or androgen ablation (continuous)</td></tr>
+        <tr><td><strong>Testosterone esters</strong></td><td>Androgen receptors</td><td>Secondary sex characteristics; epiphyseal closure</td><td>Replacement in hypogonadism (not fertility)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ MNEMONICS ════════════════ -->
+<div class="tab-panel" id="tab-mnemonics">
+  <h2 class="section-title">Mnemonics</h2>
+  <p class="section-sub">Memory aids crafted from the lecture content</p>
+  <div class="grid-2" id="mnem-container"></div>
+</div>
+
+</main>
+
+<!-- SCORE MODAL -->
+<div class="modal-overlay" id="score-modal">
+  <div class="modal">
+    <div style="font-size:2rem;">🏆</div>
+    <div class="modal-score" id="modal-score-val"></div>
+    <div class="modal-grade" id="modal-grade-msg"></div>
+    <button class="btn btn-primary" onclick="closeModal()">Continue Studying</button>
+  </div>
+</div>
+
+<script>
+// ════════════ DATA ════════════
+
+const QUIZ_DATA = [
+  {q:"The blood-testis barrier is formed by tight junctions of:",opts:["Leydig cells","Primordial germ cells","Sertoli cells","Primary spermatogonia","Spermatids"],ans:2,exp:"Tight junctions between the bases of Sertoli cells form the blood-testis barrier, protecting germ cells from noxious substances and autoimmune responses. Leydig cells are outside the tubules and do not form this barrier."},
+  {q:"The major trophic hormone for Sertoli cells is:",opts:["LH","FSH","ACTH","CRH","Inhibin"],ans:1,exp:"FSH maintains gametogenic epithelium and stimulates growth and secretion of Sertoli cells. LH targets Leydig cells. Inhibin is secreted BY Sertoli cells as a negative feedback signal."},
+  {q:"In the male fetus, secretion of testosterone is controlled by:",opts:["Inhibin","FSH","Relaxin","HCG","LH"],ans:3,exp:"Leydig cells secrete androgens in fetal life under the influence of human chorionic gonadotropin (HCG) from the placenta. LH takes over at puberty."},
+  {q:"Men castrated before puberty grow taller than normal because:",opts:["Growth hormone is massively increased","Estradiol levels rise","Testosterone absence delays epiphyseal plate union","Increased resistance to IGF-1","Androgen deposition of Ca++ increases"],ans:2,exp:"Testosterone normally causes epiphyses of long bones to unite (close). Without testosterone, this fusion is delayed, allowing continuous long-bone growth."},
+  {q:"The optimal temperature range for spermatogenesis is:",opts:["37°C","39°C","33–35°C","30°C","36.5°C"],ans:2,exp:"Spermatogenesis requires 33–35°C, maintained by the scrotal location, thin scrotal skin, pampiniform plexus countercurrent heat exchange, and dartos muscle action. Core body temp (37°C) is too hot."},
+  {q:"Which muscle forms a 'sling' around the anorectal junction to create a sphincter?",opts:["Pubococcygeus","Iliococcygeus","Obturator internus","Puborectalis","Piriformis"],ans:3,exp:"The intermediate fibers of levator ani (puborectalis) meet behind the anorectal junction forming a U-shaped sling/sphincter. Pubococcygeus elevates prostate/vagina anteriorly."},
+  {q:"The pelvic (superior) surface of the levator ani muscle is innervated by:",opts:["Inferior rectal nerve","Pudendal nerve","4th sacral nerve","Obturator nerve","Superior gluteal nerve"],ans:2,exp:"The pelvic (superior) surface is supplied by the 4th sacral nerve on its pelvic surface. The inferior rectal branch of pudendal nerve supplies the perineal (inferior) surface."},
+  {q:"The sacral plexus is formed by the ventral rami of:",opts:["L1–L4","L4, L5, S1, S2, S3, S4","S1–S5","L5, S1, S2","S2, S3, S4 only"],ans:1,exp:"The sacral plexus includes the lumbosacral trunk (L4+L5) and S1–S4. L4+L5 form the lumbosacral trunk descending into the pelvis to join sacral roots."},
+  {q:"Which is a branch from the POSTERIOR division of the internal iliac artery?",opts:["Obturator artery","Internal pudendal artery","Superior gluteal artery","Middle rectal artery","Uterine artery"],ans:2,exp:"Posterior division branches: Superior gluteal, iliolumbar, and lateral sacral ('صالح لازم يصلي'). All other options are from the anterior division."},
+  {q:"In females, the inferior vesical artery equivalent is replaced by the:",opts:["Uterine artery","Vaginal artery","Ovarian artery","Internal pudendal artery","Middle rectal artery"],ans:1,exp:"The inferior vesical artery supplies the vas deferens in males. In females this vessel is absent and replaced functionally by the vaginal artery."},
+  {q:"Which vitamin deficiency directly causes a decrease in testosterone synthesis?",opts:["Vitamin A","Vitamin B12","Folic acid","Vitamin C","Vitamin E"],ans:3,exp:"Vitamin C deficiency specifically depresses testosterone synthesis. Vitamin A causes keratinization and atrophy of germinal epithelium. Vitamin E causes tubular degeneration."},
+  {q:"The dartos muscle maintains testicular temperature by:",opts:["Secreting sweat","Contracting in cold, relaxing in heat","Exchanging heat via pampiniform plexus","Moving testes into abdomen","Synthesizing brown fat"],ans:1,exp:"The dartos muscle physically contracts in cold weather to conserve heat and relaxes in hot weather to allow heat dissipation. The pampiniform plexus handles countercurrent heat exchange, a separate mechanism."},
+  {q:"The H-Y antigen is synthesized and secreted by:",opts:["Leydig cells","Primordial germ cells","Sertoli cells","Fibroblasts","Anterior pituitary"],ans:2,exp:"Sertoli cells secrete H-Y antigen at the 7th week of gestation under Y chromosome control, inducing testicular differentiation from the indifferent gonad."},
+  {q:"The majority of sperm produced daily are primarily stored in the:",opts:["Seminiferous tubules","Rete testis","Epididymis","Vas deferens","Seminal vesicles"],ans:3,exp:"While the epididymis receives and matures sperm, most sperm are stored in the vas deferens. The epididymis is primarily the maturation site."},
+  {q:"During spermiogenesis, what primarily occurs?",opts:["Diploid spermatogonia divide into primary spermatocytes","Primary spermatocytes undergo meiosis I","Excess cytoplasm is removed from spermatids","Spermatozoa acquire motility","Sertoli cells secrete inhibin"],ans:2,exp:"Spermiogenesis is the physical transformation of spermatids into spermatozoa, involving acrosome cap formation, flagellum development, and removal of excess cytoplasm by Sertoli cells. Motility is acquired later in the epididymis."},
+  {q:"Hypogonadism caused by failure of the pituitary to secrete gonadotropins is classified as:",opts:["Primary hypogonadism","Secondary hypogonadism","Cryptorchidism","Testicular agenesis","Autoimmune orchitis"],ans:1,exp:"Secondary hypogonadism results from failure of pituitary or hypothalamic secretion of gonadotropins. Primary hypogonadism is due to intrinsic testicular disease."},
+  {q:"Which nerve branch arises from the DORSAL surface of the sacral plexus?",opts:["Nerve to quadratus femoris","Nerve to obturator internus","Superior gluteal nerve","Pudendal nerve","Pelvic splanchnic nerve"],ans:2,exp:"Dorsal surface branches supply the gluteal region, including the superior and inferior gluteal nerves and the nerve to piriformis. Quadratus femoris and obturator internus nerves arise from the ventral surface."},
+  {q:"The sympathetic trunks in the pelvis unite inferiorly to form the:",opts:["Superior hypogastric plexus","Inferior hypogastric plexus","Ganglion impar","Pelvic splanchnic nerves","Lumbosacral trunk"],ans:2,exp:"The two sympathetic trunks run medial to the anterior sacral foramina and unite at the coccyx to form the unpaired ganglion impar (ganglion of Walther)."},
+  {q:"Excessive administration of estrogens in a male would lead to:",opts:["Increased FSH and increased testosterone","Decreased FSH and decreased plasma testosterone","Increased LH and decreased testosterone","Hypertrophy of seminiferous tubules","Increased sperm motility"],ans:1,exp:"Excessive estrogen acts via negative feedback on the hypothalamo-pituitary axis, inhibiting GnRH, FSH, and LH secretion, thereby lowering plasma testosterone and suppressing spermatogenesis."},
+  {q:"The terminal branches of the internal pudendal artery include all EXCEPT:",opts:["Artery of the bulb","Deep artery of the penis","Dorsal artery of the penis","Middle rectal artery"],ans:3,exp:"The middle rectal artery is a direct visceral branch of the ANTERIOR division of the internal iliac artery, not a branch of the internal pudendal artery. Internal pudendal branches supply the perineum and penis."},
+  {q:"Which fibers of the levator ani act as a sphincter for the vagina?",opts:["Posterior fibers (Iliococcygeus)","Intermediate fibers (Puborectalis)","Anterior fibers (Pubococcygeus)","Coccygeus muscle","Obturator internus"],ans:2,exp:"The anterior fibers (pubococcygeus) meet in females to form the sphincter vaginae (and levator prostatae in males). Puborectalis forms the anorectal sling; iliococcygeus is purely supportive posteriorly."},
+  {q:"At what gestational age do Leydig cells begin to secrete testosterone?",opts:["2–3 weeks","4–6 weeks","7–9 weeks","12–14 weeks","6 months postnatal"],ans:2,exp:"Leydig cells appear and begin secreting testosterone under HCG influence at the 7th–9th week of gestation, coinciding with the critical window for male genital differentiation."},
+  {q:"Most common cause of undescended testis (cryptorchidism) is:",opts:["Testosterone deficiency","Androgen insensitivity","Premature birth","Absent gubernaculum","HCG deficiency"],ans:2,exp:"Premature birth is the most common cause of cryptorchidism because descent occurs in the final 2–3 months of gestation. A premature infant is born before this process completes."},
+  {q:"The anterior fibers of levator ani originate from:",opts:["Sacrum","Iliac crest","Back of pubis","Coccyx","Ischial tuberosity"],ans:2,exp:"Levator ani originates from the back of the pubis, the white line (fascia of obturator internus), and the ischial spine. These three points form the origin along the pelvic sidewall."},
+  {q:"Inhibin secreted by Sertoli cells primarily suppresses which hormone?",opts:["LH","GnRH","Testosterone","FSH","HCG"],ans:3,exp:"Inhibin selectively suppresses FSH from the anterior pituitary via negative feedback. This is a key regulation mechanism — Sertoli cells monitor their own stimulation and reduce FSH when spermatogenic activity is adequate."}
+];
+
+const FLASHCARD_DATA = [
+  {q:"What cells form the blood-testis barrier?",a:"Sertoli cells — via tight junctions at their bases on the basal lamina of seminiferous tubules."},
+  {q:"Which hormone stimulates Leydig cells in fetal life?",a:"HCG (human chorionic gonadotropin) from the placenta. At puberty, LH takes over this role."},
+  {q:"What is the optimal temperature for spermatogenesis?",a:"33–35°C, maintained 2–4°C below core body temperature by the scrotum, pampiniform plexus, and dartos muscle."},
+  {q:"Name the three fiber groups of levator ani and their functions.",a:"Anterior (pubococcygeus): sphincter vaginae/levator prostatae. Intermediate (puborectalis): anorectal sling. Posterior (iliococcygeus): coccyx attachment, general support."},
+  {q:"What does the pampiniform plexus do?",a:"Countercurrent heat exchange — venous blood from the testis cools the arterial blood in the testicular artery, keeping testicular temperature at 33–35°C."},
+  {q:"Which vitamin deficiency causes keratinization of germinal epithelium?",a:"Vitamin A deficiency causes keratinization and atrophy of the spermatogenic epithelium."},
+  {q:"What is spermiogenesis?",a:"The transformation of haploid spermatids into spermatozoa. Involves acrosome formation, flagellum development, nuclear condensation, and removal of excess cytoplasm by Sertoli cells."},
+  {q:"Name the posterior division branches of the internal iliac artery.",a:"Superior gluteal, iliolumbar, and lateral sacral arteries. Mnemonic: 'صالح لازم يصلي' (SLS — Superior gluteal, iLiolumbar, lateral Sacral)."},
+  {q:"What is the nerve supply of the pelvic surface of levator ani?",a:"4th sacral nerve (S4) supplies the pelvic/superior surface. The inferior rectal branch of the pudendal nerve supplies the perineal/inferior surface."},
+  {q:"Differentiate primary vs secondary hypogonadism by hormone levels.",a:"Primary: testicular failure → ↑LH/FSH (compensatory), ↓T. Secondary: pituitary failure → ↓LH/FSH, ↓T."},
+  {q:"What is the ganglion impar?",a:"The terminal unpaired ganglion formed when the two sympathetic trunks unite at the level of the coccyx. Also called ganglion of Walther."},
+  {q:"At what gestational week do Leydig cells appear and secrete testosterone?",a:"7th–9th week of gestation, under the influence of placental HCG."},
+  {q:"Why does castration before puberty cause taller stature?",a:"Testosterone normally closes epiphyseal plates of long bones. Without testosterone, epiphyses fail to fuse on schedule, allowing prolonged bone elongation."},
+  {q:"What is H-Y antigen and who secretes it?",a:"H-Y antigen is a testis-determining factor secreted by Sertoli cells at week 7, under Y chromosome control, inducing the indifferent gonad to differentiate into a testis."},
+  {q:"Where are sperm primarily stored?",a:"Vas deferens (primary storage). Epididymis is the primary maturation site (~12-day transit). Sperm acquire forward motility during epididymal transit."},
+  {q:"What replaces the inferior vesical artery in females?",a:"The vaginal artery (there is no inferior vesical artery in females; the vas deferens which this artery supplies doesn't exist)."},
+  {q:"What extrinsic factors can impair spermatogenesis?",a:"High temperature, irradiation, toxins (heavy metals, alcohol), infections (mumps orchitis), malnutrition (Vit A/C/E/B12 deficiency), starvation, and excessive estrogen."},
+  {q:"What is the lumbosacral trunk?",a:"L4 and L5 ventral rami unite to form the lumbosacral trunk, which descends from the lumbar region into the pelvis to join the sacral plexus."},
+  {q:"What injury during episiotomy causes uterine prolapse?",a:"Damage to the levator ani muscle (pelvic floor). The levator ani forms the 'carpet/sling' that supports pelvic organs. Its disruption allows the uterus to prolapse downward."},
+  {q:"What is the role of FSH in males?",a:"FSH targets Sertoli cells to: maintain gametogenic epithelium, stimulate androgen-binding protein (ABP) production, support spermatogenesis, and trigger inhibin secretion."}
+];
+
+const CASES_DATA = [
+  {
+    title:"Case 1: Premature Infant with Cryptorchidism",
+    tag:"Reproductive Endocrinology",
+    vignette:"A male infant is born prematurely at 7 months gestation. On neonatal examination, neither testis is palpable in the scrotum. Both are identified by ultrasound in the inguinal canal.",
+    questions:["What is the most likely cause of this finding?","What hormonal mechanism normally drives testicular descent?","What are the immediate and long-term management options?"],
+    answer:[
+      "Most common cause: premature birth. Testicular descent occurs during the final 2–3 months of gestation (months 7–9). This infant was born before this process was complete.",
+      "Leydig cells secrete testosterone under HCG influence. Testosterone acts on the gubernaculum to guide testicular descent through the inguinal canal into the scrotum.",
+      "Immediate: Monitor — many descend spontaneously in the first 6 months of life. If persistent: HCG hormonal therapy (stimulates Leydig cells → ↑testosterone → encourages descent). If unresponsive: Orchidopexy (surgical placement) before age 2. If untreated: risk of infertility (heat exposure prevents spermatogenesis) and testicular malignancy."
+    ]
+  },
+  {
+    title:"Case 2: Post-Mumps Infertility",
+    tag:"Infectious / Reproductive",
+    vignette:"A 28-year-old male presents with infertility 2 years after a severe mumps infection complicated by bilateral orchitis during adolescence. Semen analysis shows azoospermia. Serum FSH and LH are markedly elevated. Testosterone is low-normal.",
+    questions:["What is the mechanism of infertility here?","What type of hypogonadism does this hormonal profile indicate?","Is this reversible?"],
+    answer:[
+      "Mumps orchitis directly destroys the seminiferous tubular epithelium (extrinsic destruction of the germinal epithelium). The spermatogenic cells are wiped out while Leydig cells may be partially preserved (explaining near-normal testosterone).",
+      "Primary hypogonadism (testicular failure). The hallmark is ↑↑FSH and ↑LH (pituitary 'shouting' because the testes aren't responding) with low/normal testosterone.",
+      "Bilateral orchitis-induced azoospermia is generally irreversible due to complete destruction of the germinal epithelium. Prevention via MMR vaccination is crucial. Assisted reproduction (donor sperm or IVF/ICSI with any remaining sperm) may be considered."
+    ]
+  },
+  {
+    title:"Case 3: Vitamin A Deficiency & Infertility",
+    tag:"Nutritional / Metabolic",
+    vignette:"A 32-year-old male from a resource-limited setting presents with infertility and night blindness. Semen analysis shows severely reduced sperm count with abnormal morphology. Skin examination reveals follicular hyperkeratosis.",
+    questions:["Which testicular cell type is most directly damaged by this deficiency?","Describe the histological change seen in the testes.","What other reproductive vitamin deficiency causes a different but equally serious problem?"],
+    answer:[
+      "The germinal (spermatogenic) epithelium of the seminiferous tubules is directly damaged. Sertoli cells provide structural support but the differentiating spermatocytes and spermatids are most vulnerable.",
+      "Vitamin A deficiency causes keratinization and atrophy of the spermatogenic epithelium — the normal pseudostratified epithelium is replaced by keratinized squamous cells, obliterating the tubular lumen.",
+      "Vitamin C deficiency depresses testosterone synthesis, suppressing the entire spermatogenic cascade. Vitamin E deficiency causes tubular degeneration. Vitamin B12 impairs nucleic acid synthesis, halting spermatogonial division."
+    ]
+  },
+  {
+    title:"Case 4: Secondary Hypogonadism — Pituitary Failure",
+    tag:"Endocrinology / Pituitary",
+    vignette:"A 35-year-old male presents with infertility, decreased libido, and fatigue. Investigations: GnRH normal, LH low, FSH low, testosterone low. Scrotal ultrasound is normal. MRI pituitary shows a 1.2 cm adenoma.",
+    questions:["Classify this hypogonadism type and explain the pathophysiology.","Trace the full hormonal cascade that is disrupted.","What treatment would you recommend if the patient desires fertility?"],
+    answer:[
+      "Secondary (hypogonadotropic) hypogonadism. The pituitary adenoma compresses the gonadotroph cells, reducing LH and FSH secretion. The testes are structurally normal but receive insufficient trophic stimulation.",
+      "Normally: GnRH (hypothalamus) → LH + FSH (anterior pituitary) → LH stimulates Leydig cells → testosterone (required for spermatogonia division); FSH stimulates Sertoli cells → supports gametogenesis. Without LH/FSH, this entire cascade collapses.",
+      "For fertility: Combined gonadotropin therapy (HCG to mimic LH effect on Leydig cells + recombinant FSH to stimulate Sertoli cells). Pituitary adenoma: dopamine agonist (prolactinoma) or trans-sphenoidal surgery. Simple testosterone replacement is NOT used if fertility is desired (it suppresses residual gonadotropin secretion)."
+    ]
+  },
+  {
+    title:"Case 5: Uterine Prolapse After Traumatic Delivery",
+    tag:"Obstetrics / Pelvic Floor",
+    vignette:"A 38-year-old G4P4 woman presents with a sensation of 'something falling out of her vagina,' worse on standing. She had a prolonged second stage of labour with her last delivery, during which a wide mediolateral episiotomy was performed and poorly repaired. On examination, the cervix is visible at the introitus.",
+    questions:["Which muscle and which of its fiber groups has been disrupted?","What is the mechanism by which this leads to uterine prolapse?","What immediate measures and definitive surgical repair are available?"],
+    answer:[
+      "The levator ani muscle, specifically the anterior fiber group (pubococcygeus). These fibers normally pass on either side of the vagina to form the sphincter vaginae, and also provide the primary anterior support of the uterus and vagina.",
+      "The pubococcygeus forms the structural 'floor/carpet' that supports the pelvic viscera. When episiotomy extends too far or is poorly repaired, the muscle cannot exert its upward traction. The uterus, deprived of its inferior support, descends through the weakened hiatus urogenitalis.",
+      "Conservative: Pelvic floor physiotherapy (Kegel exercises), pessary ring insertion for temporary support. Definitive surgical: Anterior colporrhaphy (repair of the anterior vaginal wall and levator ani), Manchester repair, or sacrocolpopexy depending on severity. Manchester repair is often performed in women who wish to retain uterus."
+    ]
+  },
+  {
+    title:"Case 6: Tall Stature After Pre-Pubertal Castration",
+    tag:"Endocrine / Bone Metabolism",
+    vignette:"A 25-year-old male who underwent bilateral orchiectomy at age 8 for testicular torsion presents at a follow-up clinic. His height is 198 cm (family average is 175 cm). He has no beard, scant body hair, high-pitched voice, and a eunuchoid body habitus.",
+    questions:["Explain the mechanism behind his tall stature.","What accounts for the other physical findings (voice, hair, body habitus)?","What hormonal replacement should this patient be on?"],
+    answer:[
+      "Testosterone normally causes an initial growth spurt (protein-anabolic effect, ↑GH pulse) but ultimately forces epiphyseal plate fusion (closure) of long bones. Without testosterone from age 8, the epiphyseal plates remained open for years beyond the normal closure age, allowing continued longitudinal bone growth — resulting in tall stature with long limbs (eunuchoid habitus: arm span > height, pubis-to-floor > pubis-to-crown).",
+      "All the listed features are due to absence of testosterone: voice: testosterone drives laryngeal growth and vocal cord thickening → without it, voice remains high-pitched; body hair: testosterone drives terminal hair on face and body → absent without androgen stimulation; habitus: without testosterone-driven muscle anabolism, lean muscle mass is reduced.",
+      "Testosterone replacement therapy (intramuscular or transdermal) to restore secondary sex characteristics, maintain bone density (prevent osteoporosis), libido, and general wellbeing. He will remain infertile (no testes to produce sperm)."
+    ]
+  }
+];
+
+const ANAT_ITEMS = [
+  {icon:"🧬",name:"Seminiferous Tubules",brief:"Sperm production site",detail:"Highly coiled tubes within each testicular lobule. Lined by the spermatogenic epithelium (supported by Sertoli cells). Site of all stages of spermatogenesis. Temperature-sensitive — require 33–35°C. Collectively total ~250 meters of tubules per testis."},
+  {icon:"🔬",name:"Sertoli Cells",brief:"Nurse cells of spermatogenesis",detail:"Large pyramidal cells on basal lamina. Functions: (1) Mechanical support via blood-testis barrier (tight junctions). (2) Nutrition of developing germ cells. (3) Removal of excess cytoplasm during spermiogenesis. (4) Phagocytosis of residual bodies. (5) Secretion of: androgen-binding protein (ABP), inhibin, H-Y antigen. Stimulated by FSH."},
+  {icon:"⚗️",name:"Leydig Cells",brief:"Testosterone factory",detail:"Interstitial cells clustered between seminiferous tubules. Secrete testosterone (and minor amounts of estradiol). Regulated by HCG in fetal life → LH at puberty. Testosterone actions: spermatogenesis, secondary sex characteristics, epiphyseal closure, muscle anabolism, libido, prostate/seminal vesicle development."},
+  {icon:"🌡️",name:"Pampiniform Plexus",brief:"Countercurrent heat exchanger",detail:"Venous network surrounding the testicular artery in the spermatic cord. Warm venous blood (returning from testis) runs alongside and COOLS the testicular artery before it reaches the testis. Maintains testicular temp 2–4°C below core. Varicocele = dilation of pampiniform veins → impaired cooling → ↓spermatogenesis."},
+  {icon:"🏋️",name:"Levator Ani",brief:"Pelvic floor/diaphragm",detail:"Three parts: (1) Pubococcygeus (anterior fibers) — origin: back of pubis; inserts in perineal body; forms sphincter vaginae / levator prostatae. (2) Puborectalis (intermediate) — U-shaped sling around anorectal junction; maintains anorectal angle; fecal continence. (3) Iliococcygeus (posterior) — inserts into coccyx. Innervation: pelvic surface = 4th sacral nerve; perineal surface = inferior rectal branch of pudendal nerve."},
+  {icon:"🩸",name:"Internal Iliac Artery",brief:"Pelvis blood supply",detail:"Posterior division (muscular/skeletal): Superior gluteal (largest branch), iliolumbar, lateral sacral. Anterior division (visceral/perineal): Obturator, superior vesical (→ umbilical artery remnant), inferior vesical (♂)/vaginal (♀), middle rectal ⭕, uterine, internal pudendal → dorsal/deep/bulb arteries of penis, inferior gluteal. KEY: middle rectal = anterior division, NOT internal pudendal!"},
+  {icon:"🧠",name:"Sacral Plexus",brief:"L4–S4 nerve network",detail:"Formation: L4, L5 (lumbosacral trunk) + S1, S2, S3, S4 ventral rami. Dorsal surface branches: nerve to piriformis, superior gluteal (L4,L5,S1), inferior gluteal (L5,S1,S2). Ventral surface branches: nerve to quadratus femoris, nerve to obturator internus, posterior cutaneous nerve of thigh. Terminal branches: Sciatic (L4–S3), pudendal (S2–S4). Roots: pelvic splanchnic nerves (S2–S4) from the roots."},
+  {icon:"🔗",name:"Epididymis",brief:"Sperm maturation",detail:"Comma-shaped structure on posterior aspect of testis. Highly coiled single duct (~6m uncoiled). Functions: (1) Sperm maturation — sperm acquire forward motility during 12-day transit. (2) Storage (some sperm). (3) Reabsorption of 90% of fluid from rete testis. Head (caput) → receives from rete testis; Body (corpus); Tail (cauda) → continues as vas deferens."},
+];
+
+const MNEM_DATA = [
+  {
+    title:"Posterior Division of Internal Iliac",
+    mnemonic:"SLS",
+    expansion:"S — Superior gluteal artery\nL — iLiolumbar artery\nS — Lateral Sacral artery",
+    arabic:"صالح لازم يصلي"
+  },
+  {
+    title:"Levator Ani Nerve Supply Rule",
+    mnemonic:"4 = PELVIC, P = PERINEAL",
+    expansion:"4th sacral nerve → Pelvic (superior) surface\nPudendal nerve (inferior rectal) → Perineal (inferior) surface",
+    arabic:"Remember: number 4 above, P for pudendal below"
+  },
+  {
+    title:"Spermatogenesis Sequence",
+    mnemonic:"APPS-Z",
+    expansion:"A — Type A spermatogonia (mitosis)\nP — Primary spermatocyte (meiosis I)\nP — Secondary/Post-meiotic spermatocyte (meiosis II)\nS — Spermatids\nZ — Zoosperm (spermatozoa) via spermiogeneZis"
+  },
+  {
+    title:"Vitamins & Spermatogenesis Effects",
+    mnemonic:"ACE-B: All Can Erase Basal cells",
+    expansion:"A — Vitamin A → Atrophy & keratinization of germinal epithelium\nC — Vitamin C → Cannot synthesize testosterone\nE — Vitamin E → Erosion/degeneration of tubules\nB — Vitamin B12 → Blocks nucleic acid synthesis"
+  },
+  {
+    title:"HPT Axis Regulation",
+    mnemonic:"GnRH → LHFSH → LITE",
+    expansion:"GnRH → from hypothalamus (pulsatile!)\nLH → Leydig cells (testosterone)\nFSH → Sertoli cells (spermatogenesis support)\nL — Leydig: testosterone\nI — Inhibin: from Sertoli, suppresses FSH\nT — Testosterone: negative feedback on hypothalamus+pituitary\nE — Everything crashes if pituitary fails (secondary hypogonadism)"
+  },
+  {
+    title:"Hypogonadism Differentiation",
+    mnemonic:"HIGH = Primary, LOW = Secondary",
+    expansion:"HIGH gonadotropins (LH/FSH) = Primary (testicular failure — pituitary 'screams' to a deaf testis)\nLOW gonadotropins = Secondary (pituitary silent — testis has no signal)\nBoth give low testosterone!"
+  }
+];
+
+// ════════════ STATE ════════════
+let score = 0, streak = 0, totalAnswered = 0;
+let currentQ = 0, answered = false;
+let quizOrder = [...Array(QUIZ_DATA.length).keys()];
+
+function updateStats(){
+  const pct = Math.round(totalAnswered / QUIZ_DATA.length * 100);
+  document.getElementById('hdr-score').textContent = score;
+  document.getElementById('hdr-streak').textContent = streak;
+  document.getElementById('hdr-progress').textContent = pct + '%';
+  try {
+    localStorage.setItem('ms_score', score);
+    localStorage.setItem('ms_streak', streak);
+    localStorage.setItem('ms_answered', totalAnswered);
+  } catch(e){}
+}
+
+// ════════════ TABS ════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    try { localStorage.setItem('ms_last_tab', tab); } catch(e){}
+  });
+});
+
+// ════════════ OVERVIEW SEARCH ════════════
+function filterOverview(val) {
+  const v = val.toLowerCase();
+  document.querySelectorAll('#overview-cards .concept-card').forEach(card => {
+    const searchable = (card.dataset.search || '') + card.textContent.toLowerCase();
+    card.style.display = searchable.includes(v) ? '' : 'none';
+  });
+}
+
+// ════════════ QUIZ ════════════
+function renderQuestion(){
+  const qd = QUIZ_DATA[currentQ];
+  const container = document.getElementById('question-container');
+  const pct = ((currentQ) / QUIZ_DATA.length * 100) + 4;
+  document.getElementById('quiz-progress').style.width = pct + '%';
+  document.getElementById('q-current').textContent = currentQ + 1;
+  document.getElementById('q-total').textContent = QUIZ_DATA.length;
+  answered = false;
+
+  const letters = ['A','B','C','D','E'];
+  const opts = qd.opts.map((opt, i) => `
+    <button class="option-btn" onclick="selectAnswer(${i})" id="opt-${i}">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="question-card">
+      <div class="q-number">QUESTION ${currentQ + 1} OF ${QUIZ_DATA.length}</div>
+      <div class="q-stem">${qd.q}</div>
+      <div class="options">${opts}</div>
+      <div id="explanation" style="display:none;"></div>
+    </div>
+  `;
+  document.getElementById('quiz-nav').style.display = 'none';
+  document.getElementById('q-score-disp').textContent = score;
+  document.getElementById('q-streak-disp').textContent = streak;
+}
+
+function selectAnswer(idx) {
+  if(answered) return;
+  answered = true;
+  const qd = QUIZ_DATA[currentQ];
+  const isCorrect = idx === qd.ans;
+  const letters = ['A','B','C','D','E'];
+
+  qd.opts.forEach((_, i) => {
+    const btn = document.getElementById('opt-' + i);
+    if(i === qd.ans) btn.classList.add('correct');
+    else if(i === idx && !isCorrect) btn.classList.add('wrong');
+    else btn.classList.add('dimmed');
+    btn.onclick = null;
+  });
+
+  if(isCorrect){ score += 10; streak++; } else { streak = 0; }
+  totalAnswered = Math.max(totalAnswered, currentQ + 1);
+  updateStats();
+
+  const exp = document.getElementById('explanation');
+  exp.style.display = 'block';
+  exp.innerHTML = `
+    <div class="explanation">
+      <div class="correct-label">${isCorrect ? '✅ CORRECT' : `❌ INCORRECT — Correct answer: ${letters[qd.ans]}`}</div>
+      <div>${qd.exp}</div>
+    </div>
+  `;
+
+  document.getElementById('quiz-nav').style.display = 'flex';
+  const nextBtn = document.getElementById('next-btn');
+  if(currentQ === QUIZ_DATA.length - 1) {
+    nextBtn.textContent = 'Finish Quiz';
+    nextBtn.onclick = finishQuiz;
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.onclick = () => quizNav(1);
+  }
+}
+
+function quizNav(dir) {
+  currentQ = Math.max(0, Math.min(QUIZ_DATA.length - 1, currentQ + dir));
+  renderQuestion();
+}
+
+function finishQuiz(){
+  document.getElementById('question-container').style.display = 'none';
+  document.getElementById('quiz-nav').style.display = 'none';
+  document.getElementById('quiz-complete').style.display = 'block';
+  const pct = Math.round(score / (QUIZ_DATA.length * 10) * 100);
+  const grade = pct >= 90 ? '🏆 Outstanding — Distinction!' : pct >= 70 ? '👍 Good Pass' : pct >= 50 ? '⚠️ Borderline — Review weak areas' : '❌ Needs significant revision';
+  document.getElementById('final-score').textContent = `${score} / ${QUIZ_DATA.length * 10} points (${pct}%) — ${grade}`;
+}
+
+function resetQuiz(){
+  score = 0; streak = 0; totalAnswered = 0; currentQ = 0;
+  updateStats();
+  document.getElementById('quiz-complete').style.display = 'none';
+  document.getElementById('question-container').style.display = 'block';
+  renderQuestion();
+}
+
+// ════════════ FLASHCARDS ════════════
+function renderFlashcards(){
+  const grid = document.getElementById('fc-grid');
+  grid.innerHTML = FLASHCARD_DATA.map((fc, i) => `
+    <div class="flashcard" id="fc-${i}" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Question ${i+1} / ${FLASHCARD_DATA.length}</div>
+          <div class="fc-text">${fc.q}</div>
+          <div class="fc-hint">Tap to reveal →</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Answer</div>
+          <div class="fc-answer">${fc.a}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ════════════ CASES ════════════
+function renderCases(){
+  const container = document.getElementById('cases-container');
+  container.innerHTML = CASES_DATA.map((c, i) => `
+    <div class="case-card">
+      <div class="case-header">
+        <div>
+          <div class="case-number">CLINICAL CASE ${i+1}</div>
+          <h3 style="margin-bottom:0;">${c.title}</h3>
+        </div>
+        <span class="tag tag-key">${c.tag}</span>
+      </div>
+      <div class="case-vignette">${c.vignette}</div>
+      <div class="case-questions">
+        ${c.questions.map((q,qi) => `<div class="case-q"><strong>${qi+1}.</strong> ${q}</div>`).join('')}
+      </div>
+      <button class="reveal-btn" onclick="revealCase(${i}, this)">🔍 Reveal Answers</button>
+      <div class="case-answer" id="case-ans-${i}">
+        ${c.answer.map((a, ai) => `
+          <div class="ans-step">
+            <div class="ans-num">${ai+1}</div>
+            <div>${a}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function revealCase(i, btn){
+  const ans = document.getElementById('case-ans-' + i);
+  ans.classList.toggle('shown');
+  btn.textContent = ans.classList.contains('shown') ? '🙈 Hide Answers' : '🔍 Reveal Answers';
+}
+
+// ════════════ ANATOMY ════════════
+function renderAnatomy(){
+  const grid = document.getElementById('anat-grid');
+  grid.innerHTML = ANAT_ITEMS.map((item, i) => `
+    <div class="anat-item" onclick="showAnatDetail(${i}, this)">
+      <div class="anat-icon">${item.icon}</div>
+      <div class="anat-name">${item.name}</div>
+      <div class="anat-brief">${item.brief}</div>
+    </div>
+  `).join('');
+}
+function showAnatDetail(i, el){
+  document.querySelectorAll('.anat-item').forEach(a => a.classList.remove('selected'));
+  el.classList.add('selected');
+  const item = ANAT_ITEMS[i];
+  const detail = document.getElementById('anat-detail');
+  detail.style.display = 'block';
+  detail.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      <span style="font-size:2rem;">${item.icon}</span>
+      <h3 style="margin-bottom:0;">${item.name}</h3>
+    </div>
+    <p style="font-size:.88rem;color:var(--text2);line-height:1.75;">${item.detail}</p>
+  `;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ════════════ MNEMONICS ════════════
+function renderMnemonics(){
+  const container = document.getElementById('mnem-container');
+  container.innerHTML = MNEM_DATA.map((m, i) => `
+    <div class="mnem-card">
+      <div class="mnem-title">${m.title}</div>
+      <div class="mnem-acronym">${m.mnemonic}</div>
+      ${m.arabic ? `<div style="font-size:.8rem;color:var(--text3);margin-bottom:12px;font-style:italic;">${m.arabic}</div>` : ''}
+      <ul class="mnem-list">
+        ${m.expansion.split('\n').map(line => {
+          const parts = line.split(' — ');
+          if(parts.length === 2){
+            return `<li><span class="mnem-letter">${parts[0].trim()}</span><span>${parts[1].trim()}</span></li>`;
+          }
+          const dashIdx = line.indexOf('—');
+          if(dashIdx > -1){
+            return `<li><span class="mnem-letter">${line.substring(0,dashIdx).trim()}</span><span>${line.substring(dashIdx+1).trim()}</span></li>`;
+          }
+          const arrowIdx = line.indexOf('→');
+          if(arrowIdx > -1 && arrowIdx < 5){
+            return `<li><span class="mnem-letter">${line.substring(0,1)}</span><span>${line.substring(2).trim()}</span></li>`;
+          }
+          return `<li><span class="mnem-letter">·</span><span>${line}</span></li>`;
+        }).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+function closeModal(){ document.getElementById('score-modal').classList.remove('open'); }
+
+// ════════════ INIT ════════════
+function init(){
+  try {
+    const saved_score = localStorage.getItem('ms_score');
+    const saved_streak = localStorage.getItem('ms_streak');
+    const saved_ans = localStorage.getItem('ms_answered');
+    if(saved_score) score = parseInt(saved_score) || 0;
+    if(saved_streak) streak = parseInt(saved_streak) || 0;
+    if(saved_ans) totalAnswered = parseInt(saved_ans) || 0;
+  } catch(e){}
+  updateStats();
+  renderQuestion();
+  renderFlashcards();
+  renderCases();
+  renderAnatomy();
+  renderMnemonics();
+
+  // Restore last tab
+  try {
+    const lastTab = localStorage.getItem('ms_last_tab');
+    if(lastTab){
+      const btn = document.querySelector(`[data-tab="${lastTab}"]`);
+      if(btn) btn.click();
+    }
+  } catch(e){}
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 1. Keeps scaling correct -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- 2. Links to your central config -->
+<link rel="manifest" href="manifest.json">
+
+<!-- 3. iOS Exceptions: Forces the phone to stay in full-screen app mode -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- 4. iOS Exception: The icon (Safe to put on every page) -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="application-name" content="My App">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="MU 63">
+    <meta name="apple-mobile-web-app-title" content="MU 63">
+    <link rel="apple-touch-icon" href="icons8-brain Background Removed.png">
+    <link rel="icon" sizes="192x192" href="icons8-brain Background Removed.png">
+
+<title>MU 63</title>
+    <!-- Importing the fonts used in your existing aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <script>
+        // When the Identity widget loads, check for a user
+        netlifyIdentity.on('init', user => {
+            if (!user) {
+                // If no user is logged in, kick them back to the index page
+                window.location.href = "/";
+            }
+        });
+
+        // Optional: Add a logout behavior if you have a logout button
+        netlifyIdentity.on('logout', () => {
+            window.location.href = "/";
+        });
+    </script>
+    <style>
+        html, body {
+            overflow: visible !important;
+            overflow-y: auto !important;
+            height: auto !important;
+        }
+        :root {
+            --bg: #05060e;
+            --surface: #0a0d1d;
+            --surface-card: #11152d;
+            --border: rgba(168, 85, 247, 0.15);
+            --accent: #00c8ff;
+            --accent2: #a855f7;
+            --accent3: #22d3ee;
+            --text: #f1f5f9;
+            --text-muted: #64748b;
+            --radius: 16px;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Prevents scrollbars from the glowing orbs */
+        }
+
+        /* Ambient Glowing Background from the Pharmacology Center */
+        .bg-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15;
+            animation: drift 20s ease-in-out infinite alternate;
+        }
+        .orb:nth-child(1) { width: 600px; height: 600px; background: var(--accent2); top: -150px; left: -150px; }
+        .orb:nth-child(2) { width: 500px; height: 500px; background: var(--accent); bottom: -150px; right: -100px; animation-delay: -5s; }
+        
+        @keyframes drift { 
+            0% { transform: translate(0,0) scale(1); } 
+            100% { transform: translate(40px,30px) scale(1.1); } 
+        }
+
+        .wrapper { 
+            position: relative; 
+            z-index: 1; 
+            width: 100%;
+            max-width: 900px; 
+            padding: 40px 20px; 
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 60px; 
+        }
+
+        .badge {
+            display: inline-block; 
+            background: rgba(0, 200, 255, 0.1); 
+            border: 1px solid rgba(0, 200, 255, 0.25);
+            color: var(--accent); 
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 12px;
+            letter-spacing: 2px; 
+            padding: 8px 20px; 
+            border-radius: 100px; 
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            font-family: 'Syne', sans-serif; 
+            font-size: clamp(32px, 5vw, 48px); 
+            font-weight: 800; 
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 20%, var(--accent) 60%, var(--accent2) 100%);
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+        }
+
+        header p { 
+            color: var(--text-muted); 
+            margin-top: 12px; 
+            font-size: 16px; 
+        }
+
+        /* Nav Grid for the two main buttons/cards */
+        .nav-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 24px; 
+        }
+
+        .card {
+            background: rgba(17, 21, 45, 0.6); 
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border); 
+            border-radius: var(--radius);
+            padding: 32px; 
+            transition: all 0.3s ease; 
+            display: flex; 
+            flex-direction: column;
+            text-decoration: none; 
+            color: inherit; 
+            position: relative; 
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .card::after {
+            content: ''; 
+            position: absolute; 
+            inset: 0; 
+            border-radius: var(--radius);
+            border: 2px solid var(--accent2); 
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+            pointer-events: none;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+            border-color: transparent; 
+            background: rgba(17, 21, 45, 0.8);
+        }
+
+        .card:hover::after { 
+            opacity: 0.5; 
+        }
+        
+        /* Card specific accents */
+        .card:nth-child(1):hover::after { border-color: var(--accent); }
+        .card:nth-child(2):hover::after { border-color: var(--accent2); }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-title { 
+            font-family: 'Syne', sans-serif; 
+            font-size: 22px; 
+            font-weight: 700; 
+            margin-bottom: 12px; 
+            color: #fff; 
+        }
+
+        .card-desc { 
+            font-size: 14px; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            margin-bottom: 24px; 
+            flex: 1; 
+        }
+        
+        .card-footer { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            padding-top: 16px; 
+            font-size: 13px; 
+        }
+
+        .card-tag { 
+            font-family: 'JetBrains Mono', monospace; 
+            font-weight: 600; 
+        }
+        
+        .card:nth-child(1) .card-tag { color: var(--accent); }
+        .card:nth-child(2) .card-tag { color: var(--accent2); }
+
+        .launch-icon { 
+            color: #fff; 
+            font-weight: bold; 
+            transition: transform 0.2s;
+        }
+
+        .card:hover .launch-icon {
+            transform: translateX(4px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .wrapper { padding: 20px; }
+            header { margin-bottom: 40px; }
+            .card { padding: 24px; }
+        }
+    </style>
+
+<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+<button id="logout-btn"
+  style="position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); letter-spacing: 0.5px;">
+  Log Out
+</button>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Find the button
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // 2. Attach the click event
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            // Safety check: ensure Netlify Identity is loaded
+            if (window.netlifyIdentity) {
+              window.netlifyIdentity.logout();
+            } else {
+              console.error("Netlify Identity widget is not loaded.");
+            }
+          });
+        }
+
+        // 3. Optional but recommended: Redirect the user after they log out
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on("logout", () => {
+            // Redirects to the homepage. Change "/" to another URL if needed.
+            window.location.href = "/";
+          });
+        }
+      });
+</script>
+<style>
+  #logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-family: "Inter",system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    /* Smooth transition for the hover */
+  }
+
+  #logout-btn:hover {
+    transform: translateY(-2px);
+    /* Lifts the button up slightly */
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+    /* Makes the glow bigger */
+  }
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RHSQ7HYJYZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RHSQ7HYJYZ');
+</script>
+</head>
+<body>
+
+    <!-- Ambient background -->
+    <div class="bg-canvas">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <div class="wrapper">
+        <header>
+            <div class="badge">MU 63rd · Command Hub</div>
+            <h1>Learn Intelligently MU 63</h1>
+            <p>Select your destination to access pharmacology platforms and study trackers.</p>
+        </header>
+
+        <div class="nav-grid">
+            <!-- Link to the Main Dashboard -->
+            <!-- Update "dashboard.html" to your actual main dashboard file -->
+            <a href="/Research/dashboard.html" class="card">
+                <div class="card-icon">🔬</div>
+                <h3 class="card-title">Research</h3>
+                <p class="card-desc">Ace your Research exams with our comprehensive study guides and resources.</p>
+                <div class="card-footer">
+                    <span class="card-tag">Core Hub</span>
+                    <span class="launch-icon">Deploy ↗</span>
+                </div>
+            </a>
+
+            <!-- Link to the Checklist & Timer -->
+            <!-- Update "checklist.html" to the name of the file containing the timer code -->
+            <a href="/Research/RBS_Checklist.html" class="card">
+                <div class="card-icon">⏱️</div>
+                <h3 class="card-title">RBS Checklist & Timer</h3>
+                <p class="card-desc">Launch the MU 63rd progress tracker for Research Module. Manage your study sessions with the built-in Pomodoro timer and subject checklist.</p>
+                <div class="card-footer">
+                    <span class="card-tag">Study Tools</span>
+                    <span class="launch-icon">Deploy ↗</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

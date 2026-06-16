@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Statistics - KME Study Module</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ==========================================
+           CSS RESET & ROOT VARIABLES
+           ========================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Light Theme */
+            --kme-bg-primary: #f0f4f8;
+            --kme-bg-secondary: #ffffff;
+            --kme-bg-tertiary: #e8edf2;
+            --kme-text-primary: #1a202c;
+            --kme-text-secondary: #4a5568;
+            --kme-text-muted: #718096;
+            --kme-accent-primary: #3182ce;
+            --kme-accent-secondary: #2b6cb0;
+            --kme-accent-gradient: linear-gradient(135deg, #3182ce, #2b6cb0);
+            --kme-border-color: #e2e8f0;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+            --kme-danger-bg: #fff5f5;
+            --kme-danger-border: #fc8181;
+            --kme-danger-text: #c53030;
+            --kme-danger-icon: #e53e3e;
+            --kme-success-bg: #f0fff4;
+            --kme-success-border: #68d391;
+            --kme-success-text: #276749;
+            --kme-wrong-bg: #fff5f5;
+            --kme-wrong-border: #fc8181;
+            --kme-wrong-text: #c53030;
+            --kme-math-bg: #ebf8ff;
+            --kme-math-border: #90cdf4;
+            --kme-math-accent: #2b6cb0;
+            --kme-table-header-bg: #3182ce;
+            --kme-table-header-text: #ffffff;
+            --kme-table-row-alt: #f7fafc;
+            --kme-table-row-hover: #ebf4ff;
+            --kme-radius-sm: 8px;
+            --kme-radius-md: 12px;
+            --kme-radius-lg: 16px;
+            --kme-font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --kme-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f1724;
+            --kme-bg-secondary: #1a2332;
+            --kme-bg-tertiary: #243044;
+            --kme-text-primary: #e2e8f0;
+            --kme-text-secondary: #a0aec0;
+            --kme-text-muted: #718096;
+            --kme-accent-primary: #63b3ed;
+            --kme-accent-secondary: #90cdf4;
+            --kme-accent-gradient: linear-gradient(135deg, #2b6cb0, #3182ce);
+            --kme-border-color: #2d3748;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --kme-shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+            --kme-danger-bg: #2d1b1b;
+            --kme-danger-border: #9b2c2c;
+            --kme-danger-text: #feb2b2;
+            --kme-danger-icon: #fc8181;
+            --kme-success-bg: #1a2e1a;
+            --kme-success-border: #38a169;
+            --kme-success-text: #9ae6b4;
+            --kme-wrong-bg: #2d1b1b;
+            --kme-wrong-border: #9b2c2c;
+            --kme-wrong-text: #feb2b2;
+            --kme-math-bg: #1a2332;
+            --kme-math-border: #2b6cb0;
+            --kme-math-accent: #90cdf4;
+            --kme-table-header-bg: #2b6cb0;
+            --kme-table-header-text: #ffffff;
+            --kme-table-row-alt: #1e2d3d;
+            --kme-table-row-hover: #243b53;
+        }
+
+        /* ==========================================
+           BASE STYLES
+           ========================================== */
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--kme-font-body);
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.7;
+            transition: background-color var(--kme-transition), color var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ==========================================
+           TOP NAVIGATION BAR
+           ========================================== */
+        .kme-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-topbar-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kme-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--kme-accent-primary);
+            text-decoration: none;
+        }
+
+        .kme-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--kme-accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kme-theme-toggle {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--kme-border-color);
+            border-radius: 12px;
+            background: var(--kme-bg-tertiary);
+            color: var(--kme-text-primary);
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--kme-transition);
+        }
+
+        .kme-theme-toggle:hover,
+        .kme-theme-toggle:focus-visible {
+            border-color: var(--kme-accent-primary);
+            background: var(--kme-accent-primary);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* ==========================================
+           PROGRESS BAR
+           ========================================== */
+        .kme-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-progress-fill {
+            height: 100%;
+            background: var(--kme-accent-gradient);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* ==========================================
+           SECTION TABS / NAVIGATION
+           ========================================== */
+        .kme-tab-nav {
+            position: sticky;
+            top: 69px;
+            z-index: 900;
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .kme-tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-tab-list {
+            display: flex;
+            list-style: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 12px;
+            gap: 2px;
+        }
+
+        .kme-tab-btn {
+            flex-shrink: 0;
+            padding: 12px 18px;
+            border: none;
+            background: transparent;
+            color: var(--kme-text-muted);
+            font-family: var(--kme-font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all var(--kme-transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kme-tab-btn:hover {
+            color: var(--kme-text-primary);
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-tab-btn.kme-active {
+            color: var(--kme-accent-primary);
+            border-bottom-color: var(--kme-accent-primary);
+        }
+
+        .kme-tab-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================
+           MAIN CONTAINER
+           ========================================== */
+        .kme-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 100px;
+        }
+
+        /* Section panels */
+        .kme-section-panel {
+            display: none;
+            animation: kme-fadeIn 0.4s ease;
+        }
+
+        .kme-section-panel.kme-active {
+            display: block;
+        }
+
+        @keyframes kme-fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================
+           SECTION HEADER
+           ========================================== */
+        .kme-section-header {
+            margin-bottom: 24px;
+        }
+
+        .kme-section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--kme-text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .kme-section-title-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--kme-accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-section-subtitle {
+            font-size: 0.9rem;
+            color: var(--kme-text-muted);
+            margin-left: 54px;
+        }
+
+        /* ==========================================
+           CORE CONCEPTS - CONCEPT CARDS
+           ========================================== */
+        .kme-concept-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-md);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+            border-left: 4px solid var(--kme-accent-primary);
+        }
+
+        .kme-concept-card:hover {
+            box-shadow: var(--kme-shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .kme-concept-card p {
+            font-size: 0.95rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.75;
+        }
+
+        .kme-concept-card .kme-term {
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            background: var(--kme-bg-tertiary);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .kme-concept-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding-left: 0;
+        }
+
+        /* ==========================================
+           COMPARISONS - RESPONSIVE TABLE
+           ========================================== */
+        .kme-table-responsive {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-md);
+            overflow: hidden;
+            box-shadow: var(--kme-shadow-sm);
+            margin-bottom: 16px;
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .kme-table-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .kme-table-scroll::-webkit-scrollbar-track {
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-table-scroll::-webkit-scrollbar-thumb {
+            background: var(--kme-accent-primary);
+            border-radius: 3px;
+        }
+
+        .kme-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 480px;
+        }
+
+        .kme-table thead th {
+            background: var(--kme-table-header-bg);
+            color: var(--kme-table-header-text);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .kme-table thead th:first-child {
+            border-radius: 0;
+        }
+
+        .kme-table tbody td {
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            vertical-align: middle;
+        }
+
+        .kme-table tbody tr:nth-child(even) {
+            background: var(--kme-table-row-alt);
+        }
+
+        .kme-table tbody tr:hover {
+            background: var(--kme-table-row-hover);
+        }
+
+        .kme-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Highlight difference cells */
+        .kme-table .kme-cell-a {
+            font-weight: 600;
+            color: var(--kme-accent-primary);
+        }
+
+        .kme-table .kme-cell-b {
+            font-weight: 600;
+            color: var(--kme-danger-text);
+        }
+
+        .kme-table-hint {
+            padding: 10px 18px;
+            font-size: 0.78rem;
+            color: var(--kme-text-muted);
+            background: var(--kme-bg-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ==========================================
+           MATH FORMULAS - MATH BOX
+           ========================================== */
+        .kme-math-box {
+            background: var(--kme-math-bg);
+            border: 2px solid var(--kme-math-border);
+            border-radius: var(--kme-radius-md);
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-math-formula {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-math-border);
+            border-radius: var(--kme-radius-sm);
+            padding: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .kme-math-formula-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--kme-math-accent);
+            margin-bottom: 8px;
+        }
+
+        .kme-math-formula-expr {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            font-family: 'Georgia', serif;
+        }
+
+        .kme-math-formula-expr .kme-math-var {
+            color: var(--kme-math-accent);
+            font-style: italic;
+        }
+
+        .kme-math-scenario {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .kme-math-scenario-header {
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--kme-text-primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kme-math-scenario-num {
+            background: var(--kme-accent-gradient);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Details / Summary for step-by-step */
+        .kme-math-details {
+            border-top: 1px solid var(--kme-border-color);
+        }
+
+        .kme-math-summary {
+            padding: 12px 18px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--kme-accent-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+            transition: background var(--kme-transition);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-math-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-math-summary::before {
+            content: '\f054';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.7rem;
+            transition: transform var(--kme-transition);
+        }
+
+        details[open] > .kme-math-summary::before {
+            transform: rotate(90deg);
+        }
+
+        .kme-math-summary:hover {
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-math-steps {
+            padding: 0 18px 16px 18px;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.7;
+        }
+
+        .kme-math-steps .kme-math-result {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 12px;
+            background: var(--kme-success-bg);
+            border: 1px solid var(--kme-success-border);
+            border-radius: 6px;
+            color: var(--kme-success-text);
+            font-weight: 700;
+        }
+
+        /* ==========================================
+           EXAM TRAPS - ALERT DANGER
+           ========================================== */
+        .kme-alert-danger {
+            background: var(--kme-danger-bg);
+            border: 1px solid var(--kme-danger-border);
+            border-left: 5px solid var(--kme-danger-icon);
+            border-radius: var(--kme-radius-md);
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-alert-danger:hover {
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-alert-danger-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .kme-alert-danger-icon {
+            color: var(--kme-danger-icon);
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .kme-alert-danger-title {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--kme-danger-text);
+        }
+
+        .kme-alert-danger-body {
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.7;
+            padding-left: 30px;
+        }
+
+        .kme-alert-danger-body strong {
+            color: var(--kme-text-primary);
+        }
+
+        /* ==========================================
+           MCQ QUIZ
+           ========================================== */
+        .kme-quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .kme-quiz-score {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--kme-text-secondary);
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-quiz-score-val {
+            color: var(--kme-accent-primary);
+            font-size: 1.1rem;
+        }
+
+        .kme-quiz-reset-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--kme-accent-primary);
+            background: transparent;
+            color: var(--kme-accent-primary);
+            border-radius: var(--kme-radius-sm);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: var(--kme-font-body);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-quiz-reset-btn:hover {
+            background: var(--kme-accent-primary);
+            color: #fff;
+        }
+
+        .kme-mcq-container {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-md);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--kme-shadow-sm);
+            transition: all var(--kme-transition);
+        }
+
+        .kme-mcq-container.kme-answered-correct {
+            border-color: var(--kme-success-border);
+        }
+
+        .kme-mcq-container.kme-answered-wrong {
+            border-color: var(--kme-wrong-border);
+        }
+
+        .kme-mcq-question {
+            padding: 18px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--kme-text-primary);
+            line-height: 1.6;
+            border-bottom: 1px solid var(--kme-border-color);
+            display: flex;
+            gap: 12px;
+        }
+
+        .kme-mcq-num {
+            background: var(--kme-accent-gradient);
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .kme-mcq-options {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .kme-mcq-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 2px solid var(--kme-border-color);
+            border-radius: var(--kme-radius-sm);
+            cursor: pointer;
+            transition: all var(--kme-transition);
+            font-size: 0.9rem;
+            color: var(--kme-text-secondary);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 50px;
+        }
+
+        .kme-mcq-option:hover:not(.kme-disabled) {
+            border-color: var(--kme-accent-primary);
+            background: var(--kme-bg-tertiary);
+        }
+
+        .kme-mcq-option.kme-selected-correct {
+            border-color: var(--kme-success-border);
+            background: var(--kme-success-bg);
+            color: var(--kme-success-text);
+        }
+
+        .kme-mcq-option.kme-selected-wrong {
+            border-color: var(--kme-wrong-border);
+            background: var(--kme-wrong-bg);
+            color: var(--kme-wrong-text);
+        }
+
+        .kme-mcq-option.kme-show-correct {
+            border-color: var(--kme-success-border);
+            background: var(--kme-success-bg);
+            color: var(--kme-success-text);
+        }
+
+        .kme-mcq-option.kme-disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .kme-mcq-option.kme-selected-correct .kme-mcq-radio,
+        .kme-mcq-option.kme-show-correct .kme-mcq-radio {
+            border-color: var(--kme-success-border);
+        }
+
+        .kme-mcq-option.kme-selected-wrong .kme-mcq-radio {
+            border-color: var(--kme-wrong-border);
+        }
+
+        .kme-mcq-radio {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border: 2px solid var(--kme-border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--kme-transition);
+            font-size: 0.7rem;
+        }
+
+        .kme-mcq-option.kme-selected-correct .kme-mcq-radio::after,
+        .kme-mcq-option.kme-show-correct .kme-mcq-radio::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--kme-success-text);
+        }
+
+        .kme-mcq-option.kme-selected-wrong .kme-mcq-radio::after {
+            content: '\f00d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--kme-wrong-text);
+        }
+
+        .kme-mcq-letter {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--kme-text-muted);
+            min-width: 14px;
+        }
+
+        .kme-explanation {
+            display: none;
+            padding: 14px 20px;
+            border-top: 1px solid var(--kme-border-color);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .kme-explanation.kme-visible {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kme-explanation-correct {
+            background: var(--kme-success-bg);
+            color: var(--kme-success-text);
+        }
+
+        .kme-explanation-wrong {
+            background: var(--kme-wrong-bg);
+            color: var(--kme-wrong-text);
+        }
+
+        .kme-explanation i {
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* ==========================================
+           RESPONSIVE BREAKPOINTS
+           ========================================== */
+        @media (min-width: 600px) {
+            .kme-main {
+                padding: 28px 24px 100px;
+            }
+
+            .kme-section-title {
+                font-size: 1.7rem;
+            }
+
+            .kme-concept-card {
+                padding: 24px;
+            }
+
+            .kme-concept-card p {
+                font-size: 1rem;
+            }
+
+            .kme-tab-btn {
+                padding: 14px 22px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .kme-main {
+                padding: 36px 32px 100px;
+            }
+
+            .kme-mcq-options {
+                padding: 16px 20px;
+            }
+
+            .kme-mcq-option {
+                padding: 16px 20px;
+            }
+        }
+
+        /* ==========================================
+           UTILITY & ANIMATIONS
+           ========================================== */
+        .kme-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+
+        @keyframes kme-shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+        }
+
+        .kme-shake {
+            animation: kme-shake 0.4s ease;
+        }
+
+        @keyframes kme-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .kme-pop {
+            animation: kme-pop 0.3s ease;
+        }
+
+        /* Focus visible for accessibility */
+        *:focus-visible {
+            outline: 3px solid var(--kme-accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Scroll to top button */
+        .kme-scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--kme-accent-gradient);
+            color: #fff;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--kme-shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--kme-transition);
+            z-index: 800;
+        }
+
+        .kme-scroll-top.kme-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .kme-scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--kme-shadow-lg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         TOP NAVIGATION BAR
+         ========================================== -->
+    <header class="kme-topbar" role="banner">
+        <div class="kme-topbar-inner">
+            <a href="#" class="kme-logo" aria-label="KME Home">
+                <span class="kme-logo-icon"><i class="fas fa-graduation-cap"></i></span>
+                <span>KME Study</span>
+            </a>
+            <div class="kme-topbar-actions">
+                <button class="kme-theme-toggle" id="kmeThemeToggle" 
+                        aria-label="Toggle dark mode" title="Toggle Theme">
+                    <i class="fas fa-moon" id="kmeThemeIcon"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Reading progress bar -->
+        <div class="kme-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="kme-progress-fill" id="kmeProgressFill"></div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         SECTION TAB NAVIGATION
+         ========================================== -->
+    <nav class="kme-tab-nav" role="tablist" aria-label="Content sections">
+        <ul class="kme-tab-list">
+            <li><button class="kme-tab-btn kme-active" data-tab="concepts" role="tab" aria-selected="true">
+                <i class="fas fa-lightbulb"></i> Concepts
+            </button></li>
+            <li><button class="kme-tab-btn" data-tab="comparisons" role="tab" aria-selected="false">
+                <i class="fas fa-columns"></i> Compare
+            </button></li>
+            <li><button class="kme-tab-btn" data-tab="formulas" role="tab" aria-selected="false">
+                <i class="fas fa-calculator"></i> Formulas
+            </button></li>
+            <li><button class="kme-tab-btn" data-tab="traps" role="tab" aria-selected="false">
+                <i class="fas fa-exclamation-triangle"></i> Traps
+            </button></li>
+            <li><button class="kme-tab-btn" data-tab="mcqs" role="tab" aria-selected="false">
+                <i class="fas fa-question-circle"></i> MCQs
+            </button></li>
+        </ul>
+    </nav>
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main class="kme-main" id="kmeMain">
+
+        <!-- ========== CORE CONCEPTS PANEL ========== -->
+        <section class="kme-section-panel kme-active" id="kme-panel-concepts" role="tabpanel">
+            <div class="kme-section-header">
+                <h2 class="kme-section-title">
+                    <span class="kme-section-title-icon"><i class="fas fa-lightbulb"></i></span>
+                    Core Concepts
+                </h2>
+                <p class="kme-section-subtitle">Key definitions and foundational ideas in Medical Statistics</p>
+            </div>
+
+            <ul class="kme-concept-list">
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Medical Statistics</span> involves collecting, presenting, analyzing, and drawing inferential conclusions from medical data.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p>Its main uses include <span class="kme-term">simplifying massive data</span>, facilitating comparison, testing hypotheses, and guiding health policies.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Target population</span> is the total group of interest, while the <span class="kme-term">sampling frame</span> is the actual list from which the sample is drawn.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p>A <span class="kme-term">sample</span> is a representative subset used because studying entire populations is costly, time-consuming, and often impossible.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Data</span> represents raw, discrete observations, whereas <span class="kme-term">information</span> is processed, meaningful data providing relevant context.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Variables</span> are measurable traits varying between individuals, divided broadly into <span class="kme-term">qualitative (categorical)</span> and <span class="kme-term">quantitative (numerical)</span> groups.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Random probability sampling</span> ensures every individual unit has an equal and independent chance of selection.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Non-random probability sampling</span> does not involve random selection and is used for quick access or hard-to-reach targets.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="kme-concept-card">
+                        <p><span class="kme-term">Measurement scales</span> progress in complexity from basic categorical labels (<span class="kme-term">nominal</span>) to precise measurements with absolute true zeros (<span class="kme-term">ratio</span>).</p>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ========== COMPARISONS PANEL ========== -->
+        <section class="kme-section-panel" id="kme-panel-comparisons" role="tabpanel">
+            <div class="kme-section-header">
+                <h2 class="kme-section-title">
+                    <span class="kme-section-title-icon"><i class="fas fa-columns"></i></span>
+                    Comparisons
+                </h2>
+                <p class="kme-section-subtitle">Key contrasts and differentiating features side-by-side</p>
+            </div>
+
+            <div class="kme-table-responsive">
+                <div class="kme-table-hint">
+                    <i class="fas fa-hand-pointer"></i> Swipe horizontally to view full table on mobile
+                </div>
+                <div class="kme-table-scroll">
+                    <table class="kme-table">
+                        <thead>
+                            <tr>
+                                <th>Category A</th>
+                                <th>Category B</th>
+                                <th>Distinguishing Feature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kme-cell-a">Population data</td>
+                                <td class="kme-cell-b">Sample data</td>
+                                <td>Entire group vs. Representative subset</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Parameters generated</td>
+                                <td class="kme-cell-b">Statistics generated</td>
+                                <td>Values describe population vs. sample</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Random sampling</td>
+                                <td class="kme-cell-b">Non-random sampling</td>
+                                <td>Equal selection chance vs. Unequal selection chance</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Simple random</td>
+                                <td class="kme-cell-b">Stratified random</td>
+                                <td>Homogeneous mass vs. Heterogeneous strata</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Cluster sampling</td>
+                                <td class="kme-cell-b">Multistage sampling</td>
+                                <td>Intact selected groups vs. Large geographic areas</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Discrete variable</td>
+                                <td class="kme-cell-b">Continuous variable</td>
+                                <td>Distinct whole values vs. Fractions are allowed</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Nominal scale</td>
+                                <td class="kme-cell-b">Ordinal scale</td>
+                                <td>Unordered basic categories vs. Strict logical order</td>
+                            </tr>
+                            <tr>
+                                <td class="kme-cell-a">Interval scale</td>
+                                <td class="kme-cell-b">Ratio scale</td>
+                                <td>Arbitrary zero point vs. True absolute zero</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FORMULAS PANEL ========== -->
+        <section class="kme-section-panel" id="kme-panel-formulas" role="tabpanel">
+            <div class="kme-section-header">
+                <h2 class="kme-section-title">
+                    <span class="kme-section-title-icon"><i class="fas fa-calculator"></i></span>
+                    Math Formulas
+                </h2>
+                <p class="kme-section-subtitle">Key formulas with clinical scenario walkthroughs</p>
+            </div>
+
+            <!-- Main Formula -->
+            <div class="kme-math-box">
+                <div class="kme-math-formula">
+                    <div class="kme-math-formula-label">Sampling Interval Formula</div>
+                    <div class="kme-math-formula-expr">
+                        <span class="kme-math-var">k</span> = <span class="kme-math-var">N</span> / <span class="kme-math-var">n</span>
+                    </div>
+                    <div style="margin-top:8px; font-size:0.82rem; color:var(--kme-text-muted);">
+                        Where <em>k</em> = Sampling Interval, <em>N</em> = Total Population, <em>n</em> = Desired Sample Size
+                    </div>
+                </div>
+
+                <!-- Scenario 1 -->
+                <div class="kme-math-scenario">
+                    <div class="kme-math-scenario-header">
+                        <span class="kme-math-scenario-num">1</span>
+                        <span>A factory employs 2700 workers and you need a systematic random sample of 300 workers.</span>
+                    </div>
+                    <details class="kme-math-details">
+                        <summary class="kme-math-summary">Show Steps</summary>
+                        <div class="kme-math-steps">
+                            Divide the total population (2700) by the sample size (300).<br>
+                            <em>k</em> = 2700 / 300 = <strong>9</strong><br>
+                            <span class="kme-math-result">Sampling interval = 9 → Select every 9th worker</span>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="kme-math-scenario">
+                    <div class="kme-math-scenario-header">
+                        <span class="kme-math-scenario-num">2</span>
+                        <span>You have a list of 1000 first-year medical students and want a systematic random sample of 100 students.</span>
+                    </div>
+                    <details class="kme-math-details">
+                        <summary class="kme-math-summary">Show Steps</summary>
+                        <div class="kme-math-steps">
+                            Divide the population (1000) by the sample size (100).<br>
+                            <em>k</em> = 1000 / 100 = <strong>10</strong><br>
+                            <span class="kme-math-result">Sampling interval = 10 → Select every 10th student</span>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="kme-math-scenario">
+                    <div class="kme-math-scenario-header">
+                        <span class="kme-math-scenario-num">3</span>
+                        <span>You are studying 2700 factory workers and decide to use a systematic interval of every 9th worker.</span>
+                    </div>
+                    <details class="kme-math-details">
+                        <summary class="kme-math-summary">Show Steps</summary>
+                        <div class="kme-math-steps">
+                            Divide the total population (2700) by the sampling interval (9).<br>
+                            <em>n</em> = 2700 / 9 = <strong>300</strong><br>
+                            <span class="kme-math-result">Desired sample size = 300 workers</span>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== EXAM TRAPS PANEL ========== -->
+        <section class="kme-section-panel" id="kme-panel-traps" role="tabpanel">
+            <div class="kme-section-header">
+                <h2 class="kme-section-title">
+                    <span class="kme-section-title-icon" style="background: linear-gradient(135deg, #e53e3e, #c53030);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    Exam Traps
+                </h2>
+                <p class="kme-section-subtitle">Common pitfalls and frequently confused concepts</p>
+            </div>
+
+            <!-- Trap 1 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Confusing Interval and Ratio Scales</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    <strong>Interval scales</strong> have an arbitrary zero (e.g., Celsius temperature), whereas <strong>Ratio scales</strong> have a true absolute zero meaning absence of the trait (e.g., weight).
+                </div>
+            </div>
+
+            <!-- Trap 2 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Stratified vs. Cluster Sampling</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    <strong>Stratified sampling</strong> divides a heterogeneous population into distinct subgroups, whereas <strong>Cluster sampling</strong> selects pre-existing intact homogeneous groups.
+                </div>
+            </div>
+
+            <!-- Trap 3 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Nominal vs. Ordinal Variables</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    <strong>Ordinal</strong> categorical variables require a strict logical ranking (e.g., pain scale); <strong>Nominal</strong> variables do not have any inherent order (e.g., blood group).
+                </div>
+            </div>
+
+            <!-- Trap 4 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Simple Random vs. Systematic Sampling</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    Both require homogeneous populations, but <strong>systematic sampling</strong> strictly uses a predetermined mathematical interval.
+                </div>
+            </div>
+
+            <!-- Trap 5 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Parameter vs. Statistic Terminology</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    A <strong>Parameter</strong> always describes the entire population, while a <strong>Statistic</strong> only describes a numerical value summarizing sample data.
+                </div>
+            </div>
+
+            <!-- Trap 6 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Discrete vs. Continuous Numericals</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    <strong>Discrete</strong> numerical variables never allow fractions (e.g., number of pregnancies); <strong>continuous</strong> variables permit infinite fractions (e.g., hemoglobin level).
+                </div>
+            </div>
+
+            <!-- Trap 7 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Quota vs. Stratified Sampling</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    <strong>Quota sampling</strong> is explicitly a non-random, non-probability method, whereas <strong>Stratified sampling</strong> is a random probability method.
+                </div>
+            </div>
+
+            <!-- Trap 8 -->
+            <div class="kme-alert-danger">
+                <div class="kme-alert-danger-header">
+                    <i class="fas fa-exclamation-triangle kme-alert-danger-icon"></i>
+                    <span class="kme-alert-danger-title">Snowball Sampling Indication</span>
+                </div>
+                <div class="kme-alert-danger-body">
+                    This non-random method is tested as the exclusive choice for <strong>hidden, stigmatized, or inaccessible populations</strong> like drug addicts.
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MCQ QUIZ PANEL ========== -->
+        <section class="kme-section-panel" id="kme-panel-mcqs" role="tabpanel">
+            <div class="kme-section-header">
+                <h2 class="kme-section-title">
+                    <span class="kme-section-title-icon" style="background: linear-gradient(135deg, #805ad5, #6b46c1);">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                    Practice MCQs
+                </h2>
+                <p class="kme-section-subtitle">Test your understanding — select an answer to reveal the explanation</p>
+            </div>
+
+            <div class="kme-quiz-header">
+                <div class="kme-quiz-score">
+                    <i class="fas fa-trophy" style="color: #d69e2e;"></i>
+                    Score: <span class="kme-quiz-score-val" id="kmeScoreDisplay">0 / 20</span>
+                </div>
+                <button class="kme-quiz-reset-btn" id="kmeResetQuiz">
+                    <i class="fas fa-redo"></i> Reset Quiz
+                </button>
+            </div>
+
+            <div id="kmeQuizContainer">
+                <!-- MCQs will be injected by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scroll to top button -->
+    <button class="kme-scroll-top" id="kmeScrollTop" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ==========================================
+        // MCQ DATA - All 20 questions
+        // ==========================================
+        const mcqData = [
+            {
+                q: "Which of the following defines the study of collecting, summarizing, and drawing conclusions from data?",
+                opts: ["Epidemiology", "Medical Statistics", "Demography", "Pathology", "Bioinformatics"],
+                correct: 1,
+                explanation: "Medical statistics is the method of collecting, presenting, analyzing, and inferring conclusions from data."
+            },
+            {
+                q: "A subset of the target population selected for research is called a:",
+                opts: ["Parameter", "Statistic", "Sample", "Sampling frame", "Cluster"],
+                correct: 2,
+                explanation: "A sample is a selected subset of the study population."
+            },
+            {
+                q: "What term describes the complete list of all sampling units from which a sample is drawn?",
+                opts: ["Target population", "Study population", "Sampling frame", "Convenience sample", "Sampling unit"],
+                correct: 2,
+                explanation: "The sampling frame is the actual list of all sampling units."
+            },
+            {
+                q: "A numerical value that summarizes sample data is known as a:",
+                opts: ["Parameter", "Statistic", "Variable", "Constant", "Stratum"],
+                correct: 1,
+                explanation: "A statistic is a numerical value summarizing sample data."
+            },
+            {
+                q: "Which probability sampling method is best suited for a completely homogeneous population?",
+                opts: ["Stratified random sampling", "Cluster sampling", "Multistage sampling", "Simple random sampling", "Snowball sampling"],
+                correct: 3,
+                explanation: "Simple random sampling is suitable for units with homogenous characters."
+            },
+            {
+                q: "In which sampling technique is a predetermined interval used to select subjects from a list?",
+                opts: ["Simple random sampling", "Systematic random sampling", "Stratified random sampling", "Convenience sampling", "Quota sampling"],
+                correct: 1,
+                explanation: "Systematic sampling uses a predetermined sampling interval to select units."
+            },
+            {
+                q: "A researcher divides a population into subgroups based on education level and then randomly selects subjects from each group. This is:",
+                opts: ["Simple random sampling", "Systematic sampling", "Stratified random sampling", "Cluster sampling", "Snowball sampling"],
+                correct: 2,
+                explanation: "Stratified sampling divides heterogeneous individuals into smaller specific strata."
+            },
+            {
+                q: "Selecting intact groups, such as entire hospital departments, randomly for a study describes:",
+                opts: ["Simple random sampling", "Systematic sampling", "Stratified sampling", "Cluster sampling", "Quota sampling"],
+                correct: 3,
+                explanation: "Cluster sampling uses intact groups like school classes or hospital departments as the sampling unit."
+            },
+            {
+                q: "Which sampling method is ideal for national surveys distributed over a very large geographical area?",
+                opts: ["Multistage sampling", "Simple random sampling", "Convenience sampling", "Snowball sampling", "Purposive sampling"],
+                correct: 0,
+                explanation: "Multistage sampling is used when populations are distributed over large national areas."
+            },
+            {
+                q: "Selecting a sample consisting of patients readily available in a clinic on a specific day is:",
+                opts: ["Simple random sampling", "Stratified sampling", "Cluster sampling", "Convenience sampling", "Quota sampling"],
+                correct: 3,
+                explanation: "Convenience sampling uses available persons at a particular time or place."
+            },
+            {
+                q: "The process where researchers predetermine proportions for specific subgroups but select participants non-randomly is:",
+                opts: ["Stratified sampling", "Quota sampling", "Systematic sampling", "Simple random sampling", "Multistage sampling"],
+                correct: 1,
+                explanation: "Quota sampling predetermines subgroup proportions but uses non-random selection."
+            },
+            {
+                q: "Which sampling technique is specifically used to reach inaccessible populations, such as drug addicts?",
+                opts: ["Convenience sampling", "Quota sampling", "Snowball sampling", "Purposive sampling", "Stratified sampling"],
+                correct: 2,
+                explanation: "Snowball sampling relies on participant referrals to find inaccessible populations like drug addicts."
+            },
+            {
+                q: "Assembling a panel of specific individuals with known experience in a field describes:",
+                opts: ["Snowball sampling", "Quota sampling", "Expert (Purposive) sampling", "Cluster sampling", "Systematic sampling"],
+                correct: 2,
+                explanation: "Expert purposive sampling relies on selecting persons with demonstrable expertise."
+            },
+            {
+                q: "Processed, meaningful data that provides context for decision-making is defined as:",
+                opts: ["Raw facts", "Information", "Variables", "Parameters", "Registers"],
+                correct: 1,
+                explanation: "Information is created when raw data is processed and given context."
+            },
+            {
+                q: "Gender is an example of which type of categorical variable?",
+                opts: ["Ordinal", "Nominal", "Discrete", "Continuous", "Ratio"],
+                correct: 1,
+                explanation: "Gender is a nominal categorical variable because it has unordered categories."
+            },
+            {
+                q: "Cancer staging (Stage I, II, III, IV) is an example of which type of variable?",
+                opts: ["Nominal", "Ordinal", "Discrete", "Continuous", "Interval"],
+                correct: 1,
+                explanation: "Cancer stages and education levels are ordinal variables because they possess ordered categories."
+            },
+            {
+                q: "The number of family members or attacks of a disease is an example of a:",
+                opts: ["Continuous variable", "Discrete variable", "Nominal variable", "Ordinal variable", "Ratio variable"],
+                correct: 1,
+                explanation: "The number of family members is a discrete numerical variable since fractions are impossible."
+            },
+            {
+                q: "Hemoglobin level, which allows for infinite fractional measurements, is a:",
+                opts: ["Continuous variable", "Discrete variable", "Nominal variable", "Ordinal variable", "Parameter"],
+                correct: 0,
+                explanation: "Hemoglobin level is a continuous numerical variable because it allows for fractional values."
+            },
+            {
+                q: "Which scale of measurement characterizes temperature measured in Celsius?",
+                opts: ["Nominal scale", "Ordinal scale", "Interval scale", "Ratio scale", "Discrete scale"],
+                correct: 2,
+                explanation: "Celsius temperature uses an interval scale because the zero point is arbitrary, not an absolute absence."
+            },
+            {
+                q: "Which scale of measurement possesses a true absolute zero, such as measuring weight in kilograms?",
+                opts: ["Nominal scale", "Ordinal scale", "Interval scale", "Ratio scale", "Categorical scale"],
+                correct: 3,
+                explanation: "Weight uses a ratio scale because it has a true absolute zero indicating the absence of weight."
+            }
+        ];
+
+        const optionLetters = ['A', 'B', 'C', 'D', 'E'];
+
+        // ==========================================
+        // STORAGE KEYS
+        // ==========================================
+        const STORAGE_KEYS = {
+            theme: 'kme-theme',
+            activeTab: 'kme-active-tab',
+            quizAnswers: 'kme-quiz-answers'
+        };
+
+        // ==========================================
+        // DOM ELEMENTS
+        // ==========================================
+        const themeToggle = document.getElementById('kmeThemeToggle');
+        const themeIcon = document.getElementById('kmeThemeIcon');
+        const tabButtons = document.querySelectorAll('.kme-tab-btn');
+        const panels = document.querySelectorAll('.kme-section-panel');
+        const quizContainer = document.getElementById('kmeQuizContainer');
+        const scoreDisplay = document.getElementById('kmeScoreDisplay');
+        const resetBtn = document.getElementById('kmeResetQuiz');
+        const progressFill = document.getElementById('kmeProgressFill');
+        const scrollTopBtn = document.getElementById('kmeScrollTop');
+
+        // ==========================================
+        // THEME MANAGEMENT
+        // ==========================================
+        function getStoredTheme() {
+            return localStorage.getItem(STORAGE_KEYS.theme) || 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(STORAGE_KEYS.theme, theme);
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Initialize theme from localStorage
+        setTheme(getStoredTheme());
+
+        themeToggle.addEventListener('click', function() {
+            const current = getStoredTheme();
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // ==========================================
+        // TAB NAVIGATION
+        // ==========================================
+        function getStoredTab() {
+            return localStorage.getItem(STORAGE_KEYS.activeTab) || 'concepts';
+        }
+
+        function activateTab(tabId) {
+            // Update buttons
+            tabButtons.forEach(function(btn) {
+                const isActive = btn.getAttribute('data-tab') === tabId;
+                btn.classList.toggle('kme-active', isActive);
+                btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+
+            // Update panels
+            panels.forEach(function(panel) {
+                const panelTab = panel.id.replace('kme-panel-', '');
+                panel.classList.toggle('kme-active', panelTab === tabId);
+            });
+
+            localStorage.setItem(STORAGE_KEYS.activeTab, tabId);
+
+            // Scroll the active tab button into view
+            const activeBtn = document.querySelector('.kme-tab-btn.kme-active');
+            if (activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        // Initialize active tab from localStorage
+        activateTab(getStoredTab());
+
+        tabButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                activateTab(this.getAttribute('data-tab'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // ==========================================
+        // QUIZ RENDERING AND LOGIC
+        // ==========================================
+        function getStoredAnswers() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEYS.quizAnswers)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function storeAnswers(answers) {
+            localStorage.setItem(STORAGE_KEYS.quizAnswers, JSON.stringify(answers));
+        }
+
+        function calculateScore(answers) {
+            let correct = 0;
+            Object.keys(answers).forEach(function(key) {
+                const qIndex = parseInt(key);
+                if (answers[key] === mcqData[qIndex].correct) {
+                    correct++;
+                }
+            });
+            return correct;
+        }
+
+        function updateScoreDisplay() {
+            const answers = getStoredAnswers();
+            const score = calculateScore(answers);
+            scoreDisplay.textContent = score + ' / ' + mcqData.length;
+        }
+
+        function renderQuiz() {
+            const answers = getStoredAnswers();
+            quizContainer.innerHTML = '';
+
+            mcqData.forEach(function(mcq, qIndex) {
+                const hasAnswered = answers.hasOwnProperty(qIndex);
+                const selectedIndex = hasAnswered ? answers[qIndex] : -1;
+                const isCorrect = hasAnswered && selectedIndex === mcq.correct;
+
+                // Container
+                const container = document.createElement('div');
+                container.className = 'kme-mcq-container';
+                if (hasAnswered) {
+                    container.classList.add(isCorrect ? 'kme-answered-correct' : 'kme-answered-wrong');
+                }
+
+                // Question
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'kme-mcq-question';
+                questionDiv.innerHTML = '<span class="kme-mcq-num">' + (qIndex + 1) + '</span><span>' + mcq.q + '</span>';
+                container.appendChild(questionDiv);
+
+                // Options
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'kme-mcq-options';
+
+                mcq.opts.forEach(function(opt, oIndex) {
+                    const optDiv = document.createElement('div');
+                    optDiv.className = 'kme-mcq-option';
+                    optDiv.setAttribute('role', 'radio');
+                    optDiv.setAttribute('tabindex', '0');
+                    optDiv.setAttribute('aria-checked', 'false');
+
+                    if (hasAnswered) {
+                        optDiv.classList.add('kme-disabled');
+                        if (oIndex === selectedIndex && isCorrect) {
+                            optDiv.classList.add('kme-selected-correct');
+                        } else if (oIndex === selectedIndex && !isCorrect) {
+                            optDiv.classList.add('kme-selected-wrong');
+                        }
+                        if (oIndex === mcq.correct && !isCorrect) {
+                            optDiv.classList.add('kme-show-correct');
+                        }
+                    }
+
+                    optDiv.innerHTML =
+                        '<span class="kme-mcq-radio"></span>' +
+                        '<span class="kme-mcq-letter">' + optionLetters[oIndex] + ')</span>' +
+                        '<span>' + opt + '</span>';
+
+                    // Click handler
+                    if (!hasAnswered) {
+                        function handleSelect() {
+                            const currentAnswers = getStoredAnswers();
+                            currentAnswers[qIndex] = oIndex;
+                            storeAnswers(currentAnswers);
+                            renderQuiz(); // Re-render to show result
+                            updateScoreDisplay();
+
+                            // Scroll the question smoothly into view
+                            setTimeout(function() {
+                                const updatedContainer = quizContainer.children[qIndex];
+                                if (updatedContainer) {
+                                    updatedContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    // Add animation
+                                    updatedContainer.classList.add(oIndex === mcq.correct ? 'kme-pop' : 'kme-shake');
+                                }
+                            }, 50);
+                        }
+
+                        optDiv.addEventListener('click', handleSelect);
+                        optDiv.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                handleSelect();
+                            }
+                        });
+                    }
+
+                    optionsDiv.appendChild(optDiv);
+                });
+
+                container.appendChild(optionsDiv);
+
+                // Explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'kme-explanation';
+                if (hasAnswered) {
+                    explanationDiv.classList.add('kme-visible');
+                    explanationDiv.classList.add(isCorrect ? 'kme-explanation-correct' : 'kme-explanation-wrong');
+                    explanationDiv.innerHTML =
+                        '<i class="fas ' + (isCorrect ? 'fa-check-circle' : 'fa-times-circle') + '"></i>' +
+                        '<span>' + mcq.explanation + '</span>';
+                }
+                container.appendChild(explanationDiv);
+
+                quizContainer.appendChild(container);
+            });
+
+            updateScoreDisplay();
+        }
+
+        // Initialize quiz
+        renderQuiz();
+
+        // Reset button
+        resetBtn.addEventListener('click', function() {
+            if (Object.keys(getStoredAnswers()).length === 0) return;
+            localStorage.removeItem(STORAGE_KEYS.quizAnswers);
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ==========================================
+        // SCROLL PROGRESS BAR
+        // ==========================================
+        function updateProgress() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = progress + '%';
+        }
+
+        // ==========================================
+        // SCROLL TO TOP BUTTON
+        // ==========================================
+        function updateScrollTopVisibility() {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('kme-visible');
+            } else {
+                scrollTopBtn.classList.remove('kme-visible');
+            }
+        }
+
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Combined scroll handler
+        let scrollTicking = false;
+        window.addEventListener('scroll', function() {
+            if (!scrollTicking) {
+                window.requestAnimationFrame(function() {
+                    updateProgress();
+                    updateScrollTopVisibility();
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
+        }, { passive: true });
+
+        // Initial calls
+        updateProgress();
+        updateScrollTopVisibility();
+
+    })();
+    </script>
+</body>
+</html>

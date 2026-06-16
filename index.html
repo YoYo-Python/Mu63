@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!-- 1. Keeps scaling correct -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- 2. Links to your central config -->
+<link rel="manifest" href="manifest.json">
+
+<!-- 3. iOS Exceptions: Forces the phone to stay in full-screen app mode -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- 4. iOS Exception: The icon (Safe to put on every page) -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNS Dashboard - Student Login</title>
+    <link rel="icon" type="" href="icons8-brain Background Removed.png">
+
+    <!-- Include the Netlify Identity Widget -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <style>
+        /* CSS Reset and Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Modern vibrant gradient background */
+            background: linear-gradient(135deg, #000000 0%, #4f2201 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Glassmorphism/Clean Card styling */
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            width: 100%;
+            max-width: 420px;
+            padding: 48px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            /* Subtle border for depth */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .logo-circle {
+            width: 64px;
+            height: 64px;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 8px 16px rgba(124, 58, 237, 0.3);
+        }
+        img{
+            width:90px;
+            height: 100px;
+            border-radius: 20%;
+        }
+
+        h1 {
+            color: #111827;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: #6B7280;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* Custom Login Button */
+        .btn-login {
+            background-color: #111827;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            background-color: #374151;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* SVG Icon inside button */
+        .btn-login svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer text inside card */
+        .card-footer {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #9CA3AF;
+        }
+    </style>
+
+<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+<!-- <button id="logout-btn"
+  style="position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); letter-spacing: 0.5px;">
+  Log Out
+</button>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Find the button
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // 2. Attach the click event
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            // Safety check: ensure Netlify Identity is loaded
+            if (window.netlifyIdentity) {
+              window.netlifyIdentity.logout();
+            } else {
+              console.error("Netlify Identity widget is not loaded.");
+            }
+          });
+        }
+
+        // 3. Optional but recommended: Redirect the user after they log out
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on("logout", () => {
+            // Redirects to the homepage. Change "/" to another URL if needed.
+            window.location.href = "/";
+          });
+        }
+      });
+</script>
+<style>
+  #logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-family: "Inter",system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    /* Smooth transition for the hover */
+  }
+
+  #logout-btn:hover {
+    transform: translateY(-2px);
+    /* Lifts the button up slightly */
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+    /* Makes the glow bigger */
+  }
+</style> -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RHSQ7HYJYZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RHSQ7HYJYZ');
+</script>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <div class="logo-circle">
+            <img src = "apple-touch-icon.png" alt=""></div>
+        <h1>MU63 Student Portal</h1>
+        <p>Welcome back! Securely authenticate to access your learning master-dashboard.</p>
+
+        <!-- Custom button instead of default Netlify widget -->
+        <button id="login-btn" class="btn-login">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                </path>
+            </svg>
+            Sign in to Continue
+        </button>
+
+        <div class="card-footer">
+            Protected by Netlify Identity
+        </div>
+    </div>
+
+    <script>
+        // Open the Netlify Identity modal when our custom button is clicked
+        document.getElementById('login-btn').addEventListener('click', () => {
+            netlifyIdentity.open();
+        });
+
+        // Check if the user is already logged in on initial load
+        netlifyIdentity.on('init', user => {
+            if (user) {
+                // Change 'master-dashboard.html' to the actual filename of your master-dashboard
+                window.location.href = "/main.html";
+            }
+        });
+
+        // Redirect immediately after a successful login
+        netlifyIdentity.on('login', user => {
+            window.location.href = "/main.html";
+        });
+    </script>
+
+</body>
+
+</html>

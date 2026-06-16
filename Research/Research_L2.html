@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KME · Case-Control Studies</title>
+
+<!-- Only external resources used: Google Fonts + FontAwesome icons. Everything else runs fully offline. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ============================================================
+   KME CASE-CONTROL MODULE — DESIGN TOKENS
+   Signature concept: the 2x2 contingency table (a,b,c,d) is the
+   literal subject of this topic, so it recurs as a visual motif —
+   Case data is always blue, Control data is always green,
+   throughout concepts, comparisons, and the live OR calculator.
+   ============================================================ */
+:root{
+  --kme-bg:#F5F7FA;
+  --kme-surface:#FFFFFF;
+  --kme-surface-2:#FBFCFD;
+  --kme-navy:#142B3D;
+  --kme-navy-soft:#4C657A;
+  --kme-case:#2C6E8C;
+  --kme-case-bg:#E6F1F6;
+  --kme-case-border:#B9D7E5;
+  --kme-control:#3F8F66;
+  --kme-control-bg:#E7F4ED;
+  --kme-control-border:#BFE0CC;
+  --kme-danger:#C0392B;
+  --kme-danger-bg:#FDECEA;
+  --kme-danger-border:#F3C2BC;
+  --kme-gold:#A87412;
+  --kme-gold-bg:#FAF1DC;
+  --kme-gold-border:#E9D4A0;
+  --kme-border:#DCE3EA;
+  --kme-radius:14px;
+  --kme-radius-sm:9px;
+  --kme-shadow:0 2px 14px rgba(20,43,61,0.07);
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html[data-theme="dark"]{
+  --kme-bg:#0F1A24;
+  --kme-surface:#16232F;
+  --kme-surface-2:#1B2A38;
+  --kme-navy:#EAF1F6;
+  --kme-navy-soft:#9FB4C2;
+  --kme-case:#6FB6D6;
+  --kme-case-bg:#1B3140;
+  --kme-case-border:#2C4C5F;
+  --kme-control:#7FCBA0;
+  --kme-control-bg:#1A2F26;
+  --kme-control-border:#2C4C3B;
+  --kme-danger:#E5736A;
+  --kme-danger-bg:#352121;
+  --kme-danger-border:#4E2E2A;
+  --kme-gold:#E0B45A;
+  --kme-gold-bg:#332A19;
+  --kme-gold-border:#4D3F24;
+  --kme-border:#263846;
+  --kme-shadow:0 2px 14px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--kme-bg);
+  color:var(--kme-navy);
+  font-family:var(--font-body);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:48px;
+  transition:background .25s ease,color .25s ease;
+}
+h1,h2,h3{font-family:var(--font-display);color:var(--kme-navy);margin:0;}
+p{margin:0 0 .6em 0;}
+.kme-wrap{max-width:760px;margin:0 auto;padding:0 16px;}
+
+/* ---------- Sticky header ---------- */
+.kme-header{
+  position:sticky;top:0;z-index:50;
+  background:var(--kme-surface);
+  border-bottom:1px solid var(--kme-border);
+  box-shadow:var(--kme-shadow);
+}
+.kme-header-inner{
+  max-width:760px;margin:0 auto;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.kme-brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.kme-brand-icon{
+  width:34px;height:34px;border-radius:9px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--kme-case) 0%,var(--kme-control) 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
+}
+.kme-brand-text{display:flex;flex-direction:column;min-width:0;}
+.kme-brand-text strong{font-family:var(--font-display);font-size:14px;letter-spacing:.02em;}
+.kme-brand-text span{font-size:11px;color:var(--kme-navy-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kme-theme-toggle{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--kme-border);
+  background:var(--kme-surface-2);color:var(--kme-navy);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 auto;
+  transition:transform .15s ease;
+}
+.kme-theme-toggle:active{transform:scale(.9);}
+
+/* ---------- Section nav pills (scrollable on mobile) ---------- */
+.kme-nav{
+  display:flex;gap:8px;overflow-x:auto;padding:10px 16px 12px;
+  scrollbar-width:none;
+}
+.kme-nav::-webkit-scrollbar{display:none;}
+.kme-nav-pill{
+  flex:0 0 auto;white-space:nowrap;
+  font-family:var(--font-body);font-size:12.5px;font-weight:600;
+  padding:8px 13px;border-radius:999px;border:1px solid var(--kme-border);
+  background:var(--kme-surface-2);color:var(--kme-navy-soft);
+  cursor:pointer;text-decoration:none;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.kme-nav-pill.active{
+  background:var(--kme-navy);color:#fff;border-color:var(--kme-navy);
+}
+
+/* ---------- Generic section heading ---------- */
+.kme-section{padding:30px 0 8px;}
+.kme-section-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.kme-section-num{
+  font-family:var(--font-mono);font-size:12px;color:var(--kme-navy-soft);
+  border:1px solid var(--kme-border);border-radius:6px;padding:2px 7px;
+}
+.kme-section-head h2{font-size:20px;}
+.kme-section-sub{color:var(--kme-navy-soft);font-size:13.5px;margin-top:-6px;margin-bottom:16px;}
+
+/* ============================================================
+   1. CORE CONCEPTS  →  .kme-concept-card
+   ============================================================ */
+.kme-concept-card{
+  background:var(--kme-surface);border:1px solid var(--kme-border);
+  border-radius:var(--kme-radius);box-shadow:var(--kme-shadow);
+  padding:18px 18px 20px;margin-bottom:14px;
+}
+.kme-concept-card ul{margin:0;padding-left:0;list-style:none;}
+.kme-concept-card li{
+  position:relative;padding-left:26px;margin-bottom:13px;font-size:14.5px;
+}
+.kme-concept-card li:last-child{margin-bottom:0;}
+.kme-concept-card li::before{
+  content:"";position:absolute;left:0;top:5px;width:14px;height:14px;border-radius:4px;
+  background:repeating-linear-gradient(45deg,var(--kme-case) 0 6px,var(--kme-control) 6px 12px);
+  opacity:.85;
+}
+.kme-concept-card b{color:var(--kme-navy);font-weight:700;}
+.kme-tag{
+  display:inline-block;font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.04em;padding:1px 7px;border-radius:5px;margin-right:6px;vertical-align:1px;
+}
+.kme-tag-case{background:var(--kme-case-bg);color:var(--kme-case);border:1px solid var(--kme-case-border);}
+.kme-tag-control{background:var(--kme-control-bg);color:var(--kme-control);border:1px solid var(--kme-control-border);}
+.kme-tag-ind{background:var(--kme-gold-bg);color:var(--kme-gold);border:1px solid var(--kme-gold-border);}
+
+/* ============================================================
+   2. COMPARISONS  →  .kme-table-responsive
+   ============================================================ */
+.kme-table-responsive{
+  background:var(--kme-surface);border:1px solid var(--kme-border);
+  border-radius:var(--kme-radius);box-shadow:var(--kme-shadow);
+  overflow:hidden;margin-bottom:18px;
+}
+.kme-table-title{
+  font-family:var(--font-display);font-weight:600;font-size:13.5px;
+  padding:12px 16px 0;color:var(--kme-navy-soft);
+}
+.kme-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table.kme-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:420px;}
+table.kme-table th{
+  font-family:var(--font-display);font-size:12px;text-transform:uppercase;letter-spacing:.04em;
+  text-align:left;padding:12px 16px;border-bottom:2px solid var(--kme-border);color:var(--kme-navy-soft);
+}
+table.kme-table td{padding:11px 16px;border-bottom:1px solid var(--kme-border);vertical-align:top;}
+table.kme-table tr:last-child td{border-bottom:none;}
+.kme-col-pro{color:var(--kme-control);font-weight:600;}
+.kme-col-con{color:var(--kme-danger);font-weight:600;}
+.kme-col-case{background:var(--kme-case-bg);}
+.kme-col-cross{background:var(--kme-surface-2);}
+.kme-table-note{font-size:11.5px;color:var(--kme-navy-soft);padding:0 16px 12px;}
+
+/* mobile card-fallback row labels (visible only on very narrow screens) */
+@media (max-width:420px){
+  table.kme-table thead{display:none;}
+  table.kme-table, table.kme-table tbody, table.kme-table tr, table.kme-table td{display:block;width:100%;min-width:0;}
+  table.kme-table tr{border-bottom:1px solid var(--kme-border);padding:10px 0;}
+  table.kme-table td{padding:4px 16px;border-bottom:none;}
+  table.kme-table td::before{content:attr(data-label);display:block;font-family:var(--font-mono);font-size:10px;color:var(--kme-navy-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+  .kme-table-scroll{overflow-x:visible;}
+}
+
+/* ============================================================
+   3. MATH FORMULAS  →  .kme-math-box  +  live OR calculator
+   ============================================================ */
+.kme-math-box{
+  background:var(--kme-gold-bg);border:1px solid var(--kme-gold-border);
+  border-radius:var(--kme-radius);padding:18px;margin-bottom:18px;
+}
+.kme-math-box h3{font-size:14px;margin-bottom:10px;color:var(--kme-navy);}
+.kme-formula-list{margin:0;padding:0;list-style:none;font-family:var(--font-mono);font-size:13px;}
+.kme-formula-list li{padding:6px 0;border-bottom:1px dashed var(--kme-gold-border);}
+.kme-formula-list li:last-child{border-bottom:none;}
+.kme-formula-list b{color:var(--kme-gold);}
+
+/* live 2x2 calculator — the signature recurring element */
+.kme-calc{
+  background:var(--kme-surface);border:1px solid var(--kme-border);
+  border-radius:var(--kme-radius);box-shadow:var(--kme-shadow);
+  padding:18px;margin-bottom:18px;
+}
+.kme-calc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.kme-calc-head h3{font-size:14.5px;}
+.kme-presets{display:flex;gap:6px;flex-wrap:wrap;}
+.kme-preset-btn{
+  font-family:var(--font-body);font-size:11.5px;font-weight:600;
+  border:1px solid var(--kme-border);background:var(--kme-surface-2);color:var(--kme-navy);
+  border-radius:7px;padding:6px 10px;cursor:pointer;
+}
+.kme-preset-btn:active{transform:scale(.96);}
+.kme-grid-2x2{
+  display:grid;grid-template-columns:78px 1fr 1fr;gap:6px;margin-bottom:14px;
+}
+.kme-grid-2x2 .kme-corner{}
+.kme-grid-2x2 .kme-colhead{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;text-align:center;
+  padding:8px 4px;border-radius:7px;
+}
+.kme-colhead-case{background:var(--kme-case-bg);color:var(--kme-case);border:1px solid var(--kme-case-border);}
+.kme-colhead-control{background:var(--kme-control-bg);color:var(--kme-control);border:1px solid var(--kme-control-border);}
+.kme-rowhead{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--kme-navy-soft);
+  display:flex;align-items:center;padding:0 4px;
+}
+.kme-cell-input{
+  width:100%;font-family:var(--font-mono);font-size:16px;text-align:center;font-weight:700;
+  padding:10px 4px;border-radius:7px;border:1.5px solid var(--kme-border);background:var(--kme-surface-2);color:var(--kme-navy);
+}
+.kme-cell-input:focus{outline:none;border-color:var(--kme-gold);}
+.kme-calc-results{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;
+}
+.kme-result-box{
+  background:var(--kme-surface-2);border:1px solid var(--kme-border);border-radius:9px;
+  padding:9px 11px;
+}
+.kme-result-box .kme-rlabel{font-size:10.5px;color:var(--kme-navy-soft);text-transform:uppercase;letter-spacing:.03em;font-family:var(--font-mono);}
+.kme-result-box .kme-rvalue{font-family:var(--font-mono);font-size:17px;font-weight:700;color:var(--kme-navy);}
+.kme-or-banner{
+  border-radius:9px;padding:11px 13px;font-size:13.5px;font-weight:600;text-align:center;
+  border:1px solid var(--kme-border);background:var(--kme-surface-2);color:var(--kme-navy-soft);
+}
+.kme-or-banner.kme-risk{background:var(--kme-danger-bg);border-color:var(--kme-danger-border);color:var(--kme-danger);}
+.kme-or-banner.kme-protective{background:var(--kme-control-bg);border-color:var(--kme-control-border);color:var(--kme-control);}
+.kme-or-banner.kme-neutral{background:var(--kme-gold-bg);border-color:var(--kme-gold-border);color:var(--kme-gold);}
+
+.kme-scenario{
+  background:var(--kme-surface);border:1px solid var(--kme-border);
+  border-radius:var(--kme-radius);box-shadow:var(--kme-shadow);
+  padding:16px 18px;margin-bottom:12px;
+}
+.kme-scenario h4{font-size:14px;margin-bottom:6px;}
+.kme-scenario p{font-size:13.5px;color:var(--kme-navy-soft);margin-bottom:8px;}
+.kme-scenario details{margin-top:6px;}
+.kme-scenario summary{
+  cursor:pointer;font-family:var(--font-body);font-weight:600;font-size:13px;color:var(--kme-case);
+  padding:8px 0;list-style:none;
+}
+.kme-scenario summary::-webkit-details-marker{display:none;}
+.kme-scenario summary::before{content:"▸ ";display:inline-block;transition:transform .15s ease;}
+.kme-scenario details[open] summary::before{content:"▾ ";}
+.kme-step-list{margin:8px 0 0;padding-left:18px;font-size:13.5px;}
+.kme-step-list li{margin-bottom:6px;}
+.kme-step-list code{font-family:var(--font-mono);background:var(--kme-surface-2);padding:1px 5px;border-radius:5px;font-size:12.5px;}
+
+/* ============================================================
+   4. EXAM TRAPS  →  .kme-alert-danger
+   ============================================================ */
+.kme-alert-danger{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--kme-danger-bg);border:1px solid var(--kme-danger-border);
+  border-radius:var(--kme-radius-sm);padding:13px 14px;margin-bottom:10px;
+}
+.kme-alert-danger .kme-alert-icon{
+  flex:0 0 auto;width:28px;height:28px;border-radius:50%;
+  background:var(--kme-danger);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;margin-top:1px;
+}
+.kme-alert-danger .kme-alert-body strong{display:block;font-size:13px;color:var(--kme-danger);margin-bottom:2px;}
+.kme-alert-danger .kme-alert-body p{font-size:13.5px;margin:0;color:var(--kme-navy);}
+
+/* ============================================================
+   5. MCQ QUIZ  →  .kme-mcq-container
+   ============================================================ */
+.kme-quiz-bar{
+  display:flex;align-items:center;gap:12px;background:var(--kme-surface);
+  border:1px solid var(--kme-border);border-radius:var(--kme-radius);
+  padding:12px 16px;margin-bottom:16px;box-shadow:var(--kme-shadow);
+}
+.kme-quiz-progress{flex:1;height:8px;border-radius:5px;background:var(--kme-surface-2);overflow:hidden;}
+.kme-quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--kme-case),var(--kme-control));width:0%;transition:width .25s ease;}
+.kme-quiz-score{font-family:var(--font-mono);font-size:13px;font-weight:700;white-space:nowrap;}
+.kme-quiz-reset{
+  font-size:12px;font-weight:600;border:1px solid var(--kme-border);background:var(--kme-surface-2);
+  color:var(--kme-navy-soft);padding:7px 10px;border-radius:7px;cursor:pointer;white-space:nowrap;
+}
+
+.kme-mcq-container{display:flex;flex-direction:column;gap:14px;}
+.kme-mcq-question{
+  background:var(--kme-surface);border:1px solid var(--kme-border);
+  border-radius:var(--kme-radius);box-shadow:var(--kme-shadow);
+  padding:16px 16px 14px;
+}
+.kme-mcq-question .kme-q-num{
+  font-family:var(--font-mono);font-size:11px;color:var(--kme-navy-soft);margin-bottom:4px;display:block;
+}
+.kme-mcq-question .kme-q-text{font-size:14.5px;font-weight:600;margin-bottom:12px;display:block;}
+.kme-mcq-options{display:flex;flex-direction:column;gap:8px;}
+.kme-mcq-option{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+  border:1.5px solid var(--kme-border);background:var(--kme-surface-2);cursor:pointer;
+  min-height:44px; /* touch target */
+  transition:border-color .15s ease,background .15s ease;
+}
+.kme-mcq-option input[type="radio"]{
+  width:18px;height:18px;accent-color:var(--kme-case);flex:0 0 auto;
+}
+.kme-mcq-option span.kme-opt-label{font-size:13.5px;flex:1;}
+.kme-mcq-option:active{transform:scale(.995);}
+.kme-mcq-option.kme-correct{border-color:var(--kme-control);background:var(--kme-control-bg);}
+.kme-mcq-option.kme-incorrect{border-color:var(--kme-danger);background:var(--kme-danger-bg);}
+.kme-mcq-option.kme-disabled{cursor:default;}
+.kme-explanation{
+  display:none;margin-top:10px;padding:11px 12px;border-radius:9px;
+  background:var(--kme-gold-bg);border:1px solid var(--kme-gold-border);font-size:13px;
+}
+.kme-explanation.kme-show{display:block;}
+.kme-explanation .kme-exp-tag{font-family:var(--font-mono);font-weight:700;font-size:10.5px;color:var(--kme-gold);text-transform:uppercase;letter-spacing:.04em;margin-right:6px;}
+
+.kme-footer{text-align:center;padding:26px 16px 6px;color:var(--kme-navy-soft);font-size:12px;}
+.kme-footer i{color:var(--kme-case);}
+
+@media (min-width:560px){
+  .kme-calc-results{grid-template-columns:1fr 1fr 1fr;}
+  .kme-section-head h2{font-size:22px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ STICKY HEADER ============ -->
+<header class="kme-header">
+  <div class="kme-header-inner">
+    <div class="kme-brand">
+      <div class="kme-brand-icon"><i class="fa-solid fa-table-cells"></i></div>
+      <div class="kme-brand-text">
+        <strong>KME</strong>
+        <span>Case-Control Studies</span>
+      </div>
+    </div>
+    <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+      <i class="fa-solid fa-moon" id="kmeThemeIcon"></i>
+    </button>
+  </div>
+  <nav class="kme-nav" id="kmeNav">
+    <a class="kme-nav-pill" data-target="kme-sec-concepts" href="#kme-sec-concepts">Concepts</a>
+    <a class="kme-nav-pill" data-target="kme-sec-compare" href="#kme-sec-compare">Compare</a>
+    <a class="kme-nav-pill" data-target="kme-sec-math" href="#kme-sec-math">Math &amp; OR</a>
+    <a class="kme-nav-pill" data-target="kme-sec-traps" href="#kme-sec-traps">Exam Traps</a>
+    <a class="kme-nav-pill" data-target="kme-sec-quiz" href="#kme-sec-quiz">Quiz</a>
+  </nav>
+</header>
+
+<main class="kme-wrap">
+
+  <!-- ============ 1. CORE CONCEPTS ============ -->
+  <section class="kme-section" id="kme-sec-concepts">
+    <div class="kme-section-head">
+      <span class="kme-section-num">01</span>
+      <h2>Core Concepts</h2>
+    </div>
+    <p class="kme-section-sub">Definitions, design logic, and the indications that make case-control the right tool for the job.</p>
+
+    <div class="kme-concept-card">
+      <ul>
+        <li><b>Case-control</b> is an <b>observational, analytical</b> epidemiology study design.</li>
+        <li>It tests <b>etiologic hypotheses</b> by evaluating links between exposure and disease outcomes.</li>
+        <li>The design is strictly <b>retrospective</b> — it looks backward from an existing outcome to determine past exposure.</li>
+        <li><span class="kme-tag kme-tag-case">CASE</span>Subjects properly diagnosed with the disease or outcome of interest, based on strict inclusion criteria.</li>
+        <li><span class="kme-tag kme-tag-control">CONTROL</span>Healthy subjects entirely free from the studied disease, drawn from the <b>same population</b>.</li>
+        <li><b>Matching</b>: selecting controls that share specific confounding characteristics (e.g., age, sex) with cases to isolate the true exposure risk.</li>
+        <li><span class="kme-tag kme-tag-ind">INDICATION</span>Most optimal design for investigating <b>rare diseases</b>.</li>
+        <li><span class="kme-tag kme-tag-ind">INDICATION</span>Highly effective for diseases with exceptionally <b>long latency periods</b>.</li>
+        <li><span class="kme-tag kme-tag-ind">INDICATION</span>Ideal when needing to simultaneously investigate <b>multiple risk factors</b> for a single disease outcome.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 2. COMPARISONS ============ -->
+  <section class="kme-section" id="kme-sec-compare">
+    <div class="kme-section-head">
+      <span class="kme-section-num">02</span>
+      <h2>Comparisons</h2>
+    </div>
+    <p class="kme-section-sub">Pull these tables apart in your head before the exam pulls them apart for you.</p>
+
+    <div class="kme-table-responsive">
+      <div class="kme-table-title">Pros vs. Cons</div>
+      <div class="kme-table-scroll">
+        <table class="kme-table">
+          <thead><tr><th>Pro</th><th>Con</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Pro" class="kme-col-pro">Quick and cheap</td><td data-label="Con" class="kme-col-con">Calculates no rates</td></tr>
+            <tr><td data-label="Pro" class="kme-col-pro">Rare disease optimal</td><td data-label="Con" class="kme-col-con">Rare exposure poor</td></tr>
+            <tr><td data-label="Pro" class="kme-col-pro">Multiple risk factors</td><td data-label="Con" class="kme-col-con">Highly bias-liable</td></tr>
+            <tr><td data-label="Pro" class="kme-col-pro">Small samples needed</td><td data-label="Con" class="kme-col-con">No prevalence data</td></tr>
+            <tr><td data-label="Pro" class="kme-col-pro">Long latency suited</td><td data-label="Con" class="kme-col-con">Recall memory errors</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="kme-table-responsive">
+      <div class="kme-table-title">Case-Control vs. Cross-Sectional</div>
+      <div class="kme-table-scroll">
+        <table class="kme-table">
+          <thead><tr><th>Axis</th><th>Case-Control</th><th>Cross-Sectional</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Axis"><b>Time</b></td><td data-label="Case-Control" class="kme-col-case">Looks backward</td><td data-label="Cross-Sectional" class="kme-col-cross">Current snapshot</td></tr>
+            <tr><td data-label="Axis"><b>Groups</b></td><td data-label="Case-Control" class="kme-col-case">Cases and controls</td><td data-label="Cross-Sectional" class="kme-col-cross">Entire general population</td></tr>
+            <tr><td data-label="Axis"><b>Measure</b></td><td data-label="Case-Control" class="kme-col-case">Odds Ratio (OR)</td><td data-label="Cross-Sectional" class="kme-col-cross">Prevalence rates</td></tr>
+            <tr><td data-label="Axis"><b>Outcome</b></td><td data-label="Case-Control" class="kme-col-case">Rare diseases</td><td data-label="Cross-Sectional" class="kme-col-cross">Common conditions</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="kme-table-note">Blue = Case-Control · Grey = Cross-Sectional — matches the tag colors used throughout this module.</p>
+    </div>
+  </section>
+
+  <!-- ============ 3. MATH FORMULAS ============ -->
+  <section class="kme-section" id="kme-sec-math">
+    <div class="kme-section-head">
+      <span class="kme-section-num">03</span>
+      <h2>Math &amp; Odds Ratio</h2>
+    </div>
+    <p class="kme-section-sub">Every case-control question collapses into the same 2×2 table. Drag the numbers below and watch the OR move.</p>
+
+    <div class="kme-math-box">
+      <h3><i class="fa-solid fa-square-root-variable"></i>&nbsp; Formulas</h3>
+      <ul class="kme-formula-list">
+        <li><b>P1</b> (exposed among cases) = a / (a + c)</li>
+        <li><b>P2</b> (exposed among controls) = b / (b + d)</li>
+        <li><b>Relative Contribution</b> = P1 − P2</li>
+        <li><b>Odds Ratio (OR)</b> = (a × d) / (b × c)</li>
+      </ul>
+    </div>
+
+    <!-- LIVE 2x2 CALCULATOR — signature interactive element -->
+    <div class="kme-calc">
+      <div class="kme-calc-head">
+        <h3><i class="fa-solid fa-calculator"></i>&nbsp; Live 2×2 Calculator</h3>
+        <div class="kme-presets">
+          <button class="kme-preset-btn" data-preset="0">Caries</button>
+          <button class="kme-preset-btn" data-preset="1">Lung Cancer</button>
+          <button class="kme-preset-btn" data-preset="2">Obesity</button>
+        </div>
+      </div>
+
+      <div class="kme-grid-2x2">
+        <div class="kme-corner"></div>
+        <div class="kme-colhead kme-colhead-case">CASES</div>
+        <div class="kme-colhead kme-colhead-control">CONTROLS</div>
+
+        <div class="kme-rowhead">Exposed</div>
+        <input class="kme-cell-input" id="kmeCellA" type="number" min="0" value="32" inputmode="numeric">
+        <input class="kme-cell-input" id="kmeCellB" type="number" min="0" value="16" inputmode="numeric">
+
+        <div class="kme-rowhead">Unexposed</div>
+        <input class="kme-cell-input" id="kmeCellC" type="number" min="0" value="4" inputmode="numeric">
+        <input class="kme-cell-input" id="kmeCellD" type="number" min="0" value="48" inputmode="numeric">
+      </div>
+
+      <div class="kme-calc-results">
+        <div class="kme-result-box"><div class="kme-rlabel">P1</div><div class="kme-rvalue" id="kmeP1">—</div></div>
+        <div class="kme-result-box"><div class="kme-rlabel">P2</div><div class="kme-rvalue" id="kmeP2">—</div></div>
+        <div class="kme-result-box"><div class="kme-rlabel">P1 − P2</div><div class="kme-rvalue" id="kmeRC">—</div></div>
+      </div>
+      <div class="kme-or-banner" id="kmeOrBanner">Enter values above</div>
+    </div>
+
+    <div class="kme-scenario">
+      <h4>Scenario 1 · High-Carbohydrate Diet and Dental Caries</h4>
+      <p>36 caries cases (32 exposed, 4 not) · 64 healthy controls (16 exposed, 48 not).</p>
+      <details>
+        <summary>Show Steps</summary>
+        <ol class="kme-step-list">
+          <li>Identify 2×2 values: <code>a=32, b=16, c=4, d=48</code></li>
+          <li>Apply formula: <code>OR = (32 × 48) / (16 × 4)</code></li>
+          <li>Calculate: <code>OR = 1536 / 64 = 24</code></li>
+          <li>Interpretation: carbohydrate exposure accompanies a <b>24-times</b> increased risk of caries.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="kme-scenario">
+      <h4>Scenario 2 · Smoking and Lung Cancer</h4>
+      <p>100 cancer cases (50 smokers, 50 non-smokers) · 100 healthy controls (15 smokers, 85 non-smokers).</p>
+      <details>
+        <summary>Show Steps</summary>
+        <ol class="kme-step-list">
+          <li>Identify 2×2 values: <code>a=50, b=15, c=50, d=85</code></li>
+          <li>Apply formula: <code>OR = (50 × 85) / (15 × 50)</code></li>
+          <li>Calculate: <code>OR = 4250 / 750 ≈ 5.67</code></li>
+          <li>Interpretation: smokers are <b>5.67×</b> more likely to develop lung cancer.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="kme-scenario">
+      <h4>Scenario 3 · Exercise and Obesity <span style="color:var(--kme-control);font-weight:600;">(OR &lt; 1)</span></h4>
+      <p>100 obese cases (20 exercised, 80 did not) · 100 healthy controls (70 exercised, 30 did not).</p>
+      <details>
+        <summary>Show Steps</summary>
+        <ol class="kme-step-list">
+          <li>Identify 2×2 values: <code>a=20, b=70, c=80, d=30</code></li>
+          <li>Apply formula: <code>OR = (20 × 30) / (70 × 80)</code></li>
+          <li>Calculate: <code>OR = 600 / 5600 ≈ 0.10</code></li>
+          <li>Interpretation: OR &lt; 1 confirms exercise is a <b>protective factor</b> against obesity.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 4. EXAM TRAPS ============ -->
+  <section class="kme-section" id="kme-sec-traps">
+    <div class="kme-section-head">
+      <span class="kme-section-num">04</span>
+      <h2>Exam Traps</h2>
+    </div>
+    <p class="kme-section-sub">Eight ways examiners try to catch you out on this topic.</p>
+
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>1 · Rare disease ≠ rare exposure</strong><p>Case-control is for rare diseases; it is completely ineffective for rare exposures.</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>2 · No incidence, no prevalence</strong><p>Case-control studies cannot calculate true disease rates.</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>3 · OR = 1 misread</strong><p>OR = 1 means absolute zero association between exposure and disease, not "low risk."</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>4 · OR &lt; 1 is not an error</strong><p>It strictly indicates a protective factor — exposure decreases disease.</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>5 · Forgetting to match</strong><p>Without matching controls to cases on confounders (like age), results are statistically invalid.</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>6 · Bias ignorance</strong><p>Retrospective design relies on memory/records — heavily liable to recall and selection bias.</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>7 · Direct risk calculation</strong><p>Case-control calculates risk indirectly (Odds Ratio), not directly (Relative Risk).</p></div>
+    </div>
+    <div class="kme-alert-danger">
+      <div class="kme-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="kme-alert-body"><strong>8 · Flawed sample ratios</strong><p>An unbalanced case-to-control ratio (e.g., 100 cases but only 20 controls) invalidates the study.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 5. MCQ QUIZ ============ -->
+  <section class="kme-section" id="kme-sec-quiz">
+    <div class="kme-section-head">
+      <span class="kme-section-num">05</span>
+      <h2>MCQ Quiz</h2>
+    </div>
+    <p class="kme-section-sub">20 questions. Pick an answer to lock it in and reveal the explanation. Your progress is saved automatically.</p>
+
+    <div class="kme-quiz-bar">
+      <div class="kme-quiz-progress"><div class="kme-quiz-progress-fill" id="kmeProgressFill"></div></div>
+      <div class="kme-quiz-score" id="kmeScoreLabel">0 / 20</div>
+      <button class="kme-quiz-reset" id="kmeQuizReset"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+    </div>
+
+    <div class="kme-mcq-container" id="kmeMcqContainer"><!-- rendered by JS --></div>
+  </section>
+
+</main>
+
+<footer class="kme-footer">
+<i class="fa-solid fa-heart-pulse"></i> KME 
+</footer>
+
+<script>
+/* ============================================================
+   KME CASE-CONTROL MODULE — VANILLA JS
+   Three independent features, each persisted to localStorage:
+   1. Dark mode toggle
+   2. Section nav scrollspy
+   3. Live 2x2 / OR calculator with presets
+   4. MCQ quiz with locked answers + explanations + score
+   ============================================================ */
+(function(){
+  "use strict";
+
+  /* ---------- Storage keys ---------- */
+  var KEY_THEME = "kme_cc_theme";
+  var KEY_QUIZ  = "kme_cc_quiz_answers"; // {questionIndex: chosenOptionIndex}
+
+  /* ---------- 1. Dark mode ---------- */
+  var html = document.documentElement;
+  var themeToggle = document.getElementById("kmeThemeToggle");
+  var themeIcon = document.getElementById("kmeThemeIcon");
+
+  function applyTheme(theme){
+    html.setAttribute("data-theme", theme);
+    themeIcon.className = theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+  }
+  var savedTheme = localStorage.getItem(KEY_THEME) || "light";
+  applyTheme(savedTheme);
+
+  themeToggle.addEventListener("click", function(){
+    var current = html.getAttribute("data-theme");
+    var next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(KEY_THEME, next);
+  });
+
+  /* ---------- 2. Section nav scrollspy ---------- */
+  var navPills = Array.prototype.slice.call(document.querySelectorAll(".kme-nav-pill"));
+  var sections = navPills.map(function(p){ return document.getElementById(p.dataset.target); });
+
+  navPills.forEach(function(pill){
+    pill.addEventListener("click", function(e){
+      e.preventDefault();
+      var target = document.getElementById(pill.dataset.target);
+      if(target){
+        var headerOffset = document.querySelector(".kme-header").offsetHeight + 8;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({top: top, behavior: "smooth"});
+      }
+    });
+  });
+
+  function updateActivePill(){
+    var headerOffset = document.querySelector(".kme-header").offsetHeight + 20;
+    var activeIndex = 0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i] && sections[i].getBoundingClientRect().top - headerOffset <= 0){
+        activeIndex = i;
+      }
+    }
+    navPills.forEach(function(p,i){ p.classList.toggle("active", i === activeIndex); });
+  }
+  window.addEventListener("scroll", updateActivePill, {passive:true});
+  updateActivePill();
+
+  /* ---------- 3. Live 2x2 / OR calculator ---------- */
+  var elA = document.getElementById("kmeCellA");
+  var elB = document.getElementById("kmeCellB");
+  var elC = document.getElementById("kmeCellC");
+  var elD = document.getElementById("kmeCellD");
+  var elP1 = document.getElementById("kmeP1");
+  var elP2 = document.getElementById("kmeP2");
+  var elRC = document.getElementById("kmeRC");
+  var elBanner = document.getElementById("kmeOrBanner");
+
+  var presets = [
+    {a:32, b:16, c:4,  d:48}, // Caries
+    {a:50, b:15, c:50, d:85}, // Lung cancer
+    {a:20, b:70, c:80, d:30}  // Obesity (protective)
+  ];
+
+  function fmt(n){
+    if(!isFinite(n)) return "—";
+    return (Math.round(n*100)/100).toString();
+  }
+
+  function recalc(){
+    var a = parseFloat(elA.value) || 0;
+    var b = parseFloat(elB.value) || 0;
+    var c = parseFloat(elC.value) || 0;
+    var d = parseFloat(elD.value) || 0;
+
+    var p1 = (a+c) > 0 ? a/(a+c) : NaN;
+    var p2 = (b+d) > 0 ? b/(b+d) : NaN;
+    var rc = (isFinite(p1) && isFinite(p2)) ? (p1-p2) : NaN;
+    var or = (b*c) > 0 ? (a*d)/(b*c) : NaN;
+
+    elP1.textContent = isFinite(p1) ? fmt(p1) : "—";
+    elP2.textContent = isFinite(p2) ? fmt(p2) : "—";
+    elRC.textContent = isFinite(rc) ? fmt(rc) : "—";
+
+    elBanner.classList.remove("kme-risk","kme-protective","kme-neutral");
+    if(!isFinite(or)){
+      elBanner.textContent = "Enter non-zero values to compute OR";
+    } else if(Math.abs(or - 1) < 0.02){
+      elBanner.textContent = "OR = " + fmt(or) + "  →  no association";
+      elBanner.classList.add("kme-neutral");
+    } else if(or > 1){
+      elBanner.textContent = "OR = " + fmt(or) + "×  →  risk factor";
+      elBanner.classList.add("kme-risk");
+    } else {
+      elBanner.textContent = "OR = " + fmt(or) + "  →  protective factor";
+      elBanner.classList.add("kme-protective");
+    }
+  }
+  [elA,elB,elC,elD].forEach(function(el){ el.addEventListener("input", recalc); });
+  recalc();
+
+  document.querySelectorAll(".kme-preset-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var p = presets[parseInt(btn.dataset.preset,10)];
+      elA.value = p.a; elB.value = p.b; elC.value = p.c; elD.value = p.d;
+      recalc();
+    });
+  });
+
+  /* ---------- 4. MCQ quiz ---------- */
+  var quizData = [
+    {q:"Which study design is strictly retrospective and looks backward to detect exposure history?",
+     options:["Cross-sectional","Case series","Cohort study","Case-control study","Experimental trial"],
+     correct:3, exp:"Case-control studies are designed to look backward from outcome to exposure."},
+    {q:"What is the primary epidemiological indication for utilizing a case-control study?",
+     options:["Rare exposures","Rare diseases","Calculating incidence rates","Calculating prevalence rates","Tracking treatment efficacy"],
+     correct:1, exp:"Because cases are actively gathered, it is the most feasible design for rare diseases."},
+    {q:"Which of the following epidemiological measures CANNOT be calculated using a case-control study?",
+     options:["Proportion of exposed cases","Proportion of exposed controls","Odds Ratio","Incidence rate","Relative contribution"],
+     correct:3, exp:"Because the study starts with existing cases, true incidence rates cannot be calculated."},
+    {q:"In a case-control study investigating pancreatic cancer, the control group MUST:",
+     options:["Have a mild form of cancer","Be exposed to the same risk factors","Be entirely free from pancreatic cancer","Be derived exclusively from hospital patients","Outnumber the cases by exactly 10 to 1"],
+     correct:2, exp:"By definition, the control group must be entirely free from the disease being studied."},
+    {q:"What is the explicit mathematical formula for calculating the Odds Ratio (OR)?",
+     options:["(a+c) / (b+d)","ad / bc","a / (a+c)","P1 − P2","(a+b) / (c+d)"],
+     correct:1, exp:"The Odds Ratio is calculated indirectly via cross-multiplication: ad/bc."},
+    {q:"If the calculated Odds Ratio (OR) equals 1, what is the correct clinical interpretation?",
+     options:["The exposure increases the risk of the disease.","The exposure decreases the risk of the disease.","The exposure is perfectly protective.","The exposure is universally fatal.","The exposure is not associated with the disease."],
+     correct:4, exp:"An OR of exactly 1 proves that the exposure has zero mathematical association with the disease."},
+    {q:"If the calculated Odds Ratio (OR) is 0.45, what does this mathematically indicate?",
+     options:["High rate of recall bias.","The exposure is a protective factor.","The exposure is a severe risk factor.","The matching process failed.","There is no association."],
+     correct:1, exp:"An OR less than 1 mathematically demonstrates that increased exposure accompanies decreased outcome, making it protective."},
+    {q:"When selecting controls, matching is performed primarily to eliminate the effect of:",
+     options:["Recall bias","Selection bias","Confounding factors","Rare exposures","Financial costs"],
+     correct:2, exp:"Matching ensures baseline similarities between groups, specifically neutralizing confounding factors like age or sex."},
+    {q:"What is the formula to calculate the proportion of exposed subjects among the cases (P1)?",
+     options:["a / (a + c)","b / (b + d)","a / c","b / d","ad / bc"],
+     correct:0, exp:"P1 isolates the exposed cases \"a\" against the total number of cases \"a+c\"."},
+    {q:"A researcher wants to study a disease that has a 25-year latency period before symptoms appear. The optimal study design is:",
+     options:["Clinical trial","Case-control study","Prospective cohort","Cross-sectional","Ecological study"],
+     correct:1, exp:"Case-control bypasses waiting times by identifying patients who have already developed the long-latency disease."},
+    {q:"Which form of bias is uniquely problematic in case-control studies relying on patient interviews about past habits?",
+     options:["Lead-time bias","Hawthorne effect","Recall bias","Attrition bias","Observer bias"],
+     correct:2, exp:"Looking backward requires memory, making patients prone to flawed recall regarding past exposures."},
+    {q:"The \"Relative Contribution\" in a case-control study is mathematically defined as:",
+     options:["P1 + P2","P1 / P2","P2 − P1","P1 − P2","OR − 1"],
+     correct:3, exp:"Relative contribution is the proportion of exposed cases minus the proportion of exposed controls."},
+    {q:"According to the standard 2x2 table for case-control studies, cell \"a\" represents:",
+     options:["Diseased and unexposed","Healthy and exposed","Diseased and exposed","Healthy and unexposed","Total exposed"],
+     correct:2, exp:"Cell \"a\" identifies the intersection of positive disease status and positive exposure status."},
+    {q:"Which of the following is a recognized disadvantage of the case-control study design?",
+     options:["Requires massive sample sizes","Takes decades to complete","Not useful for rare exposures","Cannot study multiple risk factors","Too expensive"],
+     correct:2, exp:"Because the design focuses on finding rare diseases, it is highly ineffective for studying rare exposures."},
+    {q:"If a researcher studies 100 breast cancer cases and uses 20 healthy individuals as controls, what is the primary error?",
+     options:["Recall bias","Unacceptable case-to-control ratio","Wrong disease choice","Prospective design failure","Cross-sectional crossover"],
+     correct:1, exp:"Having significantly fewer controls than cases compromises statistical power; controls should match or outnumber cases."},
+    {q:"In evaluating an etiologic hypothesis like smoking and lung cancer, analytical studies differ from descriptive studies because they ALWAYS require:",
+     options:["Blood samples","A 10-year follow-up","A control group","Calculation of prevalence","Animal testing"],
+     correct:2, exp:"Unlike descriptive studies, all analytical studies strictly require a control group for valid comparison."},
+    {q:"Which is a valid source for selecting a control group in a case-control study?",
+     options:["The general population","Hospital patients without the studied disease","Friends and neighbors of cases","Family members of cases","All of the above"],
+     correct:4, exp:"Controls can be properly sourced from general populations, hospitals, or social/family networks."},
+    {q:"What does an Odds Ratio (OR) of 5.6 strictly mean?",
+     options:["5.6% of people will get the disease.","Exposed subjects are 5.6 times more likely to have the outcome.","The disease has a prevalence of 5.6.","The disease is protective by a factor of 5.6.","5.6% of the data is biased."],
+     correct:1, exp:"An OR > 1 indicates that increased exposure accompanies an increased outcome by that mathematical factor."},
+    {q:"Why is a case-control study considered an \"indirect estimation\" of risk?",
+     options:["Because it cannot use human subjects directly.","Because it utilizes animal models.","Because the outcome has already occurred before exposure is assessed.","Because it relies on cross-sectional surveys.","Because it calculates incidence."],
+     correct:2, exp:"Risk is estimated indirectly because the study starts with the disease already present, not the exposure."},
+    {q:"A researcher wants to investigate how diet, smoking, genetics, and stress contribute to a single outcome (ulcers). The best design is:",
+     options:["Case-control study","Clinical trial","Cohort study","Ecological study","Descriptive case series"],
+     correct:0, exp:"Case-control design specifically allows for the simultaneous investigation of multiple risk factors for one disease."}
+  ];
+
+  var container = document.getElementById("kmeMcqContainer");
+  var progressFill = document.getElementById("kmeProgressFill");
+  var scoreLabel = document.getElementById("kmeScoreLabel");
+  var resetBtn = document.getElementById("kmeQuizReset");
+  var letters = ["A","B","C","D","E"];
+
+  function loadAnswers(){
+    try{
+      var raw = localStorage.getItem(KEY_QUIZ);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e){ return {}; }
+  }
+  function saveAnswers(answers){
+    localStorage.setItem(KEY_QUIZ, JSON.stringify(answers));
+  }
+
+  var answers = loadAnswers();
+
+  function renderQuiz(){
+    container.innerHTML = "";
+    quizData.forEach(function(item, qi){
+      var qBlock = document.createElement("div");
+      qBlock.className = "kme-mcq-question";
+
+      var numEl = document.createElement("span");
+      numEl.className = "kme-q-num";
+      numEl.textContent = "QUESTION " + (qi+1) + " OF " + quizData.length;
+      qBlock.appendChild(numEl);
+
+      var textEl = document.createElement("span");
+      textEl.className = "kme-q-text";
+      textEl.textContent = item.q;
+      qBlock.appendChild(textEl);
+
+      var optsWrap = document.createElement("div");
+      optsWrap.className = "kme-mcq-options";
+
+      var chosen = answers.hasOwnProperty(qi) ? answers[qi] : null;
+
+      item.options.forEach(function(optText, oi){
+        var label = document.createElement("label");
+        label.className = "kme-mcq-option";
+        if(chosen !== null) label.classList.add("kme-disabled");
+
+        var radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "kme-q-" + qi;
+        radio.value = oi;
+        if(chosen !== null) radio.disabled = true;
+        if(chosen === oi) radio.checked = true;
+
+        var optLabel = document.createElement("span");
+        optLabel.className = "kme-opt-label";
+        optLabel.textContent = letters[oi] + ") " + optText;
+
+        label.appendChild(radio);
+        label.appendChild(optLabel);
+        optsWrap.appendChild(label);
+
+        radio.addEventListener("change", function(){
+          answers[qi] = oi;
+          saveAnswers(answers);
+          renderQuiz();
+          updateScore();
+        });
+
+        // visual state once answered
+        if(chosen !== null){
+          if(oi === item.correct){
+            label.classList.add("kme-correct");
+          } else if(oi === chosen && chosen !== item.correct){
+            label.classList.add("kme-incorrect");
+          }
+        }
+      });
+
+      qBlock.appendChild(optsWrap);
+
+      var expEl = document.createElement("div");
+      expEl.className = "kme-explanation" + (chosen !== null ? " kme-show" : "");
+      if(chosen !== null){
+        expEl.innerHTML = '<span class="kme-exp-tag">Why</span>' + item.exp;
+      }
+      qBlock.appendChild(expEl);
+
+      container.appendChild(qBlock);
+    });
+  }
+
+  function updateScore(){
+    var answeredCount = Object.keys(answers).length;
+    var correctCount = 0;
+    Object.keys(answers).forEach(function(k){
+      if(quizData[parseInt(k,10)].correct === answers[k]) correctCount++;
+    });
+    scoreLabel.textContent = correctCount + " / " + quizData.length;
+    progressFill.style.width = (answeredCount / quizData.length * 100) + "%";
+  }
+
+  resetBtn.addEventListener("click", function(){
+    answers = {};
+    saveAnswers(answers);
+    renderQuiz();
+    updateScore();
+  });
+
+  renderQuiz();
+  updateScore();
+
+})();
+</script>
+</body>
+</html>

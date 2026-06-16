@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hypothalamus & Pituitary — Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --surface3: #222d42;
+    --border: #2a3a52;
+    --teal: #00d4b8;
+    --teal-dim: #00a899;
+    --amber: #f5a623;
+    --rose: #f06292;
+    --violet: #a78bfa;
+    --green: #4ade80;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --text-dim: #8fa3bf;
+    --text-muted: #4a6080;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,212,184,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,184,.035) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .bg-orb {
+    position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0;
+  }
+  .orb1 { width:500px;height:500px; top:-200px;left:-150px; background:rgba(0,212,184,.06); }
+  .orb2 { width:400px;height:400px; bottom:-100px;right:-100px; background:rgba(167,139,250,.06); }
+  .orb3 { width:300px;height:300px; top:40%;left:60%; background:rgba(245,166,35,.04); }
+
+  /* ── HEADER ── */
+  header {
+    position: relative; z-index: 10;
+    padding: 28px 40px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,14,26,.85);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0;
+  }
+  .logo-area h1 {
+    font-family: var(--font-display);
+    font-size: 1.5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--teal), var(--violet));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -.5px;
+  }
+  .logo-area p { font-size: .75rem; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+  .stats-bar {
+    display: flex; gap: 20px; align-items: center;
+    padding-bottom: 12px;
+  }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 5px 12px; border-radius: 100px;
+    font-size: .78rem; font-weight: 500;
+  }
+  .stat-pill span { color: var(--teal); font-family: var(--font-mono); }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    position: sticky; top: 72px; z-index: 9;
+    background: rgba(10,14,26,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; overflow-x: auto; gap: 0;
+    padding: 0 24px;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 14px 20px;
+    background: none; border: none; color: var(--text-muted);
+    font-family: var(--font-body); font-size: .85rem; font-weight: 500;
+    cursor: pointer; position: relative;
+    transition: color .2s;
+    white-space: nowrap;
+  }
+  .nav-tab::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--teal); transform: scaleX(0); transition: transform .2s;
+    border-radius: 2px 2px 0 0;
+  }
+  .nav-tab.active { color: var(--teal); }
+  .nav-tab.active::after { transform: scaleX(1); }
+  .nav-tab:hover { color: var(--text); }
+
+  /* ── MAIN CONTENT ── */
+  main { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+  .tab-panel { display: none; animation: fadeUp .35s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 2rem; font-weight: 900;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 40%, var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .section-sub { color: var(--text-dim); font-size: .9rem; margin-bottom: 32px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .card-title { font-weight: 600; font-size: 1rem; margin-bottom: 8px; color: var(--teal); }
+  .card-body { font-size: .88rem; color: var(--text-dim); line-height: 1.7; }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-block; padding: 2px 10px; border-radius: 100px;
+    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .tag-exam { background: rgba(245,166,35,.15); color: var(--amber); border: 1px solid rgba(245,166,35,.3); }
+  .tag-pearl { background: rgba(0,212,184,.12); color: var(--teal); border: 1px solid rgba(0,212,184,.25); }
+  .tag-mech { background: rgba(167,139,250,.12); color: var(--violet); border: 1px solid rgba(167,139,250,.25); }
+  .tag-high { background: rgba(240,98,146,.12); color: var(--rose); border: 1px solid rgba(240,98,146,.25); }
+
+  /* ── SEARCH ── */
+  .search-wrap { position: relative; margin-bottom: 32px; }
+  .search-wrap input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 16px 12px 44px;
+    color: var(--text); font-family: var(--font-body); font-size: .9rem;
+    outline: none; transition: border-color .2s;
+  }
+  .search-wrap input:focus { border-color: var(--teal); }
+  .search-wrap::before { content: '🔍'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1rem; }
+
+  /* ── QUIZ ── */
+  .quiz-progress-wrap { margin-bottom: 28px; }
+  .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: .85rem; }
+  .quiz-meta .score { color: var(--teal); font-family: var(--font-mono); font-weight: 600; }
+  .progress-bar { height: 6px; background: var(--surface3); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--violet)); border-radius: 100px; transition: width .5s ease; }
+  .quiz-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px; margin-bottom: 20px;
+  }
+  .quiz-num { font-size: .75rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .08em; }
+  .quiz-q { font-size: 1.05rem; font-weight: 500; margin-bottom: 24px; line-height: 1.65; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    cursor: pointer; font-size: .9rem; text-align: left;
+    transition: all .18s; font-family: var(--font-body);
+    color: var(--text); display: flex; align-items: flex-start; gap: 10px;
+  }
+  .quiz-opt:hover { border-color: var(--teal); background: rgba(0,212,184,.06); }
+  .quiz-opt.correct { border-color: var(--green); background: rgba(74,222,128,.1); color: var(--green); }
+  .quiz-opt.wrong { border-color: var(--red); background: rgba(248,113,113,.1); color: var(--red); animation: shake .4s ease; }
+  .quiz-opt.disabled { cursor: default; }
+  .opt-letter { font-family: var(--font-mono); font-weight: 600; font-size: .8rem; min-width: 20px; margin-top: 1px; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .quiz-explain {
+    margin-top: 16px; padding: 16px; border-radius: var(--radius-sm);
+    background: rgba(0,212,184,.06); border: 1px solid rgba(0,212,184,.2);
+    font-size: .87rem; line-height: 1.7; display: none;
+  }
+  .quiz-explain.show { display: block; animation: fadeUp .3s ease; }
+  .quiz-explain .correct-label { color: var(--green); font-weight: 600; margin-bottom: 4px; }
+  .quiz-explain .wrong-parts { color: var(--text-dim); margin-top: 6px; }
+  .quiz-nav { display: flex; gap: 12px; justify-content: flex-end; margin-top: 12px; }
+  .btn {
+    padding: 10px 22px; border-radius: var(--radius-sm); border: none;
+    font-family: var(--font-body); font-size: .88rem; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+  }
+  .btn-primary { background: var(--teal); color: #0a0e1a; }
+  .btn-primary:hover { background: var(--teal-dim); transform: translateY(-1px); }
+  .btn-ghost { background: var(--surface3); color: var(--text); }
+  .btn-ghost:hover { background: var(--surface2); border: 1px solid var(--border); }
+
+  /* ── FLASHCARDS ── */
+  .fc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .fc-wrapper { height: 200px; perspective: 800px; cursor: pointer; }
+  .fc-inner {
+    width: 100%; height: 100%; position: relative;
+    transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1);
+  }
+  .fc-wrapper.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    border-radius: var(--radius); border: 1.5px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; padding: 20px; text-align: center;
+  }
+  .fc-front { background: var(--surface2); }
+  .fc-back { background: linear-gradient(135deg, #0d1f33, #0f2a26); border-color: var(--teal); transform: rotateY(180deg); }
+  .fc-front::before { content: '❓'; font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .fc-back::before { content: '💡'; font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .fc-q { font-size: .9rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+  .fc-a { font-size: .85rem; color: var(--teal); line-height: 1.55; }
+  .fc-hint { font-size: .7rem; color: var(--text-muted); position: absolute; bottom: 10px; right: 14px; }
+
+  /* ── CLINICAL CASES ── */
+  .case-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 28px; overflow: hidden;
+  }
+  .case-header {
+    background: linear-gradient(90deg, var(--surface2), var(--surface3));
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .case-num { font-family: var(--font-mono); font-size: .75rem; color: var(--teal); text-transform: uppercase; letter-spacing: .1em; }
+  .case-title { font-weight: 700; font-size: 1.05rem; margin-top: 4px; }
+  .case-body { padding: 24px; }
+  .vignette-box {
+    background: rgba(167,139,250,.07); border: 1px solid rgba(167,139,250,.2);
+    border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px;
+    font-size: .9rem; line-height: 1.75; color: var(--text);
+  }
+  .case-questions { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+  .case-q {
+    background: var(--surface2); border-radius: var(--radius-sm);
+    padding: 14px 18px; font-size: .88rem;
+    border-left: 3px solid var(--amber);
+  }
+  .reveal-btn {
+    background: linear-gradient(135deg, var(--teal), var(--violet));
+    border: none; border-radius: var(--radius-sm);
+    padding: 11px 22px; color: #0a0e1a; font-weight: 700;
+    font-family: var(--font-body); cursor: pointer; font-size: .88rem;
+    transition: opacity .18s, transform .18s;
+  }
+  .reveal-btn:hover { opacity: .9; transform: translateY(-1px); }
+  .case-answer {
+    display: none; margin-top: 16px;
+    background: rgba(74,222,128,.05); border: 1px solid rgba(74,222,128,.2);
+    border-radius: var(--radius-sm); padding: 18px;
+    font-size: .88rem; line-height: 1.75;
+    animation: fadeUp .3s ease;
+  }
+  .case-answer.show { display: block; }
+  .case-answer strong { color: var(--green); }
+
+  /* ── PATHOPHYSIOLOGY FLOW ── */
+  .flow-chain { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+  .flow-step {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px 20px;
+    font-size: .88rem; position: relative; cursor: pointer;
+    transition: border-color .2s;
+  }
+  .flow-step:hover { border-color: var(--teal); }
+  .flow-step:not(:last-child)::after {
+    content: '↓'; position: absolute; left: 50%; bottom: -24px;
+    transform: translateX(-50%); color: var(--teal); font-size: 1.2rem; z-index: 1;
+  }
+  .flow-step:not(:last-child) { margin-bottom: 24px; }
+  .flow-label { font-size: .7rem; color: var(--teal); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+  .flow-text { font-weight: 500; }
+  .flow-detail { font-size: .82rem; color: var(--text-dim); margin-top: 6px; display: none; }
+  .flow-step.open .flow-detail { display: block; }
+
+  /* ── STRUCTURE GRID ── */
+  .struct-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .struct-item {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 18px;
+    cursor: pointer; transition: all .2s;
+  }
+  .struct-item:hover, .struct-item.open { border-color: var(--violet); background: rgba(167,139,250,.07); }
+  .struct-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .struct-name { font-weight: 600; font-size: .9rem; }
+  .struct-desc { font-size: .82rem; color: var(--text-dim); margin-top: 6px; display: none; line-height: 1.6; }
+  .struct-item.open .struct-desc { display: block; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: .87rem; }
+  .compare-table th {
+    background: var(--surface3); color: var(--teal);
+    padding: 12px 16px; text-align: left; font-weight: 600;
+    border-bottom: 2px solid var(--teal);
+  }
+  .compare-table td {
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.55;
+  }
+  .compare-table tr:hover td { background: var(--surface2); }
+
+  /* ── TREATMENT ── */
+  .treat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .treat-card {
+    background: var(--surface); border-radius: var(--radius); padding: 22px;
+    border-top: 3px solid;
+  }
+  .treat-card.emergency { border-color: var(--rose); }
+  .treat-card.primary { border-color: var(--teal); }
+  .treat-card.secondary { border-color: var(--violet); }
+  .treat-card.supportive { border-color: var(--amber); }
+  .treat-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+  .treat-card.emergency .treat-label { color: var(--rose); }
+  .treat-card.primary .treat-label { color: var(--teal); }
+  .treat-card.secondary .treat-label { color: var(--violet); }
+  .treat-card.supportive .treat-label { color: var(--amber); }
+  .treat-title { font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
+  .treat-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .treat-list li { font-size: .86rem; color: var(--text-dim); display: flex; gap: 8px; align-items: flex-start; }
+  .treat-list li::before { content: '→'; color: var(--teal); flex-shrink: 0; }
+
+  /* ── MNEMONICS ── */
+  .mnem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .mnem-card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1.5px solid var(--border); padding: 24px;
+    cursor: pointer; transition: border-color .2s;
+  }
+  .mnem-card:hover { border-color: var(--amber); }
+  .mnem-word {
+    font-family: var(--font-display); font-size: 2rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--amber), var(--rose));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .mnem-title { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }
+  .mnem-list { display: none; flex-direction: column; gap: 8px; }
+  .mnem-card.open .mnem-list { display: flex; }
+  .mnem-item { display: flex; gap: 10px; align-items: flex-start; font-size: .87rem; }
+  .mnem-letter { font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem; color: var(--amber); min-width: 24px; }
+  .mnem-meaning { color: var(--text-dim); line-height: 1.5; }
+
+  /* ── DIAGNOSIS TAB ── */
+  .diag-algo { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+  .algo-step {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .algo-num {
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--teal);
+    color: var(--teal); font-family: var(--font-mono); font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-size: .9rem;
+  }
+  .algo-content { flex: 1; }
+  .algo-title { font-weight: 600; margin-bottom: 4px; }
+  .algo-desc { font-size: .86rem; color: var(--text-dim); line-height: 1.6; }
+  .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .badge {
+    padding: 4px 12px; border-radius: 100px; font-size: .78rem; font-weight: 600;
+    background: var(--surface3); border: 1px solid var(--border); color: var(--text-dim);
+  }
+
+  /* ── OVERVIEW HIGHLIGHT ── */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(0,212,184,.08), rgba(167,139,250,.08));
+    border: 1.5px solid rgba(0,212,184,.25); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .hl-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .hl-text { font-size: .88rem; line-height: 1.7; color: var(--text); }
+  .hl-text strong { color: var(--teal); }
+
+  /* ── SCORE SCREEN ── */
+  .score-screen {
+    display: none; text-align: center; padding: 60px 20px;
+    animation: fadeUp .4s ease;
+  }
+  .score-screen.show { display: block; }
+  .score-circle {
+    width: 150px; height: 150px; border-radius: 50%;
+    border: 4px solid var(--teal); margin: 0 auto 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(circle, rgba(0,212,184,.1), transparent);
+    font-family: var(--font-mono);
+  }
+  .score-num { font-size: 2.8rem; font-weight: 700; color: var(--teal); }
+  .score-total { font-size: .85rem; color: var(--text-dim); }
+  .score-msg { font-size: 1.1rem; color: var(--text); margin-bottom: 24px; }
+  .score-grade { font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s, transform .5s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    header { padding: 16px 16px 0; }
+    .stats-bar { gap: 10px; }
+    main { padding: 24px 16px 60px; }
+    .section-title { font-size: 1.5rem; }
+    .quiz-card { padding: 20px; }
+    .case-body { padding: 16px; }
+  }
+
+  /* ── STREAK ── */
+  .streak-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, rgba(245,166,35,.15), rgba(240,98,146,.15));
+    border: 1px solid rgba(245,166,35,.35); border-radius: 100px;
+    padding: 5px 14px; font-size: .8rem; font-weight: 600; color: var(--amber);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<header>
+  <div class="logo-area">
+    <h1>🧠 Hypothalamus &amp; Pituitary</h1>
+    <p>Physiology · Endocrinology · Interactive Study Platform</p>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-pill">Score: <span id="hdr-score">0/0</span></div>
+    <div class="stat-pill">Cards: <span id="hdr-cards">0</span></div>
+    <div class="streak-badge">🔥 Streak: <span id="hdr-streak">0</span></div>
+  </div>
+</header>
+
+<nav class="nav-tabs" id="navTabs">
+  <button class="nav-tab active" onclick="switchTab('overview', this)">📋 Overview</button>
+  <button class="nav-tab" onclick="switchTab('quiz', this)">🎯 Quiz Mode</button>
+  <button class="nav-tab" onclick="switchTab('flashcards', this)">🃏 Flashcards</button>
+  <button class="nav-tab" onclick="switchTab('cases', this)">🏥 Clinical Cases</button>
+  <button class="nav-tab" onclick="switchTab('pathophys', this)">⚙️ Pathophysiology</button>
+  <button class="nav-tab" onclick="switchTab('diagnosis', this)">🔬 Diagnosis</button>
+  <button class="nav-tab" onclick="switchTab('treatment', this)">💊 Treatment</button>
+  <button class="nav-tab" onclick="switchTab('mnemonics', this)">🧩 Mnemonics</button>
+</nav>
+
+<main>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<div class="tab-panel active" id="tab-overview">
+  <div class="section-title">Overview</div>
+  <div class="section-sub">High-yield summary of the Hypothalamic–Pituitary axis — every concept you need to dominate the exam.</div>
+
+  <div class="search-wrap"><input type="text" id="overviewSearch" placeholder="Search any concept, hormone, or keyword…" oninput="filterCards()"></div>
+
+  <div class="highlight-box"><div class="hl-icon">⚠️</div><div class="hl-text"><strong>EXAM BOMB:</strong> ADH binds to <strong>V2 receptors</strong> in the DCT and collecting ducts. Via adenylate cyclase/cAMP it induces insertion of <strong>Aquaporin-2</strong> channels → dilutes plasma, concentrates urine. A mere <strong>1–2% rise in plasma osmolarity</strong> is enough to trigger this.</div></div>
+  <div class="highlight-box"><div class="hl-icon">⚠️</div><div class="hl-text"><strong>EXAM BOMB:</strong> GH has <em>no direct</em> growth-promoting effects. All growth effects are mediated by <strong>Somatomedins (IGF-1)</strong> produced in the liver.</div></div>
+  <div class="highlight-box"><div class="hl-icon">⚠️</div><div class="hl-text"><strong>EXAM BOMB:</strong> The endocrine system regulates metabolism, growth, reproduction, and homeostasis. Hormones circulate systemically but act only on <strong>target organs with specific receptors</strong>.</div></div>
+
+  <div class="card-grid" id="overviewCards">
+    <!-- TOPIC 1 -->
+    <div class="card" data-search="endocrine paracrine autocrine hormone signaling">
+      <div style="margin-bottom:10px"><span class="tag tag-pearl">Signaling Types</span></div>
+      <div class="card-title">Hormonal Signaling Patterns</div>
+      <div class="card-body">
+        <strong>Endocrine:</strong> Into bloodstream → distant target organs.<br>
+        <strong>Paracrine:</strong> Into ECF → neighboring cells only.<br>
+        <strong>Autocrine:</strong> Acts on the same cell that secreted it.
+      </div>
+    </div>
+    <div class="card" data-search="protein peptide steroid cholesterol hormone chemical nature">
+      <div style="margin-bottom:10px"><span class="tag tag-mech">Chemistry</span></div>
+      <div class="card-title">Chemical Nature of Hormones</div>
+      <div class="card-body">
+        <strong>Protein/Peptide:</strong> Pituitary, Hypothalamus, Calcitonin, Parathyroid hormones.<br>
+        <strong>Steroid (from cholesterol):</strong> Adrenal cortical, Sex hormones, Vitamin D3.
+      </div>
+    </div>
+    <div class="card" data-search="receptor location membrane cytoplasm nuclear steroid thyroid peptide catecholamine">
+      <div style="margin-bottom:10px"><span class="tag tag-exam">Exam Favorite</span></div>
+      <div class="card-title">Hormone Receptor Locations</div>
+      <div class="card-body">
+        <strong>Cell membrane:</strong> Protein/peptide hormones + catecholamines.<br>
+        <strong>Cytoplasmic:</strong> Steroid hormones.<br>
+        <strong>Nuclear:</strong> Thyroid hormones.
+      </div>
+    </div>
+    <!-- TOPIC 2: POSTERIOR -->
+    <div class="card" data-search="posterior pituitary neurohypophysis structure neural downgrowth third ventricle">
+      <div style="margin-bottom:10px"><span class="tag tag-pearl">Posterior Pit.</span></div>
+      <div class="card-title">Posterior Pituitary — Structure</div>
+      <div class="card-body">
+        Neural tissue, a downgrowth from the <strong>3rd ventricle</strong>. Connected to hypothalamus via the <strong>hypothalamic–hypophyseal tract</strong>. <em>Does NOT synthesize hormones</em> — it stores and releases them.
+      </div>
+    </div>
+    <div class="card" data-search="ADH vasopressin supraoptic nucleus V2 receptor aquaporin cAMP water reabsorption DCT collecting duct">
+      <div style="margin-bottom:10px"><span class="tag tag-exam">⚠️ High Yield</span></div>
+      <div class="card-title">ADH / Vasopressin</div>
+      <div class="card-body">
+        Synthesized: <strong>Supraoptic nucleus</strong>.<br>
+        V2 → cAMP → Aquaporin-2 → water reabsorption in DCT &amp; collecting ducts.<br>
+        V1 (large doses) → vasoconstriction.<br>
+        Regulated by: plasma osmolarity (primary) &amp; blood volume.
+      </div>
+    </div>
+    <div class="card" data-search="oxytocin paraventricular nucleus milk ejection myoepithelial uterine contraction labor positive feedback">
+      <div style="margin-bottom:10px"><span class="tag tag-mech">Mechanism</span></div>
+      <div class="card-title">Oxytocin</div>
+      <div class="card-body">
+        Synthesized: <strong>Paraventricular nucleus</strong>.<br>
+        Actions: milk ejection (myoepithelial cell contraction via suckling) + uterine smooth muscle contraction in labor (<strong>positive feedback</strong>).
+      </div>
+    </div>
+    <!-- TOPIC 3: ANTERIOR -->
+    <div class="card" data-search="anterior pituitary adenohypophysis hypophyseal portal system releasing inhibiting hormones TRH CRH GHRH somatostatin GnRH dopamine">
+      <div style="margin-bottom:10px"><span class="tag tag-pearl">Anterior Pit.</span></div>
+      <div class="card-title">Anterior Pituitary — Control</div>
+      <div class="card-body">
+        No direct neural contact with hypothalamus. Controlled via <strong>hypophyseal portal system</strong>.<br>
+        Releasing hormones: TRH, CRH, GHRH, GnRH, PRH.<br>
+        Inhibiting: Somatostatin (GHIH), Dopamine (PIH).
+      </div>
+    </div>
+    <div class="card" data-search="growth hormone GH somatotropes acidophil IGF-1 somatomedins liver linear bone growth epiphyseal cartilage protein synthesis lipolysis anti-insulin hyperglycemia">
+      <div style="margin-bottom:10px"><span class="tag tag-exam">⚠️ High Yield</span></div>
+      <div class="card-title">Growth Hormone (GH)</div>
+      <div class="card-body">
+        Secreted by: <strong>Somatotropes</strong> (acidophils).<br>
+        Growth via: <strong>IGF-1</strong> (liver) → epiphyseal cartilage proliferation.<br>
+        Metabolic: Protein anabolic ↑, Lipolysis ↑, Glucose ↑ (anti-insulin).
+      </div>
+    </div>
+    <div class="card" data-search="prolactin mammotropes acidophil breast milk lactation galactorrhea amenorrhea dopamine PIH gonadotropin inhibition">
+      <div style="margin-bottom:10px"><span class="tag tag-mech">Prolactin</span></div>
+      <div class="card-title">Prolactin</div>
+      <div class="card-body">
+        Secreted by: <strong>Mammotropes</strong> (acidophils).<br>
+        Function: breast development, milk synthesis (proteins, fat, lactose).<br>
+        High levels → inhibit ovulation (<strong>amenorrhea</strong>).<br>
+        Regulated primarily by dopamine (PIH) — tonic inhibition.
+      </div>
+    </div>
+    <div class="card" data-search="diabetes insipidus polyuria polydipsia neurogenic nephrogenic specific gravity">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical</span></div>
+      <div class="card-title">Diabetes Insipidus</div>
+      <div class="card-body">
+        <strong>Neurogenic:</strong> Absent ADH (supraoptic nucleus damage).<br>
+        <strong>Nephrogenic:</strong> Renal unresponsiveness to ADH (V2/Aquaporin-2 failure).<br>
+        Result: Urine up to 20 L/day, low specific gravity, polydipsia.
+      </div>
+    </div>
+    <div class="card" data-search="SIADH syndrome inappropriate ADH hyponatremia concentrated urine plasma dilution">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical</span></div>
+      <div class="card-title">SIADH</div>
+      <div class="card-body">
+        Inappropriate continuous ADH secretion → excessive water retention → plasma dilution → <strong>hyponatremia</strong> + concentrated urine despite increased plasma volume.
+      </div>
+    </div>
+    <div class="card" data-search="acromegaly gigantism epiphyses somatotropes adenoma adults children linear bone growth thickening hyperglycemia jaw foot size">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical</span></div>
+      <div class="card-title">Acromegaly vs. Gigantism</div>
+      <div class="card-body">
+        <strong>Acromegaly:</strong> Excess GH in adults (after epiphyseal union) → bone thickening, prognathism, enlarged extremities, hyperglycemia.<br>
+        <strong>Gigantism:</strong> Excess GH in children (open epiphyses) → linear bone overgrowth.
+      </div>
+    </div>
+    <div class="card" data-search="hyperprolactinemia galactorrhea amenorrhea male female consequences">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical</span></div>
+      <div class="card-title">Hyperprolactinemia</div>
+      <div class="card-body">
+        <strong>Female:</strong> Galactorrhea + amenorrhea (inhibits FSH/LH → no ovulation).<br>
+        <strong>Male:</strong> Galactorrhea + hypogonadism + impotence.<br>
+        Cause: Mammotrope adenoma or loss of dopamine inhibition.
+      </div>
+    </div>
+    <div class="card" data-search="Simmonds disease panhypopituitarism Sheehan syndrome postpartum hemorrhage anterior pituitary necrosis trophic hormones">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical</span></div>
+      <div class="card-title">Panhypopituitarism / Simmonds</div>
+      <div class="card-body">
+        Complete destruction of anterior pituitary (e.g., post-partum hemorrhage → Sheehan syndrome) → loss of all trophic hormones → atrophy of thyroid, adrenal, gonads → weight loss, failure of lactation.
+      </div>
+    </div>
+    <div class="card" data-search="pituitary dwarfism proportionate short stature normal mental sexual development hypoglycemia">
+      <div style="margin-bottom:10px"><span class="tag tag-pearl">GH Deficiency</span></div>
+      <div class="card-title">Pituitary Dwarfism</div>
+      <div class="card-body">
+        GH deficiency in childhood → <strong>symmetrical, proportionate</strong> growth retardation. Normal mental and sexual development. Hypoglycemia (opposite of GH excess). Compare: Achondroplasia has disproportionate limb shortening.
+      </div>
+    </div>
+    <div class="card" data-search="anterior pituitary cell types thyrotropes corticotropes gonadotropes somatotropes mammotropes TSH ACTH FSH LH GH prolactin">
+      <div style="margin-bottom:10px"><span class="tag tag-pearl">Cell Types</span></div>
+      <div class="card-title">Anterior Pituitary Cell Types</div>
+      <div class="card-body">
+        🟡 Thyrotropes → TSH<br>
+        🟠 Corticotropes → ACTH<br>
+        🟣 Gonadotropes → FSH &amp; LH<br>
+        🔵 Somatotropes → GH<br>
+        🟢 Mammotropes → Prolactin
+      </div>
+    </div>
+    <div class="card" data-search="optic chiasma bitemporal hemianopia pituitary tumor mass effect vision visual field">
+      <div style="margin-bottom:10px"><span class="tag tag-high">Clinical Pearl</span></div>
+      <div class="card-title">Bitemporal Hemianopia</div>
+      <div class="card-body">
+        Pituitary tumor (especially macroadenoma) grows upward, compressing the <strong>optic chiasma</strong> → loss of nasal retinal fibers from both eyes → bitemporal visual field loss (tunnel vision).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div class="tab-panel" id="tab-quiz">
+  <div class="section-title">Quiz Mode 🎯</div>
+  <div class="section-sub">35 board-style MCQs with instant feedback, explanations, and streak tracking.</div>
+
+  <div class="quiz-progress-wrap">
+    <div class="quiz-meta">
+      <div>Question <span id="q-current">1</span> of <span id="q-total">35</span></div>
+      <div class="score">Score: <span id="q-score">0</span> correct</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="q-progress" style="width:0%"></div></div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="score-screen" id="scoreScreen">
+    <div class="score-circle"><div class="score-num" id="final-score">0</div><div class="score-total">out of 35</div></div>
+    <div class="score-grade" id="score-grade"></div>
+    <div class="score-msg" id="score-msg"></div>
+    <button class="btn btn-primary" onclick="restartQuiz()">🔄 Restart Quiz</button>
+  </div>
+</div>
+
+<!-- ══════════════ FLASHCARDS ══════════════ -->
+<div class="tab-panel" id="tab-flashcards">
+  <div class="section-title">Flashcards 🃏</div>
+  <div class="section-sub">Click any card to flip it. Master these 24 key concepts.</div>
+  <div class="fc-grid" id="fcGrid"></div>
+</div>
+
+<!-- ══════════════ CLINICAL CASES ══════════════ -->
+<div class="tab-panel" id="tab-cases">
+  <div class="section-title">Clinical Cases 🏥</div>
+  <div class="section-sub">6 exam-style vignettes — identify the mechanism, lesion, and outcome.</div>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- ══════════════ PATHOPHYSIOLOGY ══════════════ -->
+<div class="tab-panel" id="tab-pathophys">
+  <div class="section-title">Pathophysiology ⚙️</div>
+  <div class="section-sub">Interactive key structures and step-by-step disease mechanism flowcharts. Click items to expand.</div>
+
+  <h3 style="margin-bottom:16px; color:var(--teal); font-size:1.1rem;">Key Structures — Click to Explore</h3>
+  <div class="struct-grid">
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🧠</div>
+      <div class="struct-name">Hypothalamus</div>
+      <div class="struct-desc">Master control center. Contains supraoptic nucleus (ADH) and paraventricular nucleus (Oxytocin). Releases hormones via median eminence into the portal system to control anterior pituitary.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🔵</div>
+      <div class="struct-name">Supraoptic Nucleus</div>
+      <div class="struct-desc">Site of ADH (vasopressin) synthesis. Osmoreceptors here respond to plasma osmolarity changes as small as 1–2%. Projects axons down the hypothalamic–hypophyseal tract to posterior pituitary.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🟣</div>
+      <div class="struct-name">Paraventricular Nucleus</div>
+      <div class="struct-desc">Primary site of Oxytocin synthesis. Also produces some ADH. Responds to suckling signals (milk ejection) and labor signals (uterine contraction). Positive feedback loops govern both.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🔴</div>
+      <div class="struct-name">Posterior Pituitary</div>
+      <div class="struct-desc">Neurohypophysis. A neural downgrowth from the 3rd ventricle. Stores and releases ADH and Oxytocin from axon terminals — it does NOT synthesize these hormones itself.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🟡</div>
+      <div class="struct-name">Anterior Pituitary</div>
+      <div class="struct-desc">Adenohypophysis. Glandular tissue. No direct neural link to hypothalamus — controlled exclusively via the hypophyseal portal blood system. Contains somatotropes, mammotropes, corticotropes, thyrotropes, gonadotropes.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">💧</div>
+      <div class="struct-name">Portal System</div>
+      <div class="struct-desc">Hypophyseal portal system: capillaries drain the median eminence of the hypothalamus and reform into sinusoids in the anterior pituitary. Delivers releasing/inhibiting hormones in high concentration directly to pituitary cells.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">🫘</div>
+      <div class="struct-name">V2 Receptor / Aquaporin-2</div>
+      <div class="struct-desc">V2 receptors on DCT and collecting duct cells. ADH binding → Gs → adenylate cyclase → cAMP → PKA → Aquaporin-2 vesicles fuse with apical membrane → water permeability increases dramatically → water reabsorption.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">📈</div>
+      <div class="struct-name">IGF-1 / Somatomedins</div>
+      <div class="struct-desc">Produced primarily by the liver in response to GH. Mediates ALL growth-promoting effects of GH including: epiphyseal cartilage proliferation, protein synthesis, and organ growth. High IGF-1 feeds back to suppress GHRH and stimulate Somatostatin.</div>
+    </div>
+    <div class="struct-item" onclick="toggleStruct(this)">
+      <div class="struct-icon">👁️</div>
+      <div class="struct-name">Optic Chiasma</div>
+      <div class="struct-desc">Lies directly above the pituitary gland. Nasal retinal fibers from both eyes cross here. A pituitary macroadenoma expanding superiorly compresses the chiasma → bitemporal hemianopia (loss of peripheral/temporal visual fields).</div>
+    </div>
+  </div>
+
+  <h3 style="margin:32px 0 16px; color:var(--teal); font-size:1.1rem;">⚙️ ADH Action Flowchart — Click steps to expand</h3>
+  <div class="flow-chain">
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Trigger</div>
+      <div class="flow-text">↑ Plasma Osmolarity (≥1–2% above normal) OR ↓ Blood Volume (≥5–10%)</div>
+      <div class="flow-detail">Osmoreceptors in the supraoptic nucleus detect plasma hyperosmolarity. Baroreceptors in carotid sinus/aortic arch detect hypotension. Both signals converge on the hypothalamus.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Synthesis &amp; Release</div>
+      <div class="flow-text">Supraoptic nucleus synthesizes ADH → travels down hypothalamic–hypophyseal tract → released from posterior pituitary</div>
+      <div class="flow-detail">ADH is synthesized as a large precursor (prepro-ADH) in the cell bodies of magnocellular neurons in the supraoptic nucleus. It is packaged into vesicles and transported axonally to the pposterior pituitary nerve terminals where it awaits calcium-triggered exocytosis.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Receptor Binding</div>
+      <div class="flow-text">ADH binds V2 receptors on the basolateral side of DCT &amp; collecting duct cells</div>
+      <div class="flow-detail">V2 receptors are G-protein coupled receptors (Gs). They are located on the basolateral membrane of principal cells in the distal convoluted tubule and collecting duct of the kidney.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Second Messenger</div>
+      <div class="flow-text">Gs → Adenylate Cyclase activation → ↑ cAMP → Protein Kinase A activation</div>
+      <div class="flow-detail">The Gs subunit activates adenylate cyclase, converting ATP to cyclic AMP (cAMP). cAMP activates PKA (Protein Kinase A), which phosphorylates target proteins including Aquaporin-2 vesicle-docking machinery.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Aquaporin-2 Insertion</div>
+      <div class="flow-text">PKA phosphorylates → Aquaporin-2 vesicles fuse with apical membrane</div>
+      <div class="flow-detail">Aquaporin-2 water channels are pre-synthesized and stored in intracellular vesicles. PKA phosphorylation triggers vesicle fusion with the apical (luminal) membrane, inserting functional water channels. The basolateral membranes already constitutively express AQP3 and AQP4.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Outcome</div>
+      <div class="flow-text">Water moves from tubular lumen → cell → peritubular capillaries → blood</div>
+      <div class="flow-detail">The hyperosmotic medullary interstitium creates an osmotic gradient that pulls water out of the tubule through the newly inserted Aquaporin-2 channels. Result: concentrated urine (↑ specific gravity, ↑ osmolarity) and diluted plasma (↓ osmolarity, ↑ blood volume).</div>
+    </div>
+  </div>
+
+  <h3 style="margin:32px 0 16px; color:var(--amber); font-size:1.1rem;">📈 GH → IGF-1 → Growth Flowchart</h3>
+  <div class="flow-chain">
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Stimulus</div>
+      <div class="flow-text">Hypoglycemia / Starvation / Deep Sleep / Stress / Exercise / GHRH from hypothalamus</div>
+      <div class="flow-detail">The strongest stimuli for GH secretion are hypoglycemia and protein/calorie deprivation (starvation). GH secretion follows a pulsatile pattern with the largest peak occurring 60–90 minutes after sleep onset (slow-wave sleep). GHRH from the hypothalamus via portal blood stimulates somatotropes.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">GH Secretion</div>
+      <div class="flow-text">Somatotropes (acidophils) in anterior pituitary release Growth Hormone</div>
+      <div class="flow-detail">Somatotropes constitute ~50% of anterior pituitary cells. They are the most abundant cell type. GH is a 191-amino acid single-chain polypeptide. GH secretion is inhibited by Somatostatin (GHIH) from the hypothalamus and by high IGF-1 (negative feedback).</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Liver Action</div>
+      <div class="flow-text">GH binds receptors in liver → stimulates Somatomedin (IGF-1) synthesis</div>
+      <div class="flow-detail">The liver is the major source of circulating IGF-1 (Insulin-like Growth Factor 1). GH binds to JAK2-associated receptors on hepatocytes, triggering STAT5 signaling and transcription of IGF-1 gene. IGF-1 has structural similarity to proinsulin.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Growth Effects (via IGF-1)</div>
+      <div class="flow-text">IGF-1 → epiphyseal cartilage proliferation → linear bone growth (children) OR periosteal thickening (adults)</div>
+      <div class="flow-detail">In children with open epiphyseal plates: IGF-1 stimulates chondrocyte proliferation in the growth plate → linear height increase (Gigantism if excess). In adults with fused epiphyses: bones can only thicken (periosteal apposition) → Acromegaly features: prognathism, enlarged hands/feet/skull.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Metabolic Effects (direct GH)</div>
+      <div class="flow-text">↑ Protein synthesis, ↑ Lipolysis (free fatty acids), ↑ Blood glucose (anti-insulin)</div>
+      <div class="flow-detail">GH is a counter-regulatory (anti-insulin) hormone: (1) Decreases glucose uptake by muscle and fat. (2) Increases hepatic gluconeogenesis. (3) Stimulates lipolysis → ↑ free fatty acids as energy source. (4) Promotes protein synthesis (anabolic effect on muscle). Chronic GH excess → Diabetes Mellitus.</div>
+    </div>
+    <div class="flow-step" onclick="toggleFlow(this)">
+      <div class="flow-label">Negative Feedback</div>
+      <div class="flow-text">High IGF-1 → ↓ GHRH + ↑ Somatostatin → ↓ GH secretion</div>
+      <div class="flow-detail">IGF-1 exerts negative feedback at both the hypothalamus (stimulates Somatostatin release, inhibits GHRH) and directly on somatotropes in the anterior pituitary. A GH-secreting adenoma may be RESISTANT to this feedback, maintaining autonomous hypersecretion.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DIAGNOSIS ══════════════ -->
+<div class="tab-panel" id="tab-diagnosis">
+  <div class="section-title">Diagnosis 🔬</div>
+  <div class="section-sub">Diagnostic criteria, investigation findings, and step-by-step algorithms for pituitary disorders.</div>
+
+  <h3 style="color:var(--teal); margin-bottom:20px; font-size:1.1rem;">Comparison: Major Pituitary Disorders</h3>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead><tr><th>Disorder</th><th>Hormone</th><th>Key Labs</th><th>Urine</th><th>Clinical Features</th><th>Cause</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Diabetes Insipidus (Neurogenic)</strong></td><td>ADH ↓↓</td><td>Plasma osmolarity ↑, Na⁺ ↑</td><td>Volume ↑↑ (up to 20L/d), SG ≤1.005, dilute</td><td>Extreme polyuria, polydipsia, dehydration</td><td>Supraoptic nucleus damage, head trauma</td></tr>
+      <tr><td><strong>Diabetes Insipidus (Nephrogenic)</strong></td><td>ADH normal/↑ (no renal response)</td><td>Plasma osmolarity ↑</td><td>Volume ↑↑, dilute (despite ADH)</td><td>Polyuria, polydipsia; doesn't respond to ADH injection</td><td>V2 receptor or AQP2 mutation</td></tr>
+      <tr><td><strong>SIADH</strong></td><td>ADH ↑↑ (inappropriate)</td><td>Plasma osmolarity ↓, Na⁺ ↓ (hyponatremia)</td><td>Concentrated, high osmolarity</td><td>Hyponatremia, edema, no dehydration</td><td>Head trauma, lung cancer (ectopic ADH), CNS disease</td></tr>
+      <tr><td><strong>Acromegaly</strong></td><td>GH ↑, IGF-1 ↑↑</td><td>GH not suppressed by glucose, IGF-1 ↑</td><td>Normal</td><td>Enlarged hands/feet/jaw, prognathism, hyperglycemia, headaches, bitemporal hemianopia</td><td>Somatotrope adenoma (adult)</td></tr>
+      <tr><td><strong>Gigantism</strong></td><td>GH ↑↑, IGF-1 ↑↑</td><td>IGF-1 ↑, GH baseline ↑</td><td>Normal</td><td>Linear height excess (>2 SD), proportionate</td><td>Somatotrope adenoma (child — open epiphyses)</td></tr>
+      <tr><td><strong>Pituitary Dwarfism</strong></td><td>GH ↓, IGF-1 ↓</td><td>Low IGF-1, GH stimulation test → blunted response</td><td>Normal</td><td>Proportionate short stature, normal mental/sexual development, hypoglycemia</td><td>GH deficiency (idiopathic or organic)</td></tr>
+      <tr><td><strong>Hyperprolactinemia</strong></td><td>Prolactin ↑↑</td><td>Serum prolactin ↑ (>200 ng/mL suggests adenoma)</td><td>Normal</td><td>Galactorrhea, amenorrhea (F); gynecomastia, impotence (M)</td><td>Mammotrope adenoma, dopamine antagonists, hypothyroidism</td></tr>
+      <tr><td><strong>Panhypopituitarism (Simmonds)</strong></td><td>All anterior pituitary hormones ↓↓</td><td>Low TSH, ACTH, FSH, LH, GH, prolactin; low target gland hormones</td><td>Normal</td><td>Weight loss, lactation failure, hypogonadism, hypothyroidism, adrenal insufficiency</td><td>Post-partum ischemia (Sheehan), tumor, surgery, radiation</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 style="color:var(--teal); margin:32px 0 16px; font-size:1.1rem;">Diagnostic Algorithm — Acromegaly</h3>
+  <div class="diag-algo">
+    <div class="algo-step">
+      <div class="algo-num">1</div>
+      <div class="algo-content">
+        <div class="algo-title">Clinical Suspicion</div>
+        <div class="algo-desc">Enlarged hands/feet, prognathism, coarsening of facial features, increased hat/shoe/ring size, headaches, visual field defects, hyperglycemia.</div>
+        <div class="badge-grid">
+          <span class="badge">Prognathism</span><span class="badge">Acral enlargement</span><span class="badge">Bitemporal hemianopia</span><span class="badge">Hyperglycemia</span>
+        </div>
+      </div>
+    </div>
+    <div class="algo-step">
+      <div class="algo-num">2</div>
+      <div class="algo-content">
+        <div class="algo-title">Screening: IGF-1 level</div>
+        <div class="algo-desc">Elevated serum IGF-1 (age- and sex-matched) is the best screening test. IGF-1 reflects integrated 24-hr GH secretion (avoids pulsatility problem of random GH).</div>
+      </div>
+    </div>
+    <div class="algo-step">
+      <div class="algo-num">3</div>
+      <div class="algo-content">
+        <div class="algo-title">Confirmation: Oral Glucose Suppression Test (OGTT)</div>
+        <div class="algo-desc">Administer 75g oral glucose. Normally GH falls to &lt;1 ng/mL. In Acromegaly, GH remains elevated or paradoxically rises (no suppression). This is confirmatory.</div>
+      </div>
+    </div>
+    <div class="algo-step">
+      <div class="algo-num">4</div>
+      <div class="algo-content">
+        <div class="algo-title">Imaging: MRI of Pituitary</div>
+        <div class="algo-desc">MRI with gadolinium contrast to localize and size the adenoma. Macroadenoma (&gt;10mm) is more likely to compress optic chiasma. Microadenoma (&lt;10mm) has fewer mass effects.</div>
+        <div class="badge-grid">
+          <span class="badge">Macroadenoma &gt;10mm</span><span class="badge">Microadenoma &lt;10mm</span><span class="badge">Suprasellar extension</span>
+        </div>
+      </div>
+    </div>
+    <div class="algo-step">
+      <div class="algo-num">5</div>
+      <div class="algo-content">
+        <div class="algo-title">Assess Complications</div>
+        <div class="algo-desc">Fasting blood glucose (diabetes), visual field testing (perimetry for bitemporal hemianopia), echocardiogram (cardiac enlargement), colonoscopy (GH increases colorectal cancer risk).</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin:32px 0 16px; font-size:1.1rem;">Diabetes Insipidus: Differentiating Neurogenic vs. Nephrogenic</h3>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead><tr><th>Feature</th><th>Neurogenic DI</th><th>Nephrogenic DI</th><th>Primary Polydipsia</th></tr></thead>
+    <tbody>
+      <tr><td>ADH level</td><td>Low</td><td>Normal or High</td><td>Low (suppressed by excess water)</td></tr>
+      <tr><td>Response to exogenous ADH (DDAVP)</td><td>✅ Urine concentrates</td><td>❌ No response</td><td>✅ Responds (kidney is normal)</td></tr>
+      <tr><td>Water deprivation test</td><td>Urine stays dilute</td><td>Urine stays dilute</td><td>Urine concentrates</td></tr>
+      <tr><td>Plasma Na⁺</td><td>High</td><td>High</td><td>Normal or Low</td></tr>
+      <tr><td>Cause</td><td>Head trauma, surgery, tumor near supraoptic nucleus</td><td>Lithium, genetic V2/AQP2 mutation, chronic kidney disease</td><td>Psychiatric disorder, hypothalamic damage to thirst center</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ══════════════ TREATMENT ══════════════ -->
+<div class="tab-panel" id="tab-treatment">
+  <div class="section-title">Treatment 💊</div>
+  <div class="section-sub">Management principles for pituitary disorders — color-coded by urgency and category.</div>
+
+  <h3 style="color:var(--rose); margin-bottom:16px; font-size:1.05rem;">🚨 Pituitary Apoplexy (Emergency)</h3>
+  <div class="treat-grid" style="margin-bottom:32px">
+    <div class="treat-card emergency">
+      <div class="treat-label">🚨 Emergency</div>
+      <div class="treat-title">Acute Pituitary Apoplexy</div>
+      <ul class="treat-list">
+        <li>Immediate IV hydrocortisone (adrenal crisis risk)</li>
+        <li>Fluid resuscitation and electrolyte correction</li>
+        <li>Urgent neurosurgical referral if visual compromise or declining consciousness</li>
+        <li>Decompressive surgery (transsphenoidal) if indicated</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin-bottom:16px; font-size:1.05rem;">Acromegaly Treatment</h3>
+  <div class="treat-grid" style="margin-bottom:32px">
+    <div class="treat-card primary">
+      <div class="treat-label">✅ First Line</div>
+      <div class="treat-title">Transsphenoidal Surgery</div>
+      <ul class="treat-list">
+        <li>Surgical resection of pituitary adenoma</li>
+        <li>Curative in 80–85% of microadenomas</li>
+        <li>Immediate reduction of GH levels</li>
+        <li>Relieves optic chiasma compression</li>
+      </ul>
+    </div>
+    <div class="treat-card secondary">
+      <div class="treat-label">⚕️ Medical</div>
+      <div class="treat-title">Somatostatin Analogues</div>
+      <ul class="treat-list">
+        <li>Octreotide, Lanreotide — inhibit GH secretion</li>
+        <li>Used pre-operatively or in surgical failures</li>
+        <li>GH receptor antagonist: Pegvisomant</li>
+        <li>Dopamine agonists (Bromocriptine): mild cases</li>
+      </ul>
+    </div>
+    <div class="treat-card supportive">
+      <div class="treat-label">🔭 Adjuvant</div>
+      <div class="treat-title">Radiation Therapy</div>
+      <ul class="treat-list">
+        <li>Stereotactic radiosurgery (Gamma Knife)</li>
+        <li>Used when surgery incomplete and medical therapy fails</li>
+        <li>GH normalization takes months to years</li>
+        <li>Risk: hypopituitarism (pan-hormonal deficiency)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin-bottom:16px; font-size:1.05rem;">Diabetes Insipidus Treatment</h3>
+  <div class="treat-grid" style="margin-bottom:32px">
+    <div class="treat-card primary">
+      <div class="treat-label">✅ Neurogenic DI</div>
+      <div class="treat-title">DDAVP (Desmopressin)</div>
+      <ul class="treat-list">
+        <li>Synthetic ADH analogue (V2-selective)</li>
+        <li>Given intranasally, orally, or IV</li>
+        <li>Dramatically reduces urine volume</li>
+        <li>Must monitor for hyponatremia (over-treatment)</li>
+      </ul>
+    </div>
+    <div class="treat-card secondary">
+      <div class="treat-label">⚕️ Nephrogenic DI</div>
+      <div class="treat-title">Thiazide Diuretics + Low-Salt Diet</div>
+      <ul class="treat-list">
+        <li>Thiazides → mild volume depletion → ↑ proximal tubule reabsorption → less water delivered distally</li>
+        <li>Low-sodium diet reduces obligatory free water loss</li>
+        <li>NSAIDs (e.g., Indomethacin) as adjunct</li>
+        <li>DDAVP is ineffective (receptor defect)</li>
+      </ul>
+    </div>
+    <div class="treat-card supportive">
+      <div class="treat-label">💧 Supportive</div>
+      <div class="treat-title">Fluid Replacement</div>
+      <ul class="treat-list">
+        <li>Match fluid intake to output (oral hydration)</li>
+        <li>IV hypotonic fluids if unable to drink</li>
+        <li>Monitor sodium levels closely</li>
+        <li>Avoid rapid correction of hypernatremia (cerebral edema risk)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin-bottom:16px; font-size:1.05rem;">SIADH Treatment</h3>
+  <div class="treat-grid" style="margin-bottom:32px">
+    <div class="treat-card primary">
+      <div class="treat-label">✅ First Line</div>
+      <div class="treat-title">Fluid Restriction</div>
+      <ul class="treat-list">
+        <li>Restrict fluid intake to 500–1000 mL/day</li>
+        <li>Allows gradual rise in plasma Na⁺</li>
+        <li>Correct underlying cause (treat head injury, remove offending drug, treat ectopic ADH source)</li>
+      </ul>
+    </div>
+    <div class="treat-card secondary">
+      <div class="treat-label">⚕️ Pharmacological</div>
+      <div class="treat-title">Vaptans / Hypertonic Saline</div>
+      <ul class="treat-list">
+        <li>Vaptans (Tolvaptan, Conivaptan): V2 receptor antagonists — "aquaretics" — free water excretion without Na⁺ loss</li>
+        <li>Hypertonic saline (3% NaCl): for severe symptomatic hyponatremia — correct Na⁺ slowly (&lt;10 mEq/L per 24h to avoid central pontine myelinolysis)</li>
+        <li>Demeclocycline: induces nephrogenic DI (historical)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin-bottom:16px; font-size:1.05rem;">Hyperprolactinemia Treatment</h3>
+  <div class="treat-grid" style="margin-bottom:32px">
+    <div class="treat-card primary">
+      <div class="treat-label">✅ First Line</div>
+      <div class="treat-title">Dopamine Agonists</div>
+      <ul class="treat-list">
+        <li>Cabergoline (preferred — once/twice weekly, more tolerable)</li>
+        <li>Bromocriptine (older, more side effects — nausea, hypotension)</li>
+        <li>Mimic dopamine's tonic inhibition of prolactin</li>
+        <li>Shrinks adenoma in most cases; restores ovulation</li>
+      </ul>
+    </div>
+    <div class="treat-card secondary">
+      <div class="treat-label">⚕️ Surgical</div>
+      <div class="treat-title">Transsphenoidal Surgery</div>
+      <ul class="treat-list">
+        <li>Reserved for drug-resistant cases</li>
+        <li>Or when visual fields are compromised</li>
+        <li>Less effective for macroadenomas than for GH adenomas</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--teal); margin-bottom:16px; font-size:1.05rem;">Panhypopituitarism / Hormone Replacement</h3>
+  <div class="treat-grid">
+    <div class="treat-card primary">
+      <div class="treat-label">✅ Replacement Therapy</div>
+      <div class="treat-title">Hormone Substitution</div>
+      <ul class="treat-list">
+        <li>Hydrocortisone → cortisol (adrenal axis, priority #1)</li>
+        <li>Levothyroxine → thyroid hormone (start after cortisol)</li>
+        <li>Sex steroids → testosterone (M) or estrogen/progesterone (F)</li>
+        <li>GH replacement in adults (quality of life, body composition)</li>
+        <li>ADH (DDAVP) if posterior pituitary also affected</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MNEMONICS ══════════════ -->
+<div class="tab-panel" id="tab-mnemonics">
+  <div class="section-title">Mnemonics 🧩</div>
+  <div class="section-sub">Click any card to reveal the full mnemonic breakdown. Designed to stick.</div>
+  <div class="mnem-grid" id="mnemGrid"></div>
+</div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+
+const quizData = [
+  {
+    num: 1, type: "Structure/Definition",
+    q: "Which of the following accurately describes paracrine hormonal signaling?",
+    opts: ["Secreted into the bloodstream to act on distant organs.","Regulates the activity of the exact same cell secreting it.","Secreted into the ECF to affect neighboring cells.","Synthesized by exocrine glands and secreted into ducts.","Derived solely from cholesterol."],
+    correct: 2,
+    explain: "Paracrine hormones are secreted into the extracellular fluid (ECF) and affect only neighboring cells — not distant organs. Endocrine = bloodstream. Autocrine = same cell. Exocrine = ducts. Steroids = cholesterol-derived.",
+    wrong: "A=endocrine; B=autocrine; D=exocrine; E=steroid chemistry, not signaling type."
+  },
+  {
+    num: 2, type: "Structure/Definition",
+    q: "The hormones synthesized from cholesterol include which of the following?",
+    opts: ["Pituitary hormones","Adrenal cortical hormones","Hypothalamic hormones","Catecholamines","Calcitonin"],
+    correct: 1,
+    explain: "Steroid hormones — including adrenal cortical hormones (cortisol, aldosterone), sex hormones (testosterone, estrogen), and Vitamin D3 — are all derived from cholesterol.",
+    wrong: "Pituitary, hypothalamic hormones, calcitonin = protein/peptide. Catecholamines = amino acid derivatives (tyrosine)."
+  },
+  {
+    num: 3, type: "Mechanism",
+    q: "Where are the receptors for steroid hormones primarily located?",
+    opts: ["Cell membrane","Synaptic cleft","Cytoplasm","Nucleus","Golgi apparatus"],
+    correct: 2,
+    explain: "Steroid hormones are lipid-soluble — they cross the cell membrane freely and bind cytoplasmic receptors. The hormone-receptor complex then translocates to the nucleus.",
+    wrong: "Cell membrane receptors bind peptide hormones and catecholamines. Nuclear receptors are for thyroid hormones (T3/T4)."
+  },
+  {
+    num: 4, type: "Mechanism",
+    q: "Which secondary messenger is activated by ADH upon binding to V2 receptors in the kidney?",
+    opts: ["Calcium (Ca²⁺)","cGMP","cAMP","IP3","Tyrosine kinase"],
+    correct: 2,
+    explain: "ADH binds V2 receptors → Gs protein → activates adenylate cyclase → converts ATP to cAMP → activates PKA → induces Aquaporin-2 insertion. This is the classic Gs-cAMP pathway.",
+    wrong: "IP3/Calcium is used by V1 receptors (vasoconstriction). cGMP is used by natriuretic peptides. Tyrosine kinase is used by insulin and growth factors."
+  },
+  {
+    num: 5, type: "Mechanism",
+    q: "What is the precise cellular outcome of cAMP activation by ADH in the collecting ducts?",
+    opts: ["Insertion of Aquaporin-2 channels into the apical cell membrane.","Opening of sodium-potassium ATPase pumps.","Exocytosis of Somatomedins into circulation.","Cleavage of proinsulin to insulin.","Contraction of myoepithelial cells."],
+    correct: 0,
+    explain: "cAMP activates PKA, which phosphorylates proteins that trigger fusion of Aquaporin-2 vesicles with the apical membrane → water moves from tubular lumen into the cell → reabsorbed into the bloodstream.",
+    wrong: "Na⁺/K⁺-ATPase is unrelated to ADH. Somatomedins relate to GH. Proinsulin cleavage is pancreatic. Myoepithelial contraction is Oxytocin's action in lactation."
+  },
+  {
+    num: 6, type: "Regulatory",
+    q: "What is the primary threshold for stimulating ADH secretion via osmoreceptors?",
+    opts: ["5–10% decrease in blood volume","1–2% increase in plasma osmolarity","10–15% increase in blood pressure","50% decrease in sodium concentration","Elevated blood glucose"],
+    correct: 1,
+    explain: "Osmoreceptors in the supraoptic nucleus are exquisitely sensitive — a mere 1–2% increase in plasma osmolarity strongly triggers ADH release. Blood volume changes require a larger (5–10%) drop to stimulate baroreceptor-mediated ADH.",
+    wrong: "5–10% decrease in blood volume triggers the baroreceptor (volume-sensitive) pathway — a less sensitive mechanism."
+  },
+  {
+    num: 7, type: "Mechanism",
+    q: "Through which vascular structure do hypothalamic releasing hormones reach the anterior pituitary?",
+    opts: ["Hypothalamic–hypophyseal tract","Median eminence neurons","Hypophyseal portal system","Circle of Willis","Systemic venous circulation"],
+    correct: 2,
+    explain: "The anterior pituitary is controlled exclusively via the hypophyseal portal system — a vascular connection from the median eminence capillaries to the anterior pituitary sinusoids. There is NO direct neural connection (unlike the posterior pituitary).",
+    wrong: "The hypothalamic–hypophyseal tract is the neural connection to the POSTERIOR pituitary carrying ADH and Oxytocin."
+  },
+  {
+    num: 8, type: "Structure/Definition",
+    q: "Which of the following anterior pituitary cells secrete Growth Hormone?",
+    opts: ["Thyrotropes","Corticotropes","Gonadotropes","Somatotropes","Mammotropes"],
+    correct: 3,
+    explain: "Somatotropes (a type of acidophil cell) are the most abundant anterior pituitary cells (~50%) and are the exclusive source of Growth Hormone.",
+    wrong: "Thyrotropes → TSH; Corticotropes → ACTH; Gonadotropes → FSH/LH; Mammotropes → Prolactin."
+  },
+  {
+    num: 9, type: "Mechanism",
+    q: "Growth Hormone exerts its growth-promoting effects primarily through the synthesis of:",
+    opts: ["cAMP","Dopamine","Insulin-like growth factors (IGF-1)","Aquaporin-2","Calcitonin"],
+    correct: 2,
+    explain: "GH has NO direct growth-promoting effects. It stimulates the liver to produce Somatomedins (mainly IGF-1), which mediates all growth effects including epiphyseal cartilage proliferation and protein synthesis.",
+    wrong: "cAMP is a second messenger for ADH. Dopamine inhibits prolactin. Aquaporin-2 is for water reabsorption. Calcitonin is from parafollicular C-cells of the thyroid."
+  },
+  {
+    num: 10, type: "Mechanism",
+    q: "How does Growth Hormone affect carbohydrate metabolism?",
+    opts: ["It increases glucose uptake by tissues, causing hypoglycemia.","It has an anti-insulin action, decreasing glucose uptake and stimulating gluconeogenesis.","It prevents glycogenolysis in the liver.","It acts identically to insulin to store glucose.","It completely shuts down glucagon secretion."],
+    correct: 1,
+    explain: "GH is diabetogenic: it decreases tissue glucose uptake (anti-insulin) and increases hepatic gluconeogenesis and glycogenolysis → hyperglycemia. Chronic GH excess can cause overt Diabetes Mellitus.",
+    wrong: "GH opposes insulin — it causes hyperglycemia, not hypoglycemia."
+  },
+  {
+    num: 11, type: "Regulatory",
+    q: "Which of the following conditions strongly stimulates Growth Hormone secretion?",
+    opts: ["Hyperglycemia","Obesity","High levels of free fatty acids","Hypoglycemia and starvation","Increased Somatomedins (IGF-1)"],
+    correct: 3,
+    explain: "Hypoglycemia, starvation, protein deficiency, stress, exercise, and deep slow-wave sleep all powerfully stimulate GH secretion (part of GH's counter-regulatory, energy-mobilizing function).",
+    wrong: "Hyperglycemia, obesity, high FFAs, and high IGF-1 all INHIBIT GH secretion (negative feedback)."
+  },
+  {
+    num: 12, type: "Mechanism",
+    q: "The condition of Acromegaly results from excess GH secretion during which period of life?",
+    opts: ["Before union of the epiphyses","During fetal development","After union of the epiphyses","Exclusively during puberty","Only during deep sleep"],
+    correct: 2,
+    explain: "Acromegaly occurs when excess GH is secreted AFTER the epiphyseal plates have fused (in adults). Because bones cannot lengthen, they thicken instead → enlarged hands, feet, jaw (prognathism), coarsened features.",
+    wrong: "Excess GH BEFORE epiphyseal fusion (in children) causes Gigantism — linear overgrowth."
+  },
+  {
+    num: 13, type: "Structure/Definition",
+    q: "Pituitary dwarfism is characterized by which of the following?",
+    opts: ["Disproportionate shortening of limbs with a normal trunk.","Symmetrical retardation of growth, normal mental and sexual development.","Severe mental retardation and intellectual disability.","Hyperglycemia and diabetes mellitus.","Overgrowth of facial bones and prognathism."],
+    correct: 1,
+    explain: "Pituitary dwarfism (GH deficiency in childhood) → proportionate/symmetric short stature. Mental development is NORMAL (GH doesn't cross BBB). Sexual development is also normal (governed by gonadotropins, not GH). Hypoglycemia (not hyperglycemia) may occur.",
+    wrong: "Achondroplasia causes disproportionate limb shortening. Mental retardation = hypothyroid cretinism. Hyperglycemia = excess GH. Prognathism = acromegaly."
+  },
+  {
+    num: 14, type: "Mechanism",
+    q: "Prolactin release is primarily kept in check by which of the following mechanisms?",
+    opts: ["Continuous stimulation by TRH","Tonic inhibition by hypothalamic dopamine (PIH)","Negative feedback from estrogen","Positive feedback from Oxytocin","Inhibition by Somatostatin"],
+    correct: 1,
+    explain: "Uniquely, prolactin is under TONIC INHIBITION by the hypothalamus, not tonic stimulation. The inhibitory factor is Prolactin Inhibiting Hormone (PIH), which is structurally dopamine. Loss of portal blood supply → prolactin rises (unlike all other anterior pituitary hormones which fall).",
+    wrong: "TRH can stimulate prolactin but is not the primary tonic regulator. Estrogen mildly stimulates prolactin. Oxytocin and somatostatin don't primarily regulate prolactin."
+  },
+  {
+    num: 15, type: "Mechanism",
+    q: "What is the physiological consequence of high Prolactin levels on the female reproductive cycle?",
+    opts: ["Stimulation of LH and FSH surges.","Induction of premature ovulation.","Inhibition of the effect of gonadotropins on the ovary, producing amenorrhea.","Increased production of estrogen from the ovary.","Excessive uterine contractions and dysmenorrhea."],
+    correct: 2,
+    explain: "High prolactin inhibits gonadotropin (FSH/LH) action at the ovarian level and also suppresses GnRH pulsatility → no follicular development → no ovulation → amenorrhea. This is the physiological basis for lactational amenorrhea.",
+    wrong: "Prolactin suppresses the reproductive cycle, not stimulates it. Excessive uterine contractions = Oxytocin."
+  },
+  {
+    num: 16, type: "Structure/Definition",
+    q: "Which two hormones are synthesized in the hypothalamus and secreted from the posterior pituitary?",
+    opts: ["GH and Prolactin","ACTH and TSH","ADH and Oxytocin","TRH and CRH","Dopamine and Somatostatin"],
+    correct: 2,
+    explain: "ADH (synthesized in supraoptic nucleus) and Oxytocin (synthesized in paraventricular nucleus) are both made in magnocellular hypothalamic neurons and travel via axons (hypothalamic-hypophyseal tract) to be STORED and RELEASED from the posterior pituitary.",
+    wrong: "GH and Prolactin are anterior pituitary products. ACTH/TSH are anterior pituitary. TRH/CRH and Dopamine/Somatostatin are hypothalamic factors that ACT on the anterior pituitary via the portal system — they don't come from the posterior pituitary."
+  },
+  {
+    num: 17, type: "Mechanism",
+    q: "How does Oxytocin assist in labor (parturition)?",
+    opts: ["It relaxes the uterine smooth muscle to allow cervical dilation.","It contracts uterine smooth muscle, creating positive feedback as the baby's head presses the cervix.","It stimulates the anterior pituitary to release LH.","It increases progesterone to maintain uterine quiescence.","It directly dilates the cervix via collagenase activation."],
+    correct: 1,
+    explain: "Oxytocin causes uterine smooth muscle contraction. As the baby's head presses the cervix → stretch signals travel to hypothalamus → more Oxytocin released → stronger contractions → more cervical stretch → MORE Oxytocin. Classic positive feedback loop that intensifies until delivery.",
+    wrong: "Oxytocin CONTRACTS the uterus. Progesterone maintains quiescence (opposite role). LH stimulation is GnRH's role."
+  },
+  {
+    num: 18, type: "Mechanism",
+    q: "Which of the following best explains the mechanism of milk ejection (let-down reflex)?",
+    opts: ["Prolactin directly causes contraction of myoepithelial cells.","Suckling stimulates oxytocin release, which contracts myoepithelial cells around alveoli.","ADH increases alveolar water content, pushing milk out.","GH stimulates mammary gland smooth muscle contraction.","TRH stimulates mammary ductal cells directly."],
+    correct: 1,
+    explain: "Suckling → afferent neural signals → hypothalamus → Oxytocin released from posterior pituitary → bloodstream → contracts myoepithelial cells around mammary alveoli → milk ejected into ducts. Prolactin handles SYNTHESIS; Oxytocin handles EJECTION.",
+    wrong: "Prolactin stimulates milk SYNTHESIS (proteins, fat, lactose) but NOT ejection. ADH and GH are unrelated to milk ejection."
+  },
+  {
+    num: 19, type: "Mechanism",
+    q: "A patient takes a dopamine-blocking drug (e.g., haloperidol). Which anterior pituitary hormone would most likely INCREASE?",
+    opts: ["Growth Hormone","TSH","ACTH","Prolactin","FSH"],
+    correct: 3,
+    explain: "Prolactin secretion is under TONIC INHIBITION by dopamine (PIH) from the hypothalamus. Block dopamine → remove inhibition → prolactin rises → hyperprolactinemia → galactorrhea ± amenorrhea. This is a common clinical side effect of antipsychotics (dopamine D2 blockers).",
+    wrong: "All other anterior pituitary hormones are stimulated by releasing factors, not tonically inhibited by dopamine."
+  },
+  {
+    num: 20, type: "Regulatory",
+    q: "Which of the following stimuli would be expected to INHIBIT Growth Hormone secretion?",
+    opts: ["Hypoglycemia","Starvation","Hyperglycemia, obesity, and high free fatty acids","Exercise","Deep slow-wave sleep"],
+    correct: 2,
+    explain: "Hyperglycemia, obesity, and elevated free fatty acids all INHIBIT GH secretion (substrate excess signals no need to mobilize energy stores). Somatostatin and high IGF-1 also inhibit GH. All other options are stimulatory.",
+    wrong: "Hypoglycemia, starvation, exercise, and deep sleep are the major STIMULATORS of GH."
+  },
+  {
+    num: 21, type: "Mechanism",
+    q: "In which structure is ADH synthesized (not just stored)?",
+    opts: ["Paraventricular nucleus of hypothalamus","Posterior pituitary","Supraoptic nucleus of hypothalamus","Anterior pituitary","Median eminence"],
+    correct: 2,
+    explain: "ADH is synthesized primarily in the SUPRAOPTIC NUCLEUS of the hypothalamus (and to a lesser extent the paraventricular nucleus). It is then transported along axons to the posterior pituitary where it is stored and released.",
+    wrong: "The posterior pituitary STORES and RELEASES ADH but does NOT synthesize it. Paraventricular nucleus primarily synthesizes Oxytocin."
+  },
+  {
+    num: 22, type: "Mechanism",
+    q: "What is the mechanism by which ADH (in high/pharmacological doses) causes vasoconstriction?",
+    opts: ["Binds V2 receptors → cAMP → vascular smooth muscle relaxation","Binds V1 receptors → IP3/Ca²⁺ pathway → vascular smooth muscle contraction","Directly blocks adenylate cyclase in blood vessels","Activates aquaporin-1 channels in vascular walls","Stimulates catecholamine release from adrenal medulla"],
+    correct: 1,
+    explain: "At high doses, ADH binds V1 receptors on vascular smooth muscle → Gq protein → PLC → IP3 → ↑ intracellular Ca²⁺ → smooth muscle contraction → vasoconstriction → blood pressure rise. This is why ADH is also called Vasopressin.",
+    wrong: "V2 receptors use cAMP (kidney water reabsorption). V1 receptors use the IP3/Calcium pathway for vasoconstriction."
+  },
+  {
+    num: 23, type: "Structure/Definition",
+    q: "The hypophyseal portal system is significant because it:",
+    opts: ["Carries CSF from the ventricles to bathe the pituitary","Delivers blood from the pituitary back to the hypothalamus","Delivers hypothalamic hormones at high local concentrations directly to the anterior pituitary","Provides the neural connection between hypothalamus and posterior pituitary","Is the route by which posterior pituitary hormones reach systemic circulation"],
+    correct: 2,
+    explain: "The hypophyseal portal system is a specialized capillary network that drains the median eminence of the hypothalamus and re-forms sinusoids in the anterior pituitary. This delivers releasing/inhibiting hormones in HIGH concentration directly to their target cells — vastly more efficient than systemic dilution.",
+    wrong: "Neural connection to posterior pituitary = hypothalamic-hypophyseal tract (axons, not blood). Portal blood flows hypothalamus → anterior pituitary (not reverse)."
+  },
+  {
+    num: 24, type: "Mechanism",
+    q: "Oxytocin secretion during suckling is an example of which type of feedback?",
+    opts: ["Negative feedback (suckling suppresses further oxytocin)","Long-loop negative feedback via estrogen","Positive feedback (suckling triggers more oxytocin until stimulus ends)","Paracrine feedback from mammary tissue","Autocrine feedback within the hypothalamic nucleus"],
+    correct: 2,
+    explain: "Suckling is a positive feedback stimulus: suckling → oxytocin release → milk ejection → continued/increased suckling → more oxytocin. The cycle continues until the baby stops feeding (removing the stimulus). Similarly in labor, cervical distension → oxytocin → contraction → more distension.",
+    wrong: "Negative feedback would decrease oxytocin as suckling continues — the opposite of what happens."
+  },
+  {
+    num: 25, type: "Mechanism",
+    q: "A patient has a pituitary adenoma causing excess GH in adulthood. Their epiphyseal plates have already fused. What is the most likely finding?",
+    opts: ["Increased height and linear bone growth","Proportionate symmetric gigantism","Bone thickening: enlarged hands, feet, jaw — Acromegaly","Bone softening and osteoporosis","No skeletal changes since epiphyses are fused"],
+    correct: 2,
+    explain: "When epiphyses are fused, bones cannot grow longer. Instead, excess GH/IGF-1 causes PERIOSTEAL (outer) bone growth → widening and thickening → acral enlargement (hands, feet, jaw, skull). = Acromegaly. Plus: hyperglycemia, soft tissue overgrowth, coarsened features.",
+    wrong: "Linear height increase only occurs with OPEN epiphyses (Gigantism). Osteoporosis is not the primary finding."
+  },
+  {
+    num: 26, type: "Mechanism",
+    q: "A 28-year-old woman presents with milk production and no menstrual periods for 6 months. She is not pregnant. What is the most likely hormonal abnormality?",
+    opts: ["Excess ADH from a hypothalamic tumor","Excess Growth Hormone from a somatotrope adenoma","Excess Prolactin from a mammotrope adenoma","Deficiency of Oxytocin causing failed lactation","Excess TSH causing galactorrhea"],
+    correct: 2,
+    explain: "Hyperprolactinemia is the classic cause of galactorrhea (milky discharge) + amenorrhea in non-pregnant women. Excess prolactin inhibits GnRH pulsatility and gonadotropin action → no ovulation → no periods. The most common cause is a mammotrope (prolactin-secreting) pituitary adenoma (prolactinoma).",
+    wrong: "ADH excess = SIADH (hyponatremia). GH excess = acromegaly. Oxytocin deficiency = failure of milk EJECTION (not synthesis). TSH excess = hyperthyroidism."
+  },
+  {
+    num: 27, type: "Clinical",
+    q: "Which of the following BEST explains why hyponatremia occurs in SIADH?",
+    opts: ["Kidneys lose excessive sodium in the urine","Excessive ADH causes water retention → plasma dilution → dilutional hyponatremia","Sodium is actively transported out of blood into cells","Aldosterone is suppressed, causing sodium wasting","GFR increases, washing out sodium"],
+    correct: 1,
+    explain: "In SIADH, continuous ADH secretion causes maximal water reabsorption from the collecting ducts. This increases total body water → dilutes all plasma solutes → dilutional hyponatremia. The urine is paradoxically concentrated (high osmolarity) despite the dilute plasma.",
+    wrong: "SIADH is primarily about water RETENTION causing dilution — not primary sodium loss. Urinary sodium may actually be normal or elevated (the kidneys try to maintain balance)."
+  },
+  {
+    num: 28, type: "Mechanism",
+    q: "Why does a patient with Simmonds' disease (panhypopituitarism) fail to lactate after delivery?",
+    opts: ["Posterior pituitary is destroyed, so no Oxytocin is available","Anterior pituitary destruction → no Prolactin → no milk synthesis","ADH deficiency prevents alveolar fluid accumulation","Excess Somatostatin inhibits mammary gland development","GH deficiency prevents breast tissue growth"],
+    correct: 1,
+    explain: "Panhypopituitarism destroys the anterior pituitary → all anterior pituitary hormones are lost, including Prolactin → no milk synthesis (even though the breast tissue and mammary alveoli may be intact). Prolactin is essential for synthesis of milk proteins, fat, and lactose.",
+    wrong: "The posterior pituitary (and Oxytocin) is often spared in Sheehan syndrome as it has its own blood supply. Prolactin (anterior pituitary) = milk synthesis; Oxytocin (posterior) = milk ejection."
+  },
+  {
+    num: 29, type: "Mechanism",
+    q: "GH promotes protein synthesis in muscle. This can be described as:",
+    opts: ["Catabolic and gluconeogenic","Lipolytic and ketogenic","Anabolic and nitrogen-retaining","Antidiuretic and sodium-retaining","Immunosuppressive and anti-inflammatory"],
+    correct: 2,
+    explain: "GH has direct anabolic effects on protein metabolism: ↑ amino acid uptake by cells, ↑ protein synthesis, ↓ protein catabolism → positive nitrogen balance. This is why GH is abused in athletics. The anabolic effect on protein coexists with its anti-insulin (diabetogenic) effect on glucose.",
+    wrong: "Catabolic = breaking down (opposite). GH does cause lipolysis but that's not the protein synthesis description. Anti-inflammatory = glucocorticoids."
+  },
+  {
+    num: 30, type: "Regulatory",
+    q: "Which hypothalamic hormone is the primary inhibitor of GH secretion?",
+    opts: ["GHRH (Growth Hormone Releasing Hormone)","TRH (Thyrotropin Releasing Hormone)","Somatostatin (GHIH — Growth Hormone Inhibiting Hormone)","Dopamine (PIH)","GnRH (Gonadotropin Releasing Hormone)"],
+    correct: 2,
+    explain: "Somatostatin (also called GHIH — Growth Hormone Inhibiting Hormone) is produced in the periventricular nucleus of the hypothalamus and is the primary physiological inhibitor of GH secretion from somatotropes. High IGF-1 stimulates Somatostatin release (negative feedback).",
+    wrong: "GHRH stimulates GH. Dopamine primarily inhibits Prolactin. TRH releases TSH (and also stimulates Prolactin). GnRH releases FSH/LH."
+  },
+  {
+    num: 31, type: "Structure/Definition",
+    q: "Bitemporal hemianopia in a patient with a pituitary tumor results from compression of which structure?",
+    opts: ["Internal capsule","Optic nerve (CN II unilaterally)","Optic chiasma","Lateral geniculate nucleus","Occipital cortex"],
+    correct: 2,
+    explain: "The optic chiasma sits directly above the pituitary gland in the suprasellar space. A pituitary macroadenoma expanding upward compresses the chiasma → the crossing nasal retinal fibers (representing temporal visual fields of each eye) are damaged → loss of BOTH temporal/peripheral visual fields = bitemporal hemianopia.",
+    wrong: "Unilateral optic nerve compression = monocular blindness. Occipital cortex lesion = contralateral hemianopia (not bitemporal). Internal capsule = motor/sensory deficits."
+  },
+  {
+    num: 32, type: "Clinical",
+    q: "A child with a GH-secreting tumor has open epiphyseal plates. What clinical condition will develop?",
+    opts: ["Acromegaly","Pituitary dwarfism","Gigantism","Cretinism","Conn's syndrome"],
+    correct: 2,
+    explain: "Gigantism occurs when excess GH (and thus IGF-1) acts on OPEN epiphyseal growth plates in childhood → accelerated chondrocyte proliferation → linear bone elongation → abnormal height. The same tumor in an adult with fused plates causes Acromegaly.",
+    wrong: "Acromegaly = adult GH excess (fused epiphyses). Pituitary dwarfism = GH deficiency. Cretinism = congenital hypothyroidism."
+  },
+  {
+    num: 33, type: "Mechanism",
+    q: "A post-partum woman who had severe hemorrhagic shock is later found to have low TSH, ACTH, FSH, LH, and GH. She has no lactation and progressive weight loss. What is the diagnosis?",
+    opts: ["Primary hypothyroidism","Addison's disease (primary adrenal insufficiency)","Sheehan syndrome (post-partum panhypopituitarism)","Prolactinoma","Diabetes insipidus"],
+    correct: 2,
+    explain: "Sheehan syndrome is pituitary ischemic necrosis following severe post-partum hemorrhage. The pituitary gland enlarges during pregnancy (due to lactotroph hyperplasia) and becomes vulnerable to ischemia if blood supply is compromised during hemorrhagic shock. All anterior pituitary hormones are lost → panhypopituitarism.",
+    wrong: "Primary hypothyroidism/Addison's → specific gland failure, not pan-pituitary. Prolactinoma = high prolactin. Diabetes insipidus = ADH deficiency (posterior pituitary)."
+  },
+  {
+    num: 34, type: "Mechanism",
+    q: "What is the correct sequence for the ADH feedback loop when a person becomes dehydrated?",
+    opts: [
+      "↑Urine output → ↓plasma volume → ↑ADH → V2 → AQP2 → water reabsorption",
+      "↑Plasma osmolarity → osmoreceptors activated → ↑ADH release → V2 receptors → cAMP → AQP2 insertion → water reabsorption → ↓plasma osmolarity",
+      "↓Blood pressure → baroreceptors → ↑dopamine → V1 → vasoconstriction only",
+      "↑Plasma osmolarity → hypothalamus → ↑Oxytocin → kidney → water retention",
+      "↓Plasma osmolarity → ↑ADH → V2 → concentrated urine"
+    ],
+    correct: 1,
+    explain: "Dehydration → ↑plasma osmolarity → supraoptic nucleus osmoreceptors detect this → ↑ADH synthesis and release → ADH binds V2 receptors in DCT/collecting duct → Gs → adenylate cyclase → ↑cAMP → PKA → AQP2 insertion → ↑water reabsorption → plasma osmolarity normalizes. Perfect negative feedback.",
+    wrong: "Oxytocin does not regulate the kidney. Decreased plasma osmolarity would INHIBIT ADH (opposite of dehydration)."
+  },
+  {
+    num: 35, type: "Integrative",
+    q: "A 40-year-old presents with headaches, bitemporal hemianopia, enlarged hands and jaw, and fasting blood glucose of 180 mg/dL. What is the single most likely unifying diagnosis?",
+    opts: [
+      "SIADH causing hyponatremia and visual changes",
+      "Pituitary macroadenoma secreting GH (Acromegaly) with optic chiasma compression",
+      "Prolactinoma causing galactorrhea and visual changes",
+      "Craniopharyngioma causing panhypopituitarism",
+      "Diabetes mellitus with autonomic neuropathy"
+    ],
+    correct: 1,
+    explain: "This is the classic integrative presentation of a GH-secreting pituitary macroadenoma (Acromegaly): (1) Headaches from intracranial mass, (2) Bitemporal hemianopia from optic chiasma compression, (3) Acral enlargement (enlarged hands, jaw = prognathism) from IGF-1, (4) Hyperglycemia from GH's anti-insulin diabetogenic effect.",
+    wrong: "SIADH causes hyponatremia — no skeletal changes. Prolactinoma causes galactorrhea/amenorrhea — not acral enlargement. Craniopharyngioma causes panhypopituitarism (LOW hormones). Diabetes mellitus doesn't cause acral enlargement or bitemporal hemianopia."
+  }
+];
+
+const flashcards = [
+  { q: "What is the primary nucleus that synthesizes ADH?", a: "Supraoptic nucleus of the hypothalamus" },
+  { q: "What type of receptor does ADH bind in the kidney collecting duct?", a: "V2 receptor (Gs-coupled → cAMP → AQP2 insertion)" },
+  { q: "Name the water channel inserted by ADH action.", a: "Aquaporin-2 (AQP2)" },
+  { q: "What is the osmolarity threshold for ADH release?", a: "1–2% increase in plasma osmolarity (very sensitive)" },
+  { q: "What nucleus synthesizes Oxytocin?", a: "Paraventricular nucleus of the hypothalamus" },
+  { q: "What is the feedback type during labor (parturition) for Oxytocin?", a: "Positive feedback — cervical stretch → more OT → more contractions" },
+  { q: "What cell type secretes Growth Hormone?", a: "Somatotropes (acidophils) — ~50% of anterior pituitary cells" },
+  { q: "How does GH promote bone growth?", a: "GH → liver → IGF-1 (Somatomedins) → epiphyseal cartilage proliferation" },
+  { q: "What are the 3 metabolic effects of GH?", a: "↑ Protein synthesis, ↑ Lipolysis, ↑ Blood glucose (anti-insulin = diabetogenic)" },
+  { q: "What inhibits GH secretion from the hypothalamus?", a: "Somatostatin (GHIH) + high IGF-1 (negative feedback)" },
+  { q: "Acromegaly vs. Gigantism — what is the key difference?", a: "Acromegaly = GH excess AFTER epiphyseal fusion (adults). Gigantism = GH excess BEFORE fusion (children)." },
+  { q: "What cell secretes Prolactin? What primarily inhibits it?", a: "Mammotropes (acidophils). Primarily inhibited by Dopamine (PIH — Prolactin Inhibiting Hormone)." },
+  { q: "What are the consequences of hyperprolactinemia in women?", a: "Galactorrhea + amenorrhea (inhibits GnRH/FSH/LH → no ovulation)" },
+  { q: "What connects the hypothalamus to the POSTERIOR pituitary?", a: "Hypothalamic–hypophyseal tract (axonal nerve tract)" },
+  { q: "What connects the hypothalamus to the ANTERIOR pituitary?", a: "Hypophyseal portal system (vascular connection via median eminence)" },
+  { q: "What happens to ALL anterior pituitary hormones if the portal blood supply is cut?", a: "They all DECREASE — EXCEPT prolactin, which INCREASES (because dopamine inhibition is also lost)" },
+  { q: "Neurogenic vs. Nephrogenic DI: how to differentiate?", a: "Give DDAVP: Neurogenic DI responds (urine concentrates). Nephrogenic DI does NOT respond." },
+  { q: "What is the classic triad of SIADH?", a: "Hyponatremia + concentrated urine + increased plasma volume (no edema)" },
+  { q: "Name the anterior pituitary cells and their hormones.", a: "Somatotropes→GH, Mammotropes→PRL, Thyrotropes→TSH, Corticotropes→ACTH, Gonadotropes→FSH/LH" },
+  { q: "What visual field defect does a pituitary macroadenoma cause?", a: "Bitemporal hemianopia (compression of optic chiasma nasal fibers)" },
+  { q: "What is Sheehan syndrome?", a: "Post-partum pituitary ischemic necrosis after severe hemorrhagic shock → panhypopituitarism" },
+  { q: "What is the second messenger pathway for steroid hormone action?", a: "No second messenger — steroid enters cell, binds cytoplasmic receptor, complex translocates to nucleus and directly alters gene transcription." },
+  { q: "What is Pituitary Dwarfism and how does it differ from Achondroplasia?", a: "GH deficiency → proportionate symmetric short stature, normal intelligence. Achondroplasia = FGFR3 mutation → disproportionate limb shortening (normal trunk), autosomal dominant." },
+  { q: "Which GH regulatory hormone is also used therapeutically in acromegaly?", a: "Octreotide / Lanreotide — somatostatin analogues that suppress GH secretion from the adenoma." }
+];
+
+const cases = [
+  {
+    num: 1, title: "The Patient Who Drinks Like a Fish 🐟",
+    vignette: "A 35-year-old male presents to the ED with extreme thirst and producing approximately 18–20 liters of urine per day for the past 2 weeks. He was involved in a motor vehicle accident 3 weeks ago with head trauma. His urine specific gravity is 1.002. Serum sodium is 152 mEq/L (↑). Plasma osmolarity is 310 mOsm/kg (↑).",
+    questions: [
+      "1. What is the most likely diagnosis? Neurogenic or nephrogenic?",
+      "2. What mechanism explains the massive polyuria?",
+      "3. How would you confirm the diagnosis at the bedside?"
+    ],
+    answer: `<strong>Diagnosis: Neurogenic (Central) Diabetes Insipidus</strong>
+<br><br>
+<strong>Mechanism:</strong> Head trauma damaged the supraoptic nucleus or the hypothalamic–hypophyseal tract → absent ADH synthesis/release → no ADH available → V2 receptors on DCT/collecting ducts are NOT activated → no cAMP → no Aquaporin-2 insertion → collecting duct is impermeable to water → massive water loss in urine (polyuria) → plasma becomes concentrated (hypernatremia, hyperosmolarity) → extreme compensatory thirst (polydipsia).
+<br><br>
+<strong>Confirmation:</strong> DDAVP (synthetic ADH) challenge test — administer DDAVP and observe urine. In Neurogenic DI: urine concentrates dramatically (because the kidney's V2 receptors and AQP2 machinery are INTACT). In Nephrogenic DI: urine remains dilute (receptor or channel defect).
+<br><br>
+<strong>Key Lab Clue:</strong> Low urine specific gravity (1.002) + high plasma osmolarity + high serum Na⁺ = WATER LOSS, not sodium gain.`
+  },
+  {
+    num: 2, title: "The Confused Patient After Brain Surgery 🧠",
+    vignette: "A 45-year-old female underwent surgery for a brain tumor 5 days ago. She now presents confused and lethargic. Her serum sodium is 122 mEq/L (↓↓). Her plasma osmolarity is 255 mOsm/kg. Her urine is dark and concentrated (osmolarity 600 mOsm/kg). She has no peripheral edema. She is euvolemic on examination.",
+    questions: [
+      "1. What is causing the hyponatremia — is it due to sodium loss or water gain?",
+      "2. Name the syndrome and its mechanism.",
+      "3. Why is the urine concentrated while the plasma is dilute?"
+    ],
+    answer: `<strong>Diagnosis: SIADH — Syndrome of Inappropriate ADH Secretion</strong>
+<br><br>
+<strong>Mechanism:</strong> Post-operative brain irritation (or residual tumor) causes inappropriate, sustained ADH secretion despite low plasma osmolarity. ADH continuously activates V2 → cAMP → AQP2 → maximal water reabsorption from collecting ducts → total body water increases → plasma is diluted → DILUTIONAL hyponatremia (not sodium loss). The kidneys, under ADH influence, continue to concentrate the urine (paradoxically high urine osmolarity).
+<br><br>
+<strong>Why urine is concentrated:</strong> ADH tells the kidney "reabsorb water at maximum capacity" — so the kidney concentrates the urine while the plasma becomes dilute. This is the hallmark paradox of SIADH.
+<br><br>
+<strong>Treatment:</strong> Fluid restriction (500–1000 mL/day) + address the underlying cause. For severe symptoms: hypertonic saline (3% NaCl) — correct slowly to avoid central pontine myelinolysis (&lt;10 mEq/L/24h). Vaptans (V2 antagonists like Tolvaptan) promote free water excretion.`
+  },
+  {
+    num: 3, title: "The Man Whose Shoes No Longer Fit 👟",
+    vignette: "A 42-year-old engineer comes to clinic reporting that over the past 4 years his ring size has increased by 3 sizes, he has had to buy larger shoes, and his wife says his face 'looks different.' He has a fasting blood glucose of 178 mg/dL. He complains of headaches and notices he can't see objects to his left and right peripherally. On exam: prognathism, coarsened facial features, large spade-like hands.",
+    questions: [
+      "1. What is the diagnosis and what caused it?",
+      "2. Explain the visual field deficit using anatomy.",
+      "3. Why is his blood glucose elevated?"
+    ],
+    answer: `<strong>Diagnosis: Acromegaly — caused by a GH-secreting pituitary macroadenoma (somatotrope adenoma)</strong>
+<br><br>
+<strong>Pathogenesis:</strong> Somatotrope adenoma → autonomous GH hypersecretion → liver → ↑IGF-1 → periosteal bone growth (epiphyses fused in adults → bones cannot lengthen, only widen) → enlarged hands, feet, jaw, skull, tongue (macroglossia), coarsened features. Unlike children with open plates (Gigantism), he develops acral thickening.
+<br><br>
+<strong>Visual Field Deficit (Bitemporal Hemianopia):</strong> The pituitary sits in the sella turcica. The optic chiasma lies directly above. The growing adenoma expands superiorly, compressing the chiasma. The nasal retinal fibers (which carry temporal visual information) cross at the chiasma — they are compressed bilaterally → loss of temporal (peripheral) visual fields in BOTH eyes = bitemporal hemianopia.
+<br><br>
+<strong>Hyperglycemia:</strong> GH has a direct anti-insulin (diabetogenic) action: ↓ glucose uptake by tissues, ↑ hepatic gluconeogenesis, ↑ glycogenolysis → chronically elevated blood glucose → secondary Diabetes Mellitus if untreated.`
+  },
+  {
+    num: 4, title: "Milk Without a Baby 🍼",
+    vignette: "A 29-year-old nulliparous (never been pregnant) woman presents with milky discharge from both nipples and has not had a menstrual period in 8 months. Pregnancy test is negative. She is otherwise healthy. Serum prolactin is 280 ng/mL (normal &lt;25 ng/mL).",
+    questions: [
+      "1. Name the condition and likely structural cause.",
+      "2. Explain why she is not menstruating.",
+      "3. What is the primary treatment, and why does it work?"
+    ],
+    answer: `<strong>Diagnosis: Hyperprolactinemia secondary to Prolactinoma (Mammotrope adenoma)</strong>
+<br><br>
+<strong>Cause:</strong> A prolactin-secreting pituitary adenoma (prolactinoma) — most common pituitary tumor. It produces prolactin autonomously, escaping normal dopamine inhibition. Prolactin level of 280 ng/mL (vs. normal &lt;25) is consistent with a macroadenoma.
+<br><br>
+<strong>Why No Menstruation (Amenorrhea):</strong> High prolactin suppresses GnRH pulsatility from the hypothalamus AND directly inhibits the effect of FSH/LH on the ovary → follicles don't mature → no estrogen surge → no LH surge → NO OVULATION → no corpus luteum → no progesterone → no endometrial proliferation → amenorrhea. This is the physiology of "lactational amenorrhea" — now occurring pathologically.
+<br><br>
+<strong>Treatment — Dopamine Agonists (Cabergoline/Bromocriptine):</strong> Remember that prolactin secretion is under TONIC INHIBITION by dopamine. A dopamine agonist mimics this inhibition → suppresses prolactin secretion even from the adenoma → prolactin falls → GnRH/FSH/LH normalize → ovulation resumes → periods return. Also causes adenoma shrinkage in most cases. Surgery is reserved for drug-resistant cases.`
+  },
+  {
+    num: 5, title: "The Postpartum Collapse 🏥",
+    vignette: "A 32-year-old woman had a complicated vaginal delivery 4 months ago complicated by severe hemorrhage requiring transfusions. Since then she has been unable to breastfeed despite attempting, has lost 12 kg, has no menstrual periods, feels constantly cold, and is fatigued. On examination: pale, dry skin, bradycardia. Labs: low TSH, low free T4, low cortisol, low FSH, low LH, low GH, low prolactin.",
+    questions: [
+      "1. What is the diagnosis and the mechanism of pituitary failure?",
+      "2. Why is she unable to lactate?",
+      "3. In what order should hormone replacement be initiated, and why?"
+    ],
+    answer: `<strong>Diagnosis: Sheehan Syndrome (Post-partum Panhypopituitarism)</strong>
+<br><br>
+<strong>Mechanism:</strong> During pregnancy, the anterior pituitary enlarges up to 2–3× normal size (due to lactotroph hyperplasia under estrogen stimulation). This enlargement makes it vulnerable to ischemia. Severe post-partum hemorrhage → hypotension/shock → reduced blood supply to the pituitary → ischemic necrosis of the anterior pituitary → loss of ALL anterior pituitary cell types → loss of ALL trophic hormones.
+<br><br>
+<strong>Why Can't She Lactate:</strong> Prolactin from mammotropes is required for synthesis of milk (proteins, fat, lactose in mammary alveoli). With anterior pituitary necrosis, prolactin is absent → no milk can be synthesized, even though her breast tissue is intact.
+<br><br>
+<strong>Order of Hormone Replacement:</strong>
+1. <strong>Cortisol (hydrocortisone) FIRST</strong> — adrenal insufficiency is life-threatening; giving thyroid hormone before cortisol in an adrenal-insufficient patient can precipitate adrenal crisis.
+2. <strong>Thyroid hormone (Levothyroxine) SECOND</strong> — after adrenal replacement is established.
+3. <strong>Sex hormones</strong> — estrogen/progesterone for menstrual function and bone protection.
+4. GH replacement — for quality of life and body composition.`
+  },
+  {
+    num: 6, title: "The Giant Teenager 📏",
+    vignette: "A 15-year-old male is brought by his parents who are concerned he is 'growing too fast.' He is now 6'5\" and still growing rapidly. His classmates are all around 5'9\"–5'11\". He has no visual complaints. IGF-1 level is markedly elevated. MRI shows a small pituitary lesion (6mm).",
+    questions: [
+      "1. What is the diagnosis and why is it different from Acromegaly?",
+      "2. What is the role of IGF-1 in this condition?",
+      "3. What long-term complications could develop if untreated?"
+    ],
+    answer: `<strong>Diagnosis: Gigantism — GH-secreting microadenoma in an adolescent with open epiphyseal plates</strong>
+<br><br>
+<strong>Why Different from Acromegaly:</strong> The key differentiator is the STATUS OF THE EPIPHYSEAL PLATES. At age 15, epiphyseal plates are still OPEN (especially in males, fusion occurs around 18–25). Excess GH → ↑IGF-1 → chondrocyte proliferation in the open growth plates → linear bone elongation → abnormal height. The same level of GH excess in a 42-year-old (fused plates) would cause Acromegaly (bone thickening, not lengthening).
+<br><br>
+<strong>Role of IGF-1:</strong> GH itself has no direct growth-promoting effect. GH binds liver receptors → liver produces IGF-1 (Somatomedin C) → IGF-1 acts on epiphyseal chondrocytes → cartilage matrix proliferation → endochondral ossification → bone lengthening. IGF-1 also feeds back negatively to suppress further GH secretion (though the adenoma may be resistant to this feedback).
+<br><br>
+<strong>Long-term Complications if Untreated:</strong>
+• Joint pain and arthritis (cartilage overgrowth)
+• Cardiomegaly → heart failure (GH/IGF-1 cause cardiac muscle hypertrophy)
+• Secondary Diabetes Mellitus (anti-insulin effect of GH)
+• Sleep apnea (soft tissue overgrowth → airway obstruction)
+• Eventual transition to Acromegaly features when epiphyses fuse
+• Tumor expansion → bitemporal hemianopia, headaches, hypopituitarism`
+  }
+];
+
+const mnemonics = [
+  {
+    word: "ADHAM",
+    title: "ADH Action Mechanism",
+    items: [
+      { l: "A", m: "ADH binds V2 receptor" },
+      { l: "D", m: "Drives cAMP via adenylate cyclase" },
+      { l: "H", m: "H2O channels (Aquaporin-2) inserted" },
+      { l: "A", m: "Absorbs water from collecting duct" },
+      { l: "M", m: "Makes urine concentrated, plasma dilute" }
+    ]
+  },
+  {
+    word: "SOMATOG",
+    title: "GH / Somatotrope Key Facts",
+    items: [
+      { l: "S", m: "Somatotropes secrete it (acidophils)" },
+      { l: "O", m: "Only acts via Somatomedins (IGF-1) for growth" },
+      { l: "M", m: "Muscles get protein anabolic effect" },
+      { l: "A", m: "Anti-insulin → hyperglycemia" },
+      { l: "T", m: "Triggers lipolysis (free fatty acids ↑)" },
+      { l: "O", m: "Opens epiphyses → Gigantism; Closed → Acromegaly" },
+      { l: "G", m: "GHRH stimulates; Somatostatin inhibits" }
+    ]
+  },
+  {
+    word: "PROUD MOM",
+    title: "Prolactin Regulation & Effects",
+    items: [
+      { l: "P", m: "Prolactin secreted by mammotropes" },
+      { l: "R", m: "Regulated mainly by Dopamine (inhibits it tonically)" },
+      { l: "O", m: "Only hormone with tonic INHIBITION as default control" },
+      { l: "U", m: "Upregulated by suckling and TRH" },
+      { l: "D", m: "Dopamine blockade → hyperprolactinemia (side effect of antipsychotics)" },
+      { l: "M", m: "Milk synthesis: proteins, fat, lactose" },
+      { l: "O", m: "Ovulation blocked at high levels → amenorrhea" },
+      { l: "M", m: "Mammotrope adenoma = most common pituitary tumor" }
+    ]
+  },
+  {
+    word: "DISPOT",
+    title: "Diabetes Insipidus vs. SIADH — Spotting the Difference",
+    items: [
+      { l: "D", m: "DI = Dilute urine (low SG, low osmolarity)" },
+      { l: "I", m: "In DI: plasma is concentrated (hypernatremia)" },
+      { l: "S", m: "SIADH = Concentrated urine (paradox!)" },
+      { l: "P", m: "Plasma diluted in SIADH → hyponatremia" },
+      { l: "O", m: "DDAVP: Neurogenic DI responds; Nephrogenic does NOT" },
+      { l: "T", m: "Treatment: DI → fluid + DDAVP; SIADH → fluid restriction" }
+    ]
+  },
+  {
+    word: "ACRO JAW",
+    title: "Acromegaly Features (GH excess in adults)",
+    items: [
+      { l: "A", m: "Acral enlargement (hands, feet, hat size)" },
+      { l: "C", m: "Coarsening of facial features" },
+      { l: "R", m: "Ring size increases (soft tissue swelling)" },
+      { l: "O", m: "Optic chiasma compression → bitemporal hemianopia" },
+      { l: "J", m: "Jaw (prognathism) — lower jaw protrudes" },
+      { l: "A", m: "Adenoma of somatotropes (cause)" },
+      { l: "W", m: "Worsening glucose control (anti-insulin effect of GH)" }
+    ]
+  },
+  {
+    word: "SHEEHAN",
+    title: "Sheehan Syndrome Key Points",
+    items: [
+      { l: "S", m: "Severe post-partum hemorrhage → shock" },
+      { l: "H", m: "Hypotension → pituitary ischemia" },
+      { l: "E", m: "Enlarged gland during pregnancy = vulnerable" },
+      { l: "E", m: "Every anterior pituitary hormone lost (pan-hypopituitarism)" },
+      { l: "H", m: "Hypothyroidism + adrenal insufficiency follow" },
+      { l: "A", m: "Amenorrhea + loss of pubic/axillary hair" },
+      { l: "N", m: "No lactation (prolactin absent)" }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let qIdx = 0, qScore = 0, qStreak = 0, answered = new Array(quizData.length).fill(false), fcFlipped = 0;
+
+// ═══════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('lastTab', id);
+}
+
+// ═══════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  document.getElementById('scoreScreen').classList.remove('show');
+  document.getElementById('q-total').textContent = quizData.length;
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  if (idx >= quizData.length) { showScore(); return; }
+  const d = quizData[idx];
+  const div = document.createElement('div');
+  div.className = 'quiz-card';
+  const letters = ['A','B','C','D','E'];
+  div.innerHTML = `
+    <div class="quiz-num">Question ${d.num} of ${quizData.length} · <span class="tag tag-mech" style="margin-left:6px">${d.type}</span></div>
+    <div class="quiz-q">${d.q}</div>
+    <div class="quiz-options" id="opts">
+      ${d.opts.map((o,i) => `<button class="quiz-opt" onclick="selectOpt(this,${i},${d.correct},${idx})" data-idx="${i}"><span class="opt-letter">${letters[i]}</span>${o}</button>`).join('')}
+    </div>
+    <div class="quiz-explain" id="explain">
+      <div class="correct-label">✅ Correct: ${d.explain}</div>
+      <div class="wrong-parts">❌ Why others wrong: ${d.wrong}</div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQ(${idx})" style="display:none">Next Question →</button>
+    </div>
+  `;
+  container.appendChild(div);
+  updateProgress(idx);
+}
+
+function selectOpt(btn, chosen, correct, idx) {
+  if (answered[idx]) return;
+  answered[idx] = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+  opts[correct].classList.add('correct');
+  if (chosen === correct) {
+    qScore++; qStreak++;
+    document.getElementById('q-score').textContent = qScore;
+  } else {
+    btn.classList.add('wrong'); qStreak = 0;
+  }
+  document.getElementById('explain').classList.add('show');
+  document.getElementById('nextBtn').style.display = 'inline-block';
+  updateHdr();
+}
+
+function nextQ(idx) {
+  qIdx = idx + 1;
+  document.getElementById('q-current').textContent = Math.min(qIdx + 1, quizData.length);
+  renderQuestion(qIdx);
+}
+
+function updateProgress(idx) {
+  const pct = (idx / quizData.length) * 100;
+  document.getElementById('q-progress').style.width = pct + '%';
+}
+
+function showScore() {
+  document.getElementById('quiz-container').innerHTML = '';
+  const ss = document.getElementById('scoreScreen');
+  ss.classList.add('show');
+  document.getElementById('final-score').textContent = qScore;
+  const pct = Math.round((qScore / quizData.length) * 100);
+  let grade, msg;
+  if (pct >= 90) { grade = '🏆 DISTINCTION'; msg = 'Outstanding! You have mastered this topic. Ready for the exam!'; }
+  else if (pct >= 75) { grade = '🥇 MERIT'; msg = 'Excellent work! Review the questions you missed and you\'re exam-ready.'; }
+  else if (pct >= 60) { grade = '✅ PASS'; msg = 'Good effort! Focus on the explanations for missed questions.'; }
+  else { grade = '📖 Keep Studying'; msg = 'Review the material and try again — you\'ve got this!'; }
+  document.getElementById('score-grade').textContent = grade;
+  document.getElementById('score-msg').textContent = msg;
+}
+
+function restartQuiz() {
+  qIdx = 0; qScore = 0; qStreak = 0;
+  answered = new Array(quizData.length).fill(false);
+  document.getElementById('q-score').textContent = 0;
+  document.getElementById('q-current').textContent = 1;
+  buildQuiz();
+  updateHdr();
+}
+
+// ═══════════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════════
+function buildFlashcards() {
+  const grid = document.getElementById('fcGrid');
+  grid.innerHTML = '';
+  flashcards.forEach((fc, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'fc-wrapper';
+    wrapper.innerHTML = `
+      <div class="fc-inner">
+        <div class="fc-face fc-front"><div class="fc-q">${fc.q}</div><span class="fc-hint">tap to flip</span></div>
+        <div class="fc-face fc-back"><div class="fc-a">${fc.a}</div><span class="fc-hint">tap to flip</span></div>
+      </div>`;
+    wrapper.addEventListener('click', () => {
+      wrapper.classList.toggle('flipped');
+      if (wrapper.classList.contains('flipped')) { fcFlipped++; updateHdr(); }
+    });
+    grid.appendChild(wrapper);
+  });
+}
+
+// ═══════════════════════════════════════════
+// CASES
+// ═══════════════════════════════════════════
+function buildCases() {
+  const container = document.getElementById('casesContainer');
+  container.innerHTML = '';
+  cases.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'case-card';
+    div.innerHTML = `
+      <div class="case-header">
+        <div>
+          <div class="case-num">Case ${c.num}</div>
+          <div class="case-title">${c.title}</div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="vignette-box">${c.vignette}</div>
+        <div class="case-questions">
+          ${c.questions.map(q => `<div class="case-q">${q}</div>`).join('')}
+        </div>
+        <button class="reveal-btn" onclick="revealCase(this)">💡 Reveal Full Answer</button>
+        <div class="case-answer">${c.answer}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function revealCase(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? '🙈 Hide Answer' : '💡 Reveal Full Answer';
+}
+
+// ═══════════════════════════════════════════
+// MNEMONICS
+// ═══════════════════════════════════════════
+function buildMnemonics() {
+  const grid = document.getElementById('mnemGrid');
+  grid.innerHTML = '';
+  mnemonics.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'mnem-card';
+    card.innerHTML = `
+      <div class="mnem-word">${m.word}</div>
+      <div class="mnem-title">${m.title} — click to expand</div>
+      <div class="mnem-list">
+        ${m.items.map(item => `<div class="mnem-item"><span class="mnem-letter">${item.l}</span><span class="mnem-meaning">${item.m}</span></div>`).join('')}
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('open'));
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════
+// TOGGLES
+// ═══════════════════════════════════════════
+function toggleStruct(el) { el.classList.toggle('open'); }
+function toggleFlow(el) { el.classList.toggle('open'); }
+
+// ═══════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════
+function filterCards() {
+  const term = document.getElementById('overviewSearch').value.toLowerCase();
+  document.querySelectorAll('#overviewCards .card').forEach(card => {
+    const text = (card.textContent + (card.dataset.search || '')).toLowerCase();
+    card.style.display = text.includes(term) ? '' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════
+// HEADER UPDATE
+// ═══════════════════════════════════════════
+function updateHdr() {
+  document.getElementById('hdr-score').textContent = `${qScore}/${quizData.length}`;
+  document.getElementById('hdr-cards').textContent = fcFlipped;
+  document.getElementById('hdr-streak').textContent = qStreak;
+}
+
+// ═══════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// ═══════════════════════════════════════════
+// PERSIST TAB
+// ═══════════════════════════════════════════
+function restoreTab() {
+  const last = localStorage.getItem('lastTab');
+  if (last) {
+    const btn = document.querySelector(`.nav-tab[onclick*="${last}"]`);
+    if (btn) switchTab(last, btn);
+  }
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+buildQuiz();
+buildFlashcards();
+buildCases();
+buildMnemonics();
+updateHdr();
+restoreTab();
+</script>
+</body>
+</html>

@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breast Pathology — Medical Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050c18;
+  --bg2: #0a1628;
+  --bg3: #0f1f3a;
+  --surface: #112040;
+  --surface2: #162a52;
+  --border: rgba(56,189,248,0.15);
+  --border2: rgba(56,189,248,0.3);
+  --glow: #38bdf8;
+  --glow2: #06b6d4;
+  --accent: #f472b6;
+  --accent2: #fb923c;
+  --accent3: #a78bfa;
+  --green: #34d399;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --r: 10px;
+  --r2: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+.bg-canvas {
+  position: fixed; inset:0; z-index:0; pointer-events:none;
+  overflow:hidden;
+}
+.bg-orb {
+  position:absolute; border-radius:50%;
+  filter: blur(80px); opacity:0.12;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.bg-orb:nth-child(1){width:600px;height:600px;top:-200px;left:-200px;background:var(--glow);animation-delay:0s;}
+.bg-orb:nth-child(2){width:400px;height:400px;bottom:-100px;right:-100px;background:var(--accent);animation-delay:-7s;}
+.bg-orb:nth-child(3){width:300px;height:300px;top:40%;left:40%;background:var(--accent3);animation-delay:-14s;}
+@keyframes orbFloat {
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(30px,-30px) scale(1.05);}
+  66%{transform:translate(-20px,20px) scale(0.95);}
+}
+
+/* Grid overlay */
+.bg-grid {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: 
+    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ===== LAYOUT ===== */
+#app { position:relative; z-index:1; }
+
+.header {
+  padding: 20px 24px 0;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5,12,24,0.8);
+  backdrop-filter: blur(12px);
+  position: sticky; top:0; z-index:100;
+}
+.header-brand {
+  display:flex; align-items:center; gap:12px;
+}
+.header-icon {
+  width:42px; height:42px; border-radius:12px;
+  background: linear-gradient(135deg, var(--glow), var(--accent3));
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; box-shadow: 0 0 20px rgba(56,189,248,0.4);
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size:1.3rem; font-weight:700;
+  color: var(--text);
+}
+.header-sub { font-size:0.75rem; color:var(--text2); }
+
+.stats-bar {
+  display:flex; gap:16px; align-items:center;
+  padding-bottom:16px;
+}
+.stat-chip {
+  display:flex; align-items:center; gap:6px;
+  background: var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:4px 12px;
+  font-size:0.78rem; font-weight:500;
+}
+.stat-chip .val { color:var(--glow); font-weight:700; font-family:'DM Mono'; }
+
+/* ===== TABS ===== */
+.tabs-wrap {
+  overflow-x:auto; scrollbar-width:none;
+  border-bottom:1px solid var(--border);
+  background: rgba(5,12,24,0.7);
+  backdrop-filter:blur(8px);
+  position: sticky; top:79px; z-index:99;
+}
+.tabs-wrap::-webkit-scrollbar{display:none;}
+.tabs {
+  display:flex; padding:0 16px; gap:4px;
+  width:max-content; min-width:100%;
+}
+.tab-btn {
+  display:flex; align-items:center; gap:7px;
+  padding:12px 18px; font-size:0.82rem; font-weight:500;
+  color:var(--text2); background:transparent;
+  border:none; cursor:pointer; white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s; font-family:'DM Sans';
+}
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active {
+  color:var(--glow); border-bottom-color:var(--glow);
+}
+.tab-emoji { font-size:16px; }
+
+/* ===== CONTENT ===== */
+.tab-content { display:none; padding:24px 20px; max-width:1200px; margin:0 auto; }
+.tab-content.active { display:block; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r2);
+  padding:20px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color:var(--border2);
+  box-shadow: 0 0 24px rgba(56,189,248,0.08);
+}
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+@media(max-width:768px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .stats-bar{display:none;}
+  .header-title{font-size:1rem;}
+}
+
+.section-title {
+  font-family:'Playfair Display', serif;
+  font-size:1.4rem; font-weight:700; margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(to right, var(--border2), transparent);
+}
+
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 10px; border-radius:20px; font-size:0.72rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:0.05em;
+}
+.badge-glow { background:rgba(56,189,248,0.15); color:var(--glow); }
+.badge-pink { background:rgba(244,114,182,0.15); color:var(--accent); }
+.badge-orange { background:rgba(251,146,60,0.15); color:var(--accent2); }
+.badge-green { background:rgba(52,211,153,0.15); color:var(--green); }
+.badge-purple { background:rgba(167,139,250,0.15); color:var(--accent3); }
+.badge-red { background:rgba(248,113,113,0.15); color:var(--red); }
+
+/* ===== OVERVIEW TAB ===== */
+.search-bar {
+  display:flex; align-items:center; gap:10px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:10px 16px; margin-bottom:24px;
+  transition: border-color 0.2s;
+}
+.search-bar:focus-within { border-color:var(--glow); }
+.search-bar input {
+  flex:1; background:none; border:none; outline:none;
+  color:var(--text); font-size:0.9rem; font-family:'DM Sans';
+}
+.search-bar input::placeholder { color:var(--text3); }
+
+.concept-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r2); padding:18px; margin-bottom:12px;
+  transition:all 0.2s; cursor:pointer;
+}
+.concept-card:hover { border-color:var(--border2); transform:translateX(3px); }
+.concept-card.hidden { display:none; }
+.concept-name {
+  font-weight:600; font-size:0.95rem; margin-bottom:6px;
+  display:flex; align-items:center; gap:8px;
+}
+.concept-def { color:var(--text2); font-size:0.85rem; line-height:1.6; }
+.concept-mechanism {
+  margin-top:10px; padding:10px; border-radius:8px;
+  background:var(--bg3); font-size:0.82rem; color:var(--text2);
+  display:none;
+}
+.concept-card.open .concept-mechanism { display:block; }
+.concept-card.open { border-color:var(--glow); }
+
+.timeline {
+  position:relative; padding-left:28px; margin:20px 0;
+}
+.timeline::before {
+  content:''; position:absolute; left:8px; top:0; bottom:0;
+  width:2px; background:linear-gradient(to bottom, var(--glow), var(--accent3), var(--accent));
+  border-radius:2px;
+}
+.timeline-item {
+  position:relative; margin-bottom:20px; padding:14px 16px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); transition:all 0.2s;
+}
+.timeline-item:hover { border-color:var(--border2); }
+.timeline-item::before {
+  content:''; position:absolute; left:-23px; top:50%;
+  transform:translateY(-50%);
+  width:12px; height:12px; border-radius:50%;
+  background:var(--glow);
+  box-shadow:0 0 8px var(--glow);
+}
+.timeline-item-title { font-weight:600; font-size:0.9rem; margin-bottom:4px; }
+.timeline-item-desc { font-size:0.82rem; color:var(--text2); }
+
+.hy-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px;
+}
+.hy-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:14px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.hy-card .icon { font-size:24px; }
+.hy-card .label { font-weight:600; font-size:0.88rem; }
+.hy-card .desc { font-size:0.8rem; color:var(--text2); line-height:1.5; }
+
+/* ===== QUIZ TAB ===== */
+.quiz-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:24px; flex-wrap:wrap; gap:12px;
+}
+.quiz-progress-bar {
+  height:6px; background:var(--bg3); border-radius:3px;
+  margin-bottom:20px; overflow:hidden;
+}
+.quiz-progress-fill {
+  height:100%; border-radius:3px;
+  background:linear-gradient(to right, var(--glow), var(--accent3));
+  transition:width 0.4s ease;
+}
+.quiz-score-box {
+  display:flex; gap:16px; align-items:center;
+}
+.score-num {
+  font-family:'DM Mono'; font-size:1.5rem; font-weight:700;
+  color:var(--glow);
+}
+.streak-box {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(251,146,60,0.1); border:1px solid rgba(251,146,60,0.3);
+  border-radius:20px; padding:4px 12px; font-size:0.82rem;
+  color:var(--accent2);
+}
+
+.q-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r2); padding:24px; margin-bottom:16px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+.q-number {
+  font-size:0.75rem; color:var(--text3); margin-bottom:8px;
+  font-family:'DM Mono'; text-transform:uppercase; letter-spacing:0.08em;
+}
+.q-text {
+  font-size:0.95rem; font-weight:500; line-height:1.6; margin-bottom:16px;
+}
+.q-options { display:flex; flex-direction:column; gap:8px; }
+.q-option {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 16px; border-radius:var(--r);
+  border:1px solid var(--border); cursor:pointer;
+  background:var(--bg3); transition:all 0.15s; font-size:0.88rem;
+  line-height:1.5;
+}
+.q-option:hover:not(.disabled) { border-color:var(--border2); background:var(--surface2); }
+.q-option-key {
+  min-width:24px; height:24px; border-radius:6px;
+  background:var(--surface2); display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:0.78rem; font-family:'DM Mono'; flex-shrink:0;
+}
+.q-option.correct { border-color:var(--green); background:rgba(52,211,153,0.08); }
+.q-option.correct .q-option-key { background:var(--green); color:#000; }
+.q-option.wrong { border-color:var(--red); background:rgba(248,113,113,0.08); }
+.q-option.wrong .q-option-key { background:var(--red); color:#000; }
+.q-option.disabled { cursor:default; }
+
+.q-explanation {
+  margin-top:16px; padding:14px; border-radius:var(--r);
+  background:var(--bg3); border-left:3px solid var(--glow);
+  font-size:0.84rem; line-height:1.6; display:none;
+}
+.q-explanation.show { display:block; animation: fadeIn 0.3s ease; }
+.q-explanation strong { color:var(--glow); }
+
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+.anim-correct { animation: pulse 0.4s ease; }
+.anim-wrong { animation: shake 0.4s ease; }
+
+.quiz-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:20px;
+}
+.btn {
+  padding:10px 20px; border-radius:var(--r); border:1px solid var(--border);
+  background:var(--surface); color:var(--text); cursor:pointer;
+  font-size:0.88rem; font-weight:500; font-family:'DM Sans';
+  transition:all 0.2s; display:flex; align-items:center; gap:6px;
+}
+.btn:hover { border-color:var(--glow); color:var(--glow); }
+.btn-primary {
+  background:linear-gradient(135deg, var(--glow), var(--accent3));
+  color:#000; border:none; font-weight:700;
+}
+.btn-primary:hover { opacity:0.9; transform:translateY(-1px); box-shadow:0 4px 16px rgba(56,189,248,0.3); }
+
+/* ===== FLASHCARDS TAB ===== */
+.fc-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;
+}
+.fc-card {
+  perspective:1000px; height:200px; cursor:pointer;
+}
+.fc-inner {
+  position:relative; width:100%; height:100%;
+  transform-style:preserve-3d; transition:transform 0.55s cubic-bezier(.4,0,.2,1);
+}
+.fc-card.flipped .fc-inner { transform:rotateY(180deg); }
+.fc-face {
+  position:absolute; inset:0; border-radius:var(--r2);
+  backface-visibility:hidden; display:flex; flex-direction:column;
+  justify-content:center; align-items:center; padding:20px; text-align:center;
+}
+.fc-front {
+  background:var(--surface); border:1px solid var(--border);
+}
+.fc-back {
+  background:linear-gradient(135deg, var(--surface2), var(--bg3));
+  border:1px solid var(--border2);
+  transform:rotateY(180deg);
+}
+.fc-front .fc-q {
+  font-size:0.9rem; font-weight:600; line-height:1.5; color:var(--text);
+}
+.fc-front .fc-hint {
+  margin-top:10px; font-size:0.75rem; color:var(--text3);
+}
+.fc-back .fc-a {
+  font-size:0.85rem; line-height:1.6; color:var(--text); 
+}
+.fc-tag { position:absolute; top:10px; right:10px; }
+
+/* ===== CASES TAB ===== */
+.case-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r2); padding:24px; margin-bottom:20px;
+}
+.case-header {
+  display:flex; align-items:flex-start; gap:14px; margin-bottom:16px;
+}
+.case-num {
+  min-width:44px; height:44px; border-radius:12px;
+  background:linear-gradient(135deg, var(--glow), var(--accent3));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-family:'DM Mono'; color:#000; font-size:1rem;
+}
+.case-title { font-size:1.05rem; font-weight:700; margin-bottom:4px; }
+.case-tags { display:flex; gap:6px; flex-wrap:wrap; }
+.case-vignette {
+  background:var(--bg3); border-left:3px solid var(--accent);
+  border-radius:0 var(--r) var(--r) 0; padding:14px;
+  margin-bottom:16px; font-size:0.88rem; line-height:1.7;
+  color:var(--text2);
+}
+.case-questions { display:flex; flex-direction:column; gap:10px; }
+.case-q {
+  background:var(--bg3); border-radius:var(--r); padding:14px;
+}
+.case-q-text { font-weight:600; font-size:0.9rem; margin-bottom:8px; }
+.reveal-btn {
+  padding:7px 16px; border-radius:20px; border:1px solid var(--accent3);
+  background:rgba(167,139,250,0.1); color:var(--accent3);
+  cursor:pointer; font-size:0.82rem; font-weight:600; font-family:'DM Sans';
+  transition:all 0.2s;
+}
+.reveal-btn:hover { background:rgba(167,139,250,0.2); }
+.case-answer {
+  display:none; margin-top:10px; padding:12px;
+  background:rgba(52,211,153,0.06); border:1px solid rgba(52,211,153,0.2);
+  border-radius:var(--r); font-size:0.85rem; line-height:1.6;
+}
+.case-answer.visible { display:block; animation:fadeIn 0.3s; }
+
+/* ===== PATHOPHYSIOLOGY TAB ===== */
+.patho-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:12px; margin-bottom:24px;
+}
+.patho-item {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:16px; cursor:pointer; transition:all 0.2s;
+}
+.patho-item:hover, .patho-item.active {
+  border-color:var(--glow); box-shadow: 0 0 16px rgba(56,189,248,0.1);
+}
+.patho-item .pi-icon { font-size:28px; margin-bottom:8px; }
+.patho-item .pi-name { font-weight:600; font-size:0.88rem; }
+.patho-item .pi-type { font-size:0.75rem; color:var(--text3); margin-top:2px; }
+.patho-detail {
+  background:var(--surface); border:1px solid var(--border2);
+  border-radius:var(--r2); padding:20px; margin-top:16px;
+  display:none; animation:fadeIn 0.3s;
+}
+.patho-detail.visible { display:block; }
+.patho-detail-title { font-family:'Playfair Display'; font-size:1.2rem; font-weight:700; margin-bottom:12px; }
+
+.flow-chart {
+  display:flex; flex-direction:column; gap:0; margin:20px 0;
+}
+.flow-step {
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.flow-box {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:10px 16px;
+  font-size:0.85rem; font-weight:500;
+  flex-shrink:0; min-width:180px;
+}
+.flow-arrow {
+  display:flex; flex-direction:column; align-items:center;
+  padding:4px 0; color:var(--text3); font-size:1.2rem;
+}
+
+/* ===== DIAGNOSIS TAB ===== */
+.diag-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  font-size:0.85rem; margin-bottom:20px;
+}
+.diag-table th {
+  background:var(--surface2); padding:10px 14px; text-align:left;
+  font-weight:600; color:var(--glow); font-size:0.8rem;
+  text-transform:uppercase; letter-spacing:0.05em;
+}
+.diag-table th:first-child { border-radius:var(--r) 0 0 0; }
+.diag-table th:last-child { border-radius:0 var(--r) 0 0; }
+.diag-table td {
+  padding:10px 14px; border-bottom:1px solid var(--border);
+  background:var(--surface); vertical-align:top;
+}
+.diag-table tr:last-child td { border-bottom:none; }
+.diag-table tr:last-child td:first-child { border-radius:0 0 0 var(--r); }
+.diag-table tr:last-child td:last-child { border-radius:0 0 var(--r) 0; }
+
+.algo-wrap {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r2); padding:20px;
+}
+.algo-step {
+  display:flex; gap:12px; align-items:flex-start; margin-bottom:16px;
+}
+.algo-num {
+  min-width:32px; height:32px; border-radius:50%;
+  background:linear-gradient(135deg, var(--glow), var(--accent3));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-family:'DM Mono'; color:#000; font-size:0.82rem;
+  flex-shrink:0;
+}
+.algo-text { flex:1; }
+.algo-text strong { color:var(--glow); }
+.algo-text p { font-size:0.85rem; color:var(--text2); margin-top:4px; line-height:1.5; }
+.algo-connector {
+  width:2px; height:24px; background:linear-gradient(to bottom, var(--glow), var(--accent3));
+  margin-left:15px; margin-bottom:4px; border-radius:2px;
+}
+
+/* ===== TREATMENT TAB ===== */
+.treatment-section { margin-bottom:24px; }
+.treat-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px; border-radius:var(--r); background:var(--bg3);
+  margin-bottom:8px; border:1px solid var(--border);
+  transition:all 0.2s;
+}
+.treat-item:hover { border-color:var(--border2); }
+.treat-icon { font-size:20px; flex-shrink:0; }
+.treat-body strong { font-weight:600; font-size:0.88rem; }
+.treat-body p { font-size:0.82rem; color:var(--text2); margin-top:2px; line-height:1.5; }
+
+/* ===== MNEMONICS TAB ===== */
+.mnem-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r2); padding:20px; margin-bottom:16px;
+}
+.mnem-title {
+  font-family:'Playfair Display'; font-size:1.2rem; font-weight:700;
+  color:var(--glow); margin-bottom:6px;
+}
+.mnem-word {
+  font-family:'DM Mono'; font-size:1.5rem; font-weight:700;
+  color:var(--accent); letter-spacing:0.05em; margin-bottom:12px;
+}
+.mnem-list { display:flex; flex-direction:column; gap:6px; }
+.mnem-row {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:8px 12px; background:var(--bg3); border-radius:8px;
+}
+.mnem-letter {
+  font-family:'DM Mono'; font-size:1.1rem; font-weight:700;
+  color:var(--accent); min-width:24px; flex-shrink:0;
+}
+.mnem-expansion { font-size:0.88rem; line-height:1.5; }
+.mnem-expansion strong { color:var(--text); }
+.mnem-expansion span { color:var(--text2); }
+
+/* ===== FINAL SCORE SCREEN ===== */
+.score-screen {
+  display:none; text-align:center; padding:40px 20px;
+}
+.score-screen.active { display:block; animation:fadeIn 0.5s; }
+.score-big { font-family:'Playfair Display'; font-size:5rem; font-weight:900; color:var(--glow); }
+.score-label { font-size:1.1rem; color:var(--text2); margin-bottom:24px; }
+.score-feedback { font-size:1.3rem; font-weight:600; margin-bottom:8px; }
+
+/* ===== MISC ===== */
+.divider { height:1px; background:var(--border); margin:20px 0; }
+.text-glow { color:var(--glow); }
+.text-accent { color:var(--accent); }
+.text-muted { color:var(--text2); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--border2); }
+
+/* Tooltip */
+[data-tip] { position:relative; cursor:help; }
+[data-tip]:hover::after {
+  content:attr(data-tip);
+  position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+  background:var(--surface2); color:var(--text); padding:6px 10px;
+  border-radius:6px; font-size:0.78rem; white-space:nowrap;
+  border:1px solid var(--border2); z-index:999; pointer-events:none;
+}
+</style>
+</head>
+<body>
+<div class="bg-canvas">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+<div class="bg-grid"></div>
+
+<div id="app">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="header-icon">🔬</div>
+      <div>
+        <div class="header-title">Breast Pathology</div>
+        <div class="header-sub">Pathology · Interactive Study Platform</div>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-chip">🎯 Score: <span class="val" id="totalScore">0</span></div>
+      <div class="stat-chip">🔥 Streak: <span class="val" id="totalStreak">0</span></div>
+      <div class="stat-chip">✅ Done: <span class="val" id="totalDone">0%</span></div>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview',this)"><span class="tab-emoji">📋</span>Overview</button>
+      <button class="tab-btn" onclick="switchTab('quiz',this)"><span class="tab-emoji">🧠</span>Quiz</button>
+      <button class="tab-btn" onclick="switchTab('flashcards',this)"><span class="tab-emoji">🃏</span>Flashcards</button>
+      <button class="tab-btn" onclick="switchTab('cases',this)"><span class="tab-emoji">🏥</span>Clinical Cases</button>
+      <button class="tab-btn" onclick="switchTab('patho',this)"><span class="tab-emoji">⚗️</span>Pathophysiology</button>
+      <button class="tab-btn" onclick="switchTab('diagnosis',this)"><span class="tab-emoji">🔍</span>Diagnosis</button>
+      <button class="tab-btn" onclick="switchTab('treatment',this)"><span class="tab-emoji">💊</span>Management</button>
+      <button class="tab-btn" onclick="switchTab('mnemonics',this)"><span class="tab-emoji">💡</span>Mnemonics</button>
+    </div>
+  </div>
+
+  <!-- ==================== OVERVIEW TAB ==================== -->
+  <div id="tab-overview" class="tab-content active">
+    <div class="search-bar">
+      <span>🔎</span>
+      <input type="text" id="searchInput" placeholder="Search conditions, mechanisms, features..." oninput="filterConcepts(this.value)">
+    </div>
+
+    <div class="section-title">🌡️ Topic 1 — Inflammatory & Benign Disease</div>
+
+    <div id="conceptsContainer">
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="breast abscess staphylococcus aureus inflammatory infection pus lactation">
+        <div class="concept-name"><span>🦠</span> Breast Abscess <span class="badge badge-glow">Inflammatory</span></div>
+        <div class="concept-def">Painful collection of pus, usually caused by <em>Staphylococcus aureus</em> entering via nipple abrasion or retained milk. Most common inflammatory condition of the breast.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> S. aureus → nipple abrasion/lactation → bacterial invasion of breast parenchyma → pyogenic inflammation → abscess formation<br>
+          <strong>📐 Morphology:</strong> Acute/chronic; single/multiple; exquisitely tender mass. Organisms: primarily S. aureus.<br>
+          <strong>⚠️ Clinical:</strong> Predominantly affects nursing mothers (puerperal mastitis). Predisposed by poor nipple hygiene.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="mammary duct ectasia periductal plasma cell mastitis inspissation dilation">
+        <div class="concept-name"><span>🧫</span> Mammary Duct Ectasia <span class="badge badge-pink">Benign</span></div>
+        <div class="concept-def">Dilatation of mammary ducts due to thickening (inspissation) of breast secretions. Triggers periductal plasma cell infiltrate. Mimics carcinoma clinically.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Inspissation of secretions → duct dilation → rupture of duct wall → periductal inflammation → plasma cell infiltrate (hence "periductal plasma cell mastitis")<br>
+          <strong>📐 Morphology:</strong> Dilated ducts filled with granular secretion; surrounding chronic inflammation dominated by plasma cells.<br>
+          <strong>⚠️ Clinical:</strong> Firm subareolar mass + nipple discharge ± retraction. Danger: clinically mimics cancer!
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="fibrocystic disease cystic mammary hyperplasia hyperestrogenemia fibrosis adenosis epitheliosis cyst">
+        <div class="concept-name"><span>🫧</span> Fibrocystic Disease <span class="badge badge-orange">Most Common</span></div>
+        <div class="concept-def">Most common breast disease — affects >50% of reproductive-age women. Caused by hyperestrogenemia disrupting normal cyclic changes. Characterized by fibrosis, adenosis, epitheliosis, and cyst formation.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Hyperestrogenemia → abnormal cyclic breast response → 4 components: (1) Fibrosis, (2) Adenosis (↑ acini/lobules), (3) Epitheliosis (↑ epithelial cells in ducts), (4) Cyst formation<br>
+          <strong>📐 Morphology:</strong> Bilateral, ill-defined, rubbery, mobile masses. Cysts may contain serous/hemorrhagic fluid. Blue-dome cysts.<br>
+          <strong>⚠️ Malignant potential:</strong> Generally NOT premalignant. EXCEPT: Atypical epitheliosis/hyperplasia → increases breast cancer risk (5× if atypical + family history)
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="fibroadenoma benign tumor estrogen pericanalicular intracanalicular encapsulated mobile">
+        <div class="concept-name"><span>🎀</span> Fibroadenoma <span class="badge badge-green">Commonest Benign Tumor</span></div>
+        <div class="concept-def">Commonest benign tumor of the breast. Mixed fibrous + epithelial proliferation driven by estrogen stimulation. Peaks in the 3rd decade. Classic: firm, freely mobile, encapsulated "breast mouse."</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Estrogen stimulation → mixed fibroepithelial proliferation in TDLU → encapsulated mass<br>
+          <strong>📐 Subtypes:</strong> (1) Pericanalicular — stroma encircles open round ducts. (2) Intracanalicular — stroma compresses ducts into slits. (3) Mixed.<br>
+          <strong>⚠️ Clinical:</strong> Single, firm, painless, well-defined, freely mobile. Does NOT typically undergo malignant transformation. Regresses post-menopause.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="phyllodes tumor giant fibroadenoma stromal overgrowth leaf-like malignant borderline">
+        <div class="concept-name"><span>🌿</span> Phyllodes Tumor <span class="badge badge-purple">Unpredictable</span></div>
+        <div class="concept-def">Large fibroepithelial tumor with pronounced, hypercellular stromal overgrowth forming leaf-like (phyllodes) architecture. Can be benign, borderline, or malignant. ~10% metastasize via stromal component.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Hypercellular stromal proliferation (not epithelial) → leaf-like clefts → mass effect<br>
+          <strong>📐 Morphology:</strong> Huge rounded mass. Leaf-like fronds on cut section. Stromal cells are the malignant component (not epithelial).<br>
+          <strong>⚠️ Clinical:</strong> Older females (vs. fibroadenoma in younger). Metastases if malignant are stromal only. Treatment: wide excision.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="duct papilloma intraductal nipple discharge papillary carcinoma sub-areolar">
+        <div class="concept-name"><span>💧</span> Duct Papilloma <span class="badge badge-glow">Intraductal</span></div>
+        <div class="concept-def">Intraductal growth within the main lactiferous ducts beneath the nipple. Most common cause of bloody/serous nipple discharge. 4th–5th decade. Small risk of papillary carcinoma transformation.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Epithelial proliferation → papillary projections with fibrovascular core within lactiferous ducts → hemorrhage into duct lumen<br>
+          <strong>📐 Morphology:</strong> Small pedunculated mass with fibrovascular stalks; epithelium ± apocrine metaplasia.<br>
+          <strong>⚠️ Clinical:</strong> Sub-areolar mass + bloody nipple discharge. Rare malignant transformation (→ papillary carcinoma).
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title">🎗️ Topic 2 — Breast Carcinoma</div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="invasive duct carcinoma NOS desmoplastic stony hard gritty skin tethering most common">
+        <div class="concept-name"><span>🔴</span> Invasive Duct Carcinoma (NOS) <span class="badge badge-red">65–80% of cases</span></div>
+        <div class="concept-def">Commonest breast cancer type. Tumor cells invade stroma, inciting a desmoplastic (fibrous) reaction → stony hard mass. Causes skin tethering and nipple retraction.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Malignant ductal cells → stromal invasion → desmoplastic (fibrous) stromal reaction → fixation to skin/pectoral muscle<br>
+          <strong>📐 Morphology:</strong> Ill-defined, hard, gritty cut surface. Irregular stellate border. Dense fibrous stroma.<br>
+          <strong>⚠️ Clinical:</strong> Hard, fixed, painless mass. Skin dimpling/tethering. Nipple retraction. ±Peau d'orange.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="invasive lobular carcinoma indian file pattern multicentric bilateral dyscohesive">
+        <div class="concept-name"><span>🏹</span> Invasive Lobular Carcinoma <span class="badge badge-pink">Indian File Pattern</span></div>
+        <div class="concept-def">Carcinoma arising from lobular units. Dyscohesive small uniform cells infiltrate in single-file strands. Tends to be multicentric and bilateral. Worse prognosis than NOS.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Loss of E-cadherin → cell dyscohesion → individual cells infiltrate stroma in single rows ("Indian file")<br>
+          <strong>📐 Morphology:</strong> Small, uniform cells in single rows. Targetoid/concentric arrangement around ducts. Little pleomorphism.<br>
+          <strong>⚠️ Clinical:</strong> Multicentric + bilateral = screen other breast! Worse prognosis. Metastasizes to unusual sites (GI, uterus, meninges).
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="medullary carcinoma lymphocytic infiltrate fleshy solid sheets good prognosis">
+        <div class="concept-name"><span>🟣</span> Medullary Carcinoma <span class="badge badge-purple">BRCA1-associated</span></div>
+        <div class="concept-def">Well-circumscribed fleshy mass. Microscopically: solid sheets of large cells + heavy lymphocytic/plasmacytic infiltrate + scant stroma. Paradoxically better prognosis than NOS.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Associated with BRCA1 mutations. Dense immune infiltrate (good host response) → better prognosis<br>
+          <strong>📐 Morphology:</strong> Fleshy, soft, well-circumscribed mass. Microscopically: syncytial sheets of large cells, brisk lymphocytic infiltrate.<br>
+          <strong>⚠️ Clinical:</strong> May mimic benign lesion on imaging. Despite high-grade histology, prognosis better than NOS.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="mucinous colloid carcinoma mucin lakes gelatinous good prognosis older women">
+        <div class="concept-name"><span>🫧</span> Mucinous (Colloid) Carcinoma <span class="badge badge-green">Best Prognosis</span></div>
+        <div class="concept-def">Characterized by large lakes of extracellular mucin containing floating islands of malignant cells. Soft, gelatinous appearance. Good prognosis despite being malignant.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Tumor cells produce massive extracellular mucin → cells float in "lakes" of mucin → slow local growth<br>
+          <strong>📐 Morphology:</strong> Gelatinous cut surface. Mucin lakes with small islands/clusters of malignant cells. Well-circumscribed.<br>
+          <strong>⚠️ Clinical:</strong> Older women. Slow growing. Best prognosis among invasive carcinomas.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="paget disease nipple areola eczematous vacuolated paget cells underlying ductal carcinoma">
+        <div class="concept-name"><span>🔵</span> Paget's Disease of Nipple <span class="badge badge-orange">Always has underlying cancer</span></div>
+        <div class="concept-def">Eczematous lesion of nipple/areola. Duct carcinoma extends along main mammary duct → infiltrates nipple epidermis. Large pale vacuolated Paget's cells seen in thickened epidermis.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Ductal carcinoma cells migrate via lactiferous ducts → infiltrate nipple epidermis → Paget's cells (large, pale, mucin-rich) appear in epidermis<br>
+          <strong>📐 Morphology:</strong> Paget's cells: large, pale, vacuolated with prominent nucleoli. Located within stratified squamous epithelium.<br>
+          <strong>⚠️ Clinical:</strong> Always indicates underlying ductal carcinoma! Differential: eczema (bilateral vs. Paget's which is unilateral).
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="peau d'orange lymphatic permeation skin edema hair follicle tethering dermal lymphatics">
+        <div class="concept-name"><span>🍊</span> Peau d'Orange <span class="badge badge-red">Advanced sign</span></div>
+        <div class="concept-def">Orange-peel appearance of breast skin. Tumor cells block dermal lymphatics → lymphedema of skin. Hair follicles remain tethered → dimpled appearance resembling orange skin.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Tumor permeation of dermal lymphatics → lymphatic obstruction → skin edema. Hair follicles are tethered to underlying dermis by fibrous bands → cannot lift with the edematous skin → dimples form at each follicle<br>
+          <strong>📐 Morphology:</strong> Grossly thickened, dimpled, orange-peel skin over tumor. Microscopically: dilated dermal lymphatics packed with tumor emboli.<br>
+          <strong>⚠️ Clinical:</strong> Sign of advanced lymphatic involvement. Often associated with inflammatory breast carcinoma.
+        </div>
+      </div>
+
+      <div class="concept-card" onclick="toggleConcept(this)" data-keywords="cancer en cuirasse skin metastasis armor plate skin nodules fixed advanced">
+        <div class="concept-name"><span>⚔️</span> Cancer en Cuirasse <span class="badge badge-red">Very Advanced</span></div>
+        <div class="concept-def">Extensive skin involvement where tumor nodules coalesce to form a rigid plate-like encasement of the chest wall, resembling a breastplate (cuirasse). Very late-stage manifestation.</div>
+        <div class="concept-mechanism">
+          <strong>🔧 Mechanism:</strong> Extensive tumor cell permeation of dermal/subdermal lymphatics + direct skin infiltration → coalescent skin nodules → rigid fibrous plate<br>
+          <strong>📐 Morphology:</strong> Hard, thickened, fixed skin with nodular masses and ulceration.<br>
+          <strong>⚠️ Clinical:</strong> Very poor prognosis. Indicates end-stage local disease.
+        </div>
+      </div>
+    </div>
+
+    <!-- High-Yield Summary -->
+    <div class="divider"></div>
+    <div class="section-title">⚡ High-Yield Exam Essentials</div>
+    <div class="hy-grid">
+      <div class="hy-card">
+        <div class="icon">🏆</div>
+        <div class="label">Most Common Benign Tumor</div>
+        <div class="desc">Fibroadenoma — estrogen-driven, 3rd decade, freely mobile, encapsulated. "Breast mouse."</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🔴</div>
+        <div class="label">Most Common Breast Cancer</div>
+        <div class="desc">Invasive Ductal Carcinoma NOS (65–80%). Desmoplastic stony-hard mass, gritty on cut.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🏹</div>
+        <div class="label">Indian File Pattern</div>
+        <div class="desc">= Invasive Lobular Carcinoma. Dyscohesive cells (E-cadherin loss), multicentric, bilateral.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🌱</div>
+        <div class="label">Best Prognosis</div>
+        <div class="desc">Mucinous (Colloid) Carcinoma — gelatinous, mucin lakes, slow growing.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🧬</div>
+        <div class="label">Cancer Origin Site</div>
+        <div class="desc">Terminal Duct-Lobular Unit (TDLU) — where most breast cancers arise.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">💊</div>
+        <div class="label">Premalignant Change</div>
+        <div class="desc">Atypical epitheliosis in fibrocystic disease — significantly increases cancer risk.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🍊</div>
+        <div class="label">Peau d'Orange</div>
+        <div class="desc">Dermal lymphatic blockage by tumor → skin edema + tethered hair follicles = orange peel.</div>
+      </div>
+      <div class="hy-card">
+        <div class="icon">🔵</div>
+        <div class="label">Paget's Disease</div>
+        <div class="desc">Always indicates underlying ductal carcinoma. Paget cells = large pale vacuolated cells in epidermis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== QUIZ TAB ==================== -->
+  <div id="tab-quiz" class="tab-content">
+    <div id="quizArea">
+      <div class="quiz-header">
+        <div>
+          <div class="section-title" style="margin-bottom:4px">🧠 Quiz Mode</div>
+          <div class="text-muted" style="font-size:0.85rem">25 questions · Mechanism-heavy · Exam-style</div>
+        </div>
+        <div class="quiz-score-box">
+          <div>
+            <div style="font-size:0.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em">Score</div>
+            <div class="score-num" id="quizScore">0/0</div>
+          </div>
+          <div class="streak-box">🔥 <span id="quizStreak">0</span></div>
+        </div>
+      </div>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div>
+      </div>
+      <div id="quizContainer"></div>
+      <div class="quiz-nav">
+        <button class="btn" onclick="prevQuestion()">← Previous</button>
+        <span id="quizCounter" class="text-muted" style="font-size:0.85rem;font-family:'DM Mono'">1 / 25</span>
+        <button class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+      </div>
+    </div>
+    <div class="score-screen" id="scoreScreen">
+      <div style="font-size:4rem;margin-bottom:8px">🎉</div>
+      <div class="score-big" id="finalScoreNum">-</div>
+      <div class="score-label">out of 25 questions</div>
+      <div class="score-feedback" id="scoreFeedback">-</div>
+      <div id="scoreMsg" class="text-muted" style="margin-bottom:24px;font-size:0.9rem"></div>
+      <button class="btn btn-primary" onclick="resetQuiz()" style="margin:0 auto">🔄 Try Again</button>
+    </div>
+  </div>
+
+  <!-- ==================== FLASHCARDS TAB ==================== -->
+  <div id="tab-flashcards" class="tab-content">
+    <div class="section-title">🃏 Flashcards</div>
+    <p class="text-muted" style="margin-bottom:20px;font-size:0.88rem">Click any card to flip it and reveal the answer. 24 cards covering all key concepts.</p>
+    <div class="fc-grid" id="fcGrid"></div>
+  </div>
+
+  <!-- ==================== CASES TAB ==================== -->
+  <div id="tab-cases" class="tab-content">
+    <div class="section-title">🏥 Clinical Cases</div>
+    <p class="text-muted" style="margin-bottom:20px;font-size:0.88rem">6 exam-style vignettes with structured step-by-step answers.</p>
+    <div id="casesContainer"></div>
+  </div>
+
+  <!-- ==================== PATHO TAB ==================== -->
+  <div id="tab-patho" class="tab-content">
+    <div class="section-title">⚗️ Pathophysiology Explorer</div>
+    <p class="text-muted" style="margin-bottom:16px;font-size:0.88rem">Click any structure to explore its pathophysiological details.</p>
+    <div class="patho-grid" id="pathoGrid"></div>
+    <div class="patho-detail" id="pathoDetail"></div>
+    <div class="divider"></div>
+    <div class="section-title">🔄 Carcinoma Spread Flow</div>
+    <div class="card">
+      <div class="flow-chart" id="flowChart"></div>
+    </div>
+  </div>
+
+  <!-- ==================== DIAGNOSIS TAB ==================== -->
+  <div id="tab-diagnosis" class="tab-content">
+    <div class="section-title">🔍 Diagnostic Approach</div>
+    <div class="algo-wrap" style="margin-bottom:24px">
+      <div style="font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+        <span>📊</span> Step-by-Step Diagnostic Algorithm
+      </div>
+      <div id="algoContainer"></div>
+    </div>
+    <div class="section-title">📊 Benign vs Malignant — Comparison Table</div>
+    <div style="overflow-x:auto;margin-bottom:24px">
+      <table class="diag-table" id="diagTable"></table>
+    </div>
+    <div class="section-title">🔬 Histological Subtypes Summary</div>
+    <div style="overflow-x:auto">
+      <table class="diag-table" id="histoTable"></table>
+    </div>
+  </div>
+
+  <!-- ==================== TREATMENT TAB ==================== -->
+  <div id="tab-treatment" class="tab-content">
+    <div class="section-title">💊 Management Overview</div>
+    <div id="treatmentContainer"></div>
+  </div>
+
+  <!-- ==================== MNEMONICS TAB ==================== -->
+  <div id="tab-mnemonics" class="tab-content">
+    <div class="section-title">💡 Memory Aids & Mnemonics</div>
+    <p class="text-muted" style="margin-bottom:20px;font-size:0.88rem">Custom mnemonics built from lecture content.</p>
+    <div id="mnemContainer"></div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ===================== DATA =====================
+
+const quizData = [
+  {
+    q:"Which mechanism produces the 'Peau d'orange' appearance in invasive breast carcinoma?",
+    opts:["Direct invasion of pectoralis muscle","Hematogenous seeding to the dermis","Lymphatic permeation → dermal edema + tethered hair follicles","Inspissation of secretions in lactiferous ducts","Hyperestrogenemia causing fibrocystic changes"],
+    ans:2,
+    explain:"Tumor cells permeate dermal lymphatics → lymphatic obstruction → skin edema. Hair follicles remain anchored to underlying dermis by fibrous septae and CANNOT rise with the swollen skin → characteristic dimples. The result is orange-peel (peau d'orange) skin.",
+    tag:"Mechanism"
+  },
+  {
+    q:"What is the primary driving mechanism behind fibroadenoma development?",
+    opts:["BRCA1 gene mutation","Staphylococcus aureus infection","Extracellular mucin accumulation","Estrogen stimulation → mixed fibroepithelial proliferation","Lymphatic embolization of tumor cells"],
+    ans:3,
+    explain:"Fibroadenomas are estrogen-sensitive mixed benign tumors. Estrogen drives both the fibrous stromal and epithelial (glandular) components. They peak in the 3rd decade (peak reproductive/estrogenic years) and regress after menopause.",
+    tag:"Mechanism"
+  },
+  {
+    q:"In Invasive Lobular Carcinoma, what cellular feature defines the 'Indian file pattern'?",
+    opts:["Large syncytial sheets with lymphocytic infiltrate","Leaf-like stromal clefts","Dyscohesive uniform cells invading stroma in single-file rows","Signet-ring cells with intracellular mucin","Papillary projections within dilated ducts"],
+    ans:2,
+    explain:"Loss of E-cadherin in lobular carcinoma causes dyscohesion — cells cannot form clusters. They infiltrate as single-file linear rows through fibrous stroma, giving the classic 'Indian file' or targetoid pattern.",
+    tag:"Structure"
+  },
+  {
+    q:"Fibrocystic disease is mechanistically caused by derangement of normal cyclic breast changes due to:",
+    opts:["Mammary duct ectasia","Periductal plasma cell infiltrate","Hyperestrogenemia","BRCA2 gene mutation","Lobular carcinoma in situ"],
+    ans:2,
+    explain:"Relative hyperestrogenemia (or abnormal tissue response to normal estrogen) disrupts the normal monthly cycle of breast epithelial proliferation and regression, resulting in the quartet of changes: fibrosis, adenosis, epitheliosis, and cyst formation.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Paget's disease of the nipple develops primarily through which mechanism?",
+    opts:["Hematogenous seeding to areola","Epidermal infection by skin flora","Extension of ductal carcinoma cells along mammary duct to nipple epidermis","Intense stromal overgrowth compressing the nipple","Dilatation and rupture of lactiferous sinuses"],
+    ans:2,
+    explain:"Ductal carcinoma cells migrate retrograde along the lactiferous ducts, invade the nipple epidermis, and appear as Paget's cells — large, pale, vacuolated cells with prominent nucleoli within the stratified squamous epithelium. Always indicates underlying ductal carcinoma.",
+    tag:"Mechanism"
+  },
+  {
+    q:"A breast biopsy shows solid sheets of malignant cells with scant stroma and a heavy lymphocytic infiltrate. What is the diagnosis?",
+    opts:["Invasive Duct Carcinoma (NOS)","Medullary Carcinoma","Mucinous Carcinoma","Lobular Carcinoma In Situ","Fibroadenoma"],
+    ans:1,
+    explain:"Medullary carcinoma is defined by its triad: (1) syncytial solid sheets of large pleomorphic cells, (2) scant fibrous stroma, (3) brisk lymphocytic/plasmacytic infiltrate. Despite being high-grade, it paradoxically has a better prognosis than NOS.",
+    tag:"Structure"
+  },
+  {
+    q:"In a 'pericanalicular' fibroadenoma, how does the stroma arrange around the glandular elements?",
+    opts:["Stroma compresses ducts into slit-like spaces","Stroma encircles open, round, patent glandular ducts","Glandular elements entirely replace the stroma","The mass lacks a fibrous capsule","Stroma forms leaf-like projections"],
+    ans:1,
+    explain:"Pericanalicular = 'around the canal/duct.' Stroma grows concentrically around open, round-to-oval ducts, leaving them patent. In intracanalicular type, stroma grows INTO the ducts, compressing them into curved slit-like spaces.",
+    tag:"Structure"
+  },
+  {
+    q:"Which microscopic change in fibrocystic disease specifically increases the risk of subsequent breast carcinoma?",
+    opts:["Apocrine metaplasia","Stromal fibrosis","Adenosis (increase in acini)","Cyst formation","Epitheliosis with atypical hyperplasia"],
+    ans:4,
+    explain:"Of all fibrocystic changes, only epitheliosis (epithelial hyperplasia within ducts) carries malignant potential — and the risk is greatest with ATYPICAL hyperplasia. Atypical epitheliosis with a positive family history carries a ~10× relative risk for carcinoma.",
+    tag:"Regulatory"
+  },
+  {
+    q:"What structural feature of breast carcinoma regulates early and frequent lymphatic metastasis?",
+    opts:["Confinement to terminal duct-lobular unit","Rich dermal/deep lymphatic network → tumor cell permeation","Extreme cellular cohesion","Thick fibrous capsule","Lack of tumor vascularity"],
+    ans:1,
+    explain:"Breast carcinoma accesses a rich lymphatic network — dermal, intramammary, and deep lymphatics. Tumor cells can enter lymphatics early via permeation (filling channels) or embolization (discrete tumor emboli), spreading to axillary, internal mammary, and supraclavicular nodes.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Invasive lobular carcinoma structurally differs from invasive duct carcinoma NOS by being more likely to present as:",
+    opts:["Single well-encapsulated fleshy mass","Multicentric and bilateral lesions","Large cystic mass with leaf-like stroma","Nipple eczema","Soft gelatinous mucinous mass"],
+    ans:1,
+    explain:"Because lobular carcinoma arises in lobules which are distributed throughout both breasts, it has a significantly higher rate of multicentricity (within the same breast) and bilaterality (both breasts affected) compared to ductal NOS. This has major surgical implications.",
+    tag:"Comparative"
+  },
+  {
+    q:"What is the mechanism of gynecomastia in liver cirrhosis?",
+    opts:["Viral infection of breast tissue","Decreased estrogen production by the liver","Impaired hepatic estrogen degradation → elevated systemic estrogens","Increased testosterone production","Blockage of lactiferous ducts"],
+    ans:2,
+    explain:"Estrogens are normally conjugated and degraded in the liver. In cirrhosis, impaired hepatic function → reduced estrogen catabolism → elevated circulating estrogen levels → stimulation of male breast epithelium → ductal hyperplasia and stromal proliferation (gynecomastia).",
+    tag:"Mechanism"
+  },
+  {
+    q:"Why does male breast carcinoma generally have a worse prognosis than female breast carcinoma?",
+    opts:["Male breast tumors produce more mucin","The small size of male breast → rapid invasion of pectoral fascia/muscle","More frequent mucin secretion in males","Absence of lymphatic drainage in males","Dense desmoplastic capsule prevents detection"],
+    ans:1,
+    explain:"The male breast contains only a thin disc of tissue under the nipple. Even a small carcinoma quickly reaches the underlying pectoral fascia and muscle, making early surgical containment more difficult, leading to a worse overall prognosis.",
+    tag:"Comparative"
+  },
+  {
+    q:"Which statement is MOST accurate about the cell of origin for most breast cancers?",
+    opts:["Nipple skin keratinocytes","Periductal fibroblasts","Terminal duct-lobular unit (TDLU) epithelium","Subareolar lactiferous sinus epithelium","Adipose tissue stromal cells"],
+    ans:2,
+    explain:"The Terminal Duct-Lobular Unit (TDLU) is the functional unit of the breast — it contains the terminal duct and its attached lobule (acini). This is the site where ductal and lobular carcinomas arise, and where fibrocystic changes and fibroadenomas develop.",
+    tag:"Structure"
+  },
+  {
+    q:"A large soft breast mass in a 60-year-old woman reveals 'lakes of mucin containing islands of malignant cells' on biopsy. What is the prognosis?",
+    opts:["Very poor — high-grade aggressive tumor","Poor — typically triple-negative","Intermediate — similar to NOS","Good — relatively indolent behavior","Depends entirely on lymph node status"],
+    ans:3,
+    explain:"Mucinous (colloid) carcinoma has a favorable prognosis because the massive mucin production correlates with slow growth and low metastatic potential. Despite the presence of malignant cells floating in mucin lakes, patients generally do well with treatment.",
+    tag:"Regulatory"
+  },
+  {
+    q:"In mammary duct ectasia, what initial event triggers the periductal plasma cell infiltrate?",
+    opts:["BRCA gene mutation","Staphylococcal infection of duct","Inspissation of secretions → duct dilatation → duct wall rupture","Hyperestrogenemia → cyclic changes","Intraductal papilloma hemorrhage"],
+    ans:2,
+    explain:"The sequence: Inspissation (thickening) of breast secretions → accumulation within ducts → duct dilation (ectasia) → duct wall rupture → leakage of contents into periductal tissue → chronic inflammatory reaction DOMINATED by plasma cells → periductal plasma cell mastitis.",
+    tag:"Mechanism"
+  },
+  {
+    q:"A phyllodes tumor metastasizes. Which component is responsible for hematogenous spread?",
+    opts:["Epithelial glandular component","Periductal fibrous capsule","Stromal (mesenchymal) component only","Both epithelial and stromal equally","The lymphatic endothelial cells"],
+    ans:2,
+    explain:"In phyllodes tumor, if malignant transformation occurs, it is the STROMAL component (hypercellular fibrous stroma) that is malignant. Metastases when they occur are therefore purely sarcomatous (stromal), not carcinomatous. The epithelial component remains benign.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Breast carcinoma can cause 'Cancer en Cuirasse'. What mechanism underlies this finding?",
+    opts:["Bone marrow infiltration","Extensive lymphatic permeation of chest wall skin → coalescent rigid nodules","Pneumonia from pulmonary metastasis","Pleural effusion compressing the chest","Pericardial metastasis"],
+    ans:1,
+    explain:"Cancer en cuirasse ('breastplate cancer') develops when carcinoma extensively permeates the lymphatics of the dermis and subdermis of the entire chest wall. Multiple skin nodules coalesce and fibrosis creates a rigid plate-like encasement. This is a very late-stage finding.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Which of the following BEST describes the desmoplastic reaction seen in Invasive Duct Carcinoma NOS?",
+    opts:["Heavy lymphocytic infiltrate around tumor nests","Mucin secretion forming lakes in stroma","Dense fibrous stroma induced by tumor cell invasion — creates the 'stony hard' consistency","Leaf-like stromal projections into epithelial spaces","Single-file stromal invasion pattern"],
+    ans:2,
+    explain:"Desmoplasia refers to the dense fibrous (collagenous) stromal reaction triggered by invasive carcinoma cells. Tumor cells secrete growth factors (e.g., TGF-β) that activate fibroblasts → collagen deposition → dense fibrous stroma that gives the tumor its characteristic stony-hard gritty consistency.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Duct papilloma most commonly presents with:",
+    opts:["A large, rapidly growing axillary mass","Peau d'orange skin changes","Bloody or serous nipple discharge + small sub-areolar mass","A firm freely mobile breast lump in a 25-year-old","Bilateral breast enlargement"],
+    ans:2,
+    explain:"Duct papillomas are intraductal growths in the main lactiferous ducts below the nipple. Bleeding or serous exudate from the papillary growth drains via the duct to cause nipple discharge. A small sub-areolar mass may be palpable. The discharge can be bloody (serous/serosanguineous).",
+    tag:"Structure"
+  },
+  {
+    q:"Which BRCA mutation is classically associated with Medullary carcinoma of the breast?",
+    opts:["BRCA2","TP53","BRCA1","HER2 amplification","CDH1 (E-cadherin) loss"],
+    ans:2,
+    explain:"Medullary carcinoma of the breast has a well-established association with BRCA1 germline mutations. Patients with BRCA1 mutations who develop breast cancer are more likely to have medullary or medullary-like histology.",
+    tag:"Regulatory"
+  },
+  {
+    q:"What is the significance of CDH1 (E-cadherin) loss specifically in breast carcinoma?",
+    opts:["Drives ductal NOS formation","Causes estrogen receptor upregulation","Leads to cell dyscohesion → lobular carcinoma with Indian file pattern","Promotes desmoplastic stromal reaction","Triggers mucin overproduction"],
+    ans:2,
+    explain:"E-cadherin (CDH1) is the key adhesion molecule maintaining cell-cell cohesion. Its loss is the hallmark of invasive lobular carcinoma. Without E-cadherin, cells cannot adhere — they become dyscohesive and infiltrate individually in single-file rows rather than forming cohesive nests.",
+    tag:"Mechanism"
+  },
+  {
+    q:"A breast carcinoma spreads hematogenously. Which is the MOST common first site of distant metastasis?",
+    opts:["Brain","Adrenal gland","Bone (especially axial skeleton)","Liver","Spleen"],
+    ans:2,
+    explain:"Bone is the most common site of hematogenous breast cancer metastasis — particularly the axial skeleton (vertebrae, ribs, pelvis, proximal long bones). Other common sites include lung, liver, and brain. Bone metastases can be osteolytic, osteoblastic, or mixed.",
+    tag:"Mechanism"
+  },
+  {
+    q:"Which combination of features MOST strongly suggests the diagnosis is Phyllodes tumor rather than fibroadenoma?",
+    opts:["Young age, freely mobile, firm mass","Previous pregnancy, bilateral masses","Older age, LARGE rapidly growing mass with hypercellular stroma and leaf-like architecture","Bloody nipple discharge","Sub-areolar location + plasma cell infiltrate"],
+    ans:2,
+    explain:"Phyllodes tumor vs fibroadenoma: (1) Age — phyllodes typically in older women (40s-50s) vs. fibroadenoma in younger (20s-30s). (2) Size — phyllodes can be huge. (3) Stroma — phyllodes shows HYPERCELLULAR, mitotically active stroma vs. fibroadenoma's bland stroma. (4) Architecture — leaf-like fronds.",
+    tag:"Comparative"
+  },
+  {
+    q:"Risk factors for breast carcinoma include all EXCEPT:",
+    opts:["Nulliparity","Late age at first pregnancy","Obesity (post-menopausal)","Early first pregnancy (before age 20)","BRCA1/2 mutation carrier"],
+    ans:3,
+    explain:"Early first full-term pregnancy (before age 20) is actually PROTECTIVE against breast cancer — it induces terminal differentiation of breast epithelial cells, reducing susceptibility to carcinogenic transformation. All others listed are established risk factors.",
+    tag:"Regulatory"
+  },
+  {
+    q:"'Cancer en cuirasse' specifically differs from 'Peau d'orange' in that:",
+    opts:["Cancer en cuirasse affects only the axilla","Peau d'orange involves hematogenous spread; en cuirasse is local","Cancer en cuirasse is more extensive — rigid plate-like encasement of chest wall vs. localized skin edema of Peau d'orange","They are the same condition by different names","Peau d'orange only occurs in inflammatory carcinoma"],
+    ans:2,
+    explain:"Both involve dermal lymphatic infiltration, but they differ in extent and appearance: Peau d'orange = localized orange-peel skin dimpling from lymphedema with hair follicle tethering. Cancer en cuirasse = far more advanced — extensive lymphatic permeation of the ENTIRE chest wall skin creating multiple coalescing nodules forming a rigid plate.",
+    tag:"Comparative"
+  }
+];
+
+const flashcards = [
+  {q:"What is the most common benign tumor of the breast?", a:"Fibroadenoma — estrogen-driven mixed fibroepithelial tumor, peaks in 3rd decade, freely mobile and encapsulated. Called 'breast mouse' because it slips away on palpation.", tag:"Benign"},
+  {q:"What drives the development of fibrocystic disease?", a:"Hyperestrogenemia disrupting normal cyclic breast changes → fibrosis, adenosis, epitheliosis, and cyst formation. Affects >50% of reproductive-age women.", tag:"Benign"},
+  {q:"What is the significance of atypical epitheliosis in fibrocystic disease?", a:"It's the ONLY component of fibrocystic disease with genuine premalignant potential. Atypical hyperplasia increases breast cancer risk ~5×; with positive family history, up to ~10×.", tag:"Premalignant"},
+  {q:"Describe the 'Indian file pattern' and its significance.", a:"Single-file rows of small uniform dyscohesive cells infiltrating fibrous stroma. Diagnostic of Invasive Lobular Carcinoma. Caused by E-cadherin (CDH1) loss → cell dyscohesion.", tag:"Malignant"},
+  {q:"What causes Peau d'orange?", a:"Tumor cells permeate dermal lymphatics → lymphatic obstruction → skin edema. Hair follicles remain tethered by fibrous bands → cannot rise with edematous skin → orange-peel dimpling.", tag:"Signs"},
+  {q:"What is Paget's disease of the nipple and what does it always indicate?", a:"Eczematous lesion of nipple/areola caused by migration of ductal carcinoma cells along mammary ducts to nipple epidermis. Always indicates underlying ductal carcinoma.", tag:"Malignant"},
+  {q:"Compare fibroadenoma vs phyllodes tumor in older vs younger women.", a:"Fibroadenoma: young women (20s-30s), small, benign, bland stroma. Phyllodes: older women (40s-50s+), LARGE, hypercellular stroma with leaf-like architecture, can be malignant (10% metastasize via stromal component).", tag:"Comparative"},
+  {q:"What is the histological hallmark of Medullary Carcinoma?", a:"Solid syncytial sheets of large pleomorphic cells + brisk lymphocytic/plasmacytic infiltrate + scant fibrous stroma. Paradoxically BETTER prognosis than NOS despite high grade.", tag:"Malignant"},
+  {q:"What is Mucinous (Colloid) carcinoma and what is its prognosis?", a:"Carcinoma with large extracellular mucin lakes containing floating islands of malignant cells. Soft, gelatinous appearance. BEST prognosis among invasive carcinomas due to slow growth.", tag:"Malignant"},
+  {q:"From which anatomical unit do most breast cancers arise?", a:"Terminal Duct-Lobular Unit (TDLU) — the functional unit of breast parenchyma containing terminal duct + its lobule (acini). This is where ductal, lobular carcinomas, fibroadenomas, and fibrocystic changes all originate.", tag:"Anatomy"},
+  {q:"What is the mechanism of mammary duct ectasia?", a:"Inspissation of secretions → duct dilatation → duct wall rupture → leakage into periductal tissue → chronic inflammation DOMINATED by plasma cells (periductal plasma cell mastitis). Clinically mimics carcinoma!", tag:"Benign"},
+  {q:"Why does lobular carcinoma tend to be multicentric and bilateral?", a:"Lobules are distributed throughout both breasts. Loss of E-cadherin causes diffuse infiltrative spread without forming a discrete mass. This makes complete surgical resection challenging.", tag:"Malignant"},
+  {q:"What is 'Cancer en cuirasse' and how does it differ from Peau d'orange?", a:"Cancer en cuirasse = extensive lymphatic permeation of entire chest wall skin → rigid plate-like encasement (very advanced). Peau d'orange = localized skin edema with hair follicle dimpling (earlier). Both involve dermal lymphatic infiltration.", tag:"Signs"},
+  {q:"Which component of Phyllodes tumor is responsible for metastasis?", a:"The STROMAL (sarcomatous) component only. The epithelial component remains benign. Metastases are therefore purely sarcomatous — NOT carcinomatous.", tag:"Malignant"},
+  {q:"What is the mechanism of breast abscess formation?", a:"S. aureus enters via nipple abrasion or during lactation (milk = culture medium) → acute pyogenic inflammation → liquefaction necrosis → abscess. Puerperal mastitis is most common context.", tag:"Inflammatory"},
+  {q:"Describe Invasive Duct Carcinoma NOS gross and microscopic features.", a:"Gross: ill-defined, stony-HARD mass, gritty on cut section (calcium deposits), irregular stellate border. Micro: malignant ductal cells in irregular nests/cords inciting dense DESMOPLASTIC fibrous stroma.", tag:"Malignant"},
+  {q:"What are the 4 components of Fibrocystic Disease?", a:"F-ACE: Fibrosis, Adenosis (↑ acini), Cysts (serous/hemorrhagic blue-dome), Epitheliosis (↑ duct epithelium). Only epitheliosis (especially atypical) is premalignant.", tag:"Benign"},
+  {q:"How does breast carcinoma cause nipple retraction?", a:"Invasive tumor invades Cooper's ligaments (suspensory ligaments) and lactiferous ducts → fibrous shortening/tethering → pulls nipple inward. Also caused by desmoplastic reaction shortening the ducts.", tag:"Signs"},
+  {q:"What genetic mechanism specifically drives Invasive Lobular Carcinoma?", a:"Loss/mutation of CDH1 gene → absent E-cadherin protein → loss of cell-cell adhesion → dyscohesion → cells infiltrate individually in Indian file pattern rather than forming cohesive nests.", tag:"Molecular"},
+  {q:"A nursing mother presents with a painful fluctuant breast lump. What organism is most likely responsible?", a:"Staphylococcus aureus — the classic cause of puerperal (lactational) breast abscess. Enters via nipple abrasion. Milk provides an excellent culture medium. Requires drainage + antibiotics.", tag:"Inflammatory"},
+  {q:"What pathological cells are seen in Paget's disease and where are they located?", a:"Paget's cells = large, pale, vacuolated (mucin-containing) cells with prominent nucleoli. Located within the epidermis of the nipple and areola — intraepidermal, NOT dermal.", tag:"Malignant"},
+  {q:"Why is gynecomastia seen in liver cirrhosis?", a:"Liver normally metabolizes (conjugates/degrades) estrogens. In cirrhosis, impaired hepatic function → reduced estrogen catabolism → elevated systemic estrogen → stimulates male breast epithelium → ductal hyperplasia and stromal proliferation.", tag:"Male"},
+  {q:"What is the clinical significance of Duct Papilloma?", a:"Main lactiferous duct involvement → bloody or serous NIPPLE DISCHARGE (most common cause). Sub-areolar palpable mass. Low malignant potential but can rarely progress to papillary carcinoma.", tag:"Benign"},
+  {q:"List the major risk factors for breast carcinoma.", a:"BRCA1/2 mutation, positive family history, nulliparity, late first pregnancy (>30), early menarche/late menopause (long reproductive span), obesity (post-menopausal), hormone replacement therapy, oral contraceptives, previous breast biopsy with atypical hyperplasia.", tag:"Risk"}
+];
+
+const cases = [
+  {
+    num:"01",
+    title:"The Mobile Breast Lump",
+    tags:["Benign","Fibroadenoma","Estrogen"],
+    vignette:"A 24-year-old woman presents to her GP concerned about a 2 cm lump in her right breast noticed 3 months ago. She describes it as 'movable' and non-tender. She is in the late follicular phase of her cycle. On examination: firm, smooth, well-defined, freely mobile mass in the upper outer quadrant. No axillary lymphadenopathy. No skin changes.",
+    questions:[
+      {q:"1. What is the most likely diagnosis and what is the key pathological mechanism?", a:"Fibroadenoma — the commonest benign breast tumor. Mechanism: Estrogen stimulation drives mixed fibroepithelial proliferation in the Terminal Duct-Lobular Unit (TDLU). Both stromal and glandular components proliferate, creating an encapsulated, freely mobile mass."},
+      {q:"2. Describe the two microscopic subtypes.", a:"(1) Pericanalicular: stroma grows concentrically AROUND open, round patent ducts. (2) Intracanalicular: stroma grows INTO the duct lumen, compressing it into curved slit-like or crescent-shaped spaces. Mixed types exist."},
+      {q:"3. What is the malignant potential of this lesion?", a:"Very low. Fibroadenomas rarely undergo malignant transformation and are generally NOT considered premalignant. They tend to regress after menopause as estrogen declines. Complex fibroadenomas with cysts or sclerosing adenosis have slightly higher (but still small) risk."}
+    ]
+  },
+  {
+    num:"02",
+    title:"The Orange Peel Breast",
+    tags:["Malignant","Lymphatics","Advanced"],
+    vignette:"A 58-year-old woman presents with a 6-week history of right breast changes. She noticed the skin becoming thick and dimpled. On examination: hard, fixed, irregular mass in the central right breast. The overlying skin appears thickened, erythematous, and has a distinctive pitted, dimpled texture resembling orange skin. Right axillary lymph nodes are palpable and hard.",
+    questions:[
+      {q:"1. Name this skin sign and explain its exact mechanism step-by-step.", a:"Peau d'orange (French: orange skin). Mechanism: Step 1 — Invasive carcinoma permeates and obstructs dermal lymphatic channels. Step 2 — Lymphatic blockage causes protein-rich lymphedema in the dermis, expanding the skin. Step 3 — Hair follicles are anchored to the underlying dermis by fibrous septae (Cooper's ligaments) and CANNOT rise with the edematous skin. Step 4 — The follicle openings remain depressed while the surrounding skin swells → characteristic dimples."},
+      {q:"2. What does the hard, fixed mass with gritty texture indicate microscopically?", a:"Invasive Ductal Carcinoma NOS (the commonest type). The stony-hard consistency is caused by the DESMOPLASTIC REACTION — tumor cells secrete growth factors (TGF-β) activating fibroblasts to produce dense collagenous stroma. The gritty sensation on cut section is due to calcification within the necrotic tumor."},
+      {q:"3. What is the prognosis significance of palpable hard axillary nodes?", a:"Indicates lymph node metastases — one of the most important prognostic factors in breast carcinoma. The axillary node status (number involved, level) directly impacts staging (TNM) and survival. ≥4 positive nodes dramatically worsen prognosis."}
+    ]
+  },
+  {
+    num:"03",
+    title:"The Nipple Eczema",
+    tags:["Malignant","Paget's","Nipple"],
+    vignette:"A 45-year-old woman presents with a 4-month history of left nipple redness, scaling, and itching. She initially treated it with topical steroid cream with no improvement. Examination shows eczematous, weeping, crusted changes of the left nipple and areola. A firm subareolar mass is palpable on deep palpation.",
+    questions:[
+      {q:"1. What is this condition and what is the KEY clinical distinction from benign eczema?", a:"Paget's Disease of the Nipple. KEY distinction: (1) Paget's is UNILATERAL; benign eczema is typically bilateral. (2) Paget's does NOT respond to topical steroids (eczema does). (3) Paget's ALWAYS indicates an underlying ductal carcinoma — either DCIS or invasive."},
+      {q:"2. Describe the pathogenesis at the cellular level.", a:"Ductal carcinoma cells (adenocarcinoma) migrate along the lactiferous ducts (retrograde migration OR epidermotropic spread) from the underlying carcinoma → invade the nipple epidermis → appear as Paget's cells: large, pale, vacuolated cells with abundant mucin-rich cytoplasm and prominent nucleoli, scattered within the stratified squamous epithelium."},
+      {q:"3. What microscopic cells are diagnostic?", a:"Paget's cells: large cells with pale vacuolated cytoplasm (mucin+), prominent nucleoli, within the squamous epithelium of the nipple/areola. They do NOT form glands at this level but can be highlighted with PAS stain (mucin positive) and mucin stains. IHC: positive for HER2, CK7, GCDFP-15."}
+    ]
+  },
+  {
+    num:"04",
+    title:"The Bilateral Breast Masses",
+    tags:["Malignant","Lobular","Bilateral"],
+    vignette:"A 62-year-old woman undergoes bilateral mammography for a left breast mass. Imaging reveals masses in both breasts. Biopsy of the left mass shows small, uniform malignant cells arranged in single-file rows infiltrating fibrous stroma, with a concentric (targetoid) arrangement around a duct. There is minimal pleomorphism.",
+    questions:[
+      {q:"1. What is the diagnosis, and what molecular mechanism drives this pattern?", a:"Invasive Lobular Carcinoma. Molecular mechanism: Loss of CDH1 gene → absent E-cadherin protein → impaired cell-cell adhesion (dyscohesion) → individual cells infiltrate without forming cohesive nests → produce the Indian file pattern of single-row infiltration."},
+      {q:"2. Why is bilaterality a characteristic feature?", a:"Lobules are distributed throughout BOTH breast parenchymae (unlike ducts which originate centrally). The dyscohesive, infiltrative nature without a mass-forming growth pattern allows cells to spread widely with minimal structural disruption. Additionally, the underlying molecular defect (CDH1 mutation) affects both breasts equally."},
+      {q:"3. How does the prognosis compare to Invasive Ductal Carcinoma NOS?", a:"Invasive Lobular Carcinoma generally has a WORSE prognosis than NOS because: (1) multicentricity/bilaterality means higher recurrence risk. (2) The infiltrative pattern is frequently UNDERESTIMATED on imaging (mammography often underestimates extent). (3) Unusual metastatic sites (GI tract, uterus, meninges). However, grade-for-grade prognosis is similar."}
+    ]
+  },
+  {
+    num:"05",
+    title:"The Gelatinous Mass in an Elderly Woman",
+    tags:["Mucinous","Good Prognosis","Elderly"],
+    vignette:"A 73-year-old woman presents with a 4 cm slowly growing left breast mass over 2 years. She is otherwise well. Examination: soft, gelatinous-feeling, relatively well-defined mass. Mammography shows a well-circumscribed lesion. Core biopsy shows 'floating islands of small malignant cells within abundant extracellular mucin pools.'",
+    questions:[
+      {q:"1. What is the diagnosis and what histological feature is pathognomonic?", a:"Mucinous (Colloid) Carcinoma. Pathognomonic feature: vast lakes of extracellular MUCIN (not intracellular) with small clusters or islands of malignant cells 'floating' within the mucin. The mucin is produced by the tumor cells and secreted into the extracellular space."},
+      {q:"2. Why does this tumor have a better prognosis despite being malignant?", a:"The abundant mucin production creates a physical barrier that limits tumor cell invasion and dissemination. The slow growth rate correlates with lower metastatic potential. Most tumors are hormone receptor-positive (ER+/PR+). It typically occurs in older women and has a lower grade."},
+      {q:"3. What is the gross appearance and how does it explain the clinical presentation?", a:"Gross: well-circumscribed, gelatinous ('jelly-like'), glistening cut surface. The gelatinous texture is due to the abundant extracellular mucin, which accounts for the 'soft' consistency (unlike the stony-hard NOS). The slow growth explains the 2-year history before presentation."}
+    ]
+  },
+  {
+    num:"06",
+    title:"The Perimenopausal Woman with Family History",
+    tags:["Risk Factors","Integrated","BRCA"],
+    vignette:"A 49-year-old perimenopausal woman finds a 2 cm right upper outer quadrant breast lump in the shower. Her mother died of breast cancer at 45. She had a left breast biopsy 5 years ago showing 'atypical ductal hyperplasia.' Examination: slightly mobile, non-tender mass, no skin changes yet.",
+    questions:[
+      {q:"1. Identify and categorize her risk factors for breast carcinoma.", a:"HIGH-RISK factors: (1) Family history (mother, first-degree, before 50 = hereditary pattern, likely BRCA1/2), (2) previous biopsy showing ATYPICAL DUCTAL HYPERPLASIA (5-10× relative risk). MODERATE-RISK: (3) perimenopausal age (peak incidence 45-55), (4) upper outer quadrant location (most common site — most glandular tissue). Cumulative risk is very high — genetic testing and urgent investigation warranted."},
+      {q:"2. What is the significance of the atypical ductal hyperplasia found 5 years ago?", a:"Atypical ductal hyperplasia (ADH) = epitheliosis with ATYPICAL features in fibrocystic disease. It carries: ~5× relative risk of breast carcinoma in the general population. With positive FAMILY HISTORY (as in this case): ~10× relative risk. ADH is NOT carcinoma but is a non-obligate precursor — it indicates a 'field effect' of increased proliferative tendency."},
+      {q:"3. If invasive ductal carcinoma NOS is confirmed on biopsy, describe the expected local invasion pattern.", a:"NOS carcinoma invades via: (1) DESMOPLASTIC REACTION — tumor induces fibrous stroma formation → creates stony-hard fixed mass → invades Cooper's ligaments → SKIN TETHERING and nipple retraction. (2) Lymphatic permeation → Peau d'orange if dermal lymphatics blocked. (3) Direct extension to pectoral fascia/muscle if deep. (4) Eventually: Cancer en cuirasse if extensive skin lymphatic involvement."}
+    ]
+  }
+];
+
+const pathoItems = [
+  {icon:"🧬",name:"Terminal Duct-Lobular Unit",type:"Origin of most breast cancers",detail:{
+    title:"Terminal Duct-Lobular Unit (TDLU)",
+    desc:"The TDLU is the functional unit of the breast — a terminal duct + its attached lobule (group of acini). This is the site of origin for: Ductal carcinoma (from duct epithelium), Lobular carcinoma (from lobular epithelium/acini), Fibroadenoma, Fibrocystic changes, Adenosis.",
+    bullets:["Terminal duct: gives rise to ductal carcinoma in situ (DCIS) and invasive ductal carcinoma","Lobular units: give rise to lobular carcinoma in situ (LCIS) and invasive lobular carcinoma","Rich in hormone receptors → sensitive to estrogen/progesterone cycling","Under-developed TDLUs (nulliparous) = higher cancer risk"]
+  }},
+  {icon:"🔗",name:"E-Cadherin (CDH1)",type:"Cell adhesion molecule",detail:{
+    title:"E-Cadherin Loss in Lobular Carcinoma",
+    desc:"E-cadherin is a transmembrane glycoprotein essential for epithelial cell-cell adhesion. Its loss is the molecular hallmark of invasive lobular carcinoma.",
+    bullets:["CDH1 gene mutation/methylation → absent E-cadherin","Without E-cadherin: cells lose cohesion (dyscohesive)","Dyscohesive cells infiltrate individually in single-file rows (Indian file)","E-cadherin loss also explains multicentricity — cells migrate widely without forming masses","IHC: lobular carcinoma is E-cadherin negative (vs. ductal which is positive)"]
+  }},
+  {icon:"💉",name:"Estrogen Receptors (ER)",type:"Hormonal driver",detail:{
+    title:"Estrogen's Role in Breast Disease",
+    desc:"Estrogen drives proliferation of breast epithelium via ER-α signaling. Hyperestrogenemia (relative or absolute) underlies multiple breast conditions.",
+    bullets:["Fibrocystic disease: hyperestrogenemia disrupts cyclic changes → fibrosis/cysts/adenosis","Fibroadenoma: estrogen drives mixed fibroepithelial proliferation (ER+)","Breast carcinoma risk: nulliparity, late menopause, early menarche all ↑ cumulative estrogen exposure","ER+ breast cancers: respond to anti-estrogen therapy (tamoxifen, aromatase inhibitors)","Post-menopausal obesity: adipose tissue converts androgens → estrogen → ↑risk"]
+  }},
+  {icon:"🧫",name:"Desmoplastic Stroma",type:"Tumor microenvironment",detail:{
+    title:"Desmoplastic Reaction in Invasive Ductal Carcinoma",
+    desc:"Desmoplasia = the dense fibrous (collagenous) stromal response induced by invasive carcinoma cells. This is the main driver of the characteristic stony-hard texture of IDC NOS.",
+    bullets:["Tumor cells secrete TGF-β, PDGF → activate fibroblasts/myofibroblasts","Activated fibroblasts deposit type I/III collagen → dense stromal matrix","This fibrous reaction encases and stiffens the tumor — creates stony-hard consistency","Gritty sensation on cut: calcification within necrotic areas","Desmoplasia also causes fixation: tumor becomes fixed to skin and underlying muscle"]
+  }},
+  {icon:"🛤️",name:"Lymphatic System",type:"Spread pathway",detail:{
+    title:"Lymphatic Spread of Breast Carcinoma",
+    desc:"The breast has an exceptionally rich lymphatic network — dermal, intramammary, and deep lymphatics — explaining the early lymphatic spread of breast carcinoma.",
+    bullets:["Axillary nodes (level I, II, III): receive 75% of lymph from the breast","Internal mammary nodes: receive lymph from medial breast","Supraclavicular/infraclavicular nodes: skip metastases","Dermal lymphatic permeation → Peau d'orange","Extensive chest wall permeation → Cancer en cuirasse","Lymph node status = most important prognostic factor in breast cancer"]
+  }},
+  {icon:"🩹",name:"Cooper's Ligaments",type:"Structural pathway",detail:{
+    title:"Cooper's Ligaments in Breast Carcinoma",
+    desc:"Cooper's ligaments (suspensory ligaments of Cooper) are fibrous septa running from the dermis through breast parenchyma to the pectoral fascia. They are involved in multiple clinical signs.",
+    bullets:["Tumor invasion of Cooper's ligaments → fibrous shortening","Shortened ligaments tether the skin → SKIN DIMPLING (not Peau d'orange)","Also tether the nipple → NIPPLE RETRACTION","The same ligaments anchor hair follicles → contribute to Peau d'orange dimpling","Fascial involvement → fixation of mass to chest wall (→ immobile mass)"]
+  }},
+  {icon:"🔬",name:"BRCA1 & BRCA2",type:"Genetic drivers",detail:{
+    title:"BRCA Genes and Breast Cancer",
+    desc:"BRCA1 and BRCA2 are tumor suppressor genes encoding proteins essential for DNA double-strand break repair (homologous recombination). Germline mutations confer very high lifetime breast cancer risk.",
+    bullets:["BRCA1 mutation: 55-72% lifetime breast cancer risk; associated with medullary-type carcinoma","BRCA2 mutation: 45-69% lifetime risk; also increases male breast cancer risk","Both genes: autosomal dominant inheritance pattern","BRCA1 cancers: often triple-negative (ER-, PR-, HER2-), high grade","Genetic testing warranted with family history, especially if onset <50 years"]
+  }},
+  {icon:"🫧",name:"Mucin Production",type:"Tumor biology",detail:{
+    title:"Mucin in Mucinous Carcinoma",
+    desc:"Mucinous carcinoma is defined by the production of large amounts of extracellular mucin by malignant epithelial cells. The mucin provides a physical barrier that limits invasion.",
+    bullets:["Tumor cells secrete mucin (MUC1, MUC2) into extracellular space","Mucin accumulates → forms lakes that surround and separate small islands of tumor cells","Physical barrier effect: limits vascular invasion and metastasis","Gel-like consistency → clinically soft, gelatinous mass","Almost always ER+/PR+ — responds well to endocrine therapy","Best prognosis of all invasive carcinomas"]
+  }}
+];
+
+const flowSteps = [
+  {box:"Invasive Carcinoma Cells", note:""},
+  {box:"↓ Stromal Invasion", note:"Desmoplastic reaction → HARD mass"},
+  {box:"↓ Cooper's Ligament Invasion", note:"→ Skin dimpling, nipple retraction"},
+  {box:"↓ Lymphatic Permeation", note:"Dermal → Peau d'orange; Deep → Axillary nodes"},
+  {box:"↓ Nodal Metastasis", note:"Axillary > Internal mammary > Supraclavicular"},
+  {box:"↓ Hematogenous Spread", note:"Bone (most common) > Lung > Liver > Brain"},
+  {box:"↓ Cancer en Cuirasse", note:"Extensive chest wall skin involvement (late)"}
+];
+
+const algoSteps = [
+  {title:"History & Physical Examination", desc:"Assess: lump characteristics (hard/soft, fixed/mobile, irregular/smooth), skin changes (dimpling, Peau d'orange, Paget's), nipple changes (discharge, retraction), axillary lymph nodes. Risk factors: family history, age, parity."},
+  {title:"Imaging: Mammography", desc:"First-line for women >40. Spiculated mass, microcalcifications, architectural distortion = malignant features. Well-defined smooth mass = benign (fibroadenoma, cyst). Diagnostic + screening."},
+  {title:"Imaging: Ultrasound", desc:"Preferred for women <40 and in dense breasts. Differentiates solid (hypoechoic, irregular) vs. cystic lesions. Guides biopsy. Assesses axillary nodes."},
+  {title:"Core Needle Biopsy (CNB)", desc:"Preferred tissue sampling method. Provides histological diagnosis (benign vs. malignant), tumor type (ductal vs. lobular), and grade. Better than FNA for architecture preservation."},
+  {title:"IHC Panel on Biopsy", desc:"ER, PR, HER2 (receptor status) — drives treatment decisions. Ki-67 (proliferation index). CK7, E-cadherin (distinguishes lobular vs. ductal). Molecular subtyping: Luminal A/B, HER2-enriched, Triple-negative."},
+  {title:"Staging Workup", desc:"If malignant: CT chest/abdomen/pelvis (visceral mets), bone scan / PET-CT (bone mets — most common hematogenous site), MRI breast (extent, bilaterality — especially for lobular). TNM staging."}
+];
+
+const diagTableData = {
+  headers:["Feature","Fibroadenoma (Benign)","Fibrocystic Disease (Benign)","Invasive Carcinoma (Malignant)"],
+  rows:[
+    ["Age","3rd decade","Reproductive age (20-50)","45-55+ (peak)"],
+    ["Consistency","Firm, rubbery","Rubbery, nodular","Stony HARD, gritty"],
+    ["Borders","Sharp, well-defined","Ill-defined, bilateral","Irregular, stellate"],
+    ["Mobility","Freely mobile ('breast mouse')","Mobile to slightly fixed","Fixed, immobile"],
+    ["Skin changes","None","None","Dimpling, Peau d'orange, ulceration"],
+    ["Nipple","Normal","Normal","Retraction, Paget's disease"],
+    ["Axillary nodes","Normal","Normal","Often palpable (metastases)"],
+    ["Tenderness","Non-tender","Cyclical tenderness","Non-tender (painless)"],
+    ["Bilaterality","Usually unilateral","Bilateral","Usually unilateral (lobular: bilateral)"],
+    ["Malignant potential","None (usually)","Only atypical epitheliosis","—"]
+  ]
+};
+
+const histoTableData = {
+  headers:["Type","Frequency","Key Microscopic Feature","Consistency","Prognosis"],
+  rows:[
+    ["Invasive Ductal NOS","65–80%","Dense desmoplastic stroma, irregular nests","Stony hard","Intermediate"],
+    ["Invasive Lobular","10–15%","Indian file pattern, E-cadherin negative","Variable","Worse (multicentric)"],
+    ["Medullary","1–5%","Solid sheets + lymphocytic infiltrate","Soft, fleshy","Better than NOS"],
+    ["Mucinous (Colloid)","2–3%","Extracellular mucin lakes + floating cell islands","Gelatinous","Best"],
+    ["Tubular","2%","Well-formed tubules, low grade","Firm","Excellent"],
+    ["Inflammatory","1–3%","Dermal lymphatic tumor emboli","Skin erythema","Very poor"]
+  ]
+};
+
+const treatmentSections = [
+  {title:"🔴 Emergency / Urgent Management",color:"red",items:[
+    {icon:"🏥",title:"Inflammatory Breast Carcinoma",desc:"Urgent oncology referral. Neoadjuvant chemotherapy FIRST (not surgery first). Very poor prognosis."},
+    {icon:"🧬",title:"Metastatic Bone Disease",desc:"Pain management, bisphosphonates (zoledronic acid), RANKL inhibitors, orthopaedic stabilization for impending fractures."},
+    {icon:"💊",title:"Hypercalcaemia from Bone Mets",desc:"IV fluids + bisphosphonates. Urgent if symptomatic."}
+  ]},
+  {title:"🟡 Surgical Management",color:"yellow",items:[
+    {icon:"✂️",title:"Wide Local Excision (Lumpectomy)",desc:"For well-defined tumours ≤4cm. Combined with sentinel lymph node biopsy. Must achieve clear margins. Followed by radiotherapy."},
+    {icon:"✂️",title:"Mastectomy (Total/Modified Radical)",desc:"Large tumours, multicentric disease, positive BRCA1/2, patient preference, failed lumpectomy margins."},
+    {icon:"🔍",title:"Sentinel Lymph Node Biopsy",desc:"Standard of care for clinically node-negative disease. Avoids full axillary clearance (reduces lymphoedema risk)."},
+    {icon:"🔬",title:"Axillary Lymph Node Clearance",desc:"For sentinel node positive disease. Important for staging and regional control."}
+  ]},
+  {title:"🟢 Systemic Medical Therapy",color:"green",items:[
+    {icon:"💊",title:"Endocrine Therapy (ER+ tumours)",desc:"Pre-menopausal: Tamoxifen (ER antagonist) for 5-10 years. Post-menopausal: Aromatase inhibitors (anastrozole, letrozole) — superior to tamoxifen post-menopause."},
+    {icon:"💉",title:"Chemotherapy",desc:"Neoadjuvant (before surgery, to shrink tumour) or adjuvant (after surgery, to prevent recurrence). Regimens: AC-T (Adriamycin + Cyclophosphamide → Taxane). Indicated for high-grade, node-positive, triple-negative."},
+    {icon:"🎯",title:"HER2-Targeted Therapy",desc:"Trastuzumab (Herceptin) ± pertuzumab for HER2+ tumours. Significantly improves survival. Neratinib for extended adjuvant."},
+    {icon:"🧬",title:"PARP Inhibitors",desc:"Olaparib/talazoparib for BRCA1/2 mutated, HER2-negative metastatic breast cancer."}
+  ]},
+  {title:"🔵 Radiotherapy",color:"blue",items:[
+    {icon:"☢️",title:"Adjuvant Radiotherapy",desc:"Standard after breast-conserving surgery (lumpectomy). Reduces local recurrence by ~50%. Also used after mastectomy for high-risk disease (T3/T4, ≥4 positive nodes)."},
+    {icon:"⚡",title:"Palliative Radiotherapy",desc:"For painful bone metastases, brain metastases, skin disease. Single fraction effective for bone pain."}
+  ]},
+  {title:"🟣 Benign Disease Management",color:"purple",items:[
+    {icon:"🫧",title:"Breast Abscess",desc:"Incision and drainage (I&D) under antibiotic cover (flucloxacillin for S. aureus). Lactational: continue breastfeeding if possible."},
+    {icon:"📋",title:"Fibrocystic Disease",desc:"Reassurance, NSAIDs for pain, evening primrose oil. Only atypical hyperplasia requires close surveillance. Aspiration of symptomatic cysts."},
+    {icon:"🎀",title:"Fibroadenoma",desc:"Observation (most regress or remain stable). Excision if large (>3cm), increasing in size, patient anxiety, or atypical features on imaging."},
+    {icon:"🌿",title:"Phyllodes Tumor",desc:"Wide local excision with CLEAR margins (≥1cm). Mastectomy if large/recurrent. No role for radiotherapy in benign/borderline. Surveillance for recurrence."},
+    {icon:"💧",title:"Duct Papilloma",desc:"Microdochectomy (excision of involved duct). Histology mandatory to exclude papillary carcinoma."}
+  ]}
+];
+
+const mnemonics = [
+  {
+    title:"Components of Fibrocystic Disease",
+    word:"F-ACE",
+    rows:[
+      {l:"F",e:"Fibrosis",d:"Dense fibrous replacement — gives rubbery consistency"},
+      {l:"A",e:"Adenosis",d:"Increased number of acini/lobules — palpable nodularity"},
+      {l:"C",e:"Cysts",d:"Fluid-filled (serous/haemorrhagic) — 'blue dome cysts'"},
+      {l:"E",e:"Epitheliosis",d:"Ductal epithelial hyperplasia — ONLY premalignant component"}
+    ]
+  },
+  {
+    title:"Breast Cancer Risk Factors",
+    word:"NOBLE FACTS",
+    rows:[
+      {l:"N",e:"Nulliparity",d:"No full-term pregnancy = prolonged estrogen exposure"},
+      {l:"O",e:"Obesity",d:"Adipose → aromatase → estrogen (post-menopausal risk)"},
+      {l:"B",e:"BRCA1/2 mutation",d:"Highest genetic risk (up to 72% lifetime risk for BRCA1)"},
+      {l:"L",e:"Late first pregnancy (>30)",d:"Undifferentiated breast epithelium at greater risk"},
+      {l:"E",e:"Early menarche/Late menopause",d:"Prolonged 'reproductive span' = more cumulative estrogen"},
+      {l:"F",e:"Family History (first-degree)",d:"Double risk; hereditary if before age 50"},
+      {l:"A",e:"Atypical hyperplasia (previous)",d:"5-10× relative risk"},
+      {l:"C",e:"Contraceptives (OCP)",d:"Small but real increase in risk"},
+      {l:"T",e:"TDLU origin",d:"Terminal duct-lobular unit is where cancers begin"},
+      {l:"S",e:"Sex (female)",d:"100× more common in women than men"}
+    ]
+  },
+  {
+    title:"Types of Breast Carcinoma by Prognosis",
+    word:"MIMI-DLI",
+    rows:[
+      {l:"M",e:"Mucinous = best prognosis",d:"Lakes of mucin, gelatinous, ER+, slow growing"},
+      {l:"I",e:"Inflammatory = worst prognosis",d:"Dermal lymphatic emboli, skin erythema, aggressive"},
+      {l:"M",e:"Medullary = better than NOS",d:"Lymphocytic infiltrate, BRCA1 associated"},
+      {l:"I",e:"IDC NOS = intermediate",d:"65-80%, desmoplastic, stony hard"},
+      {l:"D",e:"Ductal (In Situ) = non-invasive",d:"DCIS — no basement membrane breach"},
+      {l:"L",e:"Lobular = worse (multicentric)",d:"Indian file, bilateral, E-cadherin negative"},
+      {l:"I",e:"Inflammatory again",d:"Reminder: worst of all"}
+    ]
+  },
+  {
+    title:"Signs of Advanced Breast Carcinoma",
+    word:"PRINTED",
+    rows:[
+      {l:"P",e:"Peau d'orange",d:"Dermal lymphatic blockage → orange-peel skin"},
+      {l:"R",e:"Retraction of nipple",d:"Invasion of Cooper's ligaments/ducts → nipple pulls inward"},
+      {l:"I",e:"Immobile (fixed) mass",d:"Desmoplastic reaction + chest wall invasion"},
+      {l:"N",e:"Node enlargement (axillary)",d:"Lymphatic spread — most common first site"},
+      {l:"T",e:"Tethering of skin",d:"Cooper's ligament invasion → skin dimpling"},
+      {l:"E",e:"En cuirasse (cancer)",d:"Rigid plate-like skin encasement of chest wall"},
+      {l:"D",e:"Discharge / Paget's nipple",d:"Ductal spread to nipple epidermis → Paget's cells"}
+    ]
+  },
+  {
+    title:"Differentiating Fibroadenoma from Phyllodes",
+    word:"PHASE vs YOUNG",
+    rows:[
+      {l:"P",e:"Phyllodes = Postmenopausal (older, 40s-50s)",d:"vs. Fibroadenoma in Young (20s-30s)"},
+      {l:"H",e:"Hypercellular stroma",d:"vs. bland, paucicellular stroma in fibroadenoma"},
+      {l:"A",e:"Architecture = leaf-like clefts",d:"vs. pericanalicular/intracanalicular patterns"},
+      {l:"S",e:"Size = HUGE",d:"vs. fibroadenoma usually small (<3cm)"},
+      {l:"E",e:"Excise with wide margin",d:"vs. simple observation/excision for fibroadenoma"}
+    ]
+  }
+];
+
+// ===================== STATE =====================
+let quizState = { current: 0, answers: {}, score: 0, streak: 0, maxStreak: 0, done: new Set() };
+
+// ===================== TAB SWITCHING =====================
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('lastTab_breast', id);
+}
+
+// ===================== OVERVIEW =====================
+function toggleConcept(el) {
+  el.classList.toggle('open');
+}
+function filterConcepts(val) {
+  const q = val.toLowerCase();
+  document.querySelectorAll('.concept-card').forEach(card => {
+    const kw = (card.dataset.keywords || '') + card.innerText.toLowerCase();
+    card.classList.toggle('hidden', q.length > 0 && !kw.includes(q));
+  });
+}
+
+// ===================== QUIZ =====================
+function renderQuiz() {
+  const q = quizData[quizState.current];
+  const container = document.getElementById('quizContainer');
+  const answered = quizState.answers[quizState.current];
+  const pct = Math.round((Object.keys(quizState.answers).length / quizData.length) * 100);
+  document.getElementById('quizProgressFill').style.width = pct + '%';
+  document.getElementById('quizCounter').textContent = (quizState.current + 1) + ' / ' + quizData.length;
+  document.getElementById('quizScore').textContent = quizState.score + '/' + Object.keys(quizState.answers).length;
+  document.getElementById('quizStreak').textContent = quizState.streak;
+  updateGlobalStats();
+
+  container.innerHTML = `
+    <div class="q-card" id="activeQCard">
+      <div class="q-number">Question ${quizState.current + 1} of ${quizData.length} &nbsp;·&nbsp; <span class="badge badge-glow">${q.tag}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o,i) => `
+          <div class="q-option${answered !== undefined ? ' disabled' : ''}${answered !== undefined && i === q.ans ? ' correct' : ''}${answered !== undefined && answered === i && i !== q.ans ? ' wrong' : ''}"
+            onclick="${answered !== undefined ? '' : `selectAnswer(${i})`}">
+            <div class="q-option-key">${String.fromCharCode(65+i)}</div>
+            <div>${o}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="q-explanation${answered !== undefined ? ' show' : ''}">
+        <strong>✅ Correct Answer: ${String.fromCharCode(65+q.ans)}</strong><br>${q.explain}
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  const q = quizData[quizState.current];
+  quizState.answers[quizState.current] = idx;
+  const isCorrect = idx === q.ans;
+  if (isCorrect) { quizState.score++; quizState.streak++; if (quizState.streak > quizState.maxStreak) quizState.maxStreak = quizState.streak; }
+  else { quizState.streak = 0; }
+  const card = document.getElementById('activeQCard');
+  card.classList.add(isCorrect ? 'anim-correct' : 'anim-wrong');
+  setTimeout(() => card.classList.remove('anim-correct','anim-wrong'), 400);
+  renderQuiz();
+  saveProgress();
+}
+
+function nextQuestion() {
+  if (quizState.current < quizData.length - 1) { quizState.current++; renderQuiz(); }
+  else { showFinalScore(); }
+}
+function prevQuestion() {
+  if (quizState.current > 0) { quizState.current--; renderQuiz(); }
+}
+function showFinalScore() {
+  document.getElementById('quizArea').style.display = 'none';
+  const ss = document.getElementById('scoreScreen');
+  ss.classList.add('active');
+  const pct = Math.round((quizState.score / quizData.length) * 100);
+  document.getElementById('finalScoreNum').textContent = quizState.score;
+  const feedbacks = [[0,60,'Keep Practicing! 📚','Review the concepts and try again.'],[60,75,'Good Effort! 👍','You\'re getting there. Review the explanations.'],[75,90,'Well Done! 🌟','Strong understanding! A bit more polish needed.'],[90,101,'Excellent! 🏆','Outstanding performance! You\'ve mastered this topic.']];
+  for (const [lo,hi,fb,msg] of feedbacks) {
+    if (pct >= lo && pct < hi) { document.getElementById('scoreFeedback').textContent = fb; document.getElementById('scoreMsg').textContent = `${pct}% accuracy · Best streak: ${quizState.maxStreak} 🔥`; break; }
+  }
+}
+function resetQuiz() {
+  quizState = { current: 0, answers: {}, score: 0, streak: 0, maxStreak: 0, done: new Set() };
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('scoreScreen').classList.remove('active');
+  renderQuiz();
+}
+
+// ===================== FLASHCARDS =====================
+function renderFlashcards() {
+  const grid = document.getElementById('fcGrid');
+  const tagColors = {Benign:'badge-green',Malignant:'badge-red',Premalignant:'badge-orange',Inflammatory:'badge-pink',Anatomy:'badge-glow',Molecular:'badge-purple',Male:'badge-purple',Risk:'badge-orange',Signs:'badge-pink',Comparative:'badge-glow'};
+  grid.innerHTML = flashcards.map((fc, i) => `
+    <div class="fc-card" onclick="this.classList.toggle('flipped')" id="fc${i}">
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-tag"><span class="badge ${tagColors[fc.tag]||'badge-glow'}">${fc.tag}</span></div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">👆 Click to reveal</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===================== CASES =====================
+function renderCases() {
+  const container = document.getElementById('casesContainer');
+  const tagColors = {Benign:'badge-green',Malignant:'badge-red','Good Prognosis':'badge-green',Bilateral:'badge-pink',Lobular:'badge-pink',Mucinous:'badge-purple',Elderly:'badge-purple',Lymphatics:'badge-orange',Advanced:'badge-red',Nipple:"badge-orange","Paget's":"badge-orange","Risk Factors":"badge-glow",Integrated:'badge-glow',BRCA:'badge-purple','Indian file pattern':'badge-pink'};
+  container.innerHTML = cases.map((c,ci) => `
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-num">${c.num}</div>
+        <div>
+          <div class="case-title">${c.title}</div>
+          <div class="case-tags">${c.tags.map(t=>`<span class="badge ${tagColors[t]||'badge-glow'}">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="case-vignette">${c.vignette}</div>
+      <div class="case-questions">
+        ${c.questions.map((q,qi) => `
+          <div class="case-q">
+            <div class="case-q-text">${q.q}</div>
+            <button class="reveal-btn" onclick="revealAnswer(this)">👁 Reveal Answer</button>
+            <div class="case-answer">${q.a}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function revealAnswer(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('visible');
+  btn.textContent = ans.classList.contains('visible') ? '🙈 Hide Answer' : '👁 Reveal Answer';
+}
+
+// ===================== PATHO =====================
+function renderPatho() {
+  const grid = document.getElementById('pathoGrid');
+  grid.innerHTML = pathoItems.map((p,i) => `
+    <div class="patho-item" onclick="showPathoDetail(${i}, this)">
+      <div class="pi-icon">${p.icon}</div>
+      <div class="pi-name">${p.name}</div>
+      <div class="pi-type">${p.type}</div>
+    </div>
+  `).join('');
+
+  const flow = document.getElementById('flowChart');
+  flow.innerHTML = flowSteps.map((s,i) => `
+    ${i>0?'<div class="flow-arrow">↓</div>':''}
+    <div class="flow-step">
+      <div class="flow-box">${s.box}</div>
+      ${s.note?`<div style="font-size:0.78rem;color:var(--text3);padding:0 8px">${s.note}</div>`:''}
+    </div>
+  `).join('');
+}
+function showPathoDetail(idx, el) {
+  document.querySelectorAll('.patho-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  const d = pathoItems[idx].detail;
+  const detail = document.getElementById('pathoDetail');
+  detail.classList.add('visible');
+  detail.innerHTML = `
+    <div class="patho-detail-title">${pathoItems[idx].icon} ${d.title}</div>
+    <p style="color:var(--text2);font-size:0.88rem;line-height:1.6;margin-bottom:14px">${d.desc}</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${d.bullets.map(b=>`<div style="display:flex;gap:10px;align-items:flex-start;font-size:0.85rem"><span style="color:var(--glow);flex-shrink:0">▸</span><span style="color:var(--text2)">${b}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+// ===================== DIAGNOSIS =====================
+function renderDiagnosis() {
+  // Algorithm
+  const algo = document.getElementById('algoContainer');
+  algo.innerHTML = algoSteps.map((s,i) => `
+    ${i>0?'<div class="algo-connector"></div>':''}
+    <div class="algo-step">
+      <div class="algo-num">${i+1}</div>
+      <div class="algo-text"><strong>${s.title}</strong><p>${s.desc}</p></div>
+    </div>
+  `).join('');
+
+  // Benign vs malignant table
+  const dt = document.getElementById('diagTable');
+  dt.innerHTML = `<tr>${diagTableData.headers.map((h,i) => `<th${i===0?' style="width:140px"':''}>${h}</th>`).join('')}</tr>` +
+    diagTableData.rows.map(r => `<tr>${r.map((c,i) => `<td${i===0?' style="font-weight:600;color:var(--glow)"':''}>${c}</td>`).join('')}</tr>`).join('');
+
+  // Histo table
+  const ht = document.getElementById('histoTable');
+  const progColors = {'Stony hard':'color:var(--red)','Gelatinous':'color:var(--green)','Soft, fleshy':'color:var(--accent3)','Variable':'color:var(--yellow)','Firm':'color:var(--yellow)','Skin erythema':'color:var(--red)'};
+  const pColors = {Intermediate:'color:var(--yellow)',Best:'color:var(--green)','Better than NOS':'color:var(--green)','Worse (multicentric)':'color:var(--red)','Very poor':'color:var(--red)','Excellent':'color:var(--green)'};
+  ht.innerHTML = `<tr>${histoTableData.headers.map(h=>`<th>${h}</th>`).join('')}</tr>` +
+    histoTableData.rows.map(r => `<tr>${r.map((c,i) => {
+      let style = '';
+      if (i===4) style = pColors[c] ? ` style="${pColors[c]};font-weight:600"` : '';
+      if (i===3) style = progColors[c] ? ` style="${progColors[c]}"` : '';
+      return `<td${style}>${c}</td>`;
+    }).join('')}</tr>`).join('');
+}
+
+// ===================== TREATMENT =====================
+function renderTreatment() {
+  const borderColors = {red:'var(--red)',yellow:'var(--yellow)',green:'var(--green)',blue:'var(--glow)',purple:'var(--accent3)'};
+  const container = document.getElementById('treatmentContainer');
+  container.innerHTML = treatmentSections.map(sec => `
+    <div class="treatment-section">
+      <div class="section-title" style="font-size:1.1rem">${sec.title}</div>
+      ${sec.items.map(item => `
+        <div class="treat-item" style="border-left:3px solid ${borderColors[sec.color]}">
+          <div class="treat-icon">${item.icon}</div>
+          <div class="treat-body"><strong>${item.title}</strong><p>${item.desc}</p></div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// ===================== MNEMONICS =====================
+function renderMnemonics() {
+  const container = document.getElementById('mnemContainer');
+  container.innerHTML = mnemonics.map((m,i) => `
+    <div class="mnem-card">
+      <div class="mnem-title">💡 ${m.title}</div>
+      <div class="mnem-word">${m.word}</div>
+      <div class="mnem-list">
+        ${m.rows.map(r=>`
+          <div class="mnem-row">
+            <div class="mnem-letter">${r.l}</div>
+            <div class="mnem-expansion"><strong>${r.e}</strong> <span>— ${r.d}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===================== STATS =====================
+function updateGlobalStats() {
+  document.getElementById('totalScore').textContent = quizState.score;
+  document.getElementById('totalStreak').textContent = quizState.streak;
+  const pct = Math.round((Object.keys(quizState.answers).length / quizData.length) * 100);
+  document.getElementById('totalDone').textContent = pct + '%';
+}
+
+// ===================== PROGRESS =====================
+function saveProgress() {
+  try {
+    localStorage.setItem('breastPatho_state', JSON.stringify({
+      score: quizState.score, maxStreak: quizState.maxStreak,
+      answers: quizState.answers, done: [...quizState.done]
+    }));
+  } catch(e) {}
+}
+function loadProgress() {
+  try {
+    const s = localStorage.getItem('breastPatho_state');
+    if (s) {
+      const d = JSON.parse(s);
+      quizState.score = d.score || 0;
+      quizState.maxStreak = d.maxStreak || 0;
+      quizState.answers = d.answers || {};
+      quizState.done = new Set(d.done || []);
+    }
+  } catch(e) {}
+}
+
+// ===================== INIT =====================
+function init() {
+  loadProgress();
+  renderQuiz();
+  renderFlashcards();
+  renderCases();
+  renderPatho();
+  renderDiagnosis();
+  renderTreatment();
+  renderMnemonics();
+  updateGlobalStats();
+  const last = localStorage.getItem('lastTab_breast');
+  if (last) {
+    const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.getAttribute('onclick')?.includes(`'${last}'`));
+    if (btn) switchTab(last, btn);
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KME - Morbidity Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES & THEME SYSTEM
+           ============================================ */
+        :root {
+            /* Light Theme */
+            --kme-bg-primary: #f0f4f8;
+            --kme-bg-secondary: #ffffff;
+            --kme-bg-tertiary: #e8edf2;
+            --kme-text-primary: #1a202c;
+            --kme-text-secondary: #4a5568;
+            --kme-text-muted: #718096;
+            --kme-accent-blue: #3182ce;
+            --kme-accent-blue-light: #ebf8ff;
+            --kme-accent-blue-dark: #2c5282;
+            --kme-accent-green: #38a169;
+            --kme-accent-green-light: #f0fff4;
+            --kme-accent-red: #e53e3e;
+            --kme-accent-red-light: #fff5f5;
+            --kme-accent-red-dark: #c53030;
+            --kme-accent-orange: #dd6b20;
+            --kme-accent-orange-light: #fffaf0;
+            --kme-accent-purple: #805ad5;
+            --kme-accent-purple-light: #faf5ff;
+            --kme-accent-teal: #319795;
+            --kme-accent-teal-light: #e6fffa;
+            --kme-border-color: #e2e8f0;
+            --kme-border-radius: 12px;
+            --kme-border-radius-sm: 8px;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --kme-shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+            --kme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --kme-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            --kme-mcq-correct: #38a169;
+            --kme-mcq-correct-bg: #f0fff4;
+            --kme-mcq-incorrect: #e53e3e;
+            --kme-mcq-incorrect-bg: #fff5f5;
+            --kme-table-header-bg: #edf2f7;
+            --kme-table-alt-row: #f7fafc;
+            --kme-math-bg: #faf5ff;
+            --kme-math-border: #d6bcfa;
+            --kme-details-bg: #f7fafc;
+        }
+
+        [data-theme="dark"] {
+            --kme-bg-primary: #0f1724;
+            --kme-bg-secondary: #1a2332;
+            --kme-bg-tertiary: #243044;
+            --kme-text-primary: #e2e8f0;
+            --kme-text-secondary: #a0aec0;
+            --kme-text-muted: #718096;
+            --kme-accent-blue: #63b3ed;
+            --kme-accent-blue-light: #1a2a3a;
+            --kme-accent-blue-dark: #90cdf4;
+            --kme-accent-green: #68d391;
+            --kme-accent-green-light: #1a2e1a;
+            --kme-accent-red: #fc8181;
+            --kme-accent-red-light: #2d1f1f;
+            --kme-accent-red-dark: #feb2b2;
+            --kme-accent-orange: #f6ad55;
+            --kme-accent-orange-light: #2d2319;
+            --kme-accent-purple: #b794f4;
+            --kme-accent-purple-light: #2d1f3d;
+            --kme-accent-teal: #4fd1c5;
+            --kme-accent-teal-light: #1a2e2d;
+            --kme-border-color: #2d3748;
+            --kme-shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --kme-shadow-md: 0 4px 14px rgba(0,0,0,0.3);
+            --kme-shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
+            --kme-mcq-correct: #68d391;
+            --kme-mcq-correct-bg: #1a2e1a;
+            --kme-mcq-incorrect: #fc8181;
+            --kme-mcq-incorrect-bg: #2d1f1f;
+            --kme-table-header-bg: #243044;
+            --kme-table-alt-row: #1e2a3a;
+            --kme-math-bg: #2d1f3d;
+            --kme-math-border: #805ad5;
+            --kme-details-bg: #243044;
+        }
+
+        /* ============================================
+           GLOBAL RESET & BASE STYLES
+           ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--kme-font-family);
+            background-color: var(--kme-bg-primary);
+            color: var(--kme-text-primary);
+            line-height: 1.7;
+            transition: var(--kme-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           TOP NAVIGATION BAR
+           ============================================ */
+        .kme-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--kme-bg-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            box-shadow: var(--kme-shadow-sm);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--kme-transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .kme-navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-navbar-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--kme-accent-blue), var(--kme-accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .kme-navbar-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-navbar-subtitle {
+            font-size: 0.7rem;
+            color: var(--kme-text-muted);
+            font-weight: 500;
+        }
+
+        .kme-navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ============================================
+           DARK MODE TOGGLE BUTTON
+           ============================================ */
+        .kme-theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--kme-border-color);
+            background: var(--kme-bg-tertiary);
+            color: var(--kme-text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            font-size: 1.15rem;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-theme-toggle:hover {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+            border-color: var(--kme-accent-blue);
+        }
+
+        .kme-theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* ============================================
+           PROGRESS BAR
+           ============================================ */
+        .kme-progress-bar-container {
+            position: sticky;
+            top: 61px;
+            z-index: 999;
+            background: var(--kme-bg-secondary);
+            padding: 0;
+            height: 4px;
+        }
+
+        .kme-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--kme-accent-blue), var(--kme-accent-purple));
+            border-radius: 0 2px 2px 0;
+            transition: width 0.2s ease-out;
+        }
+
+        /* ============================================
+           MAIN CONTENT CONTAINER
+           ============================================ */
+        .kme-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ============================================
+           PAGE HEADER / HERO
+           ============================================ */
+        .kme-page-header {
+            background: linear-gradient(135deg, var(--kme-accent-blue), var(--kme-accent-purple));
+            border-radius: var(--kme-border-radius);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kme-page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+        .kme-page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -20%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .kme-page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .kme-page-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .kme-page-header .kme-badge-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .kme-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ============================================
+           SECTION TAB NAVIGATION
+           ============================================ */
+        .kme-tab-nav {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 16px;
+            margin-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory;
+        }
+
+        .kme-tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kme-tab-btn {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            border-radius: 24px;
+            border: 1.5px solid var(--kme-border-color);
+            background: var(--kme-bg-secondary);
+            color: var(--kme-text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kme-tab-btn i {
+            font-size: 0.85rem;
+        }
+
+        .kme-tab-btn:hover {
+            border-color: var(--kme-accent-blue);
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-tab-btn.kme-active {
+            background: var(--kme-accent-blue);
+            color: #fff;
+            border-color: var(--kme-accent-blue);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        }
+
+        /* ============================================
+           SECTION PANELS (Show/Hide)
+           ============================================ */
+        .kme-section-panel {
+            display: none;
+            animation: kmeSlideIn 0.35s ease-out;
+        }
+
+        .kme-section-panel.kme-panel-active {
+            display: block;
+        }
+
+        @keyframes kmeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           SECTION HEADERS
+           ============================================ */
+        .kme-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--kme-border-color);
+        }
+
+        .kme-section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .kme-section-icon.kme-icon-blue {
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-section-icon.kme-icon-teal {
+            background: var(--kme-accent-teal-light);
+            color: var(--kme-accent-teal);
+        }
+
+        .kme-section-icon.kme-icon-purple {
+            background: var(--kme-accent-purple-light);
+            color: var(--kme-accent-purple);
+        }
+
+        .kme-section-icon.kme-icon-red {
+            background: var(--kme-accent-red-light);
+            color: var(--kme-accent-red);
+        }
+
+        .kme-section-icon.kme-icon-green {
+            background: var(--kme-accent-green-light);
+            color: var(--kme-accent-green);
+        }
+
+        .kme-section-header-text h2 {
+            font-size: 1.15rem;
+            font-weight: 750;
+            color: var(--kme-text-primary);
+        }
+
+        .kme-section-header-text p {
+            font-size: 0.78rem;
+            color: var(--kme-text-muted);
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           CORE CONCEPTS CARD
+           ============================================ */
+        .kme-concept-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+        }
+
+        .kme-concept-card:hover {
+            box-shadow: var(--kme-shadow-md);
+        }
+
+        .kme-concept-card .kme-card-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--kme-accent-blue);
+            margin-bottom: 12px;
+            padding: 4px 10px;
+            background: var(--kme-accent-blue-light);
+            border-radius: 6px;
+        }
+
+        .kme-concept-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kme-concept-list li {
+            position: relative;
+            padding: 10px 0 10px 28px;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+        }
+
+        .kme-concept-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .kme-concept-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 18px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--kme-accent-blue), var(--kme-accent-purple));
+        }
+
+        .kme-concept-list li strong {
+            color: var(--kme-text-primary);
+            font-weight: 700;
+        }
+
+        .kme-concept-card.kme-indication-card .kme-card-label {
+            color: var(--kme-accent-teal);
+            background: var(--kme-accent-teal-light);
+        }
+
+        .kme-concept-card.kme-indication-card .kme-concept-list li::before {
+            background: linear-gradient(135deg, var(--kme-accent-teal), var(--kme-accent-green));
+        }
+
+        /* ============================================
+           COMPARISON TABLES (RESPONSIVE)
+           ============================================ */
+        .kme-table-responsive {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius);
+            margin-bottom: 18px;
+            box-shadow: var(--kme-shadow-sm);
+            overflow: hidden;
+        }
+
+        .kme-table-title {
+            padding: 16px 20px 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--kme-text-primary);
+            border-bottom: 1px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kme-table-title i {
+            color: var(--kme-accent-teal);
+        }
+
+        .kme-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .kme-table-scroll table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 420px;
+        }
+
+        .kme-table-scroll th {
+            background: var(--kme-table-header-bg);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--kme-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--kme-border-color);
+            white-space: nowrap;
+        }
+
+        .kme-table-scroll th:first-child {
+            color: var(--kme-text-muted);
+        }
+
+        .kme-table-scroll td {
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid var(--kme-border-color);
+            vertical-align: top;
+        }
+
+        .kme-table-scroll tr:last-child td {
+            border-bottom: none;
+        }
+
+        .kme-table-scroll tr:nth-child(even) td {
+            background: var(--kme-table-alt-row);
+        }
+
+        .kme-table-scroll td:first-child {
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            white-space: nowrap;
+        }
+
+        /* Color-coded columns */
+        .kme-table-scroll th.kme-col-a {
+            color: var(--kme-accent-blue);
+        }
+
+        .kme-table-scroll th.kme-col-b {
+            color: var(--kme-accent-purple);
+        }
+
+        .kme-table-scroll td.kme-col-a {
+            color: var(--kme-accent-blue-dark);
+        }
+
+        .kme-table-scroll td.kme-col-b {
+            color: var(--kme-accent-purple);
+        }
+
+        [data-theme="dark"] .kme-table-scroll td.kme-col-a {
+            color: var(--kme-accent-blue);
+        }
+
+        [data-theme="dark"] .kme-table-scroll td.kme-col-b {
+            color: var(--kme-accent-purple);
+        }
+
+        /* ============================================
+           MATH / FORMULA BOX
+           ============================================ */
+        .kme-math-box {
+            background: var(--kme-math-bg);
+            border: 1.5px solid var(--kme-math-border);
+            border-radius: var(--kme-border-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-math-box .kme-formula-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--kme-accent-purple);
+            margin-bottom: 14px;
+            padding: 4px 10px;
+            background: rgba(128, 90, 213, 0.12);
+            border-radius: 6px;
+        }
+
+        .kme-formula-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            padding: 12px 16px;
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius-sm);
+            border: 1px solid var(--kme-border-color);
+            margin-bottom: 10px;
+            line-height: 1.6;
+            font-family: 'Courier New', Courier, monospace;
+            word-break: break-word;
+        }
+
+        .kme-formula-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Scenario/Problem cards */
+        .kme-scenario-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius);
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-scenario-card .kme-scenario-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--kme-accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kme-scenario-card .kme-scenario-question {
+            font-size: 0.9rem;
+            color: var(--kme-text-primary);
+            line-height: 1.65;
+            margin-bottom: 10px;
+        }
+
+        .kme-scenario-card details {
+            background: var(--kme-details-bg);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius-sm);
+            overflow: hidden;
+        }
+
+        .kme-scenario-card details summary {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--kme-accent-purple);
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--kme-transition);
+            list-style: none;
+        }
+
+        .kme-scenario-card details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kme-scenario-card details summary .kme-chevron {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .kme-scenario-card details[open] summary .kme-chevron {
+            transform: rotate(90deg);
+        }
+
+        .kme-scenario-card details summary:hover {
+            background: var(--kme-accent-purple-light);
+        }
+
+        .kme-scenario-card details .kme-solution-content {
+            padding: 14px 16px;
+            border-top: 1px solid var(--kme-border-color);
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.7;
+        }
+
+        .kme-scenario-card details .kme-solution-content .kme-answer {
+            font-weight: 700;
+            color: var(--kme-accent-green);
+            margin-top: 6px;
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           EXAM TRAPS / ALERT DANGER CARD
+           ============================================ */
+        .kme-alert-danger {
+            background: var(--kme-accent-red-light);
+            border: 1.5px solid var(--kme-accent-red);
+            border-radius: var(--kme-border-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-alert-danger .kme-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .kme-alert-danger .kme-alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--kme-accent-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .kme-alert-danger .kme-alert-title {
+            font-size: 1rem;
+            font-weight: 750;
+            color: var(--kme-accent-red-dark);
+        }
+
+        [data-theme="dark"] .kme-alert-danger .kme-alert-title {
+            color: var(--kme-accent-red);
+        }
+
+        .kme-trap-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kme-trap-list li {
+            position: relative;
+            padding: 10px 0 10px 32px;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--kme-text-secondary);
+            border-bottom: 1px solid rgba(229, 62, 62, 0.15);
+        }
+
+        .kme-trap-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .kme-trap-list li::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 2px;
+            top: 12px;
+            font-size: 0.7rem;
+            color: var(--kme-accent-red);
+        }
+
+        .kme-trap-list li strong {
+            color: var(--kme-accent-red-dark);
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] .kme-trap-list li strong {
+            color: var(--kme-accent-red);
+        }
+
+        /* ============================================
+           MCQ QUIZ CONTAINER
+           ============================================ */
+        .kme-mcq-container {
+            margin-bottom: 16px;
+        }
+
+        .kme-mcq-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 14px 18px;
+            background: var(--kme-bg-secondary);
+            border-radius: var(--kme-border-radius);
+            border: 1px solid var(--kme-border-color);
+            box-shadow: var(--kme-shadow-sm);
+        }
+
+        .kme-mcq-progress-text {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--kme-text-secondary);
+        }
+
+        .kme-mcq-progress-text span {
+            color: var(--kme-accent-blue);
+            font-weight: 800;
+        }
+
+        .kme-mcq-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .kme-mcq-score .kme-score-correct {
+            color: var(--kme-accent-green);
+        }
+
+        .kme-mcq-score .kme-score-incorrect {
+            color: var(--kme-accent-red);
+        }
+
+        .kme-mcq-card {
+            background: var(--kme-bg-secondary);
+            border: 1px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--kme-shadow-sm);
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-card.kme-answered-correct {
+            border-color: var(--kme-mcq-correct);
+            box-shadow: 0 0 0 1px var(--kme-mcq-correct);
+        }
+
+        .kme-mcq-card.kme-answered-incorrect {
+            border-color: var(--kme-mcq-incorrect);
+            box-shadow: 0 0 0 1px var(--kme-mcq-incorrect);
+        }
+
+        .kme-mcq-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--kme-accent-blue-light);
+            color: var(--kme-accent-blue);
+            font-size: 0.78rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .kme-mcq-question {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--kme-text-primary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .kme-mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .kme-mcq-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1.5px solid var(--kme-border-color);
+            border-radius: var(--kme-border-radius-sm);
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            min-height: 50px;
+        }
+
+        .kme-mcq-option:hover:not(.kme-option-disabled) {
+            border-color: var(--kme-accent-blue);
+            background: var(--kme-accent-blue-light);
+        }
+
+        .kme-mcq-option:active:not(.kme-option-disabled) {
+            transform: scale(0.985);
+        }
+
+        .kme-mcq-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .kme-mcq-radio-visual {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--kme-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-radio-visual::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: transparent;
+            transition: var(--kme-transition);
+        }
+
+        .kme-mcq-option-letter {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--kme-text-muted);
+            min-width: 18px;
+        }
+
+        .kme-mcq-option-text {
+            font-size: 0.88rem;
+            color: var(--kme-text-secondary);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        /* Option states after answering */
+        .kme-mcq-option.kme-option-selected {
+            border-color: var(--kme-accent-blue);
+            background: var(--kme-accent-blue-light);
+        }
+
+        .kme-mcq-option.kme-option-selected .kme-mcq-radio-visual {
+            border-color: var(--kme-accent-blue);
+        }
+
+        .kme-mcq-option.kme-option-selected .kme-mcq-radio-visual::after {
+            background: var(--kme-accent-blue);
+        }
+
+        .kme-mcq-option.kme-option-correct {
+            border-color: var(--kme-mcq-correct);
+            background: var(--kme-mcq-correct-bg);
+        }
+
+        .kme-mcq-option.kme-option-correct .kme-mcq-radio-visual {
+            border-color: var(--kme-mcq-correct);
+            background: var(--kme-mcq-correct);
+        }
+
+        .kme-mcq-option.kme-option-correct .kme-mcq-radio-visual::after {
+            background: #fff;
+        }
+
+        .kme-mcq-option.kme-option-correct .kme-mcq-option-text {
+            color: var(--kme-mcq-correct);
+            font-weight: 600;
+        }
+
+        .kme-mcq-option.kme-option-incorrect {
+            border-color: var(--kme-mcq-incorrect);
+            background: var(--kme-mcq-incorrect-bg);
+        }
+
+        .kme-mcq-option.kme-option-incorrect .kme-mcq-radio-visual {
+            border-color: var(--kme-mcq-incorrect);
+            background: var(--kme-mcq-incorrect);
+        }
+
+        .kme-mcq-option.kme-option-incorrect .kme-mcq-radio-visual::after {
+            background: #fff;
+        }
+
+        .kme-mcq-option.kme-option-incorrect .kme-mcq-option-text {
+            color: var(--kme-mcq-incorrect);
+        }
+
+        .kme-mcq-option.kme-option-disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .kme-mcq-option.kme-option-correct.kme-option-disabled,
+        .kme-mcq-option.kme-option-incorrect.kme-option-disabled {
+            opacity: 1;
+        }
+
+        /* Explanation div (hidden by default) */
+        .kme-explanation {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: var(--kme-border-radius-sm);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            animation: kmeSlideIn 0.3s ease-out;
+        }
+
+        .kme-explanation.kme-show {
+            display: block;
+        }
+
+        .kme-explanation.kme-explanation-correct {
+            background: var(--kme-mcq-correct-bg);
+            border: 1px solid var(--kme-mcq-correct);
+            color: var(--kme-mcq-correct);
+        }
+
+        .kme-explanation.kme-explanation-incorrect {
+            background: var(--kme-mcq-incorrect-bg);
+            border: 1px solid var(--kme-mcq-incorrect);
+            color: var(--kme-mcq-incorrect);
+        }
+
+        .kme-explanation i {
+            margin-right: 6px;
+        }
+
+        /* ============================================
+           MCQ RESET BUTTON
+           ============================================ */
+        .kme-reset-quiz-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: var(--kme-border-radius);
+            border: 2px solid var(--kme-accent-blue);
+            background: transparent;
+            color: var(--kme-accent-blue);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--kme-transition);
+            -webkit-tap-highlight-color: transparent;
+            margin-top: 10px;
+        }
+
+        .kme-reset-quiz-btn:hover {
+            background: var(--kme-accent-blue);
+            color: #fff;
+        }
+
+        .kme-reset-quiz-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ============================================
+           SCROLL TO TOP BUTTON
+           ============================================ */
+        .kme-scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--kme-accent-blue);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 16px rgba(49, 130, 206, 0.35);
+            transition: var(--kme-transition);
+            z-index: 900;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kme-scroll-top.kme-visible {
+            display: flex;
+        }
+
+        .kme-scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(49, 130, 206, 0.45);
+        }
+
+        .kme-scroll-top:active {
+            transform: scale(0.9);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .kme-footer {
+            text-align: center;
+            padding: 30px 16px 24px;
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: var(--kme-text-muted);
+            border-top: 1px solid var(--kme-border-color);
+        }
+
+        /* ============================================
+           RESPONSIVE BREAKPOINTS
+           ============================================ */
+        @media (min-width: 640px) {
+            .kme-container {
+                padding: 24px;
+            }
+
+            .kme-page-header {
+                padding: 36px 32px;
+            }
+
+            .kme-page-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .kme-concept-card,
+            .kme-math-box,
+            .kme-alert-danger,
+            .kme-mcq-card,
+            .kme-scenario-card {
+                padding: 24px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .kme-page-header h1 {
+                font-size: 2rem;
+            }
+
+            .kme-tab-nav {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         NAVIGATION BAR
+         ========================================== -->
+    <nav class="kme-navbar">
+        <a href="#" class="kme-navbar-brand">
+            <div class="kme-navbar-logo">KME</div>
+            <div>
+                <div class="kme-navbar-title">KME Study</div>
+                <div class="kme-navbar-subtitle">Community Medicine</div>
+            </div>
+        </a>
+        <div class="kme-navbar-actions">
+            <button class="kme-theme-toggle" id="kmeThemeToggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon" id="kmeThemeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         READING PROGRESS BAR
+         ========================================== -->
+    <div class="kme-progress-bar-container">
+        <div class="kme-progress-bar" id="kmeProgressBar"></div>
+    </div>
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main class="kme-container">
+
+        <!-- Page Header / Hero -->
+        <header class="kme-page-header">
+            <h1>Morbidity Statistics</h1>
+            <p>Master incidence, prevalence, and their clinical applications for community diagnosis and health planning.</p>
+            <div class="kme-badge-row">
+                <span class="kme-badge"><i class="fas fa-book-medical"></i> Epidemiology</span>
+                <span class="kme-badge"><i class="fas fa-clipboard-list"></i> 20 MCQs</span>
+                <span class="kme-badge"><i class="fas fa-calculator"></i> Formulas</span>
+            </div>
+        </header>
+
+        <!-- Section Tab Navigation -->
+        <nav class="kme-tab-nav" id="kmeTabNav">
+            <button class="kme-tab-btn kme-active" data-tab="concepts">
+                <i class="fas fa-lightbulb"></i> Concepts
+            </button>
+            <button class="kme-tab-btn" data-tab="comparisons">
+                <i class="fas fa-columns"></i> Comparisons
+            </button>
+            <button class="kme-tab-btn" data-tab="formulas">
+                <i class="fas fa-square-root-variable"></i> Formulas
+            </button>
+            <button class="kme-tab-btn" data-tab="traps">
+                <i class="fas fa-triangle-exclamation"></i> Exam Traps
+            </button>
+            <button class="kme-tab-btn" data-tab="mcqs">
+                <i class="fas fa-circle-question"></i> MCQs
+            </button>
+        </nav>
+
+        <!-- ==========================================
+             PANEL 1: CORE CONCEPTS
+             ========================================== -->
+        <section class="kme-section-panel kme-panel-active" id="kmePanel-concepts">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-blue">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="kme-section-header-text">
+                    <h2>Core Concepts</h2>
+                    <p>Key definitions and fundamentals of morbidity measurement</p>
+                </div>
+            </div>
+
+            <!-- Definitions Card -->
+            <div class="kme-concept-card">
+                <div class="kme-card-label"><i class="fas fa-bookmark"></i> Definitions</div>
+                <ul class="kme-concept-list">
+                    <li><strong>Morbidity statistics</strong> enumerate the <strong>extent, frequency, and severity</strong> of diseases in a community.</li>
+                    <li><strong>Incidence rate</strong> measures the occurrence of <strong>new cases</strong> in an <strong>at-risk</strong> population over a defined period.</li>
+                    <li><strong>Prevalence rate</strong> measures <strong>existing cases</strong> (old and new) in an examined population at a given time.</li>
+                    <li><strong>Point prevalence</strong> captures existing cases at a <strong>single time point</strong> (a snapshot).</li>
+                    <li><strong>Period prevalence</strong> captures existing plus new cases over a <strong>specific duration</strong> of time.</li>
+                </ul>
+            </div>
+
+            <!-- Indications Card -->
+            <div class="kme-concept-card kme-indication-card">
+                <div class="kme-card-label"><i class="fas fa-stethoscope"></i> Indications &amp; Uses</div>
+                <ul class="kme-concept-list">
+                    <li>Used for <strong>community diagnosis</strong> and identifying the overall <strong>disease burden</strong>.</li>
+                    <li>Crucial for <strong>health planning</strong> and optimal <strong>medical resource allocation</strong>.</li>
+                    <li>Evaluates <strong>intervention programs</strong> and the <strong>efficacy of health services</strong>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PANEL 2: COMPARISONS
+             ========================================== -->
+        <section class="kme-section-panel" id="kmePanel-comparisons">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-teal">
+                    <i class="fas fa-columns"></i>
+                </div>
+                <div class="kme-section-header-text">
+                    <h2>Comparisons</h2>
+                    <p>Side-by-side analysis of key epidemiological concepts</p>
+                </div>
+            </div>
+
+            <!-- Table 1: Cross-Sectional vs Cohort -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title"><i class="fas fa-table"></i> Cross-Sectional vs. Cohort Study</div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Study Feature</th>
+                                <th class="kme-col-a">Cross-Sectional Study</th>
+                                <th class="kme-col-b">Cohort Study</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Primary Output</td>
+                                <td class="kme-col-a">Point prevalence</td>
+                                <td class="kme-col-b">Incidence rate</td>
+                            </tr>
+                            <tr>
+                                <td>Time Scale</td>
+                                <td class="kme-col-a">Single snapshot</td>
+                                <td class="kme-col-b">Longitudinal tracking</td>
+                            </tr>
+                            <tr>
+                                <td>Target Patients</td>
+                                <td class="kme-col-a">Existing cases</td>
+                                <td class="kme-col-b">New cases</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 2: Incidence vs Prevalence -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title"><i class="fas fa-table"></i> Incidence Rate vs. Prevalence Rate</div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric Type</th>
+                                <th class="kme-col-a">Incidence Rate</th>
+                                <th class="kme-col-b">Prevalence Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Numerator</td>
+                                <td class="kme-col-a">New cases</td>
+                                <td class="kme-col-b">Old and new</td>
+                            </tr>
+                            <tr>
+                                <td>Denominator</td>
+                                <td class="kme-col-a">At-risk population</td>
+                                <td class="kme-col-b">Examined population</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 3: Clinical Factor Effects -->
+            <div class="kme-table-responsive">
+                <div class="kme-table-title"><i class="fas fa-table"></i> Clinical Factors Affecting Prevalence</div>
+                <div class="kme-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Clinical Factor</th>
+                                <th class="kme-col-a">High Cure Rate</th>
+                                <th class="kme-col-b">Prolonged Survival</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Disease Duration</td>
+                                <td class="kme-col-a">Rapidly shortens</td>
+                                <td class="kme-col-b">Significantly lengthens</td>
+                            </tr>
+                            <tr>
+                                <td>Total Prevalence</td>
+                                <td class="kme-col-a">Markedly decreases</td>
+                                <td class="kme-col-b">Steadily increases</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PANEL 3: MATH / FORMULAS
+             ========================================== -->
+        <section class="kme-section-panel" id="kmePanel-formulas">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-purple">
+                    <i class="fas fa-square-root-variable"></i>
+                </div>
+                <div class="kme-section-header-text">
+                    <h2>Formulas &amp; Calculations</h2>
+                    <p>Key equations with worked examples and step-by-step solutions</p>
+                </div>
+            </div>
+
+            <!-- Formula Box -->
+            <div class="kme-math-box">
+                <div class="kme-formula-label"><i class="fas fa-function"></i> Key Formulas</div>
+                <div class="kme-formula-text">
+                    <strong>Incidence Rate</strong> = (New cases ÷ At-risk population) × Constant
+                </div>
+                <div class="kme-formula-text">
+                    <strong>Prevalence Rate</strong> = (Old + New cases ÷ Examined population) × Constant
+                </div>
+            </div>
+
+            <!-- Scenario 1 -->
+            <div class="kme-scenario-card">
+                <div class="kme-scenario-label"><i class="fas fa-flask"></i> Scenario 1</div>
+                <p class="kme-scenario-question">A city has <strong>500,000 residents</strong>. A screening detects <strong>5,000 TB cases</strong>. Find the <strong>point prevalence</strong>.</p>
+                <details>
+                    <summary>
+                        <i class="fas fa-chevron-right kme-chevron"></i>
+                        Show Steps
+                    </summary>
+                    <div class="kme-solution-content">
+                        <strong>Formula:</strong> Point Prevalence = (Total existing cases ÷ Total population) × Constant<br><br>
+                        <strong>Step 1:</strong> Numerator = 5,000 (detected TB cases)<br>
+                        <strong>Step 2:</strong> Denominator = 500,000 (total population)<br>
+                        <strong>Step 3:</strong> Calculate: (5,000 ÷ 500,000) × 1,000<br>
+                        <div class="kme-answer">✅ Answer: 10 per 1,000</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Scenario 2 -->
+            <div class="kme-scenario-card">
+                <div class="kme-scenario-label"><i class="fas fa-flask"></i> Scenario 2</div>
+                <p class="kme-scenario-question">One year later, <strong>50 new TB cases</strong> are found in the same city. Find the <strong>incidence rate</strong>.</p>
+                <details>
+                    <summary>
+                        <i class="fas fa-chevron-right kme-chevron"></i>
+                        Show Steps
+                    </summary>
+                    <div class="kme-solution-content">
+                        <strong>Formula:</strong> Incidence Rate = (New cases ÷ At-risk population) × Constant<br><br>
+                        <strong>Step 1:</strong> Numerator = 50 (new cases only)<br>
+                        <strong>Step 2:</strong> Denominator = 500,000 − 5,000 = 495,000 (exclude existing cases!)<br>
+                        <strong>Step 3:</strong> Calculate: (50 ÷ 495,000) × 100,000<br>
+                        <div class="kme-answer">✅ Answer: 10.1 per 100,000</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Scenario 3 -->
+            <div class="kme-scenario-card">
+                <div class="kme-scenario-label"><i class="fas fa-flask"></i> Scenario 3</div>
+                <p class="kme-scenario-question"><strong>10,000 employees</strong> are screened, and <strong>200 have diabetes</strong>. Find the <strong>prevalence</strong>.</p>
+                <details>
+                    <summary>
+                        <i class="fas fa-chevron-right kme-chevron"></i>
+                        Show Steps
+                    </summary>
+                    <div class="kme-solution-content">
+                        <strong>Formula:</strong> Prevalence = (Existing cases ÷ Examined population) × 100<br><br>
+                        <strong>Step 1:</strong> Numerator = 200 (diabetic employees)<br>
+                        <strong>Step 2:</strong> Denominator = 10,000 (total screened)<br>
+                        <strong>Step 3:</strong> Calculate: (200 ÷ 10,000) × 100<br>
+                        <div class="kme-answer">✅ Answer: 2%</div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Scenario 4 -->
+            <div class="kme-scenario-card">
+                <div class="kme-scenario-label"><i class="fas fa-flask"></i> Scenario 4</div>
+                <p class="kme-scenario-question">Among the <strong>9,800 healthy employees</strong>, <strong>49 develop diabetes</strong> over a year. Find the <strong>incidence</strong>.</p>
+                <details>
+                    <summary>
+                        <i class="fas fa-chevron-right kme-chevron"></i>
+                        Show Steps
+                    </summary>
+                    <div class="kme-solution-content">
+                        <strong>Formula:</strong> Incidence = (New cases ÷ At-risk population) × Constant<br><br>
+                        <strong>Step 1:</strong> Numerator = 49 (newly diabetic)<br>
+                        <strong>Step 2:</strong> Denominator = 9,800 (healthy / at-risk only)<br>
+                        <strong>Step 3:</strong> Calculate: (49 ÷ 9,800) × 1,000<br>
+                        <div class="kme-answer">✅ Answer: 5 per 1,000</div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PANEL 4: EXAM TRAPS
+             ========================================== -->
+        <section class="kme-section-panel" id="kmePanel-traps">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-red">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+                <div class="kme-section-header-text">
+                    <h2>Exam Traps</h2>
+                    <p>Common pitfalls and trick questions to watch out for</p>
+                </div>
+            </div>
+
+            <div class="kme-alert-danger">
+                <div class="kme-alert-header">
+                    <div class="kme-alert-icon">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <div class="kme-alert-title">High-Yield Exam Traps — Don't Fall For These!</div>
+                </div>
+                <ul class="kme-trap-list">
+                    <li>The incidence denominator <strong>MUST strictly exclude</strong> previously diagnosed cases (at-risk only).</li>
+                    <li><strong>Improved diagnostic tools</strong> falsely raise prevalence by finding previously hidden cases.</li>
+                    <li>Excellent chronic disease treatments <strong>prolong life without curing</strong>, heavily increasing prevalence.</li>
+                    <li><strong>Cross-sectional studies</strong> provide point prevalence, <strong>never</strong> true longitudinal incidence.</li>
+                    <li><strong>Out-migration of healthy people</strong> paradoxically increases prevalence by shrinking the denominator.</li>
+                    <li><strong>In-migration of susceptible people</strong> directly increases the measured disease prevalence.</li>
+                    <li>An extremely <strong>high case-fatality rate</strong> rapidly decreases point prevalence.</li>
+                    <li><strong>Better disease reporting</strong> systems create an artificial spike in calculated incidence.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PANEL 5: MCQs
+             ========================================== -->
+        <section class="kme-section-panel" id="kmePanel-mcqs">
+            <div class="kme-section-header">
+                <div class="kme-section-icon kme-icon-green">
+                    <i class="fas fa-circle-question"></i>
+                </div>
+                <div class="kme-section-header-text">
+                    <h2>Practice MCQs</h2>
+                    <p>Test your understanding — 20 exam-style questions</p>
+                </div>
+            </div>
+
+            <!-- Quiz Progress -->
+            <div class="kme-mcq-progress">
+                <div class="kme-mcq-progress-text">Answered: <span id="kmeAnswered">0</span> / <span id="kmeTotal">20</span></div>
+                <div class="kme-mcq-score">
+                    <span class="kme-score-correct"><i class="fas fa-check-circle"></i> <span id="kmeCorrectCount">0</span></span>
+                    <span class="kme-score-incorrect"><i class="fas fa-times-circle"></i> <span id="kmeIncorrectCount">0</span></span>
+                </div>
+            </div>
+
+            <!-- MCQ Container (dynamically populated) -->
+            <div class="kme-mcq-container" id="kmeMcqContainer">
+                <!-- MCQs will be injected here by JavaScript -->
+            </div>
+
+            <!-- Reset Button -->
+            <button class="kme-reset-quiz-btn" id="kmeResetQuiz">
+                <i class="fas fa-rotate-right"></i> Reset All Questions
+            </button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="kme-footer">
+        <p>KME Study — Built for focused exam preparation.</p>
+    </footer>
+
+    <!-- Scroll to Top -->
+    <button class="kme-scroll-top" id="kmeScrollTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ==========================================
+         VANILLA JAVASCRIPT
+         ========================================== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================
+            // MCQ DATA — All 20 questions
+            // ============================================
+            const KME_MCQ_DATA = [
+                {
+                    id: 1,
+                    question: "Which metric evaluates the occurrence of newly diagnosed cases in a population over time?",
+                    options: ["Point prevalence", "Period prevalence", "Incidence rate", "Case-fatality rate", "Disease burden rate"],
+                    correct: 2, // index 0-based: C
+                    explanation: "Incidence specifically measures the rate of new cases occurring in a population over time."
+                },
+                {
+                    id: 2,
+                    question: "Which study design is strictly required to directly calculate an incidence rate?",
+                    options: ["Cross-sectional study", "Case-control study", "Cohort study", "Ecological study", "Descriptive survey"],
+                    correct: 2,
+                    explanation: "A cohort study tracks an at-risk population over time to calculate new occurrences, which is the definition of incidence."
+                },
+                {
+                    id: 3,
+                    question: "A new drug prolongs the lifespan of diabetic patients but does not cure them. How does this affect disease statistics?",
+                    options: ["Decreases incidence", "Increases incidence", "Decreases prevalence", "Increases prevalence", "No effect on morbidity"],
+                    correct: 3,
+                    explanation: "Prolonging life without curing the disease increases the total number of existing cases, thereby increasing prevalence."
+                },
+                {
+                    id: 4,
+                    question: "What is the correct denominator for calculating the incidence rate of tuberculosis?",
+                    options: ["Total examined population", "Total hospitalized population", "At-risk population excluding current cases", "At-risk population including current cases", "Total regional mortality"],
+                    correct: 2,
+                    explanation: "The denominator for incidence must be the at-risk population, explicitly subtracting those who already have the disease."
+                },
+                {
+                    id: 5,
+                    question: "In a town of 100,000 people, 1,000 currently have asthma. Over the next year, 500 new cases are diagnosed. What is the denominator to calculate the asthma incidence rate?",
+                    options: ["100,000", "101,000", "99,500", "99,000", "1,500"],
+                    correct: 3,
+                    explanation: "The denominator subtracts the 1,000 existing cases from the 100,000 total population, leaving 99,000 at-risk individuals."
+                },
+                {
+                    id: 6,
+                    question: "Which factor would most likely lead to a measured decrease in disease prevalence?",
+                    options: ["Longer disease duration", "In-migration of susceptible people", "Improved diagnostic facilities", "High case-fatality rate", "Out-migration of healthy people"],
+                    correct: 3,
+                    explanation: "A high case-fatality rate rapidly removes active cases from the population pool, decreasing overall prevalence."
+                },
+                {
+                    id: 7,
+                    question: "Improved public screening tools are introduced for breast cancer. What is the immediate statistical effect?",
+                    options: ["Decreased incidence", "Decreased prevalence", "Increased prevalence", "Increased case-fatality", "Decreased period prevalence"],
+                    correct: 2,
+                    explanation: "Better diagnostic tools identify previously undetected existing cases, leading to a measured increase in prevalence."
+                },
+                {
+                    id: 8,
+                    question: "Which of the following defines period prevalence?",
+                    options: ["Old cases measured on a single specific day", "New cases arising in an at-risk population", "Old and new cases observed over a specific duration", "Disease severity in a specific community", "Mortality divided by new cases"],
+                    correct: 2,
+                    explanation: "Period prevalence measures all existing cases (old and new) over a specific duration of time."
+                },
+                {
+                    id: 9,
+                    question: "What statistical effect occurs when a massive out-migration of healthy people happens in a city?",
+                    options: ["Incidence dramatically decreases", "Prevalence dramatically decreases", "Prevalence dramatically increases", "Case-fatality rate increases", "Period prevalence drops to zero"],
+                    correct: 2,
+                    explanation: "Removing healthy individuals shrinks the denominator without changing the numerator, which artificially increases the prevalence rate."
+                },
+                {
+                    id: 10,
+                    question: "Which intervention directly decreases the incidence rate of an infectious disease?",
+                    options: ["Introducing life-prolonging palliative care", "High case-fatality rate", "Out-migration of cases", "Effective vaccination programs", "Improved registry reporting"],
+                    correct: 3,
+                    explanation: "Effective vaccination programs provide immunity, directly preventing the occurrence of new cases and decreasing incidence."
+                },
+                {
+                    id: 11,
+                    question: "What does morbidity statistics primarily measure in a community?",
+                    options: ["Total death rate", "Extent, frequency, and severity of disease", "Absolute number of hospitals", "Total population birth rate", "Number of active physicians"],
+                    correct: 1,
+                    explanation: "Morbidity statistics are defined as data enumerating the extent, frequency, or severity of disease in a community."
+                },
+                {
+                    id: 12,
+                    question: "A snapshot of existing diabetes cases taken on March 1st in a local hospital is an example of:",
+                    options: ["Incidence rate", "Point prevalence", "Period prevalence", "Case-fatality rate", "Cohort tracking"],
+                    correct: 1,
+                    explanation: "Measuring the frequency of existing cases at one specific point in time defines point prevalence."
+                },
+                {
+                    id: 13,
+                    question: "What happens to the prevalence of an incurable disease if the case-fatality rate significantly drops?",
+                    options: ["Prevalence decreases", "Prevalence increases", "Incidence increases", "Incidence decreases", "Morbidity drops"],
+                    correct: 1,
+                    explanation: "If fewer people die from an incurable disease, cases accumulate in the population, increasing prevalence."
+                },
+                {
+                    id: 14,
+                    question: "How does the in-migration of susceptible individuals affect community statistics?",
+                    options: ["Decreases prevalence", "Increases prevalence", "Decreases incidence", "Decreases case-fatality", "Increases overall immunity"],
+                    correct: 1,
+                    explanation: "Adding susceptible individuals to the population ultimately leads to more cases, increasing the prevalence."
+                },
+                {
+                    id: 15,
+                    question: "If a pathogen mutates to become highly virulent, leading to rapid host death within hours, what happens to prevalence?",
+                    options: ["Rapidly increases", "Slowly increases", "Rapidly decreases", "Remains unchanged", "Equals the birth rate"],
+                    correct: 2,
+                    explanation: "Rapid death removes the diseased individuals from the population quickly, causing a sharp decrease in prevalence."
+                },
+                {
+                    id: 16,
+                    question: "Which source is commonly used for industrial morbidity statistics?",
+                    options: ["Armed forces records", "Sickness surveys", "Notification of diseases", "Absenteeism records", "General practitioner logs"],
+                    correct: 3,
+                    explanation: "Absenteeism from work is the primary metric used to track industrial morbidity statistics."
+                },
+                {
+                    id: 17,
+                    question: "To calculate the prevalence rate of a disease, the numerator must include:",
+                    options: ["Only newly diagnosed cases", "Only historical survivor cases", "Both old and newly diagnosed cases", "Only hospitalized cases", "Total examined population"],
+                    correct: 2,
+                    explanation: "The numerator for prevalence strictly requires combining both old (existing) and new cases."
+                },
+                {
+                    id: 18,
+                    question: "In evaluating health services, a rising prevalence of a chronic, incurable disease (with steady incidence) most likely indicates:",
+                    options: ["Failure of the health system", "Success of medical treatments prolonging life", "Outbreak of a new strain", "Complete failure of diagnostic tools", "Decreased access to medications"],
+                    correct: 1,
+                    explanation: "For chronic incurable diseases, increased prevalence indicates effective treatments are successfully preventing death and prolonging life."
+                },
+                {
+                    id: 19,
+                    question: "Which formula correctly represents the incidence rate calculation?",
+                    options: ["(Old cases / Total population) × Constant", "(New cases / At-risk population) × Constant", "(Old + New cases / Examined population) × Constant", "(Total deaths / Total cases) × Constant", "(At-risk population / New cases) × Constant"],
+                    correct: 1,
+                    explanation: "Incidence is calculated by dividing new cases by the specific at-risk population multiplied by a constant."
+                },
+                {
+                    id: 20,
+                    question: "A cross-sectional survey is conducted in a community. Which epidemiological measure is best derived from this data?",
+                    options: ["Incidence rate", "Point prevalence", "Period prevalence", "Cohort relative risk", "Absolute mortality rate"],
+                    correct: 1,
+                    explanation: "Cross-sectional studies act as a snapshot in time, making them the standard method for determining point prevalence."
+                }
+            ];
+
+            const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+
+            // ============================================
+            // DOM REFERENCES
+            // ============================================
+            const themeToggle = document.getElementById('kmeThemeToggle');
+            const themeIcon = document.getElementById('kmeThemeIcon');
+            const tabNav = document.getElementById('kmeTabNav');
+            const progressBar = document.getElementById('kmeProgressBar');
+            const scrollTopBtn = document.getElementById('kmeScrollTop');
+            const mcqContainer = document.getElementById('kmeMcqContainer');
+            const resetQuizBtn = document.getElementById('kmeResetQuiz');
+            const answeredEl = document.getElementById('kmeAnswered');
+            const totalEl = document.getElementById('kmeTotal');
+            const correctCountEl = document.getElementById('kmeCorrectCount');
+            const incorrectCountEl = document.getElementById('kmeIncorrectCount');
+
+            // ============================================
+            // THEME MANAGEMENT (persisted via localStorage)
+            // ============================================
+            function getStoredTheme() {
+                return localStorage.getItem('kme-theme') || 'light';
+            }
+
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('kme-theme', theme);
+                if (theme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            }
+
+            // Initialize theme on load
+            applyTheme(getStoredTheme());
+
+            themeToggle.addEventListener('click', function() {
+                const current = getStoredTheme();
+                applyTheme(current === 'light' ? 'dark' : 'light');
+            });
+
+            // ============================================
+            // TAB NAVIGATION (persisted via localStorage)
+            // ============================================
+            function getStoredTab() {
+                return localStorage.getItem('kme-active-tab') || 'concepts';
+            }
+
+            function activateTab(tabId) {
+                // Update tab buttons
+                const allBtns = tabNav.querySelectorAll('.kme-tab-btn');
+                allBtns.forEach(function(btn) {
+                    btn.classList.remove('kme-active');
+                    if (btn.getAttribute('data-tab') === tabId) {
+                        btn.classList.add('kme-active');
+                    }
+                });
+
+                // Update panels
+                const allPanels = document.querySelectorAll('.kme-section-panel');
+                allPanels.forEach(function(panel) {
+                    panel.classList.remove('kme-panel-active');
+                });
+                const targetPanel = document.getElementById('kmePanel-' + tabId);
+                if (targetPanel) {
+                    targetPanel.classList.add('kme-panel-active');
+                }
+
+                localStorage.setItem('kme-active-tab', tabId);
+            }
+
+            // Initialize active tab on load
+            activateTab(getStoredTab());
+
+            tabNav.addEventListener('click', function(e) {
+                const btn = e.target.closest('.kme-tab-btn');
+                if (!btn) return;
+                const tabId = btn.getAttribute('data-tab');
+                activateTab(tabId);
+            });
+
+            // ============================================
+            // READING PROGRESS BAR
+            // ============================================
+            function updateProgressBar() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const percentage = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = Math.min(percentage, 100) + '%';
+            }
+
+            // ============================================
+            // SCROLL TO TOP BUTTON
+            // ============================================
+            function updateScrollTopVisibility() {
+                if (window.scrollY > 400) {
+                    scrollTopBtn.classList.add('kme-visible');
+                } else {
+                    scrollTopBtn.classList.remove('kme-visible');
+                }
+            }
+
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Combined scroll handler
+            window.addEventListener('scroll', function() {
+                updateProgressBar();
+                updateScrollTopVisibility();
+            }, { passive: true });
+
+            // ============================================
+            // MCQ QUIZ ENGINE
+            // ============================================
+            let quizState = loadQuizState();
+
+            function loadQuizState() {
+                try {
+                    const saved = localStorage.getItem('kme-quiz-state');
+                    if (saved) return JSON.parse(saved);
+                } catch (e) { /* ignore */ }
+                return { answers: {}, correct: 0, incorrect: 0 };
+            }
+
+            function saveQuizState() {
+                localStorage.setItem('kme-quiz-state', JSON.stringify(quizState));
+            }
+
+            function updateScoreboard() {
+                const answeredCount = Object.keys(quizState.answers).length;
+                answeredEl.textContent = answeredCount;
+                totalEl.textContent = KME_MCQ_DATA.length;
+                correctCountEl.textContent = quizState.correct;
+                incorrectCountEl.textContent = quizState.incorrect;
+            }
+
+            function buildMcqCards() {
+                mcqContainer.innerHTML = '';
+
+                KME_MCQ_DATA.forEach(function(q) {
+                    const card = document.createElement('div');
+                    card.className = 'kme-mcq-card';
+                    card.setAttribute('data-qid', q.id);
+
+                    // Question number badge
+                    const numBadge = document.createElement('div');
+                    numBadge.className = 'kme-mcq-number';
+                    numBadge.textContent = q.id;
+
+                    // Question text
+                    const qText = document.createElement('div');
+                    qText.className = 'kme-mcq-question';
+                    qText.textContent = q.question;
+
+                    // Options container
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'kme-mcq-options';
+
+                    q.options.forEach(function(optText, idx) {
+                        const label = document.createElement('label');
+                        label.className = 'kme-mcq-option';
+                        label.setAttribute('data-idx', idx);
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = 'kme-q-' + q.id;
+                        radio.value = idx;
+
+                        const radioVisual = document.createElement('span');
+                        radioVisual.className = 'kme-mcq-radio-visual';
+
+                        const letterSpan = document.createElement('span');
+                        letterSpan.className = 'kme-mcq-option-letter';
+                        letterSpan.textContent = LETTERS[idx] + '.';
+
+                        const textSpan = document.createElement('span');
+                        textSpan.className = 'kme-mcq-option-text';
+                        textSpan.textContent = optText;
+
+                        label.appendChild(radio);
+                        label.appendChild(radioVisual);
+                        label.appendChild(letterSpan);
+                        label.appendChild(textSpan);
+
+                        optionsDiv.appendChild(label);
+                    });
+
+                    // Explanation (hidden by default)
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.className = 'kme-explanation';
+                    explanationDiv.setAttribute('data-qid', q.id);
+
+                    card.appendChild(numBadge);
+                    card.appendChild(qText);
+                    card.appendChild(optionsDiv);
+                    card.appendChild(explanationDiv);
+
+                    mcqContainer.appendChild(card);
+
+                    // If previously answered, restore state
+                    if (quizState.answers.hasOwnProperty(q.id)) {
+                        applyAnsweredState(q, quizState.answers[q.id]);
+                    }
+                });
+
+                // Attach click listeners to all options
+                mcqContainer.addEventListener('click', handleOptionClick);
+
+                updateScoreboard();
+            }
+
+            function handleOptionClick(e) {
+                const optionLabel = e.target.closest('.kme-mcq-option');
+                if (!optionLabel) return;
+                if (optionLabel.classList.contains('kme-option-disabled')) return;
+
+                const card = optionLabel.closest('.kme-mcq-card');
+                const qid = parseInt(card.getAttribute('data-qid'));
+                const selectedIdx = parseInt(optionLabel.getAttribute('data-idx'));
+
+                // Prevent re-answering
+                if (quizState.answers.hasOwnProperty(qid)) return;
+
+                const qData = KME_MCQ_DATA.find(function(q) { return q.id === qid; });
+                if (!qData) return;
+
+                // Record answer
+                quizState.answers[qid] = selectedIdx;
+
+                const isCorrect = selectedIdx === qData.correct;
+                if (isCorrect) {
+                    quizState.correct++;
+                } else {
+                    quizState.incorrect++;
+                }
+
+                saveQuizState();
+                applyAnsweredState(qData, selectedIdx);
+                updateScoreboard();
+            }
+
+            function applyAnsweredState(qData, selectedIdx) {
+                const card = mcqContainer.querySelector('.kme-mcq-card[data-qid="' + qData.id + '"]');
+                if (!card) return;
+
+                const allOptions = card.querySelectorAll('.kme-mcq-option');
+                const isCorrect = selectedIdx === qData.correct;
+
+                // Disable all options
+                allOptions.forEach(function(opt, idx) {
+                    opt.classList.add('kme-option-disabled');
+
+                    if (idx === qData.correct) {
+                        opt.classList.add('kme-option-correct');
+                    }
+
+                    if (idx === selectedIdx && !isCorrect) {
+                        opt.classList.add('kme-option-incorrect');
+                    }
+
+                    if (idx === selectedIdx) {
+                        opt.classList.add('kme-option-selected');
+                        const radio = opt.querySelector('input[type="radio"]');
+                        if (radio) radio.checked = true;
+                    }
+                });
+
+                // Style the card border
+                if (isCorrect) {
+                    card.classList.add('kme-answered-correct');
+                } else {
+                    card.classList.add('kme-answered-incorrect');
+                }
+
+                // Show explanation
+                const explanationDiv = card.querySelector('.kme-explanation');
+                if (explanationDiv) {
+                    if (isCorrect) {
+                        explanationDiv.className = 'kme-explanation kme-show kme-explanation-correct';
+                        explanationDiv.innerHTML = '<i class="fas fa-check-circle"></i> <strong>Correct!</strong> ' + qData.explanation;
+                    } else {
+                        explanationDiv.className = 'kme-explanation kme-show kme-explanation-incorrect';
+                        explanationDiv.innerHTML = '<i class="fas fa-times-circle"></i> <strong>Incorrect.</strong> The correct answer is <strong>' + LETTERS[qData.correct] + '</strong>. ' + qData.explanation;
+                    }
+                }
+            }
+
+            // Reset Quiz
+            resetQuizBtn.addEventListener('click', function() {
+                quizState = { answers: {}, correct: 0, incorrect: 0 };
+                saveQuizState();
+                buildMcqCards();
+            });
+
+            // Build MCQs on load
+            buildMcqCards();
+
+            // ============================================
+            // INITIAL PROGRESS BAR UPDATE
+            // ============================================
+            updateProgressBar();
+
+        })();
+    </script>
+</body>
+</html>
