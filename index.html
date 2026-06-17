@@ -2,29 +2,17 @@
 <html lang="en">
 
 <head>
-<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <!-- 100% privacy-first analytics -->
-<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-
-<!-- 1. Keeps scaling correct -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<!-- 2. Links to your central config -->
-<link rel="manifest" href="manifest.json">
-
-<!-- 3. iOS Exceptions: Forces the phone to stay in full-screen app mode -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<!-- 4. iOS Exception: The icon (Safe to put on every page) -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MU63 Dashboard - Student Login</title>
     <link rel="icon" type="" href="icons8-brain Background Removed.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 
-    <!-- Include the Netlify Identity Widget -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 
     <style>
         /* CSS Reset and Font Import */
@@ -231,37 +219,33 @@
     </div>
 
     <script>
-        import netlifyIdentity from 'netlify-identity-widget';
+        document.addEventListener('DOMContentLoaded', function() {
+            var netlifyIdentity = window.netlifyIdentity;
 
-            // Initialize as early as possible so it catches the token in the URL
-        netlifyIdentity.init();
-        const signInButton = document.getElementById('login-btn'); // Use your specific class or ID here
+            if (!netlifyIdentity) {
+                console.error('Netlify Identity widget failed to load.');
+                return;
+            }
 
-            signInButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevents the button from just adding a '#' to the URL
-                if (window.netlifyIdentity) {
-                    netlifyIdentity.open(); // Opens the login/signup modal
-                } else {
-                    console.error("Netlify Identity widget script not loaded.");
+            netlifyIdentity.init();
+
+            var loginBtn = document.getElementById('login-btn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    netlifyIdentity.open();
+                });
+            }
+
+            netlifyIdentity.on('init', function(user) {
+                if (user) {
+                    window.location.href = '/main.html';
                 }
             });
 
-        // Open the Netlify Identity modal when our custom button is clicked
-        document.getElementById('login-btn').addEventListener('click', () => {
-            netlifyIdentity.open();
-        });
-
-        // Check if the user is already logged in on initial load
-        netlifyIdentity.on('init', user => {
-            if (user) {
-                // Change 'master-dashboard.html' to the actual filename of your master-dashboard
-                window.location.href = "/main.html";
-            }
-        });
-
-        // Redirect immediately after a successful login
-        netlifyIdentity.on('login', user => {
-            window.location.href = "/main.html";
+            netlifyIdentity.on('login', function(user) {
+                window.location.href = '/main.html';
+            });
         });
     </script>
 

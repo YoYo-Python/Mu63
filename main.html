@@ -31,20 +31,18 @@
     <!-- Importing the fonts used in your existing aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
     <script>
-        // When the Identity widget loads, check for a user
-        netlifyIdentity.on('init', user => {
-            if (!user) {
-                // If no user is logged in, kick them back to the index page
-                window.location.href = "/";
-            }
-        });
-
-        // Optional: Add a logout behavior if you have a logout button
-        netlifyIdentity.on('logout', () => {
-            window.location.href = "/";
-        });
+        var netlifyIdentity = window.netlifyIdentity;
+        if (netlifyIdentity) {
+            netlifyIdentity.on('init', function(user) {
+                if (!user) {
+                    window.location.href = '/';
+                }
+            });
+            netlifyIdentity.on('logout', function() {
+                window.location.href = '/';
+            });
+        }
     </script>
     <style>
         html, body {
@@ -257,8 +255,6 @@
             .card { padding: 24px; }
         }
     </style>
-
-<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 <button id="logout-btn"
   style="position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); letter-spacing: 0.5px;">
