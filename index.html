@@ -227,8 +227,6 @@
                 return;
             }
 
-            netlifyIdentity.init();
-
             var loginBtn = document.getElementById('login-btn');
             if (loginBtn) {
                 loginBtn.addEventListener('click', function(e) {
@@ -246,6 +244,12 @@
             netlifyIdentity.on('login', function(user) {
                 window.location.href = '/main.html';
             });
+
+            netlifyIdentity.on('signup', function(user) {
+                window.location.href = '/main.html';
+            });
+
+            netlifyIdentity.init();
         });
     </script>
 
