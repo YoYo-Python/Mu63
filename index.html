@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- 100% privacy-first analytics -->
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
 <!-- 1. Keeps scaling correct -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -20,7 +25,6 @@
     <link rel="icon" type="" href="icons8-brain Background Removed.png">
 
     <!-- Include the Netlify Identity Widget -->
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <style>
         /* CSS Reset and Font Import */
@@ -227,9 +231,21 @@
     </div>
 
     <script>
-        window.netlifyIdentity.init({
-                APIUrl: "https://YOUR-OLD-SITE-NAME.netlify.app/.netlify/identity"
+        import netlifyIdentity from 'netlify-identity-widget';
+
+            // Initialize as early as possible so it catches the token in the URL
+        netlifyIdentity.init();
+        const signInButton = document.getElementById('login-btn'); // Use your specific class or ID here
+
+            signInButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevents the button from just adding a '#' to the URL
+                if (window.netlifyIdentity) {
+                    netlifyIdentity.open(); // Opens the login/signup modal
+                } else {
+                    console.error("Netlify Identity widget script not loaded.");
+                }
             });
+
         // Open the Netlify Identity modal when our custom button is clicked
         document.getElementById('login-btn').addEventListener('click', () => {
             netlifyIdentity.open();
