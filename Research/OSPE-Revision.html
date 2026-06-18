@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practical Research — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0d14;
+  --bg2:#111520;
+  --bg3:#181d2e;
+  --card:#1a2035;
+  --card2:#1f2640;
+  --border:#2a3350;
+  --border2:#354060;
+  --accent:#4f8ef7;
+  --accent2:#7c5cfc;
+  --green:#22d3a5;
+  --red:#f75f5f;
+  --orange:#f7a94f;
+  --yellow:#f7e24f;
+  --text:#e8ecf5;
+  --text2:#9aa3bd;
+  --text3:#5a6480;
+  --glow:rgba(79,142,247,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+/* HEADER */
+.site-header{background:linear-gradient(135deg,#0f172a,#1a2035);border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;height:60px}
+.site-logo{font-family:'Sora',sans-serif;font-size:1.1em;font-weight:800;color:var(--accent);letter-spacing:-0.5px;flex:1}
+.site-logo span{color:var(--text2);font-weight:400}
+.xp-bar-wrap{display:flex;align-items:center;gap:10px}
+.xp-label{font-size:.75em;color:var(--text2);white-space:nowrap}
+.xp-track{width:120px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .5s}
+.level-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.7em;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.streak-badge{display:flex;align-items:center;gap:4px;font-size:.8em;color:var(--orange);font-weight:600}
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d1526 0%,#131d35 50%,#0d1526 100%);border-bottom:1px solid var(--border);padding:40px 24px 32px}
+.hero-inner{max-width:1100px;margin:0 auto}
+.hero-eyebrow{font-size:.72em;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+.hero-title{font-family:'Sora',sans-serif;font-size:2em;font-weight:800;color:#fff;line-height:1.2;margin-bottom:8px}
+.hero-title .hl{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--text2);font-size:.92em;max-width:600px;margin-bottom:24px}
+.stats-row{display:flex;gap:20px;flex-wrap:wrap}
+.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;display:flex;flex-direction:column;gap:2px}
+.stat-pill .sv{font-family:'Sora',sans-serif;font-size:1.4em;font-weight:800;color:var(--accent)}
+.stat-pill .sl{font-size:.72em;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+/* TABS NAV */
+.tabs-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:60px;z-index:90}
+.tabs-nav-inner{max-width:1100px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs-nav-inner::-webkit-scrollbar{display:none}
+.tab-btn{padding:14px 18px;font-size:.82em;font-weight:600;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px}
+/* SECTION PANELS */
+.panel{display:none}
+.panel.active{display:block}
+/* FILE SELECTOR */
+.file-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.file-chip{padding:7px 14px;border-radius:8px;font-size:.78em;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--card);transition:all .2s}
+.file-chip:hover{border-color:var(--accent);color:var(--accent)}
+.file-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+/* CONTENT CARDS */
+.content-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.content-card h2{font-family:'Sora',sans-serif;font-size:1em;font-weight:700;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.content-card h3{font-size:.9em;font-weight:600;color:var(--text);margin:16px 0 8px}
+.content-card h4{font-size:.83em;font-weight:600;color:var(--text2);margin:10px 0 6px}
+.content-card ul{padding-left:20px;font-size:.88em;color:var(--text2)}
+.content-card ul li{margin-bottom:5px}
+.content-card ul li strong{color:var(--text)}
+.content-card ol{padding-left:20px;font-size:.88em;color:var(--text2)}
+.content-card ol li{margin-bottom:5px}
+/* CLINICAL BOX */
+.clinical-box{background:rgba(79,142,247,.07);border:1px solid rgba(79,142,247,.25);border-left:3px solid var(--accent);border-radius:10px;padding:16px 18px;margin:12px 0;font-size:.87em;color:var(--text2)}
+.clinical-box h4{color:var(--accent);margin-bottom:6px}
+/* TRAP BOX */
+.trap-box{background:rgba(247,95,95,.07);border:1px solid rgba(247,95,95,.2);border-left:3px solid var(--red);border-radius:10px;padding:16px 18px;margin:12px 0}
+.trap-box h3{color:var(--red);font-size:.88em;margin-bottom:8px}
+.trap-box ul{font-size:.85em;color:#f7a0a0}
+.trap-box ul li{margin-bottom:6px}
+/* FORMULA BOX */
+.formula-box{background:rgba(34,211,165,.07);border:1px solid rgba(34,211,165,.2);border-left:3px solid var(--green);border-radius:10px;padding:16px 18px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:.84em;color:var(--text2)}
+.formula-box .step{margin:3px 0 3px 12px}
+.formula-box .result{color:var(--green);font-weight:600;margin-top:8px;font-size:.95em}
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.84em}
+th{background:var(--bg3);color:var(--accent);padding:9px 12px;text-align:left;border:1px solid var(--border);font-weight:600}
+td{padding:8px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+tr:hover td{background:rgba(79,142,247,.05)}
+/* MCQ QUIZ PANEL */
+.quiz-progress-bar{background:var(--bg3);border-radius:10px;height:8px;margin-bottom:20px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;transition:width .4s}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.8em;color:var(--text2)}
+.question-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;animation:fadeSlide .3s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px}
+.q-num-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;min-width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:800;font-size:.85em;flex-shrink:0}
+.q-file-tag{font-size:.7em;color:var(--accent);background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);padding:2px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
+.q-text{font-size:.95em;color:var(--text);font-weight:500;line-height:1.7}
+.options-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.option-btn{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;text-align:left;font-size:.88em;color:var(--text);transition:all .2s;display:flex;align-items:flex-start;gap:12px}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,142,247,.08)}
+.option-btn:disabled{cursor:default}
+.option-letter{min-width:24px;height:24px;border-radius:6px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.8em;font-weight:600;color:var(--text2);flex-shrink:0}
+.option-btn.correct{border-color:var(--green);background:rgba(34,211,165,.08)}
+.option-btn.correct .option-letter{background:var(--green);color:#0a0d14}
+.option-btn.wrong{border-color:var(--red);background:rgba(247,95,95,.08)}
+.option-btn.wrong .option-letter{background:var(--red);color:#fff}
+.option-btn.revealed-correct{border-color:var(--green);background:rgba(34,211,165,.05)}
+.option-btn.revealed-correct .option-letter{background:rgba(34,211,165,.3);color:var(--green)}
+.explanation-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:.85em;color:var(--text2)}
+.explanation-box .exp-label{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:.8em;text-transform:uppercase;letter-spacing:1px}
+.quiz-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:10px;font-size:.85em;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:rgba(247,95,95,.15);color:var(--red);border:1px solid rgba(247,95,95,.3)}
+/* RESULTS SCREEN */
+.results-screen{text-align:center;padding:40px 20px}
+.results-score{font-family:'Sora',sans-serif;font-size:4em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.results-label{color:var(--text2);font-size:.9em;margin-bottom:24px}
+.results-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:0 auto 28px}
+.rb-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.rb-val{font-family:'Sora',sans-serif;font-size:1.6em;font-weight:800;margin-bottom:2px}
+.rb-val.green{color:var(--green)}
+.rb-val.red{color:var(--red)}
+.rb-val.orange{color:var(--orange)}
+.rb-lbl{font-size:.7em;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+/* FLASHCARDS */
+.fc-wrap{perspective:1000px}
+.fc-card{width:100%;min-height:220px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .5s;margin-bottom:16px}
+.fc-card.flipped{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;width:100%;min-height:220px;backface-visibility:hidden;border-radius:14px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(124,92,252,.1));border:1px solid rgba(79,142,247,.3);transform:rotateY(180deg)}
+.fc-badge{font-size:.68em;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.fc-content{font-size:1em;color:var(--text);font-weight:500;line-height:1.7}
+.fc-back .fc-content{color:var(--green);font-size:.92em}
+.fc-hint{font-size:.72em;color:var(--text3);margin-top:12px}
+.fc-nav{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px}
+.fc-counter{font-size:.8em;color:var(--text2);flex:1;text-align:center}
+/* REFERENCE TABS */
+.ref-topic-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.ref-topic-btn{padding:6px 14px;border-radius:8px;font-size:.76em;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--card);transition:all .2s}
+.ref-topic-btn.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.ref-panel{display:none}
+.ref-panel.active{display:block}
+/* ACHIEVEMENT TOAST */
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{background:linear-gradient(135deg,var(--card2),var(--card));border:1px solid var(--border2);border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:10px;animation:slideIn .3s ease;max-width:300px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast-icon{font-size:1.4em}
+.toast-text{font-size:.82em}
+.toast-text strong{color:var(--accent);display:block}
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+.ach-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;opacity:.4;transition:all .3s}
+.ach-card.unlocked{opacity:1;border-color:rgba(247,162,79,.3);background:rgba(247,162,79,.05)}
+.ach-icon{font-size:2em;margin-bottom:8px}
+.ach-name{font-size:.82em;font-weight:700;color:var(--text);margin-bottom:4px}
+.ach-desc{font-size:.72em;color:var(--text2)}
+/* COMPARISON TABLE SECTION */
+.comp-label{display:inline-block;background:rgba(79,142,247,.1);color:var(--accent);font-size:.7em;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:6px;letter-spacing:.5px}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .hero-title{font-size:1.4em}
+  .stats-row{gap:10px}
+  .stat-pill{padding:8px 12px}
+  .results-breakdown{grid-template-columns:repeat(3,1fr);gap:8px}
+  .main{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-logo">MU Research <span>· Practical Epidemiology</span></div>
+    <div class="xp-bar-wrap">
+      <span class="xp-label">XP</span>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      <span class="level-badge" id="levelBadge">Lv 1</span>
+    </div>
+    <div class="streak-badge">🔥 <span id="streakNum">0</span></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Mansoura University · Research </div>
+    <h1 class="hero-title">Practical Research <span class="hl">Study Platform</span></h1>
+    <p class="hero-sub">8 Files · 58 MCQs · Epidemiology, Biostatistics, Screening & Study Design — fully interactive with instant feedback.</p>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="sv" id="totalAnswered">0</span><span class="sl">Answered</span></div>
+      <div class="stat-pill"><span class="sv" id="totalCorrect" style="color:var(--green)">0</span><span class="sl">Correct</span></div>
+      <div class="stat-pill"><span class="sv" id="accuracyStat">—</span><span class="sl">Accuracy</span></div>
+      <div class="stat-pill"><span class="sv" id="xpStat">0</span><span class="sl">XP Total</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS NAV -->
+<nav class="tabs-nav">
+  <div class="tabs-nav-inner">
+    <button class="tab-btn active" onclick="showTab('quiz')">📝 Quiz Mode</button>
+    <button class="tab-btn" onclick="showTab('flashcards')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="showTab('notes')">📚 Study Notes</button>
+    <button class="tab-btn" onclick="showTab('formulas')">🔢 Formulas</button>
+    <button class="tab-btn" onclick="showTab('compare')">📊 Comparisons</button>
+    <button class="tab-btn" onclick="showTab('traps')">⚠️ Exam Traps</button>
+    <button class="tab-btn" onclick="showTab('achievements')">🏆 Achievements</button>
+  </div>
+</nav>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<main class="main">
+
+<!-- ===== QUIZ PANEL ===== -->
+<div class="panel active" id="panel-quiz">
+  <div class="file-selector" id="quizFileSelector">
+    <button class="file-chip active" onclick="selectQuizFile('all',this)">All Files (58)</button>
+    <button class="file-chip" onclick="selectQuizFile('1',this)">File 1 (Q1-10)</button>
+    <button class="file-chip" onclick="selectQuizFile('2',this)">File 2 (Q11-15)</button>
+    <button class="file-chip" onclick="selectQuizFile('3',this)">File 3 (Q16-18)</button>
+    <button class="file-chip" onclick="selectQuizFile('4',this)">File 4 (Q19-34)</button>
+    <button class="file-chip" onclick="selectQuizFile('5',this)">File 5 (Q35-38)</button>
+    <button class="file-chip" onclick="selectQuizFile('6',this)">File 6 (Q39-52)</button>
+    <button class="file-chip" onclick="selectQuizFile('7',this)">File 7 (Q53-56)</button>
+    <button class="file-chip" onclick="selectQuizFile('8',this)">File 8 (Q57-58)</button>
+  </div>
+  <div id="quizArea"></div>
+</div>
+
+<!-- ===== FLASHCARDS PANEL ===== -->
+<div class="panel" id="panel-flashcards">
+  <div class="file-selector" id="fcFileSelector">
+    <button class="file-chip active" onclick="selectFCFile('all',this)">All Topics</button>
+    <button class="file-chip" onclick="selectFCFile('1',this)">Study Designs</button>
+    <button class="file-chip" onclick="selectFCFile('2',this)">Odds Ratio</button>
+    <button class="file-chip" onclick="selectFCFile('3',this)">Relative Risk</button>
+    <button class="file-chip" onclick="selectFCFile('4',this)">Screening</button>
+    <button class="file-chip" onclick="selectFCFile('5',this)">RCT & Blinding</button>
+    <button class="file-chip" onclick="selectFCFile('6',this)">Sampling & Stats</button>
+    <button class="file-chip" onclick="selectFCFile('7',this)">Biostatistics</button>
+    <button class="file-chip" onclick="selectFCFile('8',this)">Incidence & Prevalence</button>
+  </div>
+  <div id="fcArea"></div>
+</div>
+
+<!-- ===== NOTES PANEL ===== -->
+<div class="panel" id="panel-notes">
+  <div class="ref-topic-tabs" id="notesTopicTabs">
+    <button class="ref-topic-btn active" onclick="showNotesTopic('1',this)">File 1: Descriptive Studies</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('2',this)">File 2: Case-Control</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('3',this)">File 3: Cohort Studies</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('4',this)">File 4: Screening</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('5',this)">File 5: RCT</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('6',this)">File 6: Statistics 1</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('7',this)">File 7: Statistics 2</button>
+    <button class="ref-topic-btn" onclick="showNotesTopic('8',this)">File 8: Morbidity Stats</button>
+  </div>
+  <div id="notesArea"></div>
+</div>
+
+<!-- ===== FORMULAS PANEL ===== -->
+<div class="panel" id="panel-formulas">
+  <div id="formulasArea"></div>
+</div>
+
+<!-- ===== COMPARE PANEL ===== -->
+<div class="panel" id="panel-compare">
+  <div id="compareArea"></div>
+</div>
+
+<!-- ===== TRAPS PANEL ===== -->
+<div class="panel" id="panel-traps">
+  <div id="trapsArea"></div>
+</div>
+
+<!-- ===== ACHIEVEMENTS PANEL ===== -->
+<div class="panel" id="panel-achievements">
+  <div class="content-card">
+    <h2>🏆 Achievements</h2>
+    <div class="ach-grid" id="achGrid"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const QUESTIONS = [
+ // FILE 1
+ {id:1,file:'1',topic:'Carotenemia',q:"What benign condition is characterized by a yellow-orange discoloration of the skin, typically secondary to the excessive ingestion of foods rich in carotene?",opts:["Scleral icterus","Carotenemia","Jaundice","Hepatitis"],ans:1,exp:"Carotenemia is defined by yellow-orange skin discoloration from excessive carotene ingestion — WITHOUT scleral icterus."},
+ {id:2,file:'1',topic:'Carotenemia',q:"Which anatomical feature helps differentiate carotenemia from other causes of yellow discoloration like jaundice?",opts:["Presence of pruritus","Darkening of the urine","Absence of yellow discoloration of the sclera","Pale stools"],ans:2,exp:"Absence of scleral icterus differentiates carotenemia from jaundice — the key clinical distinguisher."},
+ {id:3,file:'1',topic:'Carotenemia',q:"Is further diagnostic testing necessary for a patient confirmed to have carotenemia?",opts:["Yes, to rule out liver failure","Yes, to check coagulation profiles","No, because it is a benign condition","No, unless the patient is over 50 years old"],ans:2,exp:"No further testing needed; carotenemia is benign. Avoid unnecessary investigations."},
+ {id:4,file:'1',topic:'Carotenemia',q:"A 43-year-old male presents with yellow-orange discoloration of the hands, feet, and axillae, with normal LFTs and thyroid function, whose diet has predominantly consisted of papaya and mango for six months. What is the most appropriate management?",opts:["Liver biopsy","Initiation of antiviral therapy","Reduction in consumption of high carotene-containing foods","Prescribing thyroid hormone replacement"],ans:2,exp:"Reduce high-carotene food consumption; skin discoloration resolves on its own."},
+ {id:5,file:'1',topic:'Carotenemia',q:"Which of the following foods are considered high in carotene?",opts:["Apples, oranges, and beans","Peaches, berries, and pineapples","Broccoli, cabbage, carrots, spinach, cucumbers, tomatoes, lettuce, and mangoes","All of the above"],ans:3,exp:"All listed foods are high in carotene — apples, oranges, beans, peaches, berries, pineapples, broccoli, cabbage, carrots, spinach, cucumbers, tomatoes, lettuce, and mangoes."},
+ {id:6,file:'1',topic:'Study Designs',q:"What type of study design is characterized as an observational descriptive study that describes a number of similar cases in one report?",opts:["Cross-sectional study","Case report","Case series","Cohort study"],ans:2,exp:"Case series describes multiple similar cases in a single report. Case report = only ONE unique case."},
+ {id:7,file:'1',topic:'Study Designs',q:"A multi-country study used national survey prevalence data of Alzheimer's disease in 11 countries alongside dietary supply factors, finding correlations between total fat supply and disease prevalence. What is the type of this study design?",opts:["Correlational (Ecological) study","Case-control study","Experimental study","Case series"],ans:0,exp:"Multi-country population-level correlation = Ecological study. It studies POPULATIONS not individuals."},
+ {id:8,file:'1',topic:'Study Designs',q:"What is a primary application of a correlational (ecological) study?",opts:["Determining the exact cause of a disease in individuals","Testing a new therapeutic drug","Determining associations between exposures and outcomes in populations","Reporting a single unique clinical finding"],ans:2,exp:"Ecological studies determine associations in populations, NOT in individuals."},
+ {id:9,file:'1',topic:'Survey Methodology',q:"Which of the following represents the correct sequential steps for conducting a survey study?",opts:["Planning, Collection of data, Writing reports, Data tabulation","Preliminary stage, Planning, Preparation for data collection, Collection of data, Data tabulation & analysis, Writing reports","Data tabulation, Preparation, Collection of data, Planning, Reports","Preparation, Planning, Preliminary stage, Analysis, Collection"],ans:1,exp:"Correct order: Preliminary → Planning → Preparation → Collection → Tabulation/Analysis → Reports. Always START with Preliminary."},
+ {id:10,file:'1',topic:'Survey Methodology',q:"In a survey investigating the prevalence of obesity in a Saudi obstetric population, where was the biochemical analysis of field blood samples performed?",opts:["Mansoura University Hospital","Local rural health clinics","National Nutrition Institute laboratories","Independent private laboratories"],ans:2,exp:"Biochemical analysis was performed at National Nutrition Institute laboratories."},
+ // FILE 2
+ {id:11,file:'2',topic:'Case-Control',q:"A study investigated risk factors for acute HCV infection among 86 patients and 287 age- and gender-matched controls, assessing past exposures within six months. What study design does this represent?",opts:["Experimental study","Cross-sectional study","Case-control study","Prospective cohort study"],ans:2,exp:"Cases + matched controls + retrospective exposure assessment = Case-control study."},
+ {id:12,file:'2',topic:'Odds Ratio',q:"Among 3,000 cases of bladder cancer, 1,293 used artificial sweeteners and 1,707 did not. Among 3,000 controls, 855 used sweeteners and 2,145 did not. What is the appropriate measure and its value?",opts:["Relative Risk; 0.6","Odds Ratio; 1.9","Odds Ratio; 22.6","Prevalence; 25%"],ans:1,exp:"OR = (1293×2145)/(855×1707) = 2,773,485/1,459,485 = 1.9. Case-control → always OR, never RR."},
+ {id:13,file:'2',topic:'Odds Ratio',q:"In HIV transmission following needle stick injuries: 80 cases and 150 controls had deep injuries, 20 cases and 850 controls had superficial injuries. What is the Odds Ratio (OR)?",opts:["1.9","5.0","22.6","60%"],ans:2,exp:"OR = (80×850)/(150×20) = 68,000/3,000 = 22.6. HIV cases are 22.6 times more common with deep penetration injuries."},
+ {id:14,file:'2',topic:'Odds Ratio',q:"How should an Odds Ratio (OR) of 22.6 in the needle stick injury study be interpreted?",opts:["HIV cases are 22.6% more likely to occur in general","HIV positive cases are 22.6 times more common among deep penetration injuries than superficial injuries","The incidence rate of HIV is 22.6 per 1,000","The relative risk of HIV is decreased by 22.6%"],ans:1,exp:"OR = 22.6 means '22.6 TIMES more common,' NOT 22.6% more likely. Never confuse multiplication with percentage."},
+ {id:15,file:'2',topic:'Case-Control',q:"Researchers are studying a rare neurological disorder to determine if past 20-year industrial chemical exposure is a contributing factor. They gather data from individuals with and without the disorder. What study design is this?",opts:["Observational, Analytical, Case-control","Correlational (ecological) study","Descriptive Case Series","Randomized Controlled Trial"],ans:0,exp:"Rare disease + looking back at exposure = Observational, Analytical, Case-control study."},
+ // FILE 3
+ {id:16,file:'3',topic:'Cohort Studies',q:"Which study design is most suitable for following exposed and non-exposed groups over time to determine the occurrence rate of hepatocellular carcinoma?",opts:["Case-control study","Cross-sectional study","Prospective Cohort study","Ecological study"],ans:2,exp:"Prospective Cohort follows exposed/non-exposed groups FORWARD to measure disease occurrence (incidence)."},
+ {id:17,file:'3',topic:'Relative Risk',q:"In a study comparing 2000 individuals with high PA to 6000 with low PA, 20 MI cases occur in the high PA group. What is the incidence rate among the 'exposed' (high PA) group?",opts:["0.0167","0.6","0.01","1.9"],ans:2,exp:"Ie = 20/2000 = 0.01. The 'exposed' here is the HIGH PA group."},
+ {id:18,file:'3',topic:'Relative Risk',q:"Using the PA and MI study data (High PA incidence = 0.01; Low PA incidence = 0.0167), what is the Relative Risk (RR)?",opts:["1.67","0.6 (or 60%)","22.6","1.9"],ans:1,exp:"RR = Ie/In = 0.01/0.0167 = 0.6. RR < 1 = PROTECTIVE factor. High PA REDUCES MI risk."},
+ // FILE 4
+ {id:19,file:'4',topic:'Screening Tests',q:"In a tuberculosis screening study of 200 subjects: 130 True Negatives and 10 False Negatives. What is the Negative Predictive Value (NPV)?",opts:["85%","25%","92.8%","51%"],ans:2,exp:"NPV = TN/(TN+FN) = 130/(130+10) = 130/140 = 92.8%."},
+ {id:20,file:'4',topic:'Screening Tests',q:"In a screening test with 40 True Positives, 130 True Negatives, and Grand Total 200, what is the Accuracy?",opts:["92.8%","85%","25%","47%"],ans:1,exp:"Accuracy = (TP+TN)/Total = (40+130)/200 = 170/200 = 85%."},
+ {id:21,file:'4',topic:'Screening Tests',q:"In a newborn viral screening study, what is considered the 'gold standard' to confirm if newborns actually harbor the virus?",opts:["The new serum screening test","Blood culture for bacteria","Viral isolation/culture","Chest X-ray"],ans:2,exp:"Viral isolation/culture is the gold standard for confirming viral infection."},
+ {id:22,file:'4',topic:'Screening Tests',q:"In blood sugar screening for diabetes (86 TP, 84 FN, 98 FP, 9752 TN), what is the sensitivity?",opts:["47%","92.8%","51%","85%"],ans:2,exp:"Sensitivity = TP/(TP+FN) = 86/(86+84) = 86/170 = 51%."},
+ {id:23,file:'4',topic:'Screening Tests',q:"Using the same diabetes screening data (86 TP, 98 FP), what is the Positive Predictive Value (PPV)?",opts:["51%","47%","85%","92.8%"],ans:1,exp:"PPV = TP/(TP+FP) = 86/(86+98) = 86/184 = 47%."},
+ {id:24,file:'4',topic:'Validity & Reliability',q:"Dots on a target are tightly clustered but off-center (not in the bullseye). What does this describe?",opts:["Valid and Reliable","Not Valid, Not Reliable","Reliable but NOT Valid","Valid but NOT Reliable"],ans:2,exp:"Clustered = Reliable. Off-center = NOT Valid. Need BOTH clustering AND centering for validity + reliability."},
+ {id:25,file:'4',topic:'Validity & Reliability',q:"Dots on a target are tightly clustered IN the center bullseye. What does this describe?",opts:["Valid and Reliable","Not Valid, Not Reliable","Reliable but NOT Valid","Valid but NOT Reliable"],ans:0,exp:"Clustered in center = BOTH Valid AND Reliable. This is the ideal scenario."},
+ {id:26,file:'4',topic:'Screening Tests',q:"When comparing two populations with the SAME test sensitivity (90%) but different disease prevalences (10% vs. 1%), what happens to PPV?",opts:["PPV stays the same regardless of prevalence","PPV is lower in the high prevalence population","PPV decreases as prevalence increases","Higher prevalence leads to higher PPV"],ans:3,exp:"Higher prevalence → Higher PPV. With 10% prevalence: PPV=50%. With 1% prevalence: PPV=8.3%. Prevalence DOES affect PPV."},
+ {id:27,file:'4',topic:'Screening Tests',q:"If a diagnostic test is expensive, in which population should it primarily be used to maximize utility?",opts:["Lower prevalence populations","High-risk individuals only","Populations already treated with antibiotics","Higher prevalence populations"],ans:3,exp:"Expensive tests should target higher prevalence populations to maximize utility (higher PPV with less false positives wasted)."},
+ {id:28,file:'4',topic:'Screening Tests',q:"What is the correct definition of Specificity?",opts:["Proportion WITH disease correctly identified as POSITIVE","Proportion WITHOUT disease correctly identified as NEGATIVE","Probability that a positive test result truly has disease","Proportion of all correct test results"],ans:1,exp:"Specificity = TN/(TN+FP) = proportion WITHOUT disease correctly classified as NEGATIVE."},
+ {id:29,file:'4',topic:'Screening Tests',q:"On what basis are screening tests primarily used?",opts:["Individual diagnosis","Family history basis","Clinical examination basis","Community basis"],ans:3,exp:"Screening tests are used on a COMMUNITY basis, not for individual definitive diagnosis."},
+ {id:30,file:'4',topic:'Screening Tests',q:"In 1000 animals with 10% disease prevalence, sensitivity=95%, specificity=90%. How many will be test-positive?",opts:["95","100","185","950"],ans:2,exp:"TP=95%×100=95. FP=10%×900=90. Total positive = 95+90 = 185."},
+ {id:31,file:'4',topic:'Validity & Reliability',q:"Validity and reliability are analogous to which pair of terms, respectively?",opts:["Validity ≈ repeatability; Reliability ≈ accuracy","Validity ≈ reliability (they're the same)","Validity ≈ accuracy; Reliability ≈ repeatability","Reliability ≈ positive predictive value"],ans:2,exp:"Validity ≈ accuracy (measuring what you're supposed to). Reliability ≈ repeatability (same values each time)."},
+ {id:32,file:'4',topic:'Screening Tests',q:"For a communicable disease with high mortality, what must be the primary characteristic of the screening test?",opts:["Highly specific","Highly sensitive","Economical","Highly repeatable"],ans:1,exp:"High mortality → must be HIGHLY SENSITIVE to not miss any cases. Missing a case = fatal consequence."},
+ {id:33,file:'4',topic:'Validity & Reliability',q:"The reliability of a screening test refers strictly to:",opts:["Ability to accurately measure what it's supposed to measure","Giving the same values even on repeated testing","Observer interpretation capability","Dependence on observer's knowledge"],ans:1,exp:"Reliability = consistent/same values on repeated testing (repeatability)."},
+ {id:34,file:'4',topic:'Screening Tests',q:"Screening table: TP=50, FP=5, FN=10, TN=90. What is the accuracy?",opts:["83.3%","90.3%","94.7%","95.4%"],ans:1,exp:"Accuracy = (TP+TN)/(TP+FP+FN+TN) = (50+90)/(50+5+10+90) = 140/155 = 90.3%."},
+ // FILE 5
+ {id:35,file:'5',topic:'Experimental Studies',q:"A study of Tocilizumab (TCZ) vs. matched placebo IV infusion in COVID-19 patients. What type of study design is this?",opts:["Cross-sectional study","Descriptive case report","Observational cohort","Experimental study (Randomized Controlled Trial)"],ans:3,exp:"Treatment group + placebo group + randomization = RCT (Experimental study). Highest level of evidence."},
+ {id:36,file:'5',topic:'Blinding',q:"Which of the following strictly characterizes a double-blind study design?",opts:["Only subjects are unaware of group allocation","Subjects and observer are unaware of subjects' group allocation","Subjects, observer, AND data analyst are all unaware","Subjects and data analysts are unaware but observer knows"],ans:1,exp:"Double-blind: BOTH subjects AND observer are unaware. Triple-blind also includes the data analyst."},
+ {id:37,file:'5',topic:'Experimental Studies',q:"Which is a primary characteristic of a placebo used in RCTs?",opts:["Completely different in appearance to the active drug","Gives the exact same pharmacological effect as tested drug","It is pharmacologically inert","Ethical to use even when a known life-saving drug exists"],ans:2,exp:"Placebo is pharmacologically INERT (no active drug effect) but matched in appearance to the active drug."},
+ {id:38,file:'5',topic:'Experimental Studies',q:"Which characteristic applies to randomization in an experimental study?",opts:["Demonstrates a case-control design","Each subject has equal chance of assignment to any group","Ensures selection bias is actively introduced","Only used in retrospective studies"],ans:1,exp:"Randomization = each subject has EQUAL CHANCE of being assigned to any group. Eliminates selection bias."},
+ // FILE 6
+ {id:39,file:'6',topic:'Sampling',q:"A hospital manager wants to systematically sample 300 employees out of 2,700 total. What is the correct sampling interval?",opts:["3","9","12","30"],ans:1,exp:"Interval = Total/Sample = 2700/300 = 9."},
+ {id:40,file:'6',topic:'Sampling',q:"In systematic sampling with interval=9, if the first randomly drawn number is 8, what are the first five sample numbers?",opts:["8, 9, 10, 11, 12","8, 16, 24, 32, 40","8, 17, 26, 35, 44","9, 18, 27, 36, 45"],ans:2,exp:"8, 8+9=17, 17+9=26, 26+9=35, 35+9=44."},
+ {id:41,file:'6',topic:'Sampling',q:"A researcher tests a curriculum on 600 students from different socioeconomic (SES) backgrounds with proportional representation (25% low, 25% high SES etc.). What is the ideal sampling method?",opts:["Snowball sampling","Simple random sampling","Convenience sampling","Stratified random sampling"],ans:3,exp:"Proportional sampling from SES SUBGROUPS = Stratified random sampling."},
+ {id:42,file:'6',topic:'Sampling',q:"To study physician job stress, a researcher randomly selects 3 healthcare settings, then 3 departments within each, then includes ALL physicians in those departments. What is this?",opts:["Cluster / Multistage sampling","Purposive sampling","Systematic sampling","Convenience sampling"],ans:0,exp:"Random selection at MULTIPLE LEVELS (settings → departments) = Cluster/Multistage sampling."},
+ {id:43,file:'6',topic:'Sampling',q:"Studying COVID-19 vaccination coverage by surveying patients who happen to attend Mansoura University hospital during March 2025. What is the sampling technique?",opts:["Snowball sampling","Stratified random sampling","Convenience sampling","Multistage sampling"],ans:2,exp:"Whoever happens to be available/accessible = Convenience sampling (non-probability)."},
+ {id:44,file:'6',topic:'Sampling',q:"A tech company needs insights from specific individuals with deep understanding of both AI technology and ethics. What is the best sampling technique?",opts:["Purposive / Judgmental sampling","Simple random sampling","Systematic sampling","Stratified sampling"],ans:0,exp:"Selecting specific experts based on criteria = Purposive/Judgmental sampling (non-probability)."},
+ {id:45,file:'6',topic:'Sampling',q:"In a high school of 1,000 students, researchers select exactly 10% from within each specific grade subgroup. What is the sampling method?",opts:["Snowball sampling","Stratified random sampling","Cluster sampling","Convenience sampling"],ans:1,exp:"Dividing by grade then sampling 10% from EACH subgroup = Stratified random sampling."},
+ {id:46,file:'6',topic:'Sampling',q:"A researcher interviews one illegal drug user who then refers others in their social network, causing the sample to grow. What is this method?",opts:["Snowball sampling","Systematic sampling","Stratified random sampling","Multistage sampling"],ans:0,exp:"Chain referral from one participant to next = Snowball sampling."},
+ {id:47,file:'6',topic:'Variable Types',q:"Which of the following is a Qualitative Nominal variable?",opts:["Time in current job (years)","Profession (Doctor, Nurse, Technician)","Number of shifts per week","Stage of cancer (I, II, III, IV)"],ans:1,exp:"Profession categories have NO inherent order = Nominal. (Stage of cancer has ORDER = Ordinal)"},
+ {id:48,file:'6',topic:'Variable Types',q:"Which of the following is a Quantitative Continuous variable?",opts:["Gender","Holding other jobs (Yes/No)","Heart rate and Temperature (Celsius)","Education level"],ans:2,exp:"Heart rate and temperature can take any value within a range = Continuous."},
+ {id:49,file:'6',topic:'Variable Types',q:"How is 'Number of family members' or 'Number of shifts per week' best classified?",opts:["Qualitative Nominal","Qualitative Ordinal","Quantitative Continuous","Quantitative Discrete"],ans:3,exp:"Counted in whole numbers, cannot be fractional = Discrete (not continuous)."},
+ {id:50,file:'6',topic:'Data Presentation',q:"For grouped continuous data (e.g. serum potassium levels with class intervals), what is the most appropriate graph?",opts:["Pie chart","Histogram","Scatter plot","Pictogram"],ans:1,exp:"Contiguous bars for grouped continuous data = Histogram. Bars TOUCH (unlike bar chart for categorical data)."},
+ {id:51,file:'6',topic:'Data Presentation',q:"To present job titles (Nominal) alongside gender (Nominal) of healthcare workers, what is the most suitable graph?",opts:["Simple Pie Chart","Scatter Plot","Clustered or Multiple Bar Chart","Frequency Polygon"],ans:2,exp:"Two nominal variables side-by-side = Clustered/Multiple Bar Chart."},
+ {id:52,file:'6',topic:'Biostatistics',q:"If the maximum value in a dataset is erroneously substituted with a much higher outlier, which measure of central tendency is UNLIKELY to be affected?",opts:["Variance","Range","Mean","Median"],ans:3,exp:"Median is resistant to outliers; Mean is NOT. Outliers pull the mean but NOT the median."},
+ // FILE 7
+ {id:53,file:'7',topic:'Tests of Significance',q:"A study compares HTN status between coffee drinkers (n=10) and non-coffee drinkers (n=9), total n=19. What is the appropriate test of significance?",opts:["Independent t-test","Fisher's Exact Test","Paired t-test","Z-test"],ans:1,exp:"Small sample (n=19) with categorical data → Fisher's Exact Test. Use when total n<20 or expected cell frequency <5."},
+ {id:54,file:'7',topic:'Normal Distribution',q:"Which two numerical parameters completely determine the shape of a normal distribution curve?",opts:["Median and Range","Mean and Standard Deviation","Mode and Variance","Median and Standard Deviation"],ans:1,exp:"Mean and Standard Deviation COMPLETELY define the normal distribution curve."},
+ {id:55,file:'7',topic:'Biostatistics',q:"For heavily skewed, non-parametric continuous data (OCT levels varying wildly from 115 to 833), what are the most appropriate measures of central tendency and dispersion?",opts:["Mean and Standard Deviation","Median and Min-Max (Range)","Mode and Variance","Mean and Range"],ans:1,exp:"Skewed/non-parametric data → Median (central tendency) + Min-Max Range (dispersion)."},
+ {id:56,file:'7',topic:'Tests of Significance',q:"To determine significance of differences in normally distributed parametric continuous data (Eye Tension) between two independent groups (Cases vs. Controls), which test?",opts:["Chi-square test","Fisher's Exact test","Independent t-test","Snowball test"],ans:2,exp:"Parametric + TWO INDEPENDENT groups → Independent t-test. (Not paired, not >2 groups)"},
+ // FILE 8
+ {id:57,file:'8',topic:'Morbidity Statistics',q:"In a stable town of 10,000 residents, a health survey on January 1, 2024, reveals that exactly 200 residents currently have active asthma. What does this figure (200) represent?",opts:["Incidence","Point Prevalence","Crude death rate","Case fatality rate"],ans:1,exp:"200 existing cases at a SINGLE POINT IN TIME (Jan 1, 2024) = Point Prevalence."},
+ {id:58,file:'8',topic:'Morbidity Statistics',q:"Throughout 2024, 50 residents in the town were NEWLY DIAGNOSED with asthma. What epidemiological measure does the number 50 represent?",opts:["Incidence","Point Prevalence","Relative Risk","Standard Deviation"],ans:0,exp:"Newly diagnosed cases OVER A TIME PERIOD = Incidence. (NOT prevalence, which is existing cases at one moment)"}
+];
+
+const FLASHCARDS = [
+ {file:'1',front:"What is Carotenemia?",back:"Benign yellow-orange skin discoloration from excessive carotene ingestion. Key: NO scleral icterus (differentiates from jaundice)."},
+ {file:'1',front:"Case Report vs. Case Series — key difference?",back:"Case Report = ONE unique case. Case Series = MULTIPLE similar cases in one report."},
+ {file:'1',front:"What is an Ecological (Correlational) study?",back:"Studies associations between exposures and outcomes in POPULATIONS (not individuals). Example: multi-country diet & Alzheimer's study."},
+ {file:'1',front:"What are the 6 steps of conducting a survey?",back:"1. Preliminary stage → 2. Planning → 3. Preparation for data collection → 4. Collection of data → 5. Data tabulation & analysis → 6. Writing reports"},
+ {file:'2',front:"When is Case-Control the ideal study design?",back:"For RARE DISEASES. Start with the outcome (disease) and look BACKWARD at exposures. Measure of association = Odds Ratio (OR)."},
+ {file:'2',front:"Odds Ratio formula?",back:"OR = (a × d) / (b × c)\nWhere a=cases exposed, b=cases unexposed, c=controls exposed, d=controls unexposed"},
+ {file:'2',front:"How do you interpret OR = 22.6?",back:"The outcome is 22.6 TIMES MORE COMMON in the exposed group. NOT 22.6% more common — it's a multiplier."},
+ {file:'3',front:"Cohort Study — direction and measure?",back:"Prospective (forward in time). Starts with EXPOSURE → follows to OUTCOME. Measure = RELATIVE RISK (RR). Can calculate incidence."},
+ {file:'3',front:"Relative Risk formula + interpretation?",back:"RR = Ie / In (Incidence in Exposed / Incidence in Non-exposed)\nRR < 1 = Protective factor\nRR > 1 = Risk factor\nRR = 1 = No association"},
+ {file:'4',front:"Sensitivity vs. Specificity formulas?",back:"Sensitivity = TP/(TP+FN) — detects those WITH disease\nSpecificity = TN/(TN+FP) — identifies those WITHOUT disease"},
+ {file:'4',front:"PPV vs. NPV formulas?",back:"PPV = TP/(TP+FP) — probability positive test truly has disease\nNPV = TN/(TN+FN) — probability negative test truly disease-free"},
+ {file:'4',front:"How does prevalence affect PPV?",back:"Higher prevalence → Higher PPV (same sensitivity).\nLow prevalence → More false positives → Lower PPV significantly.\nPrevalence affects PPV, NOT sensitivity or specificity."},
+ {file:'4',front:"Validity vs. Reliability analogy?",back:"Validity ≈ Accuracy (measuring what you're supposed to)\nReliability ≈ Repeatability (same result each time)\nCan be reliable but NOT valid (clustered off-center on target)."},
+ {file:'5',front:"RCT vs. Cohort — key difference?",back:"RCT: Investigator ASSIGNS intervention. Has randomization, placebo, blinding.\nCohort: Investigator only OBSERVES. No assignment of exposure."},
+ {file:'5',front:"Single vs. Double vs. Triple blind?",back:"Single-blind: Only SUBJECTS unaware\nDouble-blind: Subjects + OBSERVER unaware\nTriple-blind: Subjects + Observer + DATA ANALYST unaware"},
+ {file:'5',front:"What is a Crossover Trial?",back:"Each participant receives BOTH treatments in different time periods with a WASHOUT period in between. Not two parallel groups."},
+ {file:'6',front:"Probability vs. Non-probability sampling?",back:"Probability: Simple Random, Systematic, Stratified, Cluster/Multistage\nNon-probability: Convenience, Purposive/Judgmental, Snowball"},
+ {file:'6',front:"Systematic sampling — how to apply?",back:"Interval = Total population / Sample size\nPick a RANDOM start number, then ADD interval each time.\nExample: start=8, interval=9 → 8,17,26,35,44..."},
+ {file:'6',front:"Stratified vs. Cluster sampling — difference?",back:"Stratified: Divide into SUBGROUPS, sample PROPORTIONALLY from EACH subgroup.\nCluster: Randomly select ENTIRE clusters, then study ALL within selected clusters."},
+ {file:'6',front:"Discrete vs. Continuous variables?",back:"Discrete = counted in whole numbers (shifts/week, family members, children)\nContinuous = can have decimals (age, weight, HR, temperature, cholesterol)"},
+ {file:'6',front:"Histogram vs. Bar chart — when to use?",back:"Histogram: CONTINUOUS grouped data (bars TOUCH)\nBar chart: CATEGORICAL/NOMINAL data (bars DON'T touch)\nClue: intervals = histogram; categories = bar chart"},
+ {file:'7',front:"Fisher's Exact Test — when to use?",back:"When total sample n < 20 OR expected cell frequency < 5.\nFor small CATEGORICAL data. NOT for continuous data."},
+ {file:'7',front:"Parametric vs. Non-parametric summary stats?",back:"Parametric (Normal): Mean ± Standard Deviation\nNon-parametric (Skewed): Median + Min-Max Range (or IQR)\nClue: Mean≈Median = normal. Mean≠Median = skewed."},
+ {file:'7',front:"p-value thresholds?",back:"p < 0.05 = Statistically Significant\np < 0.01 = Highly significant\np < 0.001 = Very highly significant\np ≥ 0.05 = Not significant"},
+ {file:'8',front:"Incidence vs. Prevalence — key difference?",back:"Incidence: NEW cases over a TIME PERIOD\nPrevalence: ALL EXISTING cases at ONE POINT IN TIME\nIncidence ≠ Prevalence — don't confuse!"},
+ {file:'8',front:"Why doesn't End Prevalence = Start Prevalence + Incidence?",back:"Because some existing cases RECOVER or DIE during the year.\nExample: 200 start + 50 new = 250 expected, but end=220 → 30 cases recovered/died."}
+];
+
+const ACHIEVEMENTS = [
+ {id:'first_answer',icon:'🎯',name:'First Answer',desc:'Answer your first question',condition:s=>s.totalAnswered>=1},
+ {id:'perfect_ten',icon:'⚡',name:'Perfect 10',desc:'Get 10 correct answers',condition:s=>s.totalCorrect>=10},
+ {id:'halfway',icon:'🏃',name:'Halfway There',desc:'Answer 29+ questions',condition:s=>s.totalAnswered>=29},
+ {id:'file_master_1',icon:'📗',name:'File 1 Master',desc:'Answer all File 1 questions correctly',condition:s=>s.fileCorrect['1']>=10},
+ {id:'file_master_4',icon:'🔬',name:'Screening Expert',desc:'Answer 8+ File 4 questions correctly',condition:s=>s.fileCorrect['4']>=8},
+ {id:'formula_genius',icon:'🧮',name:'Formula Genius',desc:'Get Q12, Q13, Q17, Q18 all correct',condition:s=>s.correctIds.has(12)&&s.correctIds.has(13)&&s.correctIds.has(17)&&s.correctIds.has(18)},
+ {id:'streak5',icon:'🔥',name:'On Fire',desc:'5 correct answers in a row',condition:s=>s.maxStreak>=5},
+ {id:'streak10',icon:'💥',name:'Unstoppable',desc:'10 correct answers in a row',condition:s=>s.maxStreak>=10},
+ {id:'all_58',icon:'🏆',name:'Champion',desc:'Complete all 58 questions',condition:s=>s.totalAnswered>=58},
+ {id:'full_score',icon:'👑',name:'Perfect Score',desc:'100% accuracy on 10+ questions',condition:s=>s.totalAnswered>=10&&s.totalCorrect===s.totalAnswered},
+];
+
+// STATE
+let state = {
+  totalAnswered:0, totalCorrect:0, xp:0, level:1, streak:0, maxStreak:0,
+  fileCorrect:{'1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0},
+  correctIds:new Set(), unlockedAch:new Set()
+};
+let quizState = {mode:'all',pool:[],idx:0,answered:false,sessionCorrect:0,sessionWrong:0,shuffled:[]};
+let fcState = {mode:'all',pool:[],idx:0,flipped:false};
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function saveState(){try{localStorage.setItem('pra_state',JSON.stringify({...state,correctIds:[...state.correctIds],unlockedAch:[...state.unlockedAch]}));}catch(e){}}
+function loadState(){try{const d=JSON.parse(localStorage.getItem('pra_state'));if(d){d.correctIds=new Set(d.correctIds);d.unlockedAch=new Set(d.unlockedAch);state=d;}}catch(e){}}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='quiz') renderQuiz();
+  if(name==='flashcards') renderFC();
+  if(name==='notes') renderNotes('1');
+  if(name==='formulas') renderFormulas();
+  if(name==='compare') renderCompare();
+  if(name==='traps') renderTraps();
+  if(name==='achievements') renderAchievements();
+}
+
+function updateHUD(){
+  const acc = state.totalAnswered>0 ? Math.round(state.totalCorrect/state.totalAnswered*100)+'%' : '—';
+  document.getElementById('totalAnswered').textContent=state.totalAnswered;
+  document.getElementById('totalCorrect').textContent=state.totalCorrect;
+  document.getElementById('accuracyStat').textContent=acc;
+  document.getElementById('xpStat').textContent=state.xp;
+  document.getElementById('streakNum').textContent=state.streak;
+  const xpInLevel=(state.xp%100);
+  document.getElementById('xpFill').style.width=xpInLevel+'%';
+  document.getElementById('levelBadge').textContent='Lv '+state.level;
+}
+
+function showToast(icon,title,sub){
+  const t=document.createElement('div');
+  t.className='toast';
+  t.innerHTML=`<div class="toast-icon">${icon}</div><div class="toast-text"><strong>${title}</strong>${sub||''}</div>`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},2800);
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function selectQuizFile(file,el){
+  document.querySelectorAll('#quizFileSelector .file-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  quizState.mode=file;
+  startQuiz();
+}
+
+function startQuiz(){
+  const pool = quizState.mode==='all' ? [...QUESTIONS] : QUESTIONS.filter(q=>q.file===quizState.mode);
+  quizState.pool=shuffle([...pool]);
+  quizState.idx=0;quizState.sessionCorrect=0;quizState.sessionWrong=0;
+  renderQuiz();
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function renderQuiz(){
+  if(!quizState.pool.length){startQuiz();return;}
+  if(quizState.idx>=quizState.pool.length){renderResults();return;}
+  const q=quizState.pool[quizState.idx];
+  const pct=Math.round(quizState.idx/quizState.pool.length*100);
+  const html=`
+    <div class="quiz-meta">
+      <span>Question ${quizState.idx+1} / ${quizState.pool.length}</span>
+      <span>${pct}% complete</span>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div class="question-card">
+      <div class="q-header">
+        <div class="q-num-badge">${q.id}</div>
+        <div>
+          <span class="q-text">${q.q}</span>
+          <span class="q-file-tag">File ${q.file} · ${q.topic}</span>
+        </div>
+      </div>
+      <div class="options-grid" id="optGrid">
+        ${q.opts.map((o,i)=>`<button class="option-btn" onclick="answerQ(${i})" id="opt${i}">
+          <span class="option-letter">${'ABCD'[i]}</span><span>${o}</span>
+        </button>`).join('')}
+      </div>
+      <div id="expBox"></div>
+      <div class="quiz-actions" id="quizActions">
+        <button class="btn btn-secondary" onclick="skipQ()">Skip →</button>
+        <button class="btn btn-danger btn-sm" onclick="restartQuiz()" style="font-size:.78em;padding:8px 14px">🔄 Restart</button>
+      </div>
+    </div>`;
+  document.getElementById('quizArea').innerHTML=html;
+  quizState.answered=false;
+}
+
+function answerQ(chosen){
+  if(quizState.answered)return;
+  quizState.answered=true;
+  const q=quizState.pool[quizState.idx];
+  const correct=(chosen===q.ans);
+  // Disable all
+  document.querySelectorAll('.option-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.ans) b.classList.add(chosen===i?'correct':'revealed-correct');
+    if(i===chosen&&!correct) b.classList.add('wrong');
+  });
+  // Explanation
+  document.getElementById('expBox').innerHTML=`
+    <div class="explanation-box">
+      <div class="exp-label">${correct?'✅ Correct!':'❌ Incorrect'}</div>
+      ${q.exp}
+    </div>`;
+  // Actions
+  document.getElementById('quizActions').innerHTML=`
+    <button class="btn btn-primary" onclick="nextQ()">Next Question →</button>
+    <button class="btn btn-danger" onclick="restartQuiz()" style="font-size:.78em;padding:8px 14px">🔄 Restart</button>`;
+  // Update state
+  state.totalAnswered++;
+  if(correct){
+    state.totalCorrect++;
+    state.streak++;
+    if(state.streak>state.maxStreak)state.maxStreak=state.streak;
+    quizState.sessionCorrect++;
+    state.xp+=10;
+    if(state.streak>1)state.xp+=5;
+    state.correctIds.add(q.id);
+    state.fileCorrect[q.file]=(state.fileCorrect[q.file]||0)+1;
+    if(state.level<Math.floor(state.xp/100)+1){state.level=Math.floor(state.xp/100)+1;showToast('🎖️','Level Up!','You reached Level '+state.level);}
+  } else {
+    state.streak=0;
+    quizState.sessionWrong++;
+  }
+  checkAchievements();
+  updateHUD();
+  saveState();
+}
+
+function nextQ(){quizState.idx++;renderQuiz();}
+function skipQ(){quizState.pool.push(quizState.pool.splice(quizState.idx,1)[0]);renderQuiz();}
+function restartQuiz(){quizState.idx=0;quizState.pool=shuffle([...QUESTIONS.filter(q=>quizState.mode==='all'||q.file===quizState.mode)]);renderQuiz();}
+
+function renderResults(){
+  const total=quizState.pool.length;
+  const pct=Math.round(quizState.sessionCorrect/total*100);
+  const emoji=pct>=90?'🏆':pct>=70?'💪':pct>=50?'📈':'📚';
+  document.getElementById('quizArea').innerHTML=`
+    <div class="results-screen">
+      <div class="results-score">${pct}%</div>
+      <div class="results-label">${emoji} Session Complete!</div>
+      <div class="results-breakdown">
+        <div class="rb-item"><div class="rb-val green">${quizState.sessionCorrect}</div><div class="rb-lbl">Correct</div></div>
+        <div class="rb-item"><div class="rb-val red">${quizState.sessionWrong}</div><div class="rb-lbl">Wrong</div></div>
+        <div class="rb-item"><div class="rb-val orange">${state.streak}</div><div class="rb-lbl">Streak</div></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="restartQuiz()">🔄 Restart Quiz</button>
+        <button class="btn btn-secondary" onclick="selectQuizFile('all',document.querySelector('.file-chip'))">All Questions</button>
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+function selectFCFile(mode,el){
+  document.querySelectorAll('#fcFileSelector .file-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const fileMap={'1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8'};
+  if(mode==='all') fcState.pool=shuffle([...FLASHCARDS]);
+  else fcState.pool=shuffle(FLASHCARDS.filter(f=>f.file===fileMap[mode]));
+  fcState.idx=0;fcState.flipped=false;
+  renderFC();
+}
+
+function renderFC(){
+  if(!fcState.pool.length){fcState.pool=shuffle([...FLASHCARDS]);fcState.idx=0;}
+  const c=fcState.pool[fcState.idx];
+  document.getElementById('fcArea').innerHTML=`
+    <div style="margin-bottom:12px;font-size:.82em;color:var(--text2);text-align:center">${fcState.idx+1} / ${fcState.pool.length} cards · Click card to reveal answer</div>
+    <div class="fc-wrap"><div class="fc-card" id="fcCard" onclick="flipFC()">
+      <div class="fc-front">
+        <div class="fc-badge">Question</div>
+        <div class="fc-content">${c.front}</div>
+        <div class="fc-hint">👆 Tap to flip</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-badge">Answer</div>
+        <div class="fc-content" style="white-space:pre-line">${c.back}</div>
+      </div>
+    </div></div>
+    <div class="fc-nav">
+      <button class="btn btn-secondary" onclick="prevFC()" style="padding:8px 16px">← Prev</button>
+      <span class="fc-counter">File ${c.file}</span>
+      <button class="btn btn-primary" onclick="nextFC()" style="padding:8px 16px">Next →</button>
+    </div>`;
+}
+
+function flipFC(){
+  const card=document.getElementById('fcCard');
+  fcState.flipped=!fcState.flipped;
+  if(fcState.flipped) card.classList.add('flipped');
+  else card.classList.remove('flipped');
+}
+function nextFC(){fcState.idx=(fcState.idx+1)%fcState.pool.length;fcState.flipped=false;renderFC();}
+function prevFC(){fcState.idx=(fcState.idx-1+fcState.pool.length)%fcState.pool.length;fcState.flipped=false;renderFC();}
+
+// ============================================================
+// NOTES
+// ============================================================
+function showNotesTopic(n,el){
+  document.querySelectorAll('.ref-topic-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderNotes(n);
+}
+
+const NOTES = {
+'1':`<div class="content-card">
+  <h2>📘 File 1: Descriptive Studies & Survey Study</h2>
+  <h3>Clinical Background: Carotenemia</h3>
+  <div class="clinical-box">
+    <h4>Definition & Key Features</h4>
+    <ul>
+      <li>Benign condition — yellow-orange skin discoloration from excessive carotene ingestion</li>
+      <li>ABSENT scleral icterus (differentiates from jaundice)</li>
+      <li>No pruritus, no dark urine, no pale stools</li>
+    </ul>
+    <h4>Case: 43M, 6 months papaya & mango diet</h4>
+    <ul>
+      <li>Yellow-orange discoloration: hands, feet, axillae</li>
+      <li>All LFTs, coagulation, albumin, platelets, TFTs normal</li>
+      <li>Management: Reduce high-carotene food intake → resolves spontaneously</li>
+      <li>No further testing needed — it's benign!</li>
+    </ul>
+    <h4>High-Carotene Foods (All of the above!)</h4>
+    <ul><li>Apples, oranges, beans, peaches, berries, pineapples, broccoli, cabbage, carrots, spinach, cucumbers, tomatoes, lettuce, mangoes</li></ul>
+  </div>
+  <h3>Study Design Types (Descriptive)</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+    <tr><td>Case Report</td><td>ONE unique case</td><td>Carotenemia case</td></tr>
+    <tr><td>Case Series</td><td>Multiple similar cases</td><td>Several carotenemia patients</td></tr>
+    <tr><td>Ecological</td><td>Populations (not individuals)</td><td>Diet & Alzheimer's in 11 countries</td></tr>
+    <tr><td>Cross-sectional</td><td>Snapshot prevalence</td><td>Point-in-time survey</td></tr>
+    <tr><td>Longitudinal</td><td>Follow-up over time</td><td>Monitoring disease course</td></tr>
+  </table></div>
+  <h3>6 Steps of Conducting a Survey</h3>
+  <div class="formula-box">
+    <div class="step">1. Preliminary stage</div>
+    <div class="step">2. Planning</div>
+    <div class="step">3. Preparation for data collection</div>
+    <div class="step">4. Collection of data</div>
+    <div class="step">5. Data tabulation & analysis</div>
+    <div class="step">6. Writing reports</div>
+    <div class="result">Always start with PRELIMINARY — not Planning!</div>
+  </div>
+</div>`,
+
+'2':`<div class="content-card">
+  <h2>📘 File 2: Case-Control Studies & Odds Ratio</h2>
+  <div class="clinical-box">
+    <h4>Case-Control Design</h4>
+    <ul>
+      <li>Start with OUTCOME (disease/cases) and look BACKWARD at exposure</li>
+      <li>Best for RARE DISEASES</li>
+      <li>Cases vs. age/gender-matched controls</li>
+      <li>Measure of association: ODDS RATIO (OR) — never RR!</li>
+    </ul>
+  </div>
+  <h3>Odds Ratio Calculation</h3>
+  <div class="formula-box">
+    <div class="step">OR = (a × d) / (b × c)</div>
+    <div class="step">a = Cases exposed | b = Cases unexposed</div>
+    <div class="step">c = Controls exposed | d = Controls unexposed</div>
+    <br>
+    <div class="step"><strong>Artificial sweeteners & bladder cancer:</strong></div>
+    <div class="step">OR = (1293 × 2145) / (855 × 1707) = 1.9</div>
+    <div class="result">→ 1.9x more likely in sweetener users</div>
+    <br>
+    <div class="step"><strong>Needle stick & HIV:</strong></div>
+    <div class="step">OR = (80 × 850) / (150 × 20) = 22.6</div>
+    <div class="result">→ 22.6x more common with deep injury</div>
+  </div>
+</div>`,
+
+'3':`<div class="content-card">
+  <h2>📘 File 3: Cohort Studies & Relative Risk</h2>
+  <div class="clinical-box">
+    <h4>Cohort Study Design</h4>
+    <ul>
+      <li>Prospective (forward in time): Exposure → Outcome</li>
+      <li>Follow exposed AND non-exposed groups over time</li>
+      <li>Measure: RELATIVE RISK (RR) — can calculate incidence</li>
+      <li>Best for: common diseases, incidence studies</li>
+    </ul>
+  </div>
+  <h3>Relative Risk Calculation — PA & MI Example</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Group</th><th>MI Cases</th><th>Total</th><th>Incidence</th></tr>
+    <tr><td>High PA (Exposed)</td><td>20</td><td>2000</td><td>0.01</td></tr>
+    <tr><td>Low PA (Non-exposed)</td><td>100</td><td>6000</td><td>0.0167</td></tr>
+  </table></div>
+  <div class="formula-box">
+    <div class="step">Ie = 20/2000 = 0.01</div>
+    <div class="step">In = 100/6000 = 0.0167</div>
+    <div class="step">RR = Ie/In = 0.01/0.0167</div>
+    <div class="result">RR = 0.6 → Protective factor (RR < 1 = PROTECTIVE)</div>
+  </div>
+  <h3>Cohort vs. Case-Control Comparison</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Feature</th><th>Cohort</th><th>Case-Control</th></tr>
+    <tr><td>Direction</td><td>Prospective (forward)</td><td>Retrospective (backward)</td></tr>
+    <tr><td>Starts with</td><td>Exposure</td><td>Outcome</td></tr>
+    <tr><td>Measure</td><td>Relative Risk (RR)</td><td>Odds Ratio (OR)</td></tr>
+    <tr><td>Best for</td><td>Common diseases</td><td>Rare diseases</td></tr>
+    <tr><td>Calculate incidence?</td><td>Yes</td><td>No</td></tr>
+  </table></div>
+</div>`,
+
+'4':`<div class="content-card">
+  <h2>📘 File 4: Screening Tests, Validity & Reliability</h2>
+  <h3>Core Formulas</h3>
+  <div class="formula-box">
+    <div class="step"><strong>Sensitivity</strong> = TP/(TP+FN) — detects those WITH disease</div>
+    <div class="step"><strong>Specificity</strong> = TN/(TN+FP) — identifies those WITHOUT disease</div>
+    <div class="step"><strong>PPV</strong> = TP/(TP+FP) — probability positive test truly has disease</div>
+    <div class="step"><strong>NPV</strong> = TN/(TN+FN) — probability negative test is truly disease-free</div>
+    <div class="step"><strong>Accuracy</strong> = (TP+TN)/Grand Total</div>
+    <div class="step"><strong>Prevalence</strong> = Total diseased/Grand Total</div>
+  </div>
+  <h3>Impact of Prevalence on PPV (Same Sensitivity 90%)</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Prevalence</th><th>TP</th><th>FP</th><th>PPV</th></tr>
+    <tr><td>10% (high)</td><td>90</td><td>90</td><td><strong style="color:var(--green)">50%</strong></td></tr>
+    <tr><td>1% (low)</td><td>9</td><td>99</td><td><strong style="color:var(--red)">8.3%</strong></td></tr>
+  </table></div>
+  <div class="clinical-box">
+    <h4>Key Conclusions</h4>
+    <ul>
+      <li>Higher prevalence → Higher PPV</li>
+      <li>Prevalence affects PPV but NOT sensitivity/specificity</li>
+      <li>Expensive tests → use in HIGH prevalence populations</li>
+    </ul>
+  </div>
+  <h3>Validity vs. Reliability — Target Analogy</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Pattern</th><th>Valid?</th><th>Reliable?</th></tr>
+    <tr><td>Scattered, off-center</td><td>❌ No</td><td>❌ No</td></tr>
+    <tr><td>Clustered, off-center</td><td>❌ No</td><td>✅ Yes</td></tr>
+    <tr><td>Clustered, in bullseye</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  </table></div>
+</div>`,
+
+'5':`<div class="content-card">
+  <h2>📘 File 5: Experimental Studies (RCT)</h2>
+  <div class="clinical-box">
+    <h4>RCT Design</h4>
+    <ul>
+      <li>Investigator ASSIGNS treatment (not just observes)</li>
+      <li>Randomization: each subject has EQUAL chance of assignment</li>
+      <li>Placebo: pharmacologically INERT, matched in appearance</li>
+      <li>Highest level of evidence (Gold Standard)</li>
+    </ul>
+  </div>
+  <h3>Blinding Types</h3>
+  <div class="formula-box">
+    <div class="step">Single-blind: Only SUBJECTS unaware of allocation</div>
+    <div class="step">Double-blind: Subjects + OBSERVER both unaware</div>
+    <div class="step">Triple-blind: Subjects + Observer + DATA ANALYST all unaware</div>
+  </div>
+  <h3>Crossover Trial</h3>
+  <div class="clinical-box">
+    <ul>
+      <li>Each participant receives BOTH treatments</li>
+      <li>Sequence 1: Treatment A → Washout → Treatment B</li>
+      <li>Sequence 2: Treatment B → Washout → Treatment A</li>
+      <li>NOT two parallel groups — each person is their own control</li>
+    </ul>
+  </div>
+  <h3>Cohort vs. RCT</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Feature</th><th>Cohort (Observational)</th><th>RCT (Experimental)</th></tr>
+    <tr><td>Investigator role</td><td>Observes only</td><td>Assigns intervention</td></tr>
+    <tr><td>Randomization</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Placebo</td><td>No</td><td>Common</td></tr>
+    <tr><td>Evidence level</td><td>Moderate</td><td>Highest</td></tr>
+  </table></div>
+</div>`,
+
+'6':`<div class="content-card">
+  <h2>📘 File 6: Statistics 1 — Sampling, Variables & Data Presentation</h2>
+  <h3>Sampling Techniques</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Technique</th><th>Category</th><th>Key Feature</th></tr>
+    <tr><td>Simple Random</td><td>Probability</td><td>Every member has equal chance</td></tr>
+    <tr><td>Systematic</td><td>Probability</td><td>Fixed interval from random start</td></tr>
+    <tr><td>Stratified</td><td>Probability</td><td>Proportional from each subgroup</td></tr>
+    <tr><td>Cluster/Multistage</td><td>Probability</td><td>Random clusters then all within</td></tr>
+    <tr><td>Convenience</td><td>Non-Probability</td><td>Whoever is available</td></tr>
+    <tr><td>Purposive/Judgmental</td><td>Non-Probability</td><td>Specific experts selected</td></tr>
+    <tr><td>Snowball</td><td>Non-Probability</td><td>Chain referral</td></tr>
+  </table></div>
+  <h3>Variable Types</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Variable</th><th>Type</th><th>Scale</th></tr>
+    <tr><td>Profession, Gender, Blood Group</td><td>Qualitative</td><td>Nominal</td></tr>
+    <tr><td>Education level, Cancer stage</td><td>Qualitative</td><td>Ordinal</td></tr>
+    <tr><td>Number of family members, shifts/week</td><td>Quantitative</td><td>Discrete</td></tr>
+    <tr><td>Age, Weight, HR, Temp, Cholesterol</td><td>Quantitative</td><td>Continuous</td></tr>
+  </table></div>
+  <h3>Data Presentation</h3>
+  <div class="formula-box">
+    <div class="step">Pie chart → Proportions (e.g. gender distribution)</div>
+    <div class="step">Histogram → Grouped CONTINUOUS data (bars TOUCH)</div>
+    <div class="step">Bar chart → Categorical/NOMINAL data (bars DON'T touch)</div>
+    <div class="step">Scatter plot → Relationship between TWO continuous variables</div>
+    <div class="step">Clustered bar chart → Two nominal variables side by side</div>
+    <div class="result">Median is resistant to outliers — Mean is NOT!</div>
+  </div>
+</div>`,
+
+'7':`<div class="content-card">
+  <h2>📘 File 7: Statistics 2 — Tests of Significance</h2>
+  <h3>Choosing the Right Statistical Test</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Scenario</th><th>Test</th></tr>
+    <tr><td>Small sample (&lt;20), categorical data</td><td><strong>Fisher's Exact Test</strong></td></tr>
+    <tr><td>Large sample, categorical (nominal) data</td><td><strong>Chi-square test</strong></td></tr>
+    <tr><td>2 independent groups, parametric (normal) continuous</td><td><strong>Independent t-test</strong></td></tr>
+    <tr><td>2 groups, non-parametric (skewed) continuous</td><td><strong>Mann-Whitney U test</strong></td></tr>
+  </table></div>
+  <h3>Summary Statistics by Data Type</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Data Type</th><th>Central Tendency</th><th>Dispersion</th></tr>
+    <tr><td>Parametric (Normal) — Mean≈Median</td><td>Mean</td><td>Standard Deviation (SD)</td></tr>
+    <tr><td>Non-parametric (Skewed) — Mean≠Median</td><td>Median</td><td>Min-Max Range or IQR</td></tr>
+  </table></div>
+  <h3>Normal Distribution</h3>
+  <div class="formula-box">
+    <div class="step">Shape determined by: Mean + Standard Deviation ONLY</div>
+    <div class="step">Normal: Mean ≈ Median (small SD relative to mean)</div>
+    <div class="step">Skewed: Mean ≠ Median (large SD relative to mean)</div>
+    <div class="result">p &lt; 0.05 = Significant | p &lt; 0.001 = Highly Significant</div>
+  </div>
+</div>`,
+
+'8':`<div class="content-card">
+  <h2>📘 File 8: Morbidity Statistics</h2>
+  <div class="clinical-box">
+    <h4>Sunvale Town Scenario (Population = 10,000)</h4>
+    <ul>
+      <li>Jan 1, 2024: 200 residents have active asthma → Point Prevalence = 200/10,000 = 2%</li>
+      <li>Throughout 2024: 50 NEWLY diagnosed → Incidence = 50</li>
+      <li>Dec 31, 2024: 220 residents have active asthma → Point Prevalence = 220/10,000 = 2.2%</li>
+    </ul>
+  </div>
+  <h3>Incidence vs. Prevalence</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Feature</th><th>Incidence</th><th>Prevalence</th></tr>
+    <tr><td>What it measures</td><td>NEW cases</td><td>ALL existing cases</td></tr>
+    <tr><td>Time dimension</td><td>Over a PERIOD</td><td>At a POINT in time</td></tr>
+    <tr><td>Numerator</td><td>New cases only</td><td>Old + new cases</td></tr>
+    <tr><td>Sunvale example</td><td>50 new in 2024</td><td>200 (Jan) or 220 (Dec)</td></tr>
+  </table></div>
+  <div class="trap-box">
+    <h3>⚠️ Critical Exam Trap</h3>
+    <ul>
+      <li>End prevalence (220) ≠ Start prevalence (200) + Incidence (50) = 250</li>
+      <li>Difference = 30 cases that RECOVERED or DIED during the year!</li>
+    </ul>
+  </div>
+</div>`
+};
+
+function renderNotes(n){
+  document.getElementById('notesArea').innerHTML=NOTES[n]||'';
+}
+
+// ============================================================
+// FORMULAS
+// ============================================================
+function renderFormulas(){
+  document.getElementById('formulasArea').innerHTML=`
+<div class="content-card">
+  <h2>🔢 Odds Ratio (Case-Control)</h2>
+  <div class="formula-box">
+    <div class="step">OR = (a × d) / (b × c)</div>
+    <div class="step">a = Cases exposed | b = Cases unexposed | c = Controls exposed | d = Controls unexposed</div>
+    <br>
+    <div class="step"><strong>Example 1: Sweeteners & Bladder Cancer</strong></div>
+    <div class="step">OR = (1293 × 2145) / (855 × 1707) = <strong>1.9</strong></div>
+    <br>
+    <div class="step"><strong>Example 2: Needle Stick & HIV</strong></div>
+    <div class="step">OR = (80 × 850) / (150 × 20) = <strong>22.6</strong></div>
+    <div class="result">Interpretation: X times MORE COMMON (not % more likely)</div>
+  </div>
+</div>
+<div class="content-card">
+  <h2>🔢 Relative Risk (Cohort)</h2>
+  <div class="formula-box">
+    <div class="step">RR = Ie / In</div>
+    <div class="step">Ie = Incidence in Exposed group</div>
+    <div class="step">In = Incidence in Non-exposed group</div>
+    <br>
+    <div class="step"><strong>PA & MI Example:</strong></div>
+    <div class="step">Ie = 20/2000 = 0.01 | In = 100/6000 = 0.0167</div>
+    <div class="step">RR = 0.01/0.0167 = <strong>0.6</strong></div>
+    <div class="result">RR &lt; 1 = Protective | RR &gt; 1 = Risk factor | RR = 1 = No association</div>
+  </div>
+</div>
+<div class="content-card">
+  <h2>🔢 Screening Test Metrics</h2>
+  <div class="formula-box">
+    <div class="step">Sensitivity = TP / (TP + FN)</div>
+    <div class="step">Specificity = TN / (TN + FP)</div>
+    <div class="step">PPV = TP / (TP + FP)</div>
+    <div class="step">NPV = TN / (TN + FN)</div>
+    <div class="step">Accuracy = (TP + TN) / Grand Total</div>
+    <div class="step">Prevalence = Total Diseased / Grand Total</div>
+    <br>
+    <div class="step"><strong>TB Screening Example (200 subjects):</strong></div>
+    <div class="step">NPV = 130/140 = <strong>92.8%</strong></div>
+    <div class="step">Accuracy = 170/200 = <strong>85%</strong></div>
+    <div class="result">High prevalence → High PPV | Prevalence does NOT affect Sensitivity</div>
+  </div>
+</div>
+<div class="content-card">
+  <h2>🔢 Systematic Sampling</h2>
+  <div class="formula-box">
+    <div class="step">Sampling Interval = Total Population / Sample Size</div>
+    <div class="step">Example: 2700/300 = Interval of 9</div>
+    <div class="step">Start: pick random number (e.g., 8)</div>
+    <div class="step">Sequence: 8 → 17 → 26 → 35 → 44 → ...</div>
+    <div class="result">Always add the interval — never multiply!</div>
+  </div>
+</div>`;
+}
+
+// ============================================================
+// COMPARISONS
+// ============================================================
+function renderCompare(){
+  document.getElementById('compareArea').innerHTML=`
+<div class="content-card">
+  <h2>📊 Study Design Hierarchy</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Design</th><th>Type</th><th>Direction</th><th>Measure</th><th>Best For</th></tr>
+    <tr><td>Case Report / Series</td><td>Descriptive</td><td>—</td><td>None</td><td>Unique findings, generating hypotheses</td></tr>
+    <tr><td>Ecological</td><td>Descriptive</td><td>—</td><td>Correlation</td><td>Population-level associations</td></tr>
+    <tr><td>Cross-sectional</td><td>Observational</td><td>Snapshot</td><td>Prevalence</td><td>Prevalence studies</td></tr>
+    <tr><td>Case-Control</td><td>Observational/Analytical</td><td>Backward (retrospective)</td><td>Odds Ratio</td><td>RARE diseases</td></tr>
+    <tr><td>Cohort</td><td>Observational/Analytical</td><td>Forward (prospective)</td><td>Relative Risk</td><td>Common diseases, incidence</td></tr>
+    <tr><td>RCT</td><td>Experimental</td><td>Forward + Assigned</td><td>RR, NNT, Efficacy</td><td>Testing interventions (Gold Standard)</td></tr>
+  </table></div>
+</div>
+<div class="content-card">
+  <h2>📊 Statistical Tests Summary</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Data Type</th><th>Sample Size</th><th>Test</th></tr>
+    <tr><td>Categorical (Nominal)</td><td>Small &lt;20 or expected cell &lt;5</td><td>Fisher's Exact Test</td></tr>
+    <tr><td>Categorical (Nominal)</td><td>Large (&ge;20)</td><td>Chi-square</td></tr>
+    <tr><td>Continuous, Parametric (Normal)</td><td>2 independent groups</td><td>Independent t-test</td></tr>
+    <tr><td>Continuous, Non-parametric (Skewed)</td><td>2 groups</td><td>Mann-Whitney U</td></tr>
+  </table></div>
+</div>
+<div class="content-card">
+  <h2>📊 Sampling Types</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Technique</th><th>Type</th><th>Scenario</th></tr>
+    <tr><td>Simple Random</td><td>Probability</td><td>1000 employees, pick 100 randomly</td></tr>
+    <tr><td>Systematic</td><td>Probability</td><td>Every 9th employee from list</td></tr>
+    <tr><td>Stratified</td><td>Probability</td><td>10% from each grade/SES subgroup</td></tr>
+    <tr><td>Cluster/Multistage</td><td>Probability</td><td>Random settings → departments → all within</td></tr>
+    <tr><td>Convenience</td><td>Non-Probability</td><td>Whoever attends clinic that day</td></tr>
+    <tr><td>Purposive</td><td>Non-Probability</td><td>AI ethics experts specifically</td></tr>
+    <tr><td>Snowball</td><td>Non-Probability</td><td>Drug users refer others</td></tr>
+  </table></div>
+</div>`;
+}
+
+// ============================================================
+// EXAM TRAPS
+// ============================================================
+function renderTraps(){
+  const traps=[
+    {file:'File 1',traps:[
+      "Carotenemia vs. Jaundice: NO scleral icterus in carotenemia — this is the KEY differentiator",
+      "Ecological study = POPULATIONS not individuals (don't confuse with case-control)",
+      "Case Report = ONE case | Case Series = MULTIPLE similar cases",
+      "Survey always starts with PRELIMINARY STAGE — not Planning",
+    ]},
+    {file:'File 2',traps:[
+      "Case-control → Odds Ratio ONLY — never use Relative Risk!",
+      "Rare disease → Case-Control (never cohort for rare diseases)",
+      "OR formula: (a×d)/(b×c) — NOT (a/b)/(c/d)",
+      "OR = 22.6 means '22.6 TIMES more common' — NOT 22.6% more likely",
+    ]},
+    {file:'File 3',traps:[
+      "RR vs. OR: Relative Risk is ONLY calculated in Cohort studies",
+      "RR < 1 = PROTECTIVE factor (e.g., RR=0.6 means exposure REDUCES risk)",
+      "'Exposed' designation matters: Read carefully which group is 'exposed'",
+    ]},
+    {file:'File 4',traps:[
+      "Sensitivity uses 'all truly diseased' as denominator; PPV uses 'all test-positive'",
+      "Prevalence affects PPV but NOT sensitivity or specificity",
+      "Reliable ≠ Valid: Clustered off-center = reliable but NOT valid",
+      "High mortality disease → High SENSITIVITY (not specificity)",
+      "Specificity = proportion WITHOUT disease correctly classified as NEGATIVE",
+    ]},
+    {file:'File 5',traps:[
+      "Cohort ≠ Experimental: In RCT, investigator ASSIGNS treatment; in cohort, only observes",
+      "Double-blind: Both SUBJECTS and OBSERVER unaware (not just subjects)",
+      "Crossover: Each person gets BOTH treatments with washout in between — NOT parallel groups",
+      "Placebo is pharmacologically INERT — matched in appearance only",
+    ]},
+    {file:'File 6',traps:[
+      "Systematic sampling: Interval = Total/Sample. First number RANDOM, then add interval",
+      "Stratified vs. Cluster: Stratified = sample FROM each subgroup. Cluster = select ENTIRE clusters",
+      "Discrete: 'Number of family members' = whole numbers. NOT continuous",
+      "Ordinal vs. Nominal: Education level has ORDER (ordinal). Blood group has NO order (nominal)",
+      "Outliers affect MEAN, not MEDIAN — Median is the robust measure",
+      "Histogram = continuous (bars TOUCH) | Bar chart = categorical (bars DON'T touch)",
+    ]},
+    {file:'File 7',traps:[
+      "Fisher's Exact when n<20 OR expected cell frequency <5. Don't use Chi-square for tiny samples",
+      "Mean ≈ Median = Normal distribution. If they diverge = Skewed",
+      "Parametric → Mean ± SD | Non-parametric → Median (Min-Max)",
+      "p < 0.05 = Significant | p < 0.001 = Highly significant",
+      "Independent t-test: ONLY for TWO independent groups with normal data. Not for paired data",
+    ]},
+    {file:'File 8',traps:[
+      "Incidence = NEW cases over a TIME PERIOD only",
+      "Prevalence = ALL existing cases at ONE POINT in time",
+      "End prevalence ≠ Start + Incidence: The gap = recovered + died cases",
+    ]},
+  ];
+  document.getElementById('trapsArea').innerHTML=traps.map(t=>`
+    <div class="content-card">
+      <h2>⚠️ ${t.file} Exam Traps</h2>
+      <div class="trap-box">
+        <ul>${t.traps.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>
+    </div>`).join('');
+}
+
+// ============================================================
+// ACHIEVEMENTS
+// ============================================================
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!state.unlockedAch.has(a.id)&&a.condition(state)){
+      state.unlockedAch.add(a.id);
+      showToast(a.icon,'Achievement Unlocked!',a.name);
+    }
+  });
+}
+
+function renderAchievements(){
+  document.getElementById('achGrid').innerHTML=ACHIEVEMENTS.map(a=>`
+    <div class="ach-card ${state.unlockedAch.has(a.id)?'unlocked':''}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadState();
+updateHUD();
+startQuiz();
+</script>
+</body>
+</html>

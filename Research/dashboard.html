@@ -296,10 +296,35 @@ body{
   .MU63-stats{gap:16px;padding:14px 16px}
   .MU63-stat-num{font-size:22px}
 }
+        .back-btn {
+        position: fixed;
+        background:#ffffff;
+        color: #000000;
+        border: 1px solid #D1D5DB;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        border:none;
+        z-index: 1000;
+        margin: 15px;
+        }
+        .back-btn:hover {
+        background: linear-gradient(135deg, #ffa5cc, #a17bd7, #86b4ff);;
+        border-color: #9CA3AF;
+        font-weight: 600;
+        color: #ffffff;
+        }
 </style>
 </head>
 <body>
+<div class="back-btn">
+  <a href="/main.html" style=" text-decoration: none; /* Removes the underline */
+    color: inherit;        /* Matches the surrounding text color and stops visited color changes */
+    outline: none;  "> <-- Back</a>
 
+</div>
 <div class="MU63-grid-bg"></div>
 <div class="MU63-ambient" aria-hidden="true">
   <div class="MU63-orb MU63-orb-1"></div>
@@ -320,6 +345,7 @@ body{
     </div>
   </div>
 </header>
+
 
 <section class="MU63-hero">
   <div class="MU63-hero-left">
@@ -464,6 +490,17 @@ body{
         <div class="MU63-card-meta"><i class="fa-regular fa-file-lines"></i> 8 concepts · 20 MCQs</div>
         <div class="MU63-card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
     </div>
+</a>
+
+<a class="MU63-card" href="OSPE-Dashboard.html">
+  <div class="MU63-card-icon" style="--grad:linear-gradient(135deg,#fc8f00,#f13800);color:#ff8800"><i class="fa-solid fa-person-running"></i></div>
+  <span class="MU63-card-tag MU63-card-tag-lecture"><i class="fa-solid fa-person-running"></i>OSPE</span>
+  <h3 class="MU63-card-title">OSPE</h3>
+  <p class="MU63-card-desc">Practical research demonstration questions to prepare for the OSPE exam.</p>
+  <div class="MU63-card-footer">
+    <div class="MU63-card-meta"><i class="fa-regular fa-file-lines"></i> Summary · MCQs</div>
+    <div class="MU63-card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+  </div>
 </a>
 
 </main>

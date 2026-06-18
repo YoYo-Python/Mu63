@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resarch MCQ Quiz — KME · Mansoura University</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1117; --surf:#161b22; --surf2:#1c2230; --border:#30363d;
+  --text:#e6edf3; --muted:#8b949e;
+  --accent:#58a6ff; --accent-dim:rgba(88,166,255,.12);
+  --green:#3fb950; --green-bg:rgba(63,185,80,.13);
+  --red:#f85149; --red-bg:rgba(248,81,73,.13);
+  --radius:12px; --radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#0d1117 100%);border-bottom:1px solid var(--border);padding:28px 24px 22px;text-align:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header-eye{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.header h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(20px,4vw,32px);color:var(--text);line-height:1.2;margin-bottom:4px}
+.header-sub{font-size:12px;color:var(--muted)}
+
+/* PROGRESS */
+.prog-wrap{max-width:900px;margin:16px auto 0;padding:0 24px}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px}
+.prog-bg{height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#79c0ff);border-radius:99px;transition:width .4s ease;width:0%}
+
+/* SCORE */
+.score-strip{max-width:900px;margin:14px auto 0;padding:0 24px;display:flex;gap:10px;flex-wrap:wrap}
+.s-pill{display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surf)}
+.s-pill .dot{width:8px;height:8px;border-radius:50%}
+.s-pill.c{border-color:var(--green);color:var(--green)}.s-pill.c .dot{background:var(--green)}
+.s-pill.w{border-color:var(--red);color:var(--red)}.s-pill.w .dot{background:var(--red)}
+.s-pill.r{color:var(--muted)}.s-pill.r .dot{background:var(--muted)}
+
+/* FILTERS */
+.filter-wrap{max-width:900px;margin:16px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.fb{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:var(--surf);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.fb:hover{border-color:var(--accent);color:var(--accent)}
+.fb.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+/* MAIN */
+.main{max-width:900px;margin:0 auto;padding:20px 24px 80px}
+
+/* SECTION HEADING */
+.sec-h{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:7px 14px;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin:28px 0 14px;display:flex;align-items:center;gap:8px}
+.sec-h .cnt{color:var(--muted);font-size:10px;margin-left:auto}
+
+/* QUESTION CARD */
+.qc{background:var(--surf);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px;transition:border-color .2s}
+.qc:hover{border-color:#484f58}
+.qc.ac{border-color:var(--green)}
+.qc.aw{border-color:var(--red)}
+.qc.hidden{display:none}
+
+.qn{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.qtag{font-size:10px;padding:2px 8px;border-radius:99px;background:var(--surf2);border:1px solid var(--border);color:var(--muted);font-weight:500}
+.qt{font-size:15px;font-weight:500;color:var(--text);margin-bottom:16px;line-height:1.65}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:7px}
+.ob{display:flex;align-items:flex-start;gap:11px;padding:11px 15px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surf2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:all .18s;line-height:1.5;width:100%}
+.ob:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim)}
+.ob:disabled{cursor:default}
+.ol{font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:4px;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0;transition:all .18s}
+.ob:hover:not(:disabled) .ol{background:var(--accent);color:#fff}
+.ob.correct{border-color:var(--green);background:var(--green-bg)}
+.ob.correct .ol{background:var(--green);color:#fff}
+.ob.wrong{border-color:var(--red);background:var(--red-bg)}
+.ob.wrong .ol{background:var(--red);color:#fff}
+
+/* FEEDBACK */
+.fb-area{margin-top:13px;padding:11px 15px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;display:none;align-items:flex-start;gap:10px;line-height:1.55}
+.fb-area.show{display:flex}
+.fb-area.correct{background:var(--green-bg);border:1px solid rgba(63,185,80,.3);color:var(--green)}
+.fb-area.wrong{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.25);color:var(--text)}
+.fb-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.fb-body{flex:1}
+.fb-title{font-weight:700;margin-bottom:2px}
+.fb-exp{color:var(--muted);font-weight:400;font-size:12.5px;margin-top:4px}
+
+/* RESET */
+.qreset{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 0;margin-top:8px;display:none;text-decoration:underline;text-underline-offset:3px}
+.qreset.show{display:inline-block}
+.qreset:hover{color:var(--text)}
+
+@media(max-width:600px){
+  .header{padding:18px 14px}
+  .main{padding:14px 10px 60px}
+  .qc{padding:16px 13px}
+  .qt{font-size:13.5px}
+  .ob{font-size:13px}
+  .filter-wrap,.score-strip,.prog-wrap{padding:0 10px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eye">KME · Faculty of Medicine · Mansoura University</div>
+  <h1>Research MCQ Quiz</h1>
+  <div class="header-sub">Epidemiology · Biostatistics · Screening · Experimental Studies · 77 Questions</div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-meta">
+    <span id="pl">0 of 77 answered</span>
+    <span id="pp">0%</span>
+  </div>
+  <div class="prog-bg"><div class="prog-fill" id="pf"></div></div>
+</div>
+
+<div class="score-strip">
+  <div class="s-pill c"><span class="dot"></span><span id="sc">0</span>&nbsp;Correct</div>
+  <div class="s-pill w"><span class="dot"></span><span id="sw">0</span>&nbsp;Wrong</div>
+  <div class="s-pill r"><span class="dot"></span><span id="sr">77</span>&nbsp;Remaining</div>
+</div>
+
+<div class="filter-wrap">
+  <span class="fl">Filter:</span>
+  <button class="fb on" onclick="ft(this,'all')">All (77)</button>
+  <button class="fb" onclick="ft(this,'Descriptive Studies')">Descriptive Studies</button>
+  <button class="fb" onclick="ft(this,'Case-Control')">Case-Control</button>
+  <button class="fb" onclick="ft(this,'Cohort Studies')">Cohort Studies</button>
+  <button class="fb" onclick="ft(this,'Screening Tests')">Screening Tests</button>
+  <button class="fb" onclick="ft(this,'Experimental Studies')">Experimental Studies</button>
+  <button class="fb" onclick="ft(this,'Sampling')">Sampling &amp; Statistics</button>
+  <button class="fb" onclick="ft(this,'Morbidity')">Morbidity &amp; Mortality</button>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+const Q=[
+// ── DESCRIPTIVE STUDIES ──
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"Which of the following describes carotenemia?",
+ o:["A malignant condition characterized by scleral icterus","A benign condition characterized by yellow-orange skin discoloration without scleral icterus","A condition requiring extensive diagnostic testing such as liver biopsies","A disease caused by a severe deficiency of carotene","A viral infection leading to pruritus and pale stools"],
+ c:1,e:"Carotenemia is benign and self-limiting, caused by excess dietary carotene. It produces yellow-orange skin (palms/soles) WITHOUT scleral icterus — distinguishing it from jaundice."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"A 43-year-old male presents with yellow-orange discoloration of his hands, feet, and axillae for a few weeks, with normal LFTs and thyroid profile. He predominantly consumed papaya and mango for six months. What is the appropriate management?",
+ o:["Immediate liver transplant","Antiviral therapy","Reduction in consumption of high-carotene foods","Thyroid hormone replacement","Corticosteroid therapy"],
+ c:2,e:"Carotenemia is benign and dietary in origin. Normal LFTs and thyroid profile rule out other causes. The only management needed is reducing carotene-rich food intake."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"Which of the following foods is NOT listed as a high carotene-containing food?",
+ o:["Broccoli and cabbage","Spinach and cucumber","Tomato and lettuce","Red meat and poultry","Apple and orange"],
+ c:3,e:"Red meat and poultry contain negligible carotene. High-carotene foods are plant-based: orange/yellow/green vegetables and fruits."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"A study reporting a newly described disease, an unexpected therapeutic effect, or a link between diseases is classified as what type of study design?",
+ o:["Experimental randomized trial","Observational, descriptive case report","Case-control study","Prospective cohort study","Systematic review"],
+ c:1,e:"Case reports are descriptive observational studies ideal for reporting novel/unusual findings, unexpected drug effects, or new disease associations."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"Which of the following study designs describes a number of similar cases in one single report?",
+ o:["Case series","Correlational study","Ecological study","Longitudinal study","Randomized controlled trial"],
+ c:0,e:"A case series aggregates multiple similar case reports into one publication, allowing pattern recognition without a control group."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"A multi-country study links diet and Alzheimer's disease using national survey prevalence data across 11 countries, finding total fat and calories strongly correlated with prevalence. What study design is this?",
+ o:["Case series","Retrospective cohort","Correlational (ecological) study","Case report","Experimental trial"],
+ c:2,e:"Correlational/ecological studies analyze population-level (not individual-level) data from multiple groups or regions to identify associations."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"In the survey regarding the prevalence of obesity in a Saudi obstetric population, where was the biochemical analysis of field blood samples performed?",
+ o:["Mansoura University","Ministry of Health Central Lab","National Nutrition Institute laboratories","Rural healthcare clinics","Local pharmacy"],
+ c:2,e:"Biochemical analysis was conducted at the National Nutrition Institute laboratories, as stated in the survey methodology."},
+{s:"Descriptive Studies & Survey Study",t:"Descriptive Studies",
+ q:"According to the provided text, what is the correct FIRST step in conducting a survey study?",
+ o:["Data tabulation & analysis","Collection of data","Writing reports","Preliminary stage","Preparation for data collection"],
+ c:3,e:"The preliminary stage (defining objectives, formulating hypotheses, literature review) comes first — before data collection or any preparation."},
+
+// ── CASE-CONTROL ──
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"Researchers want to know whether low birth weight is associated with multiple sclerosis (MS) in adulthood (prevalence 150 per 100,000). Which design is most appropriate?",
+ o:["Retrospective cohort study","Randomized controlled trial","Case-control study with MS patients as cases and subjects without MS as controls","Prospective cohort study","Ecological study"],
+ c:2,e:"Case-control studies are ideal for rare diseases — efficient, cost-effective, and retrospectively compare exposure history in cases vs. controls."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"Based on the Artificial Sweeteners and Bladder Cancer table, how many users of artificial sweeteners were in the bladder cancer group (cases) and the control group, respectively?",
+ o:["1707 cases, 2145 controls","1293 cases, 855 controls","855 cases, 1293 controls","3000 cases, 3000 controls","1707 cases, 855 controls"],
+ c:1,e:"The 2×2 table shows 1293 users among cases (bladder cancer) and 855 users among controls."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"Based on the Artificial Sweeteners and Bladder Cancer table, how many non-users were in the cases group and control group, respectively?",
+ o:["1293 cases, 855 controls","3000 cases, 3000 controls","1707 cases, 2145 controls","2145 cases, 1707 controls","855 cases, 1707 controls"],
+ c:2,e:"Non-users: 1707 in cases and 2145 in controls, as read from the 2×2 table."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"What is the Odds Ratio (OR) for artificial sweeteners and bladder cancer? (cases-users=1293, cases-nonusers=1707, controls-users=855, controls-nonusers=2145)",
+ o:["1.5","2.0","1.9","22.6","0.6"],
+ c:2,e:"OR = (a×d)/(b×c) = (1293×2145)/(1707×855) = 2,773,485/1,459,485 ≈ 1.9. Sweetener users have ~1.9× the odds of bladder cancer."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"Based on the Needle Stick Injury and HIV table, how many DEEP exposures occurred in cases and controls respectively?",
+ o:["80 cases, 150 controls","20 cases, 850 controls","100 cases, 1000 controls","150 cases, 80 controls","850 cases, 20 controls"],
+ c:0,e:"80 HIV-positive cases had deep needle stick injuries; 150 HIV-negative controls had deep injuries."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"Based on the Needle Stick Injury and HIV table, how many SUPERFICIAL exposures occurred in cases and controls respectively?",
+ o:["80 cases, 150 controls","100 cases, 1000 controls","20 cases, 850 controls","150 cases, 850 controls","850 cases, 20 controls"],
+ c:2,e:"Only 20 HIV-positive cases had superficial injuries vs. 850 HIV-negative controls — reinforcing that depth dramatically increases HIV risk."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"What is the OR and its interpretation for HIV transmission following deep needle stick injury? (deep: 80 cases / 150 controls; superficial: 20 cases / 850 controls)",
+ o:["OR=1.9; HIV is 1.9× more common in deep injuries","OR=22.6; HIV is 22.6× more common among deep than superficial injuries","OR=0.6; Deep injuries reduce HIV risk by 60%","OR=15; HIV is 15× more common in superficial injuries","OR=80; Deep injuries cause 80% of HIV cases"],
+ c:1,e:"OR = (80×850)/(150×20) = 68,000/3,000 = 22.6. Deep needle stick injuries carry 22.6× greater odds of HIV transmission than superficial injuries."},
+{s:"Case-Control Studies",t:"Case-Control",
+ q:"A researcher investigates whether 20 years of industrial chemical exposure contributes to a rare neurological disorder by gathering data from people with and without the disorder. What study design is this?",
+ o:["Observational, Analytical, Case-control","Prospective cohort","Descriptive survey","Randomized controlled trial","Case series"],
+ c:0,e:"Selecting cases (with disorder) and controls (without), then looking backward at chemical exposure = classic case-control study."},
+
+// ── COHORT STUDIES ──
+{s:"Cohort Studies",t:"Cohort Studies",
+ q:"A research team follows 2000 HBsAg-positive and a similar group of HBsAg-negative patients over 15 years to determine the rate of hepatocellular carcinoma. What study design is this?",
+ o:["Cross-sectional study","Case-control study","Prospective Cohort study","Experimental study","Correlational study"],
+ c:2,e:"Following defined exposed (HBsAg+) and unexposed (HBsAg−) groups forward in time to observe disease incidence = prospective cohort study."},
+{s:"Cohort Studies",t:"Cohort Studies",
+ q:"Based on the Physical Activity (PA) and MI table, how many total persons were in the High PA group and how many developed MI?",
+ o:["6000 total, 100 developed MI","2000 total, 20 developed MI","6000 total, 20 developed MI","2000 total, 100 developed MI","1980 total, 20 developed MI"],
+ c:1,e:"High PA group: 2000 total, 20 developed MI → incidence rate = 20/2000 = 0.01."},
+{s:"Cohort Studies",t:"Cohort Studies",
+ q:"Based on the PA and MI table, what is the incidence rate among High PA (exposed) and Low PA (non-exposed)?",
+ o:["High PA=0.06; Low PA=0.01","High PA=0.01; Low PA=0.0167","High PA=0.167; Low PA=0.10","High PA=0.60; Low PA=0.40","High PA=0.0167; Low PA=0.01"],
+ c:1,e:"Incidence (High PA) = 20/2000 = 0.01. Incidence (Low PA) = 100/6000 = 0.0167. High PA has LOWER incidence — it is protective."},
+{s:"Cohort Studies",t:"Cohort Studies",
+ q:"What is the Relative Risk (RR) of High Physical Activity on MI? (Incidence: High PA=0.01, Low PA=0.0167)",
+ o:["1.67","1.9","22.6","0.6 (60%)","92.8%"],
+ c:3,e:"RR = Incidence(exposed)/Incidence(unexposed) = 0.01/0.0167 = 0.6. High PA is PROTECTIVE — reduces MI risk by 40%."},
+
+// ── SCREENING TESTS ──
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Newborn Viral Screening table, how many newborns tested Positive on the screen AND were positive by viral isolation (True Positives)?",
+ o:["30","100","70","20","90"],
+ c:2,e:"Screen Positive & Viral Isolation Positive = 70 True Positives."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Newborn Viral Screening table, how many newborns tested Negative on the screen but were actually positive by viral isolation (False Negatives)?",
+ o:["70","20","30","200","220"],
+ c:1,e:"Screen Negative & Viral Isolation Positive = 20. These are missed cases — false negatives."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Using the Newborn Viral Screening data (TP=70, FN=20, FP=30, TN=200), what is the Sensitivity?",
+ o:["70/90 = 77.7%","200/230 = 86.9%","70/100 = 70%","200/220 = 90.9%","186/190 = 97.8%"],
+ c:0,e:"Sensitivity = TP/(TP+FN) = 70/(70+20) = 70/90 = 77.7%. Measures ability to correctly identify truly diseased individuals."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Breast Cancer Screening table, how many diseased women tested positive (True Positives) and how many disease-free women tested positive (False Positives)?",
+ o:["186 TP, 14 FP","4 TP, 3796 FP","190 TP, 3810 FP","186 TP, 4 FP","14 TP, 3796 FP"],
+ c:0,e:"186 diseased women correctly screened positive (TP). 14 disease-free women incorrectly screened positive (FP)."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Breast Cancer Screening table, what is the total number of women in the study?",
+ o:["200","3800","3810","4000","190"],
+ c:3,e:"Total = TP(186) + FP(14) + FN(4) + TN(3796) = 4000 women."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Diabetes Screening table, how many Diabetic patients tested Positive (True Positives)?",
+ o:["98","84","86","9752","170"],
+ c:2,e:"86 diabetic patients tested positive on the screening test = True Positives."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Diabetes Screening table, how many Non-diabetic patients tested Negative (True Negatives)?",
+ o:["98","84","86","9752","9850"],
+ c:3,e:"9752 non-diabetic patients correctly tested negative = True Negatives."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Based on the Diabetes Screening table (TP=86, FP=98, FN=14, TN=9752), what is the Positive Predictive Value (PPV)?",
+ o:["51%","40%","47%","88%","66%"],
+ c:2,e:"PPV = TP/(TP+FP) = 86/(86+98) = 86/184 ≈ 47%. Only 47% of positive screens actually have diabetes."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Target diagram: hits are tightly clustered but completely miss the bullseye center. This represents a test that is:",
+ o:["Valid and Reliable","Not Valid, Not Reliable","Not Valid, Reliable","Valid, Not Reliable","Highly sensitive"],
+ c:2,e:"Tight clustering = high Reliability (reproducible). Missing the bullseye = NOT Valid. Result: Not Valid but Reliable."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"What happens to PPV when disease prevalence decreases from 10% to 1%, assuming sensitivity stays the same?",
+ o:["PPV increases significantly","PPV remains unchanged","False positives decrease, raising PPV","Lower prevalence → more false positives → lower PPV","Negative predictive value drops"],
+ c:3,e:"As prevalence falls, the proportion of false positives among all positives rises dramatically. PPV is heavily dependent on disease prevalence."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"The proportion of people WITHOUT disease who are correctly classified as NEGATIVE by a screening test is called:",
+ o:["Positive predictive value","Sensitivity","Prevalence","Specificity","Incidence"],
+ c:3,e:"Specificity = TN/(TN+FP) — ability to correctly identify disease-FREE individuals as negative."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"In a communicable disease with high mortality, what is the most important characteristic for a screening test?",
+ o:["Highly specific","Easy to perform","Economical","Highly sensitive","High positive predictive value"],
+ c:3,e:"For high-mortality communicable diseases, missing a case (false negative) is catastrophic. High sensitivity minimizes missed cases."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Reliability of a screening test refers to:",
+ o:["Accurately measuring what it is supposed to measure","Dependence on the knowledge of the observer","Giving the same values on repeated testing","The extent to which the observer can find results","The proportion of true positives"],
+ c:2,e:"Reliability = reproducibility. A reliable test gives consistent results on repeated testing of the same specimen under the same conditions."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"For a screening test: TP=50, FP=5, FN=10, TN=90. What is the calculated accuracy?",
+ o:["90.3%","95.4%","83.3%","94.7%","100%"],
+ c:0,e:"Accuracy = (TP+TN)/Total = (50+90)/(50+5+10+90) = 140/155 = 90.3%."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"Which of the following characterizes a screening test?",
+ o:["More accurate","A basis for treatment","Used on community basis","More expensive","Confirms the diagnosis"],
+ c:2,e:"Screening tests are applied to communities (populations) to detect disease early. They are NOT diagnostic — positive results need confirmatory testing."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"The property identifying the proportion of disease-free persons correctly identified as negative by a screening test is called:",
+ o:["Sensitivity","Specificity","Positive predictive value","Negative predictive value"],
+ c:1,e:"Specificity = TN/(TN+FP) = proportion of disease-FREE persons correctly identified as NEGATIVE."},
+{s:"Screening Tests",t:"Screening Tests",
+ q:"In screening tests, which pair of terms is analogous?",
+ o:["Validity is analogous to repeatability","Reliability is analogous to accuracy","Validity is analogous to reliability","Validity is analogous to accuracy"],
+ c:3,e:"Validity = Accuracy (measures what it should). Reliability = Repeatability (consistent on repeated testing)."},
+
+// ── EXPERIMENTAL STUDIES ──
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"A study comparing Tocilizumab (TCZ) IV infusion against a placebo IV infusion in two groups of 150 COVID-19 patients is best described as:",
+ o:["An observational cohort study","An experimental study (Randomized Controlled Trial)","A correlational study","A case-control study","A descriptive case series"],
+ c:1,e:"Randomly allocating an active drug vs. a matched placebo to evaluate safety and efficacy = experimental RCT."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Which of the following characterizes a PLACEBO in a Randomized Controlled Trial?",
+ o:["It is pharmacologically inert","It is visually different from the active drug","It gives the exact same pharmacological effect as the tested drug","It is always ethical to use even when a highly effective drug exists","It is used only in Phase IV trials"],
+ c:0,e:"A placebo must be pharmacologically inert (no active ingredient) yet identical in appearance, taste, and route to the study drug."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"In a double-blind study:",
+ o:["Only the subjects are unaware of their group allocation","Only the observer is unaware of the group allocation","Both subjects and the observer are unaware of the subjects' group allocation","The subjects and the data analyst are unaware, but the observer knows","The entire hospital staff is blinded to the research goals"],
+ c:2,e:"Double-blind = BOTH participants AND investigators/observers are unaware of treatment assignment, minimizing performance and detection bias."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Based on the Clinical Trial Testing Analgesics table, how many patients experienced pain relief in the Analgesic A group?",
+ o:["30","20","5","45","50"],
+ c:3,e:"The Analgesic A row shows 45 patients experienced pain relief."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Based on the Clinical Trial Testing Analgesics table, how many patients did NOT experience pain relief in the Analgesic B group and the Control group, respectively?",
+ o:["5 and 30","20 and 30","30 and 20","45 and 20","20 and 5"],
+ c:1,e:"Analgesic B: 20 not relieved. Control group: 30 not relieved."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"The classical phase of testing a drug in humans is:",
+ o:["Phase I","Phase II","Phase III","Phase IV"],
+ c:2,e:"Phase III is the classical large-scale trial in humans comparing the new drug to existing treatments or placebo to establish efficacy and safety."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Which of the following criteria can be detected in PRECLINICAL trials?",
+ o:["Effectiveness","Efficacy","Long-term side effects","Teratogenic effects"],
+ c:3,e:"Preclinical (animal) trials detect teratogenic effects, acute toxicity, and pharmacokinetics — NOT human-specific effectiveness or efficacy."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Which of the following is TRUE about intervention studies?",
+ o:["Does not need a control group","It runs retrospectively","Inexpensive","Allocates exposure randomly"],
+ c:3,e:"The defining feature of intervention/experimental studies is RANDOM ALLOCATION of exposure (treatment), distinguishing them from observational studies."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Which of the following is an ADVANTAGE of a randomized clinical trial?",
+ o:["Requires large sample size","Loss to follow up","Time consuming and expensive","Non-compliance to treatment assignment","Unbiased allocation through randomization"],
+ c:4,e:"Randomization is THE advantage — it eliminates selection bias and ensures balanced distribution of known and unknown confounders."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"The Doctor is aware of the test being conducted, but the Patients are unaware of whether they receive the drug or placebo. The type of blindness is:",
+ o:["Double blind","Single blind","Triple blind","Open blind","Non blind"],
+ c:1,e:"Single blind: only the PATIENT is blinded. Both doctor and patient blinded = double blind."},
+{s:"Experimental Studies",t:"Experimental Studies",
+ q:"Study design: Sequence 1 = Treatment A → Washout → Treatment B; Sequence 2 = Treatment B → Washout → Treatment A. This is:",
+ o:["Quasi-experimental trial","Parallel trial","Factorial trial","Crossover trial","Within subject trial"],
+ c:3,e:"A crossover trial: each participant receives all treatments in randomized sequence, separated by washout — each person acts as their own control."},
+
+// ── SAMPLING & STATISTICS 1 ──
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"A researcher tests a new curriculum on 600 students from different SES backgrounds (25% low SES, etc.). What is the ideal sampling method?",
+ o:["Convenience sampling","Simple random sampling","Stratified random sampling","Cluster sampling","Snowball sampling"],
+ c:2,e:"Stratified random sampling divides population into subgroups (strata) by SES, then randomly samples proportionally from each — ensuring all subgroups are represented."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"A researcher randomly selects 3 healthcare settings, then 3 departments within those, and includes all physicians in those departments. This is:",
+ o:["Systematic sampling","Simple random sampling","Convenience sampling","Cluster / Multistage sampling","Snowball sampling"],
+ c:3,e:"Multistage/cluster sampling selects groups in stages (settings → departments), then includes all in the final cluster."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"You survey COVID-19 vaccination coverage among patients attending Mansoura University hospital during March 2025. What is the best sampling technique?",
+ o:["Convenience sampling","Purposive sampling","Stratified sampling","Systematic sampling","Simple random sampling"],
+ c:0,e:"Surveying whoever is accessible at a specific location = convenience sampling — quick and practical, but susceptible to selection bias."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"A researcher studies drug use patterns by interviewing one known user, who refers others in their social network — progressively growing the sample. This is:",
+ o:["Cluster sampling","Snowball sampling","Stratified sampling","Judgmental sampling","Systematic sampling"],
+ c:1,e:"Snowball sampling: existing participants recruit future participants — ideal for hidden/hard-to-reach populations like drug users."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Which technique yields a SIMPLE RANDOM sample?",
+ o:["Choosing volunteers from 2nd year medical students","Listing by blood group and choosing proportionally from each","Numbering all elements and using a random number table to pick cases","Randomly selecting schools, then sampling everyone within them","Not all individuals have equal chance to be in the sample"],
+ c:2,e:"Simple random sampling requires all elements be listed (sampling frame) and selected via random number tables — every individual has an equal probability."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Match: 'First individual selected randomly, and every 4th subject is selected.'",
+ o:["Systematic random sampling","Simple random sampling","Stratified random sampling","Cluster random sampling"],
+ c:0,e:"Selecting every nth person after a random start = Systematic random sampling."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Match: 'Households selected at random, and every person in each household is included.'",
+ o:["Systematic random sampling","Simple random sampling","Stratified random sampling","Cluster random sampling"],
+ c:3,e:"Selecting natural groups (households) randomly and including ALL members = Cluster sampling."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Match: 'Individuals divided into subgroups by specified characteristics, then random samples selected from each subgroup.'",
+ o:["Systematic random sampling","Simple random sampling","Stratified random sampling","Cluster random sampling"],
+ c:2,e:"Dividing into subgroups (strata) by characteristic, then sampling from each = Stratified random sampling."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"How is the variable 'Temperature in Celsius' classified?",
+ o:["Discrete","Nominal","Ordinal","Quantitative Continuous","Qualitative Continuous"],
+ c:3,e:"Temperature in Celsius is quantitative continuous — it can take any value within a range with equal intervals."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"How is 'Diabetes (YES/NO)' classified?",
+ o:["Continuous","Ordinal","Discrete","Qualitative Nominal","Quantitative Ratio"],
+ c:3,e:"Diabetes YES/NO is a binary/dichotomous qualitative nominal variable — categories with no inherent rank order."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"What type of variable is 'Education level (illiterate–primary–secondary–university)'?",
+ o:["Continuous","Discrete","Nominal","Ordinal","Binary"],
+ c:3,e:"Education level has ordered categories with meaningful rank but unequal intervals = classic Ordinal variable."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"What type of variables are 'Sex' and 'Residence'?",
+ o:["Continuous","Discrete","Qualitative Nominal","Ordinal","Interval"],
+ c:2,e:"Sex and Residence are categorical with no inherent order = Qualitative Nominal variables."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"In a Residence dataset of 10 patients where Urban appears 6 times and Rural 4 times, what is the MODE of 'Residence'?",
+ o:["Urban","Rural","Male","Female","Cannot be determined"],
+ c:0,e:"Mode = most frequently occurring value. Urban (6) > Rural (4) → Urban is the mode."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Based on the Length of Hospital Stay table, what percentage of ICU patients stayed for 8–16 days?",
+ o:["12.5%","32.5%","40%","2.5%","100%"],
+ c:1,e:"The 8–16 day class interval accounts for 32.5% of ICU patients in the frequency distribution."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Based on the Length of Hospital Stay table, how many total patients were in the ICU?",
+ o:["13","40","100","5","16"],
+ c:1,e:"The total number of ICU patients in the table is 40."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"A dataset contains an extreme, erroneously high outlier value. Which measure of central tendency is UNLIKELY to be affected?",
+ o:["Mean","Variance","Range","Standard deviation","Median"],
+ c:4,e:"The Median is resistant to outliers — it depends only on rank order (the middle value), not the actual magnitude of extreme values."},
+{s:"Medical Statistics 1 & Sampling",t:"Sampling",
+ q:"Data on neuropathic complications of DM categorized by 5-year class intervals of disease duration is best represented by a:",
+ o:["Pie chart","Bar diagram","Histogram","Scatter diagram","Pictogram"],
+ c:2,e:"A Histogram is used for continuous data grouped into class intervals — bars are adjacent, reflecting the continuity of the variable."},
+
+// ── STATISTICS 2 ──
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"Based on the Characteristics Table (Exposed n=71 vs Non-exposed n=88), the p-value for 'Sex' difference was 0.34. What does this indicate?",
+ o:["0.34 → Highly significant","0.34 → Not significant","0.34 → Marginally significant","0.34 → Very significant","Cannot be interpreted"],
+ c:1,e:"p=0.34 > 0.05 — NOT statistically significant. The sex difference between groups could be due to chance."},
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"Based on the Characteristics Table, which characteristic showed a HIGHLY significant difference (p<0.001)?",
+ o:["Sex","Age","Duration of employment","Marital status","Educational status"],
+ c:2,e:"Duration of employment showed p<0.001 — highly significant difference between exposed and non-exposed groups."},
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"Based on the OCT and Tension Table, what measure of central tendency and dispersion is used to report OCT levels?",
+ o:["Mean ± Standard Deviation","Median (Min-Max)","Mode and Variance","Mean and Range","Median ± Standard Error"],
+ c:0,e:"OCT levels are reported as Mean ± SD, appropriate for normally distributed continuous data."},
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"The p-value for Tension between cases and controls is 0.78. What does this mean?",
+ o:["Highly significant difference in tension","No statistically significant difference in tension","Tension is perfectly correlated with OCT levels","The tension data is heavily skewed","Sample size is too small to interpret"],
+ c:1,e:"p=0.78 >> 0.05 — clearly NOT statistically significant. Groups do not differ meaningfully in tension levels."},
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"Based on the Intervention/Control Demographics Table, what is the percentage of participants >12 years old in the Intervention and Control groups, respectively?",
+ o:["63.2% and 64.0%","36.8% and 36.0%","63.2% and 44.0%","18% and 25%","82% and 75%"],
+ c:0,e:"63.2% of the Intervention group and 64.0% of the Control group were older than 12 years."},
+{s:"Medical Statistics 2",t:"Sampling",
+ q:"Two normal curves share the same center: Curve 1 is tall & narrow, Curve 2 is short & wide. Which measure discriminates between the two?",
+ o:["Median","Mean","Mode","Standard deviation"],
+ c:3,e:"Both curves share the same Mean, Median, and Mode. Standard Deviation measures SPREAD — narrow = small SD, wide = large SD."},
+
+// ── MORBIDITY & MORTALITY ──
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"In Sunvale, a survey on Jan 1, 2024 found 200 residents with active asthma out of 10,000. During the year, 50 new cases were diagnosed. What does the figure '50' represent?",
+ o:["Incidence","Point prevalence at start of year","Point prevalence at end of year","Mortality rate","Relative risk"],
+ c:0,e:"Incidence = NEW cases in a defined period. The 200 existing cases = point prevalence. The 50 new cases during the year = incidence."},
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"Concerning disease incidence rate, all are true EXCEPT:",
+ o:["It measures the rate at which new cases are occurring","It is an indicator of need for preventive measures","It is used in both acute and chronic disease","It takes into consideration the population at risk","It is concerned with how long the disease lasts"],
+ c:4,e:"Incidence is NOT concerned with disease duration. Duration affects PREVALENCE (prevalence ≈ incidence × duration). Classic exam trap."},
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"Duration of disease will influence:",
+ o:["Incidence rate","Prevalence rate","Crude death rate","Secondary Attack Rate","Case Fatality Rate"],
+ c:1,e:"Prevalence = Incidence × Mean Duration. Longer duration → more people living with disease → higher prevalence, without changing incidence."},
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"Among 8000 persons examined in an Avian flu outbreak, 400 were developing Avian flu. What is the incidence rate (size of morbidity problem)?",
+ o:["20 per 1,000","50 per 1,000","20 per 10,000","50 per 10,000","20 per 100,000"],
+ c:1,e:"Attack rate (incidence) = (400/8000) × 1000 = 50 per 1,000."},
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"Attack rate is:",
+ o:["Incidence rate","Expressed as percentage","Used in outbreaks","Calculated in a particular population in a limited time","All of the above"],
+ c:4,e:"Attack rate IS an incidence rate (A), expressed as percentage (B), used during outbreaks (C), over a limited time period (D). All are correct."},
+{s:"Morbidity & Mortality Statistics",t:"Morbidity",
+ q:"If deaths from tuberculosis are expressed in relation to the total mid-year population, it is:",
+ o:["Case fatality rate","Age specific death rate","Proportionate mortality rate","Crude death rate","Cause specific death rate"],
+ c:4,e:"Deaths from a SPECIFIC disease (TB) / Total mid-year population = Cause Specific Death Rate. Crude death rate uses all-cause deaths. CFR uses disease cases as denominator."}
+];
+
+// ── STATE ──
+let total=Q.length, ans={}, correct=0, wrong=0, answered=0;
+
+// ── UI BUILD ──
+const letters=['A','B','C','D','E'];
+const main=document.getElementById('main');
+let currentSec='';
+
+Q.forEach((q,i)=>{
+  if(q.s!==currentSec){
+    currentSec=q.s;
+    const cnt=Q.filter(x=>x.s===q.s).length;
+    const h=document.createElement('div');
+    h.className='sec-h'; h.dataset.sec=q.s;
+    h.innerHTML=`📋 ${q.s} <span class="cnt">${cnt} questions</span>`;
+    main.appendChild(h);
+  }
+  const card=document.createElement('div');
+  card.className='qc'; card.id='qc'+i;
+  card.dataset.topic=q.t; card.dataset.sec=q.s;
+  card.innerHTML=`
+    <div class="qn">Q${i+1} <span class="qtag">${q.t}</span></div>
+    <div class="qt">${q.q}</div>
+    <div class="opts">${q.o.map((opt,oi)=>`
+      <button class="ob" onclick="pick(${i},${oi})">
+        <span class="ol">${letters[oi]}</span><span>${opt}</span>
+      </button>`).join('')}
+    </div>
+    <div class="fb-area" id="fb${i}">
+      <span class="fb-icon" id="fi${i}"></span>
+      <div class="fb-body">
+        <div class="fb-title" id="ft${i}"></div>
+        <div class="fb-exp" id="fe${i}"></div>
+      </div>
+    </div>
+    <button class="qreset" id="qr${i}" onclick="reset(${i})">↺ Try again</button>`;
+  main.appendChild(card);
+});
+
+// ── PICK ──
+function pick(i,oi){
+  if(ans[i]!==undefined) return;
+  const q=Q[i], card=document.getElementById('qc'+i);
+  const btns=card.querySelectorAll('.ob');
+  btns.forEach(b=>b.disabled=true);
+  const ok=oi===q.c;
+  btns[oi].classList.add(ok?'correct':'wrong');
+  if(!ok) btns[q.c].classList.add('correct');
+  const fb=document.getElementById('fb'+i);
+  fb.classList.add('show',ok?'correct':'wrong');
+  document.getElementById('fi'+i).textContent=ok?'✓':'✗';
+  document.getElementById('ft'+i).textContent=ok?'Correct!':'Wrong — Correct answer: '+letters[q.c];
+  if(q.e) document.getElementById('fe'+i).textContent=q.e;
+  card.classList.add(ok?'ac':'aw');
+  document.getElementById('qr'+i).classList.add('show');
+  ans[i]=oi; answered++;
+  if(ok) correct++; else wrong++;
+  upd();
+}
+
+// ── RESET ──
+function reset(i){
+  const q=Q[i], card=document.getElementById('qc'+i);
+  const btns=card.querySelectorAll('.ob');
+  const wasOk=ans[i]===q.c;
+  btns.forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong')});
+  document.getElementById('fb'+i).classList.remove('show','correct','wrong');
+  card.classList.remove('ac','aw');
+  document.getElementById('qr'+i).classList.remove('show');
+  if(wasOk) correct--; else wrong--;
+  answered--; delete ans[i]; upd();
+}
+
+// ── PROGRESS ──
+function upd(){
+  const pct=Math.round(answered/total*100);
+  document.getElementById('pl').textContent=answered+' of '+total+' answered';
+  document.getElementById('pp').textContent=pct+'%';
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('sc').textContent=correct;
+  document.getElementById('sw').textContent=wrong;
+  document.getElementById('sr').textContent=total-answered;
+}
+
+// ── FILTER ──
+function ft(btn,topic){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.qc').forEach(c=>{
+    c.classList.toggle('hidden', topic!=='all' && c.dataset.topic!==topic);
+  });
+  document.querySelectorAll('.sec-h').forEach(h=>{
+    const sec=h.dataset.sec;
+    const vis=[...document.querySelectorAll(`.qc[data-sec="${CSS.escape(sec)}"]:not(.hidden)`)].length>0;
+    h.style.display=(topic==='all'||vis)?'':'none';
+  });
+}
+
+upd();
+</script>
+</body>
+</html>
