@@ -722,28 +722,52 @@
   type="text/javascript"></script>
 
 <script>
-  window.addEventListener('load', async function () {
-    await Clerk.load({
-      ui: { ClerkUI: window.__internal_ClerkUICtor },
-    })
+  script.addEventListener('load', async function () {
+    await window.Clerk.load();
 
-    const loginBtn = document.getElementById('login-btn')
+    const loginBtn = document.getElementById('login-btn');
+    const inlineAuthDiv = document.getElementById('clerk-inline-auth');
+    const footerBranding = document.getElementById('footer-branding');
 
-    if (Clerk.isSignedIn) {
-      window.location.href = '/main-dashboard.html'
+    const themeUiOptions = {
+      variables: {
+        colorPrimary: '#b8a0e8',
+        colorBackground: '#121523',
+        colorText: '#eceaf0',
+        colorTextSecondary: '#9890a8',
+        borderRadius: '24px',
+        fontFamily: "'Outfit', sans-serif"
+      }
+    };
+
+    // 1. Live State Listener: Fires immediately when the user logs in successfully
+    window.Clerk.addListener(({ session }) => {
+      if (session) {
+        window.location.href = '/main-dashboard.html';
+      }
+    });
+
+    // 2. Initial Page Load Check: If they are already logged in when visiting index.html
+    if (window.Clerk.user) {
+      window.location.href = '/main-dashboard.html';
     } else {
-      loginBtn.addEventListener('click', async function (e) {
-        e.preventDefault()
-        await Clerk.openSignIn({
-          afterSignInUrl: '/main-dashboard.html',
-          afterSignUpUrl: '/main-dashboard.html',
-        })
-        if (Clerk.user) {
-          window.location.href = '/main-dashboard.html'
-        }
-      })
+      // Unauthenticated state: setup button click handler
+      if (loginBtn) {
+        loginBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          loginBtn.style.display = 'none';
+          inlineAuthDiv.style.display = 'block';
+          footerBranding.style.marginTop = '16px';
+
+          window.Clerk.mountSignIn(inlineAuthDiv, {
+            appearance: themeUiOptions,
+            afterSignInUrl: '/main-dashboard.html' // Note: 'afterSignInUrl' is standard for Clerk UI components
+          });
+        });
+      }
     }
-  })
+  });
 </script>
   <script>
     if ('serviceWorker' in navigator) {
