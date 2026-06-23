@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -341,4 +341,444 @@
   }
 </script>
 </body>
+<!-- </html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="application-name" content="MU 63">
+  <meta name="apple-mobile-web-app-title" content="MU 63">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#080b14">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="icon" href="brain-icon.png">
+  <title>MU 63 — Student Portal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b14;
+      --surface: rgba(18, 21, 35, 0.92);
+      --surface-card: rgba(24, 28, 46, 0.9);
+      --border: rgba(168, 146, 222, 0.10);
+      --border-hover: rgba(168, 146, 222, 0.28);
+      --accent: #b8a0e8;
+      --accent-2: #c8b0f0;
+      --accent-3: #a088d8;
+      --text-primary: #eceaf0;
+      --text-secondary: #9890a8;
+      --text-muted: #70688a;
+      --radius: 24px;
+      --radius-pill: 999px;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 50px 120px rgba(0, 0, 0, 0.4);
+      --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      --transition-fast: 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(168, 146, 222, 0.06), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(200, 176, 240, 0.04), transparent 40%);
+      z-index: 0;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb:nth-child(1) {
+      width: 500px;
+      height: 500px;
+      background: var(--accent);
+      top: -200px;
+      left: -150px;
+      animation: orbFloat 20s ease-in-out infinite alternate;
+    }
+
+    .orb:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      background: var(--accent-2);
+      bottom: -150px;
+      right: -100px;
+      animation: orbFloat 25s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate(30px, 20px) scale(1.1);
+      }
+    }
+
+    /* Container wrapper to keep everything aligned clean */
+    .portal-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      pointer-events: none;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(168, 146, 222, 0.12), transparent 70%);
+      top: -80px;
+      right: -60px;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .icon-wrap {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 20px;
+      background: rgba(168, 146, 222, 0.08);
+      border: rgba(255, 255, 255, 0.1) 1px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .icon-wrap img {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #080b14;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.15) 50%, transparent 60%);
+      background-size: 200% 100%;
+      animation: shimmer 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(168, 146, 222, 0.3);
+    }
+
+    .btn-login:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-login svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .card-footer {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.03em;
+    }
+
+    .card-footer::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.5;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+
+      0%,
+      100% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.2;
+        transform: scale(0.8);
+      }
+    }
+
+    /* Placeholder slots for mounting Clerk UI cleanly */
+    #clerk-inline-auth {
+      width: 100%;
+      display: none;
+    }
+
+    #clerk-user-profile {
+      position: absolute;
+      top: -20px;
+      right: 0;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 36px 24px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        margin-bottom: 28px;
+      }
+
+      .btn-login {
+        padding: 14px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="orb"></div>
+  <div class="orb"></div>
+
+  <div class="portal-container">
+    <!-- This displays profile avatar when logged in -->
+    <div id="clerk-user-profile"></div>
+
+    <!-- Main Login Card Layout -->
+    <div id="main-login-card" class="login-card">
+      <div class="icon-wrap">
+        <img src="brain-icon.png" alt="MU63 Icon">
+      </div>
+
+      <h1>MU63 Student Portal</h1>
+      <p class="subtitle">Welcome back. Securely authenticate to access your learning dashboard.</p>
+
+      <!-- Trigger Modal Authentication directly via script -->
+      <button id="login-btn" class="btn-login">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+          </path>
+        </svg>
+        Sign in to Continue
+      </button>
+
+      <div id="clerk-inline-auth"></div>
+
+      <div id="footer-branding" class="card-footer">Protected by Clerk Engine</div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Configure your Clerk Publishable Key here
+    const clerkPublishableKey = "pk_test_dmFsaWQta2l0dGVuLTg5LmNsZXJrLmFjY291bnRzLmRldiQ";
+
+    // 2. Inject Clerk Browser SDK 
+    const script = document.createElement('script');
+    script.setAttribute('data-clerk-publishable-key', clerkPublishableKey);
+    script.async = true;
+    script.src = `https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
+    script.crossOrigin = "anonymous";
+
+    script.addEventListener('load', async function () {
+      await window.Clerk.load();
+
+      const loginBtn = document.getElementById('login-btn');
+      const mainCard = document.getElementById('main-login-card');
+      const inlineAuthDiv = document.getElementById('clerk-inline-auth');
+      const userProfileDiv = document.getElementById('clerk-user-profile');
+      const footerBranding = document.getElementById('footer-branding');
+
+      // Visual configurations mapping your exact styling system to Clerk UI components
+      const themeUiOptions = {
+        variables: {
+          colorPrimary: '#b8a0e8',
+          colorBackground: '#121523',
+          colorText: '#eceaf0',
+          colorTextSecondary: '#9890a8',
+          borderRadius: '24px',
+          fontFamily: "'Outfit', sans-serif"
+        }
+      };
+
+      // 3. Monitor state shifts and react instantly
+      if (window.Clerk.user) {
+        // Authenticated state: bypass completely and route directly to dashboard file
+        window.location.href = '/main-dashboard.html';
+      } else {
+        // Unauthenticated state: activate your native login CTA trigger link
+        if (loginBtn) {
+          loginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Switch display layouts seamlessly to reveal the embedded Clerk block
+            loginBtn.style.display = 'none';
+            inlineAuthDiv.style.display = 'block';
+            footerBranding.style.marginTop = '16px';
+
+            // Render Clerk container explicitly customized down to UI theme choices
+            window.Clerk.mountSignIn(inlineAuthDiv, {
+              appearance: themeUiOptions,
+              redirectUrl: '/main-dashboard.html'
+            });
+          });
+        }
+      }
+    });
+
+    document.body.appendChild(script);
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(() => { });
+      });
+    }
+  </script>
+</body>
+
 </html>
