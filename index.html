@@ -722,52 +722,28 @@
   type="text/javascript"></script>
 
 <script>
-  script.addEventListener('load', async function () {
-    await window.Clerk.load();
+  window.addEventListener('load', async function () {
+    await Clerk.load({
+      ui: { ClerkUI: window.__internal_ClerkUICtor },
+    })
 
-    const loginBtn = document.getElementById('login-btn');
-    const inlineAuthDiv = document.getElementById('clerk-inline-auth');
-    const footerBranding = document.getElementById('footer-branding');
-
-    const themeUiOptions = {
-      variables: {
-        colorPrimary: '#b8a0e8',
-        colorBackground: '#121523',
-        colorText: '#eceaf0',
-        colorTextSecondary: '#9890a8',
-        borderRadius: '24px',
-        fontFamily: "'Outfit', sans-serif"
-      }
-    };
-
-    // 1. Live State Listener: Fires immediately when the user logs in successfully
-    window.Clerk.addListener(({ session }) => {
-      if (session) {
-        window.location.href = '/main-dashboard.html';
-      }
-    });
-
-    // 2. Initial Page Load Check: If they are already logged in when visiting index.html
-    if (window.Clerk.user) {
-      window.location.href = '/main-dashboard.html';
-    } else {
-      // Unauthenticated state: setup button click handler
-      if (loginBtn) {
-        loginBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-
-          loginBtn.style.display = 'none';
-          inlineAuthDiv.style.display = 'block';
-          footerBranding.style.marginTop = '16px';
-
-          window.Clerk.mountSignIn(inlineAuthDiv, {
-            appearance: themeUiOptions,
-            afterSignInUrl: '/main-dashboard.html' // Note: 'afterSignInUrl' is standard for Clerk UI components
-          });
-        });
-      }
+    if (Clerk.user) {
+      window.location.href = '/main-dashboard.html'
+      return
     }
-  });
+
+    const loginBtn = document.getElementById('login-btn')
+    const card = document.getElementById('main-login-card')
+
+    loginBtn.addEventListener('click', function (e) {
+      e.preventDefault()
+      card.innerHTML = ''
+      Clerk.mountSignIn(card, {
+        afterSignInUrl: '/main-dashboard.html',
+        afterSignUpUrl: '/main-dashboard.html',
+      })
+    })
+  })
 </script>
   <script>
     if ('serviceWorker' in navigator) {
