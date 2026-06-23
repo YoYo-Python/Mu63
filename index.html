@@ -738,6 +738,9 @@
           afterSignInUrl: '/main-dashboard.html',
           afterSignUpUrl: '/main-dashboard.html',
         })
+        if (Clerk.user) {
+          window.location.href = '/main-dashboard.html'
+        }
       })
     }
   })
