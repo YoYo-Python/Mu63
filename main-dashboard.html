@@ -12,7 +12,6 @@
 <link rel="icon" sizes="192x192" href="brain-icon.png">
 <title>MU 63</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <style>
   :root {
     color-scheme: dark;
@@ -606,20 +605,7 @@
       <h1>Learn Intelligently MU 63</h1>
       <p>Select your destination to access your platforms and study trackers.</p>
     </header>
-<script>
-    var netlifyIdentity = window.netlifyIdentity;
-    if (netlifyIdentity) {
-        netlifyIdentity.on('init', function(user) {
-            if (!user && !window.location.hostname.match(/^(localhost|127\.0\.0\.1|\.local|.*\.local)$/)) {
-                window.location.href = "/";
-            }
-        });
-        netlifyIdentity.on('logout', function() {
-            window.location.href = "/";
-        });
-        netlifyIdentity.init();
-    }
-</script>
+
 
     <div class="nav-grid">
       <a href="master-dashboard.html" class="card">
@@ -706,23 +692,7 @@
     localStorage.setItem('mu63Theme', nextTheme);
     applyTheme(nextTheme);
   });
-    document.addEventListener("DOMContentLoaded", () => {
-        // 1. Find the button
-        const logoutBtn = document.getElementById("logout-btn");
 
-        // 2. Attach the click event
-        if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-                // Safety check: ensure Netlify Identity is loaded
-                if (window.netlifyIdentity) {
-                    window.netlifyIdentity.logout();
-                } else {
-                    console.error("Netlify Identity widget is not loaded.");
-                }
-            });
-        }
-
-    });
 
 </script>
 <script>
