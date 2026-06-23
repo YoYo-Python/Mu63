@@ -722,28 +722,32 @@
   type="text/javascript"></script>
 
 <script>
-  window.addEventListener('load', async function () {
-    await Clerk.load({
+  function initClerk() {
+    if (!window.Clerk || !window.__internal_ClerkUICtor) {
+      setTimeout(initClerk, 50);
+      return;
+    }
+
+    Clerk.load({
       ui: { ClerkUI: window.__internal_ClerkUICtor },
-    })
+    }).then(function () {
+      if (Clerk.user) {
+        window.location.href = '/main-dashboard.html';
+        return;
+      }
 
-    const loginBtn = document.getElementById('login-btn')
-
-    if (Clerk.isSignedIn) {
-      window.location.href = '/main-dashboard.html'
-    } else {
-      loginBtn.addEventListener('click', async function (e) {
-        e.preventDefault()
-        await Clerk.openSignIn({
+      const loginBtn = document.getElementById('login-btn');
+      loginBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        Clerk.openSignIn({
           afterSignInUrl: '/main-dashboard.html',
           afterSignUpUrl: '/main-dashboard.html',
-        })
-        if (Clerk.user) {
-          window.location.href = '/main-dashboard.html'
-        }
-      })
-    }
-  })
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initClerk);
 </script>
   <script>
     if ('serviceWorker' in navigator) {
