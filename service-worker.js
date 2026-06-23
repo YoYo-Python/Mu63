@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mu63-cache-v1';
+const CACHE_NAME = 'mu63-cache-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const ASSETS = [
   './ENR_Checklist.html',
   './manifest.json',
   './apple-touch-icon.png',
+  './brain-icon.png',
   './ENR/Endo/endocrine-dashboard.html',
   './ENR/Endo/Anatomy/dashboard.html',
   './ENR/Endo/Anatomy/Anatomy-L2.html',
@@ -72,7 +73,15 @@ const ASSETS = [
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => {
+      return Promise.allSettled(
+        ASSETS.map(url =>
+          cache.add(url).catch(() => {
+            console.warn('SW: failed to cache', url);
+          })
+        )
+      );
+    })
   );
 });
 
@@ -80,7 +89,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => Promise.all(
       keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
+    )).then(() => self.clients.claim())
   );
 });
 
