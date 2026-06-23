@@ -727,22 +727,22 @@
       ui: { ClerkUI: window.__internal_ClerkUICtor },
     })
 
-    if (Clerk.user) {
-      window.location.href = '/main-dashboard.html'
-      return
-    }
-
     const loginBtn = document.getElementById('login-btn')
-    const card = document.getElementById('main-login-card')
 
-    loginBtn.addEventListener('click', function (e) {
-      e.preventDefault()
-      card.innerHTML = ''
-      Clerk.mountSignIn(card, {
-        afterSignInUrl: '/main-dashboard.html',
-        afterSignUpUrl: '/main-dashboard.html',
+    if (Clerk.isSignedIn) {
+      window.location.href = '/main-dashboard.html'
+    } else {
+      loginBtn.addEventListener('click', async function (e) {
+        e.preventDefault()
+        await Clerk.openSignIn({
+          afterSignInUrl: '/main-dashboard.html',
+          afterSignUpUrl: '/main-dashboard.html',
+        })
+        if (Clerk.user) {
+          window.location.href = '/main-dashboard.html'
+        }
       })
-    })
+    }
   })
 </script>
   <script>
