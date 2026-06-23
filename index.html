@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MU63 Dashboard - Student Login</title>
     <link rel="icon" type="" href="icons8-brain Background Removed.png">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
@@ -125,8 +125,6 @@
         }
     </style>
 
-<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
 <!-- <button id="logout-btn"
   style="position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); letter-spacing: 0.5px;">
   Log Out
@@ -193,6 +191,9 @@
 
   gtag('config', 'G-RHSQ7HYJYZ');
 </script>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="theme-color" content="#080b14">
 </head>
 
 <body>
@@ -253,6 +254,13 @@
         });
     </script>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+  }
+</script>
 </body>
 
 </html>

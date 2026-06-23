@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Reproductive Pharmacology - Oxytocic & Tocolytic Drugs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary: #6C5CE7;
+--primary-dark: #5A4BD1;
+--primary-light: #A29BFE;
+--secondary: #00CEC9;
+--secondary-dark: #00B5B0;
+--accent: #FD79A8;
+--accent-dark: #E84393;
+--success: #00B894;
+--warning: #FDCB6E;
+--danger: #FF7675;
+--danger-dark: #D63031;
+--bg-dark: #0A0A1A;
+--bg-card: #12122A;
+--bg-card-hover: #1A1A3E;
+--bg-input: #1E1E3F;
+--text-primary: #FFFFFF;
+--text-secondary: #B0B0D0;
+--text-muted: #6C6C9C;
+--border: rgba(108, 92, 231, 0.2);
+--shadow: 0 8px 32px rgba(0,0,0,0.3);
+--shadow-lg: 0 16px 64px rgba(0,0,0,0.4);
+--glass: rgba(255,255,255,0.05);
+--glass-border: rgba(255,255,255,0.1);
+--gradient-1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+--gradient-2: linear-gradient(135deg, #00CEC9, #55EFC4);
+--gradient-3: linear-gradient(135deg, #FD79A8, #FDCB6E);
+--gradient-4: linear-gradient(135deg, #E17055, #FDCB6E);
+--gradient-5: linear-gradient(135deg, #0984E3, #74B9FF);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: 'Inter', sans-serif;
+background: var(--bg-dark);
+color: var(--text-primary);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+.bg-effects {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+pointer-events: none;
+z-index: 0;
+overflow: hidden;
+}
+
+.bg-orb {
+position: absolute;
+border-radius: 50%;
+filter: blur(80px);
+opacity: 0.15;
+animation: orbFloat 20s ease-in-out infinite;
+}
+
+.bg-orb:nth-child(1) {
+width: 500px; height: 500px;
+background: var(--primary);
+top: -10%; left: -5%;
+animation-delay: 0s;
+}
+
+.bg-orb:nth-child(2) {
+width: 400px; height: 400px;
+background: var(--secondary);
+top: 50%; right: -10%;
+animation-delay: -7s;
+}
+
+.bg-orb:nth-child(3) {
+width: 350px; height: 350px;
+background: var(--accent);
+bottom: -5%; left: 30%;
+animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+0%, 100% { transform: translate(0, 0) scale(1); }
+25% { transform: translate(30px, -40px) scale(1.1); }
+50% { transform: translate(-20px, 20px) scale(0.95); }
+75% { transform: translate(40px, 30px) scale(1.05); }
+}
+
+.app-container {
+position: relative;
+z-index: 1;
+max-width: 1400px;
+margin: 0 auto;
+padding: 20px;
+}
+
+/* Header */
+.header {
+text-align: center;
+padding: 40px 20px 30px;
+margin-bottom: 20px;
+}
+
+.header-badge {
+display: inline-block;
+padding: 6px 16px;
+background: var(--glass);
+border: 1px solid var(--glass-border);
+border-radius: 20px;
+font-size: 0.75rem;
+color: var(--primary-light);
+text-transform: uppercase;
+letter-spacing: 2px;
+margin-bottom: 16px;
+backdrop-filter: blur(10px);
+}
+
+.header h1 {
+font-size: clamp(1.8rem, 4vw, 2.8rem);
+font-weight: 900;
+background: var(--gradient-1);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+line-height: 1.2;
+margin-bottom: 8px;
+}
+
+.header h2 {
+font-size: clamp(1rem, 2vw, 1.3rem);
+color: var(--text-secondary);
+font-weight: 400;
+}
+
+/* Stats Bar */
+.stats-bar {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+justify-content: center;
+margin-bottom: 24px;
+}
+
+.stat-chip {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 8px 16px;
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 12px;
+font-size: 0.85rem;
+backdrop-filter: blur(10px);
+}
+
+.stat-chip .stat-icon {
+font-size: 1.1rem;
+}
+
+.stat-chip .stat-value {
+font-weight: 700;
+color: var(--primary-light);
+}
+
+/* Search Bar */
+.search-container {
+max-width: 500px;
+margin: 0 auto 24px;
+position: relative;
+}
+
+.search-container input {
+width: 100%;
+padding: 12px 20px 12px 44px;
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 14px;
+color: var(--text-primary);
+font-size: 0.95rem;
+font-family: 'Inter', sans-serif;
+outline: none;
+transition: all 0.3s;
+}
+
+.search-container input:focus {
+border-color: var(--primary);
+box-shadow: 0 0 20px rgba(108, 92, 231, 0.2);
+}
+
+.search-container .search-icon {
+position: absolute;
+left: 16px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 1rem;
+color: var(--text-muted);
+}
+
+/* Tab Navigation */
+.tab-nav {
+display: flex;
+gap: 6px;
+overflow-x: auto;
+padding-bottom: 8px;
+margin-bottom: 24px;
+scrollbar-width: none;
+-ms-overflow-style: none;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+flex-shrink: 0;
+padding: 10px 18px;
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 12px;
+color: var(--text-secondary);
+font-size: 0.82rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+font-family: 'Inter', sans-serif;
+white-space: nowrap;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.tab-btn:hover {
+background: var(--bg-card-hover);
+color: var(--text-primary);
+transform: translateY(-2px);
+}
+
+.tab-btn.active {
+background: var(--gradient-1);
+color: white;
+border-color: transparent;
+box-shadow: 0 4px 16px rgba(108, 92, 231, 0.4);
+}
+
+/* Tab Content */
+.tab-content {
+display: none;
+animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 16px;
+transition: all 0.3s;
+backdrop-filter: blur(10px);
+}
+
+.card:hover {
+border-color: var(--primary);
+box-shadow: 0 4px 24px rgba(108, 92, 231, 0.15);
+}
+
+.card-title {
+font-size: 1.1rem;
+font-weight: 700;
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.card-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 16px;
+}
+
+/* Tags */
+.tag {
+display: inline-block;
+padding: 3px 10px;
+border-radius: 6px;
+font-size: 0.7rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.tag-high { background: rgba(255,118,117,0.2); color: #FF7675; }
+.tag-exam { background: rgba(253,203,110,0.2); color: #FDCB6E; }
+.tag-pearl { background: rgba(0,206,201,0.2); color: #00CEC9; }
+.tag-moa { background: rgba(108,92,231,0.2); color: #A29BFE; }
+
+/* Summary Cards */
+.summary-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 20px;
+transition: all 0.3s;
+position: relative;
+overflow: hidden;
+}
+
+.summary-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 3px;
+border-radius: 16px 16px 0 0;
+}
+
+.summary-card.oxytocic::before { background: var(--gradient-3); }
+.summary-card.tocolytic::before { background: var(--gradient-2); }
+.summary-card.important::before { background: var(--gradient-4); }
+.summary-card.info::before { background: var(--gradient-5); }
+
+.summary-card:hover {
+transform: translateY(-4px);
+box-shadow: var(--shadow);
+}
+
+.summary-card .icon { font-size: 2rem; margin-bottom: 10px; }
+.summary-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--text-primary); }
+.summary-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* Timeline */
+.timeline {
+position: relative;
+padding-left: 30px;
+}
+
+.timeline::before {
+content: '';
+position: absolute;
+left: 10px;
+top: 0;
+bottom: 0;
+width: 2px;
+background: var(--gradient-1);
+}
+
+.timeline-item {
+position: relative;
+margin-bottom: 24px;
+padding-left: 20px;
+}
+
+.timeline-item::before {
+content: '';
+position: absolute;
+left: -24px;
+top: 6px;
+width: 12px;
+height: 12px;
+border-radius: 50%;
+background: var(--primary);
+border: 2px solid var(--bg-dark);
+box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+}
+
+.timeline-item h4 {
+font-size: 0.95rem;
+color: var(--primary-light);
+margin-bottom: 6px;
+}
+
+.timeline-item p {
+font-size: 0.85rem;
+color: var(--text-secondary);
+line-height: 1.5;
+}
+
+/* Signs Grid */
+.signs-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 12px;
+}
+
+.sign-item {
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 16px;
+transition: all 0.3s;
+cursor: pointer;
+}
+
+.sign-item:hover {
+border-color: var(--primary);
+transform: translateY(-2px);
+}
+
+.sign-item h4 {
+font-size: 0.9rem;
+margin-bottom: 6px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.sign-item p {
+font-size: 0.8rem;
+color: var(--text-secondary);
+line-height: 1.4;
+}
+
+.sign-item .tags { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Quiz Section */
+.quiz-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+.quiz-progress {
+width: 100%;
+height: 6px;
+background: var(--bg-input);
+border-radius: 3px;
+overflow: hidden;
+margin-bottom: 16px;
+}
+
+.quiz-progress-fill {
+height: 100%;
+background: var(--gradient-1);
+border-radius: 3px;
+transition: width 0.5s ease;
+}
+
+.quiz-score {
+display: flex;
+gap: 16px;
+align-items: center;
+}
+
+.quiz-score span {
+font-size: 0.85rem;
+color: var(--text-secondary);
+}
+
+.quiz-score .score-num {
+font-weight: 800;
+font-size: 1.2rem;
+color: var(--success);
+}
+
+.quiz-question {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 28px;
+margin-bottom: 16px;
+}
+
+.quiz-question .q-number {
+font-size: 0.75rem;
+color: var(--primary-light);
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-bottom: 8px;
+}
+
+.quiz-question .q-text {
+font-size: 1.05rem;
+font-weight: 600;
+line-height: 1.5;
+margin-bottom: 20px;
+}
+
+.quiz-options {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.quiz-option {
+padding: 14px 18px;
+background: var(--bg-input);
+border: 2px solid var(--border);
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.9rem;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.quiz-option:hover:not(.disabled) {
+border-color: var(--primary);
+background: rgba(108, 92, 231, 0.1);
+transform: translateX(4px);
+}
+
+.quiz-option .opt-letter {
+width: 28px;
+height: 28px;
+border-radius: 8px;
+background: var(--glass);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+font-size: 0.8rem;
+flex-shrink: 0;
+}
+
+.quiz-option.correct {
+border-color: var(--success) !important;
+background: rgba(0, 184, 148, 0.15) !important;
+animation: pulseCorrect 0.5s ease;
+}
+
+.quiz-option.wrong {
+border-color: var(--danger) !important;
+background: rgba(255, 118, 117, 0.15) !important;
+animation: shakeWrong 0.5s ease;
+}
+
+.quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+.quiz-option.correct .opt-letter { background: var(--success); color: white; }
+.quiz-option.wrong .opt-letter { background: var(--danger); color: white; }
+
+@keyframes pulseCorrect {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.02); }
+}
+
+@keyframes shakeWrong {
+0%, 100% { transform: translateX(0); }
+20% { transform: translateX(-8px); }
+40% { transform: translateX(8px); }
+60% { transform: translateX(-5px); }
+80% { transform: translateX(5px); }
+}
+
+.quiz-explanation {
+margin-top: 16px;
+padding: 16px;
+border-radius: 12px;
+font-size: 0.85rem;
+line-height: 1.5;
+display: none;
+}
+
+.quiz-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+.quiz-explanation.correct-exp { background: rgba(0,184,148,0.1); border: 1px solid rgba(0,184,148,0.3); }
+.quiz-explanation.wrong-exp { background: rgba(255,118,117,0.1); border: 1px solid rgba(255,118,117,0.3); }
+
+.quiz-nav {
+display: flex;
+justify-content: space-between;
+margin-top: 20px;
+}
+
+.btn {
+padding: 10px 24px;
+border: none;
+border-radius: 10px;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+font-family: 'Inter', sans-serif;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+}
+
+.btn-primary {
+background: var(--gradient-1);
+color: white;
+}
+
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 16px rgba(108, 92, 231, 0.4);
+}
+
+.btn-secondary {
+background: var(--bg-input);
+color: var(--text-primary);
+border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+border-color: var(--primary);
+}
+
+.btn-success {
+background: var(--gradient-2);
+color: white;
+}
+
+.btn-danger {
+background: linear-gradient(135deg, var(--danger), var(--accent-dark));
+color: white;
+}
+
+/* Flashcards */
+.flashcard-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 16px;
+}
+
+.flashcard {
+perspective: 1000px;
+height: 220px;
+cursor: pointer;
+}
+
+.flashcard-inner {
+position: relative;
+width: 100%;
+height: 100%;
+transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+position: absolute;
+width: 100%;
+height: 100%;
+backface-visibility: hidden;
+border-radius: 16px;
+padding: 24px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+border: 1px solid var(--border);
+}
+
+.flashcard-front {
+background: var(--bg-card);
+}
+
+.flashcard-front .fc-icon { font-size: 2rem; margin-bottom: 12px; }
+.flashcard-front p { font-size: 0.9rem; font-weight: 600; line-height: 1.4; }
+.flashcard-front .fc-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 12px; }
+
+.flashcard-back {
+background: var(--bg-card-hover);
+transform: rotateY(180deg);
+border-color: var(--primary);
+}
+
+.flashcard-back p {
+font-size: 0.85rem;
+color: var(--text-secondary);
+line-height: 1.5;
+}
+
+/* Clinical Cases */
+.case-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 28px;
+margin-bottom: 20px;
+}
+
+.case-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 16px;
+}
+
+.case-number {
+width: 36px;
+height: 36px;
+background: var(--gradient-1);
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 800;
+font-size: 0.9rem;
+flex-shrink: 0;
+}
+
+.case-header h3 {
+font-size: 1rem;
+}
+
+.case-scenario {
+font-size: 0.9rem;
+color: var(--text-secondary);
+line-height: 1.6;
+margin-bottom: 16px;
+padding: 16px;
+background: var(--bg-input);
+border-radius: 12px;
+border-left: 3px solid var(--primary);
+}
+
+.case-questions { margin-top: 16px; }
+
+.case-q {
+margin-bottom: 12px;
+}
+
+.case-q p {
+font-size: 0.9rem;
+font-weight: 600;
+margin-bottom: 8px;
+}
+
+.case-answer {
+display: none;
+padding: 14px;
+background: rgba(0, 184, 148, 0.1);
+border: 1px solid rgba(0, 184, 148, 0.3);
+border-radius: 10px;
+font-size: 0.85rem;
+line-height: 1.5;
+color: var(--text-secondary);
+margin-top: 8px;
+animation: fadeIn 0.3s ease;
+}
+
+.case-answer.show { display: block; }
+
+/* Tables */
+.table-container {
+overflow-x: auto;
+border-radius: 12px;
+border: 1px solid var(--border);
+margin-bottom: 16px;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+font-size: 0.85rem;
+}
+
+th {
+background: var(--bg-input);
+padding: 14px 16px;
+text-align: left;
+font-weight: 700;
+color: var(--primary-light);
+border-bottom: 2px solid var(--border);
+white-space: nowrap;
+}
+
+td {
+padding: 12px 16px;
+border-bottom: 1px solid var(--border);
+color: var(--text-secondary);
+line-height: 1.4;
+}
+
+tr:hover td {
+background: rgba(108, 92, 231, 0.05);
+}
+
+/* Flowchart */
+.flowchart {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+padding: 24px;
+}
+
+.flow-step {
+padding: 14px 24px;
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 12px;
+text-align: center;
+max-width: 500px;
+width: 100%;
+font-size: 0.85rem;
+transition: all 0.3s;
+}
+
+.flow-step:hover {
+border-color: var(--primary);
+transform: scale(1.02);
+}
+
+.flow-step.highlight {
+background: rgba(108, 92, 231, 0.15);
+border-color: var(--primary);
+}
+
+.flow-step.danger-step {
+background: rgba(255, 118, 117, 0.1);
+border-color: var(--danger);
+}
+
+.flow-arrow {
+font-size: 1.2rem;
+color: var(--primary-light);
+}
+
+/* Drug cards */
+.drug-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 20px;
+transition: all 0.3s;
+}
+
+.drug-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow);
+}
+
+.drug-card .drug-name {
+font-size: 1rem;
+font-weight: 700;
+margin-bottom: 4px;
+}
+
+.drug-card .drug-class {
+font-size: 0.75rem;
+color: var(--text-muted);
+margin-bottom: 10px;
+}
+
+.drug-card .drug-detail {
+font-size: 0.8rem;
+color: var(--text-secondary);
+line-height: 1.4;
+margin-bottom: 6px;
+}
+
+.drug-card .drug-detail strong {
+color: var(--primary-light);
+}
+
+.urgency-high { border-left: 3px solid var(--danger); }
+.urgency-med { border-left: 3px solid var(--warning); }
+.urgency-low { border-left: 3px solid var(--success); }
+
+/* Mnemonic */
+.mnemonic-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 16px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.mnemonic-card:hover {
+border-color: var(--accent);
+transform: translateY(-2px);
+}
+
+.mnemonic-title {
+font-size: 1.1rem;
+font-weight: 800;
+margin-bottom: 8px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.mnemonic-word {
+font-size: 1.6rem;
+font-weight: 900;
+background: var(--gradient-3);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin-bottom: 12px;
+letter-spacing: 2px;
+}
+
+.mnemonic-list {
+list-style: none;
+display: none;
+}
+
+.mnemonic-list.show { display: block; }
+
+.mnemonic-list li {
+padding: 8px 0;
+font-size: 0.85rem;
+color: var(--text-secondary);
+border-bottom: 1px solid var(--border);
+display: flex;
+gap: 8px;
+}
+
+.mnemonic-list li:last-child { border: none; }
+
+.mnemonic-list li .letter {
+font-weight: 800;
+color: var(--accent);
+width: 20px;
+flex-shrink: 0;
+}
+
+/* Clickable anatomy items */
+.anatomy-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+gap: 14px;
+}
+
+.anatomy-item {
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 18px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.anatomy-item:hover {
+border-color: var(--secondary);
+transform: translateY(-2px);
+}
+
+.anatomy-item.expanded {
+border-color: var(--secondary);
+background: rgba(0, 206, 201, 0.05);
+}
+
+.anatomy-item h4 {
+font-size: 0.95rem;
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 4px;
+}
+
+.anatomy-item .anatomy-brief {
+font-size: 0.8rem;
+color: var(--text-muted);
+}
+
+.anatomy-detail {
+display: none;
+margin-top: 10px;
+padding-top: 10px;
+border-top: 1px solid var(--border);
+font-size: 0.83rem;
+color: var(--text-secondary);
+line-height: 1.5;
+}
+
+.anatomy-item.expanded .anatomy-detail { display: block; animation: fadeIn 0.3s; }
+
+/* Section title */
+.section-title {
+font-size: 1.3rem;
+font-weight: 800;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.section-subtitle {
+font-size: 0.95rem;
+font-weight: 600;
+color: var(--text-secondary);
+margin-bottom: 16px;
+margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.app-container { padding: 12px; }
+.header { padding: 24px 12px 20px; }
+.card { padding: 18px; }
+.quiz-question { padding: 20px; }
+.card-grid { grid-template-columns: 1fr; }
+.flashcard-grid { grid-template-columns: 1fr; }
+.signs-grid { grid-template-columns: 1fr; }
+.anatomy-grid { grid-template-columns: 1fr; }
+.stats-bar { gap: 8px; }
+.stat-chip { padding: 6px 12px; font-size: 0.75rem; }
+.tab-btn { padding: 8px 14px; font-size: 0.75rem; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+
+/* Alert / Warning Box */
+.alert-box {
+padding: 14px 18px;
+border-radius: 12px;
+font-size: 0.85rem;
+line-height: 1.5;
+margin-bottom: 12px;
+display: flex;
+gap: 10px;
+align-items: flex-start;
+}
+
+.alert-box.alert-danger {
+background: rgba(255,118,117,0.1);
+border: 1px solid rgba(255,118,117,0.3);
+color: var(--danger);
+}
+
+.alert-box.alert-warning {
+background: rgba(253,203,110,0.1);
+border: 1px solid rgba(253,203,110,0.3);
+color: var(--warning);
+}
+
+.alert-box.alert-info {
+background: rgba(108,92,231,0.1);
+border: 1px solid rgba(108,92,231,0.3);
+color: var(--primary-light);
+}
+
+.alert-box .alert-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+
+/* Investigation badges */
+.badge-grid {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 10px;
+}
+
+.inv-badge {
+padding: 6px 14px;
+background: var(--glass);
+border: 1px solid var(--glass-border);
+border-radius: 20px;
+font-size: 0.75rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.inv-badge:hover {
+background: rgba(108, 92, 231, 0.2);
+border-color: var(--primary);
+}
+
+/* Motivation */
+.motivation-banner {
+text-align: center;
+padding: 20px;
+margin-top: 24px;
+background: var(--glass);
+border: 1px solid var(--glass-border);
+border-radius: 16px;
+}
+
+.motivation-banner .emoji { font-size: 2rem; margin-bottom: 8px; }
+.motivation-banner p { font-size: 0.9rem; color: var(--text-secondary); }
+.motivation-banner p strong { color: var(--primary-light); }
+
+/* Complete screen */
+.quiz-complete {
+text-align: center;
+padding: 40px;
+}
+
+.quiz-complete .score-circle {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+background: var(--gradient-1);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+margin: 0 auto 20px;
+}
+
+.quiz-complete .score-circle .big-score {
+font-size: 2rem;
+font-weight: 900;
+}
+
+.quiz-complete .score-circle .score-label {
+font-size: 0.7rem;
+opacity: 0.8;
+}
+
+.hidden { display: none !important; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="bg-effects">
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+</div>
+
+<div class="app-container">
+<!-- Header -->
+<div class="header">
+<div class="header-badge">📚 Pharmacology Study Platform</div>
+<h1>Reproductive Pharmacology</h1>
+<h2>Oxytocic & Tocolytic Drugs — Complete Interactive Review</h2>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+<div class="stat-chip"><span class="stat-icon">🎯</span> Quiz Score: <span class="stat-value" id="globalScore">0</span>/<span id="globalTotal">25</span></div>
+<div class="stat-chip"><span class="stat-icon">🔥</span> Streak: <span class="stat-value" id="globalStreak">0</span></div>
+<div class="stat-chip"><span class="stat-icon">📊</span> Progress: <span class="stat-value" id="globalProgress">0</span>%</div>
+<div class="stat-chip"><span class="stat-icon">🃏</span> Cards Flipped: <span class="stat-value" id="globalFlipped">0</span></div>
+</div>
+
+<!-- Search -->
+<div class="search-container">
+<span class="search-icon">🔍</span>
+<input type="text" id="searchInput" placeholder="Search any drug, concept, or keyword..." oninput="handleSearch(this.value)">
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-nav" id="tabNav">
+<button class="tab-btn active" onclick="switchTab('overview')">📋 Overview</button>
+<button class="tab-btn" onclick="switchTab('quiz')">🧪 Quiz (25)</button>
+<button class="tab-btn" onclick="switchTab('flashcards')">🃏 Flashcards</button>
+<button class="tab-btn" onclick="switchTab('cases')">🏥 Cases</button>
+<button class="tab-btn" onclick="switchTab('mechanism')">🔬 Mechanisms</button>
+<button class="tab-btn" onclick="switchTab('diagnosis')">🔎 Dx & DDx</button>
+<button class="tab-btn" onclick="switchTab('treatment')">💊 Treatment</button>
+<button class="tab-btn" onclick="switchTab('mnemonics')">🧠 Mnemonics</button>
+</div>
+
+<!-- ===================== OVERVIEW TAB ===================== -->
+<div class="tab-content active" id="tab-overview">
+<h2 class="section-title">📋 Quick Overview</h2>
+
+<div class="card-grid">
+<div class="summary-card oxytocic">
+<div class="icon">⬆️</div>
+<h3>Oxytocic Drugs (Uterine Stimulants)</h3>
+<p>Drugs that stimulate uterine contractions: Oxytocin, Prostaglandins (Dinoprostone, Carboprost, Misoprostol), Mifepristone, Ergot Alkaloids (Methylergometrine). Used for labor induction and PPH.</p>
+</div>
+<div class="summary-card tocolytic">
+<div class="icon">⬇️</div>
+<h3>Tocolytic Drugs (Uterine Relaxants)</h3>
+<p>Drugs that inhibit uterine contractions: Atosiban, β2-agonists (Ritodrine, Salbutamol), CCBs (Nifedipine), MgSO4, PG inhibitors (Indomethacin). Used to prevent preterm labor.</p>
+</div>
+<div class="summary-card important">
+<div class="icon">⚠️</div>
+<h3>Critical Exam Concept</h3>
+<p>Oxytocics are ONLY for vaginal delivery. Contraindicated in abnormal presentations, C-section, or CPD. Sequence: PGs first (cervical ripening) → then Oxytocin (contractions).</p>
+</div>
+<div class="summary-card info">
+<div class="icon">💡</div>
+<h3>Methylergometrine Rule</h3>
+<p>NEVER for labor induction — causes tetanic contractions that trap & asphyxiate the fetus. ONLY for postpartum hemorrhage.</p>
+</div>
+</div>
+
+<h3 class="section-subtitle">🕐 Induction of Labor — Sequential Timeline</h3>
+<div class="card">
+<div class="timeline">
+<div class="timeline-item">
+<h4>Step 1: Cervical Assessment</h4>
+<p>Evaluate cervix — if closed and unripe, pharmacological ripening is needed before contractions can be induced.</p>
+</div>
+<div class="timeline-item">
+<h4>Step 2: Prostaglandins (Dinoprostone / Misoprostol)</h4>
+<p>Primary mechanism is <strong>cervical ripening</strong> — softening and dilating the cervix. Given intravaginally or orally. This is the essential first step.</p>
+</div>
+<div class="timeline-item">
+<h4>Step 3: Wait Period (Several Hours)</h4>
+<p>Allow prostaglandins to fully ripen the cervix before starting oxytocin to avoid complications.</p>
+</div>
+<div class="timeline-item">
+<h4>Step 4: Oxytocin IV Infusion</h4>
+<p>Stimulates G-protein coupled receptors → rhythmic uterine contractions from fundus downward → safe expulsion of fetus through the prepared cervix.</p>
+</div>
+<div class="timeline-item">
+<h4>Post-Delivery: If Hemorrhage → Methylergometrine</h4>
+<p>ONLY after baby and placenta are delivered. Causes forceful, prolonged tetanic contraction to compress bleeding vessels.</p>
+</div>
+</div>
+</div>
+
+<h3 class="section-subtitle">🏷️ Key Clinical Signs & Facts Grid</h3>
+<div class="signs-grid" id="signsGrid">
+<div class="sign-item searchable" data-search="oxytocin adh water intoxication">
+<h4>💧 Oxytocin & Water Intoxication</h4>
+<p>Structurally similar to ADH → weak antidiuretic activity → high doses cause water retention and hyponatremia.</p>
+<div class="tags"><span class="tag tag-exam">Exam Favorite</span><span class="tag tag-high">High-Yield</span></div>
+</div>
+<div class="sign-item searchable" data-search="magnesium sulfate myasthenia gravis calcium">
+<h4>🧲 MgSO₄ Contraindication</h4>
+<p>Absolute contraindication: <strong>Myasthenia Gravis</strong>. Toxicity reversed by <strong>Calcium</strong>.</p>
+<div class="tags"><span class="tag tag-high">High-Yield</span><span class="tag tag-exam">Exam Favorite</span></div>
+</div>
+<div class="sign-item searchable" data-search="carboprost asthma bronchoconstriction pgf2">
+<h4>🫁 Carboprost & Asthma</h4>
+<p>PGF2α analogue → severe bronchoconstriction. Absolutely contraindicated in asthmatics.</p>
+<div class="tags"><span class="tag tag-pearl">Clinical Pearl</span></div>
+</div>
+<div class="sign-item searchable" data-search="indomethacin ductus arteriosus premature closure">
+<h4>❤️ Indomethacin & Ductus</h4>
+<p>Inhibits fetal PG → premature closure of ductus arteriosus → right ventricular heart failure. Avoid in 3rd trimester!</p>
+<div class="tags"><span class="tag tag-high">High-Yield</span><span class="tag tag-exam">Exam Favorite</span></div>
+</div>
+<div class="sign-item searchable" data-search="ritodrine hypokalemia beta2 tachycardia">
+<h4>⚡ Ritodrine Side Effects</h4>
+<p>β2-agonist → hypokalemia (K+ driven intracellularly), tachycardia, tremors. High-dose: loss of β2 specificity → β1 effects.</p>
+<div class="tags"><span class="tag tag-moa">MOA</span><span class="tag tag-exam">Exam Favorite</span></div>
+</div>
+<div class="sign-item searchable" data-search="methylergometrine postpartum hemorrhage coronary vasospasm ami">
+<h4>🫀 Ergot Cardiovascular Risk</h4>
+<p>Methylergometrine → severe vasoconstriction via alpha receptors → coronary vasospasm → can cause acute MI.</p>
+<div class="tags"><span class="tag tag-pearl">Clinical Pearl</span><span class="tag tag-high">High-Yield</span></div>
+</div>
+<div class="sign-item searchable" data-search="mifepristone progesterone antagonist abortion">
+<h4>🚫 Mifepristone MOA</h4>
+<p>Competitive progesterone receptor antagonist → removes uterine relaxation → induces abortion. Used for medical termination.</p>
+<div class="tags"><span class="tag tag-moa">MOA</span></div>
+</div>
+<div class="sign-item searchable" data-search="atosiban oxytocin antagonist modified analogue">
+<h4>🔄 Atosiban — Unique MOA</h4>
+<p>Modified oxytocin analogue → competitive antagonist at oxytocin receptors → halts contractions. Side effect: hot flushing.</p>
+<div class="tags"><span class="tag tag-moa">MOA</span><span class="tag tag-pearl">Clinical Pearl</span></div>
+</div>
+</div>
+
+<div class="motivation-banner">
+<div class="emoji">🚀</div>
+<p>You're reviewing <strong>Reproductive Pharmacology</strong> — one of the highest-yield exam topics! Keep going! 💪</p>
+</div>
+</div>
+
+<!-- ===================== QUIZ TAB ===================== -->
+<div class="tab-content" id="tab-quiz">
+<h2 class="section-title">🧪 Quiz Mode — 25 Questions</h2>
+
+<div class="quiz-header">
+<div class="quiz-score">
+<span>✅ Correct: <span class="score-num" id="quizCorrect">0</span></span>
+<span>❌ Wrong: <span id="quizWrong" style="color:var(--danger);font-weight:800">0</span></span>
+<span>🔥 Streak: <span id="quizStreak" style="color:var(--warning);font-weight:800">0</span></span>
+</div>
+</div>
+<div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressBar" style="width:0%"></div></div>
+
+<div id="quizContainer"></div>
+<div id="quizComplete" class="quiz-complete hidden">
+<div class="score-circle">
+<span class="big-score" id="finalScore">0</span>
+<span class="score-label">out of 25</span>
+</div>
+<h3 id="finalMessage" style="margin-bottom:12px;"></h3>
+<p style="color:var(--text-secondary);margin-bottom:20px;" id="finalSub"></p>
+<button class="btn btn-primary" onclick="resetQuiz()">🔄 Retake Quiz</button>
+</div>
+</div>
+
+<!-- ===================== FLASHCARDS TAB ===================== -->
+<div class="tab-content" id="tab-flashcards">
+<h2 class="section-title">🃏 Flashcards — Click to Flip</h2>
+<p style="color:var(--text-muted);margin-bottom:20px;font-size:0.85rem;">Click any card to reveal the answer. Track your progress above!</p>
+<div class="flashcard-grid" id="flashcardGrid"></div>
+</div>
+
+<!-- ===================== CASES TAB ===================== -->
+<div class="tab-content" id="tab-cases">
+<h2 class="section-title">🏥 Clinical Case Scenarios</h2>
+<div id="casesContainer"></div>
+</div>
+
+<!-- ===================== MECHANISM TAB ===================== -->
+<div class="tab-content" id="tab-mechanism">
+<h2 class="section-title">🔬 Mechanisms & Pathophysiology</h2>
+
+<h3 class="section-subtitle">🧬 Key Pharmacological Targets — Click to Expand</h3>
+<div class="anatomy-grid" id="anatomyGrid">
+</div>
+
+<h3 class="section-subtitle" style="margin-top:30px;">🔄 Flowchart: β2-Agonist Tocolysis Pathway</h3>
+<div class="card">
+<div class="flowchart">
+<div class="flow-step">💊 Ritodrine / Salbutamol administered</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Binds β2-adrenoceptors on myometrium</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Activates Gs-protein → Stimulates Adenylyl Cyclase</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step highlight">⬆️ Intracellular cAMP</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">⬇️ Intracellular Ca²⁺ availability</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step highlight">✅ Uterine Smooth Muscle Relaxation (Tocolysis)</div>
+</div>
+</div>
+
+<h3 class="section-subtitle" style="margin-top:24px;">🔄 Flowchart: Fetal NSAID Complication (Indomethacin)</h3>
+<div class="card">
+<div class="flowchart">
+<div class="flow-step">Mother ingests Indomethacin in late pregnancy</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Drug crosses placenta to fetus</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Inhibits fetal COX enzyme</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">⬇️ Fetal Prostaglandin synthesis</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step danger-step">Loss of PG-mediated vasodilation of Ductus Arteriosus</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step danger-step">⚠️ PREMATURE CLOSURE of Ductus Arteriosus</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step danger-step">Blood backs up → Pulmonary Hypertension → <strong>Right Ventricular Heart Failure</strong></div>
+</div>
+</div>
+
+<h3 class="section-subtitle" style="margin-top:24px;">🔄 Flowchart: Oxytocin Signal Transduction</h3>
+<div class="card">
+<div class="flowchart">
+<div class="flow-step">Oxytocin binds G-protein coupled receptor (Gq)</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Activates Phospholipase C (PLC)</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">PIP2 → IP3 + DAG</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step highlight">IP3 releases Ca²⁺ from sarcoplasmic reticulum</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Ca²⁺ binds Calmodulin → activates MLCK</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step highlight">✅ Rhythmic Myometrial Contraction</div>
+</div>
+</div>
+</div>
+
+<!-- ===================== DIAGNOSIS TAB ===================== -->
+<div class="tab-content" id="tab-diagnosis">
+<h2 class="section-title">🔎 Diagnostic Considerations & Comparisons</h2>
+
+<h3 class="section-subtitle">📊 Oxytocic Agents Comparison</h3>
+<div class="table-container">
+<table>
+<thead>
+<tr><th>Feature</th><th>Oxytocin</th><th>Prostaglandins</th><th>Methylergometrine</th><th>Mifepristone</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Class</strong></td><td>Peptide hormone</td><td>Lipid autacoids</td><td>Ergot alkaloid</td><td>Steroid antagonist</td></tr>
+<tr><td><strong>Source</strong></td><td>Hypothalamus → post. pituitary</td><td>Synthetic analogues</td><td>Synthetic ergot derivative</td><td>Synthetic</td></tr>
+<tr><td><strong>Receptor</strong></td><td>Gq-coupled OT receptor</td><td>PG receptors (EP, FP)</td><td>α-adrenergic / serotonergic</td><td>Progesterone receptor (antagonist)</td></tr>
+<tr><td><strong>Contraction Type</strong></td><td>Rhythmic (systole/diastole)</td><td>Rhythmic + cervical ripening</td><td>Tetanic (prolonged, continuous)</td><td>Indirect (removes relaxation)</td></tr>
+<tr><td><strong>Primary Use</strong></td><td>Labor induction, PPH</td><td>Cervical ripening, abortion</td><td>Postpartum hemorrhage ONLY</td><td>Medical abortion</td></tr>
+<tr><td><strong>Key Side Effect</strong></td><td>Water intoxication (ADH-like)</td><td>Bronchoconstriction (Carboprost)</td><td>Coronary vasospasm / MI</td><td>Bleeding, incomplete abortion</td></tr>
+<tr><td><strong>Contraindication</strong></td><td>Abnormal presentation, CPD</td><td>Asthma (Carboprost)</td><td>During labor (pre-delivery)</td><td>Ectopic pregnancy</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 class="section-subtitle">📊 Tocolytic Agents Comparison</h3>
+<div class="table-container">
+<table>
+<thead>
+<tr><th>Feature</th><th>Atosiban</th><th>β2-Agonists</th><th>Nifedipine</th><th>MgSO₄</th><th>Indomethacin</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>MOA</strong></td><td>OT receptor antagonist</td><td>↑ cAMP via β2</td><td>Block Ca²⁺ channels</td><td>Ca²⁺ efflux + block entry</td><td>Inhibit COX → ↓ PG</td></tr>
+<tr><td><strong>Key Drug</strong></td><td>Atosiban</td><td>Ritodrine, Salbutamol</td><td>Nifedipine</td><td>MgSO₄</td><td>Indomethacin</td></tr>
+<tr><td><strong>Unique Feature</strong></td><td>Modified OT analogue</td><td>Also bronchodilator</td><td>Also antihypertensive</td><td>Also anticonvulsant</td><td>Also analgesic (dysmenorrhea)</td></tr>
+<tr><td><strong>Side Effects</strong></td><td>Hot flushing, nausea</td><td>Hypokalemia, tachycardia, tremor</td><td>Hypotension, headache</td><td>Muscle weakness, hypotension</td><td>GI upset</td></tr>
+<tr><td><strong>Contraindication</strong></td><td>—</td><td>Cardiac disease</td><td>Hypotension</td><td>Myasthenia Gravis ⚠️</td><td>3rd trimester (ductus closure) ⚠️</td></tr>
+<tr><td><strong>Antidote</strong></td><td>—</td><td>β-blockers</td><td>—</td><td>IV Calcium ⚠️</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 class="section-subtitle">🔬 Investigation Findings — Key Badges</h3>
+<div class="card">
+<p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">Click each badge to understand its clinical significance:</p>
+<div class="badge-grid" id="invBadges">
+</div>
+<div id="badgeDetail" style="margin-top:12px;padding:14px;background:var(--bg-input);border-radius:10px;font-size:0.83rem;color:var(--text-secondary);display:none;"></div>
+</div>
+
+<h3 class="section-subtitle">📋 Diagnostic Algorithm: When to Use Which Oxytocic</h3>
+<div class="card">
+<div class="flowchart">
+<div class="flow-step highlight">Is the patient in labor or post-delivery?</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">PRE-DELIVERY: Is the cervix ripe (soft/dilated)?</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">❌ Cervix NOT ripe → Give <strong>Prostaglandins</strong> (Dinoprostone) for cervical ripening</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">✅ Cervix ripe → Give <strong>Oxytocin IV</strong> for rhythmic contractions</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">POST-DELIVERY: Is there uterine hemorrhage?</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step danger-step">✅ PPH present → Give <strong>Methylergometrine IM</strong> (tetanic contraction to compress vessels)</div>
+</div>
+</div>
+</div>
+
+<!-- ===================== TREATMENT TAB ===================== -->
+<div class="tab-content" id="tab-treatment">
+<h2 class="section-title">💊 Treatment Protocols & Drug Details</h2>
+
+<div class="alert-box alert-danger">
+<span class="alert-icon">🚨</span>
+<div><strong>EMERGENCY:</strong> Postpartum Hemorrhage — Methylergometrine IM immediately after placenta delivery. If asthmatic, use Oxytocin instead. NEVER Carboprost in asthma.</div>
+</div>
+
+<div class="alert-box alert-warning">
+<span class="alert-icon">⚠️</span>
+<div><strong>MgSO₄ Toxicity Protocol:</strong> If patient develops hypotension + severe muscle weakness → administer IV <strong>Calcium Gluconate</strong> slowly. Check patellar reflexes regularly.</div>
+</div>
+
+<h3 class="section-subtitle">💉 Oxytocic Drugs — Detailed Cards</h3>
+<div class="card-grid">
+<div class="drug-card urgency-high">
+<div class="drug-name">💉 Oxytocin</div>
+<div class="drug-class">Peptide Hormone | IV/IM</div>
+<div class="drug-detail"><strong>MOA:</strong> Gq-coupled receptor → PLC → IP3 → ↑Ca²⁺ → rhythmic contractions</div>
+<div class="drug-detail"><strong>Uses:</strong> Labor induction, augmentation, PPH control, milk ejection</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Water intoxication (ADH-like), uterine hyperstimulation</div>
+<div class="drug-detail"><strong>CI:</strong> Abnormal presentation, CPD, prior uterine surgery</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">🧪 Dinoprostone (PGE2)</div>
+<div class="drug-class">Prostaglandin | Intravaginal</div>
+<div class="drug-detail"><strong>MOA:</strong> Stimulates PG receptors → cervical ripening (primary) + uterine contraction</div>
+<div class="drug-detail"><strong>Uses:</strong> Cervical ripening before oxytocin, medical abortion</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Nausea, vomiting, diarrhea, fever</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">⚡ Carboprost (PGF2α)</div>
+<div class="drug-class">Prostaglandin | IM</div>
+<div class="drug-detail"><strong>MOA:</strong> Stimulates FP receptors → strong uterine contraction + bronchoconstriction</div>
+<div class="drug-detail"><strong>Uses:</strong> Refractory PPH, abortion</div>
+<div class="drug-detail"><strong>CI:</strong> ⚠️ ASTHMA — causes severe bronchospasm</div>
+</div>
+<div class="drug-card urgency-med">
+<div class="drug-name">💊 Misoprostol (PGE1)</div>
+<div class="drug-class">Prostaglandin | Oral/Sublingual/Vaginal</div>
+<div class="drug-detail"><strong>MOA:</strong> Stimulates EP receptors → cervical ripening + uterine contraction</div>
+<div class="drug-detail"><strong>Uses:</strong> Cervical ripening, medical abortion (with Mifepristone), PPH prevention</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">🔴 Methylergometrine</div>
+<div class="drug-class">Ergot Alkaloid | IM</div>
+<div class="drug-detail"><strong>MOA:</strong> α-adrenergic + serotonin → forceful TETANIC contractions</div>
+<div class="drug-detail"><strong>Uses:</strong> Postpartum hemorrhage ONLY</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Hypertension, coronary vasospasm → MI</div>
+<div class="drug-detail"><strong>CI:</strong> ⚠️ NEVER during labor, hypertension, coronary artery disease</div>
+</div>
+<div class="drug-card urgency-med">
+<div class="drug-name">🚫 Mifepristone (RU-486)</div>
+<div class="drug-class">Progesterone Antagonist | Oral</div>
+<div class="drug-detail"><strong>MOA:</strong> Competitive progesterone receptor antagonist → reverses uterine relaxation</div>
+<div class="drug-detail"><strong>Uses:</strong> Medical termination of pregnancy (with misoprostol)</div>
+<div class="drug-detail"><strong>CI:</strong> Ectopic pregnancy, adrenal insufficiency</div>
+</div>
+</div>
+
+<h3 class="section-subtitle">🛑 Tocolytic Drugs — Detailed Cards</h3>
+<div class="card-grid">
+<div class="drug-card urgency-low">
+<div class="drug-name">🔄 Atosiban</div>
+<div class="drug-class">Oxytocin Receptor Antagonist | IV</div>
+<div class="drug-detail"><strong>MOA:</strong> Modified oxytocin → competitive antagonist at OT receptors → stops contractions</div>
+<div class="drug-detail"><strong>Uses:</strong> Preterm labor (24–33 weeks)</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Hot flushing, nausea, headache</div>
+</div>
+<div class="drug-card urgency-med">
+<div class="drug-name">💨 Ritodrine / Salbutamol</div>
+<div class="drug-class">β2-Sympathomimetic | IV/Oral</div>
+<div class="drug-detail"><strong>MOA:</strong> β2-receptor → ↑cAMP → ↓Ca²⁺ → uterine relaxation</div>
+<div class="drug-detail"><strong>Side Effects:</strong> ⚠️ Hypokalemia (K⁺ shift into cells), tachycardia, tremors</div>
+<div class="drug-detail"><strong>CI:</strong> Cardiac disease, diabetes</div>
+</div>
+<div class="drug-card urgency-low">
+<div class="drug-name">💛 Nifedipine</div>
+<div class="drug-class">Calcium Channel Blocker | Oral</div>
+<div class="drug-detail"><strong>MOA:</strong> Blocks L-type Ca²⁺ channels → ↓intracellular Ca²⁺ → relaxation</div>
+<div class="drug-detail"><strong>Uses:</strong> Preterm labor, hypertension</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Hypotension, headache, flushing</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">🧲 Magnesium Sulphate</div>
+<div class="drug-class">Electrolyte | IV</div>
+<div class="drug-detail"><strong>MOA:</strong> Ca²⁺ efflux from cells + blocks Ca²⁺ entry → uterine relaxation</div>
+<div class="drug-detail"><strong>Uses:</strong> Tocolysis, seizure prevention in preeclampsia/eclampsia</div>
+<div class="drug-detail"><strong>Side Effects:</strong> Muscle weakness, hypotension, respiratory depression</div>
+<div class="drug-detail"><strong>CI:</strong> ⚠️ <strong>MYASTHENIA GRAVIS</strong> | Antidote: <strong>IV CALCIUM</strong></div>
+</div>
+<div class="drug-card urgency-med">
+<div class="drug-name">🔥 Indomethacin</div>
+<div class="drug-class">NSAID / PG Inhibitor | Oral/Rectal</div>
+<div class="drug-detail"><strong>MOA:</strong> Inhibits COX → ↓PG synthesis → ↓uterine contractions</div>
+<div class="drug-detail"><strong>Uses:</strong> Dysmenorrhea, preterm labor (early)</div>
+<div class="drug-detail"><strong>CI:</strong> ⚠️ Late 2nd / 3rd trimester → <strong>premature closure of ductus arteriosus</strong></div>
+</div>
+</div>
+
+<h3 class="section-subtitle">🎯 Symptomatic Management Grid</h3>
+<div class="table-container">
+<table>
+<thead>
+<tr><th>Clinical Situation</th><th>Drug of Choice</th><th>Alternative</th><th>Avoid</th></tr>
+</thead>
+<tbody>
+<tr><td>Cervical ripening</td><td>Dinoprostone / Misoprostol</td><td>—</td><td>Methylergometrine</td></tr>
+<tr><td>Labor induction</td><td>Oxytocin IV</td><td>Prostaglandins</td><td>Methylergometrine</td></tr>
+<tr><td>Postpartum hemorrhage</td><td>Methylergometrine, Oxytocin</td><td>Carboprost (if not asthmatic)</td><td>—</td></tr>
+<tr><td>Medical abortion</td><td>Mifepristone + Misoprostol</td><td>—</td><td>—</td></tr>
+<tr><td>Preterm labor</td><td>Atosiban, Nifedipine</td><td>Ritodrine, MgSO₄</td><td>Indomethacin (late pregnancy)</td></tr>
+<tr><td>Preeclampsia seizures</td><td>MgSO₄</td><td>—</td><td>MgSO₄ in Myasthenia Gravis</td></tr>
+<tr><td>Dysmenorrhea</td><td>Indomethacin / NSAIDs</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ===================== MNEMONICS TAB ===================== -->
+<div class="tab-content" id="tab-mnemonics">
+<h2 class="section-title">🧠 Mnemonics & Memory Aids</h2>
+<p style="color:var(--text-muted);margin-bottom:20px;font-size:0.85rem;">Click each card to expand the breakdown!</p>
+<div id="mnemonicContainer"></div>
+</div>
+
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const quizData = [
+{q:"What is the mechanism of action of Atosiban?",opts:["Stimulate oxytocin receptor","Stimulate estrogen receptor","Block progesterone receptor","Block oxytocin receptor","Block estrogen receptor"],ans:3,exp:"Atosiban is a modified form of oxytocin that competitively blocks uterine oxytocin receptors, preventing contractions. It does not stimulate any receptor, nor does it act on estrogen/progesterone receptors."},
+{q:"Adverse effects of Magnesium Sulphate can be reversed by:",opts:["Phosphorus","Sodium","Calcium","Potassium","Atosiban"],ans:2,exp:"Calcium competes with magnesium at the channels, reversing the toxic blockade. Other electrolytes do not reverse this specific Mg²⁺ blockade."},
+{q:"What is the absolute contraindication for magnesium sulfate?",opts:["Seizures in preeclampsia","Pulmonary edema","Myasthenia gravis","Myocardial infarction","Cardiac arrhythmias"],ans:2,exp:"MgSO₄ causes muscle relaxation; in Myasthenia gravis (pre-existing neuromuscular weakness), this causes fatal paralysis. It is actually USED for seizures in preeclampsia."},
+{q:"Which of the following is NOT a tocolytic drug?",opts:["Nifedipine","Ritodrine","Atosiban","Magnesium Sulphate","Methylergometrine"],ans:4,exp:"Methylergometrine is an ergot alkaloid — an OXYTOCIC (stimulates contractions). All others are uterine relaxants (tocolytics)."},
+{q:"Oxytocin is primarily used for:",opts:["Increasing sperm count","Decreasing breast milk production","Inducing labor contractions","Control antepartum hemorrhage","Treating hypotension"],ans:2,exp:"Oxytocin stimulates G-protein coupled receptors in the myometrium to facilitate delivery. It stimulates (not decreases) milk ejection and can cause hypotension (not treat it)."},
+{q:"The mechanism of action of Mifepristone in medical abortion is to:",opts:["Antagonize progesterone receptor in uterus","Antagonize estrogen receptor in uterus","Antagonize oxytocin receptor in uterus","Stimulate prostaglandins","Block calcium channels"],ans:0,exp:"Mifepristone competitively blocks the progesterone receptor, removing progesterone's relaxant effect and terminating pregnancy."},
+{q:"What is the primary role of Prostaglandins when inducing labor?",opts:["Lowering maternal blood pressure","Cervical ripening (softening)","Blocking oxytocin","Inducing tetanic contractions","Treating dysmenorrhea"],ans:1,exp:"PGs mainly act to dilate and soften the cervix before oxytocin is given. Their unique critical role in induction is cervical ripening."},
+{q:"Which side effect is classically associated with Ritodrine?",opts:["Hyperkalemia","Hypokalemia","Bradycardia","Hypertension","Bronchoconstriction"],ans:1,exp:"Beta-2 agonists drive potassium into cells, causing hypokalemia. They cause tachycardia (not bradycardia), hypotension, and bronchodilation."},
+{q:"Why is Indomethacin contraindicated in the third trimester of pregnancy?",opts:["It causes cervical ripening","It induces severe maternal hemorrhage","It causes premature closure of the ductus arteriosus","It causes maternal myasthenia gravis","It blocks oxytocin"],ans:2,exp:"Inhibiting prostaglandins in the fetus forces the ductus arteriosus to close before birth, causing right heart failure."},
+{q:"How does Methylergometrine stop postpartum bleeding?",opts:["Inducing platelet aggregation","Forming a cervical plug","Causing forceful, prolonged uterine contractions","Inhibiting prostaglandins","Blocking calcium channels"],ans:2,exp:"It works by causing tetanic muscle contraction to mechanically compress bleeding uterine vessels, not via coagulation pathways."},
+{q:"Where is Oxytocin synthesized?",opts:["Anterior pituitary","Posterior pituitary","Hypothalamus","Ovaries","Uterus"],ans:2,exp:"It is synthesized in the hypothalamus and transported to the posterior pituitary for storage and release. The posterior pituitary only stores it."},
+{q:"A patient given a prostaglandin for induction develops an asthma attack. Which drug was likely used?",opts:["Dinoprostone","Misoprostol","Carboprost","Oxytocin","Mifepristone"],ans:2,exp:"Carboprost (PGF2α) specifically causes severe bronchoconstriction and aggravates asthma."},
+{q:"Nifedipine prevents premature labor by:",opts:["Opening potassium channels","Blocking voltage-gated calcium channels","Antagonizing oxytocin receptors","Increasing cAMP","Decreasing cGMP"],ans:1,exp:"Nifedipine stops calcium entry into myometrial cells, preventing the calcium-calmodulin complex required for contraction."},
+{q:"Which is an adverse effect of Oxytocin due to its structural similarity to ADH?",opts:["Dehydration","Water intoxication","Polyuria","Hyperkalemia","Tremors"],ans:1,exp:"Oxytocin has weak antidiuretic activity; high doses cause water retention and hyponatremia (water intoxication)."},
+{q:"What is the proper use of Indomethacin in a non-pregnant female?",opts:["Cervical ripening","Contraception","Relief of dysmenorrhea cramps","Induction of lactation","Treatment of myasthenia gravis"],ans:2,exp:"It inhibits PG synthesis, stopping the uterine spasms that cause menstrual pain (dysmenorrhea)."},
+{q:"Which maternal condition absolutely contraindicates the use of oxytocics for induction?",opts:["Mild hypertension","Post-term pregnancy","Cephalo-pelvic disproportion","Dysmenorrhea","Hypokalemia"],ans:2,exp:"If the fetal head is too large for the pelvis, stimulating contractions will rupture the uterus. Post-term is an indication for induction."},
+{q:"What adverse cardiovascular event is associated with Methylergometrine?",opts:["Bradycardia","Acute myocardial infarction","Hypotension","Ventricular fibrillation","Hypovolemia"],ans:1,exp:"It has strong sympathomimetic/alpha properties causing severe coronary vasoconstriction → vasospasm → MI."},
+{q:"Which drug effectively stops the action of prostaglandins already synthesized in the uterus?",opts:["Indomethacin","Magnesium Sulfate","Mifepristone","No drug can — only inhibits new synthesis","Nifedipine"],ans:3,exp:"Indomethacin is a synthesis inhibitor (blocks COX); it cannot stop PGs already formed and bound. It is not a receptor antagonist."},
+{q:"Atosiban causes 'hot flushing' primarily because:",opts:["It stimulates sympathetic nerves","It causes smooth muscle relaxation in facial blood vessels","It releases histamine","It induces fever centrally","It blocks sweat glands"],ans:1,exp:"As a tocolytic relaxing smooth muscle, it also relaxes vascular smooth muscle causing vasodilation (flushing)."},
+{q:"Why is Dinoprostone preferred over Oxytocin for the initial phase of inducing a premature closed cervix?",opts:["It is cheaper","Oxytocin causes fetal distress immediately","Prostaglandins actively soften and dilate (ripen) the cervix","Oxytocin only works in the 2nd trimester","Dinoprostone blocks pain receptors"],ans:2,exp:"The primary mechanistic action of PGs is cervical ripening, which must happen before oxytocin can safely push the baby out."},
+{q:"What happens to the fetus if Methylergometrine is given during labor?",opts:["Fetal macrosomia","Fetal death due to continuous uterine spasm (asphyxiation)","Premature closure of the ductus","Tachycardia","No effect"],ans:1,exp:"It causes a tetanic hold that stops placental blood flow → fetal asphyxiation. Closure of ductus is caused by NSAIDs, not ergots."},
+{q:"Which drug promotes calcium efflux from myometrial cells?",opts:["Nifedipine","Ritodrine","Magnesium Sulphate","Oxytocin","Atosiban"],ans:2,exp:"MgSO₄ specifically forces calcium efflux and blocks its entry. Nifedipine only blocks entry, it doesn't promote efflux."},
+{q:"A patient presents with incomplete medical abortion. Which receptor was targeted by the drug she took?",opts:["Beta-2","Oxytocin","Estrogen","Progesterone","Prostaglandin"],ans:3,exp:"Mifepristone is the standard for medical abortion and is a progesterone receptor antagonist."},
+{q:"Which tocolytic is functionally an analogue of the hormone that induces labor?",opts:["Ritodrine","Indomethacin","Atosiban","Magnesium sulfate","Nifedipine"],ans:2,exp:"Atosiban is a modified form of oxytocin, allowing it to act as a competitive antagonist at the oxytocin receptor."},
+{q:"Beta-2 agonists like Ritodrine cause tocolysis by which intracellular change?",opts:["Increasing intracellular Ca²⁺","Decreasing cAMP","Increasing intracellular cAMP","Blocking IP3","Inhibiting COX"],ans:2,exp:"β2-receptor activation → Gs → Adenylyl Cyclase → ↑cAMP → ↓intracellular Ca²⁺ → uterine relaxation."}
+];
+
+const flashcardData = [
+{front:"What is the #1 use of Methylergometrine?",back:"Postpartum hemorrhage ONLY. It causes tetanic (prolonged) contractions that compress bleeding uterine vessels. NEVER use for labor induction.",icon:"🔴"},
+{front:"MgSO₄ absolute contraindication?",back:"Myasthenia Gravis — MgSO₄ causes skeletal muscle relaxation which would worsen the already-compromised neuromuscular junction, risking fatal paralysis.",icon:"🧲"},
+{front:"MgSO₄ toxicity antidote?",back:"IV Calcium (e.g., Calcium Gluconate). Mg²⁺ competes with Ca²⁺ at channels; giving excess Ca²⁺ competitively overcomes the blockade.",icon:"💉"},
+{front:"Why is Carboprost CI in asthma?",back:"Carboprost is a PGF2α analogue. PGF2α causes potent bronchoconstriction, which can trigger a life-threatening asthma attack.",icon:"🫁"},
+{front:"What keeps the ductus arteriosus open in utero?",back:"Prostaglandins (especially PGE2). NSAIDs like Indomethacin inhibit PG synthesis → premature closure of ductus → fetal right heart failure.",icon:"❤️"},
+{front:"Oxytocin vs ADH — what's the connection?",back:"Oxytocin is structurally similar to ADH. At high doses, it has weak antidiuretic activity → causes water retention → water intoxication & hyponatremia.",icon:"💧"},
+{front:"First step in pharmacological labor induction?",back:"Prostaglandins (Dinoprostone/Misoprostol) for CERVICAL RIPENING. Only after cervix is ripe do you give Oxytocin for contractions.",icon:"1️⃣"},
+{front:"How does Mifepristone cause abortion?",back:"It is a competitive antagonist at the progesterone receptor. By blocking progesterone's uterine-relaxing effect, it triggers uterine contractions and pregnancy termination.",icon:"🚫"},
+{front:"Why does Ritodrine cause hypokalemia?",back:"β2-agonists activate the Na⁺/K⁺-ATPase pump, driving potassium from the extracellular space INTO cells, lowering serum K⁺.",icon:"⚡"},
+{front:"What is Atosiban?",back:"A modified form of oxytocin that acts as a COMPETITIVE ANTAGONIST at oxytocin receptors, blocking uterine contractions. Used to prevent preterm labor.",icon:"🔄"},
+{front:"Methylergometrine contraction pattern?",back:"TETANIC — forceful, prolonged, continuous. No relaxation phase. This would trap and asphyxiate a fetus → only used AFTER delivery.",icon:"📊"},
+{front:"Oxytocin contraction pattern?",back:"RHYTHMIC — alternating systole and diastole. This allows continued placental blood flow and safe fetal passage. Safe for labor induction.",icon:"📈"},
+{front:"Nifedipine MOA as tocolytic?",back:"Blocks L-type voltage-gated calcium channels → reduces Ca²⁺ entry into myometrial cells → prevents calcium-calmodulin activation → uterine relaxation.",icon:"💛"},
+{front:"Where is oxytocin made vs stored?",back:"Synthesized in HYPOTHALAMUS. Stored and released from POSTERIOR PITUITARY. Common exam trick!",icon:"🧠"},
+{front:"Methylergometrine cardiovascular risk?",back:"Causes severe vasoconstriction via alpha-adrenergic receptors → coronary vasospasm → can precipitate acute myocardial infarction (MI). CI in hypertension & CAD.",icon:"🫀"},
+{front:"What does MgSO₄ do to calcium?",back:"It causes Ca²⁺ EFFLUX from myometrial cells AND blocks Ca²⁺ entry. This dual action reduces intracellular Ca²⁺ → uterine relaxation.",icon:"🔬"},
+{front:"What is CPD and why does it matter?",back:"Cephalo-Pelvic Disproportion: fetal head too large for maternal pelvis. If oxytocics are given, uterine contractions would push against an immovable obstruction → uterine RUPTURE.",icon:"⚠️"},
+{front:"Indomethacin uses (non-pregnant)?",back:"Relief of DYSMENORRHEA — by inhibiting COX → reducing PG synthesis → decreasing painful uterine spasms during menstruation.",icon:"💊"},
+{front:"Misoprostol dual use?",back:"1) Cervical ripening / medical abortion (with Mifepristone) — as a PGE1 analogue stimulating uterine contractions. 2) Gastric protection (off-topic but high-yield!).",icon:"🔑"},
+{front:"Complete the sequence: PG → ? → Methylergometrine",back:"PG (cervical ripening) → OXYTOCIN (rhythmic contractions for delivery) → Methylergometrine (tetanic contraction for postpartum hemorrhage).",icon:"📋"}
+];
+
+const casesData = [
+{title:"Third Trimester NSAID Complication",scenario:"A pregnant woman in her 3rd trimester takes an over-the-counter NSAID for cramps. Fetal echocardiography reveals pulmonary hypertension and signs of right heart failure.",questions:[
+{q:"What mechanism is involved?",a:"Inhibition of prostaglandin synthesis in the fetus. NSAIDs (like Indomethacin) cross the placenta and inhibit fetal COX enzyme."},
+{q:"What structure is implicated?",a:"The Ductus Arteriosus. Prostaglandins (especially PGE2) are required to maintain a PATENT ductus arteriosus in utero. Inhibiting them forces premature closure."},
+{q:"What are the consequences?",a:"Premature closure of the ductus arteriosus → blood cannot bypass the lungs → backs up into pulmonary artery → pulmonary hypertension → right ventricular heart failure in the fetus."}
+]},
+{title:"Magnesium Sulfate Toxicity",scenario:"A preeclamptic patient receiving IV MgSO₄ to prevent seizures develops severe muscle weakness, absent deep tendon reflexes, hypotension, and respiratory depression.",questions:[
+{q:"What mechanism is involved?",a:"Excessive block of calcium channels by Magnesium. Mg²⁺ competes with Ca²⁺ at neuromuscular junctions and smooth muscle channels, causing over-relaxation."},
+{q:"What is the antidote?",a:"IV Calcium Gluconate (given slowly). Calcium competitively overcomes the magnesium blockade at channels."},
+{q:"Why is MgSO₄ contraindicated in Myasthenia Gravis?",a:"MG patients already have impaired neuromuscular transmission. MgSO₄'s muscle-relaxing effect would cause fatal respiratory paralysis."}
+]},
+{title:"Beta-Agonist Side Effects in Preterm Labor",scenario:"A woman in premature labor at 30 weeks is given IV Ritodrine. Contractions stop successfully, but she develops tachycardia (HR 130), tremors, and lab work shows K⁺ of 2.8 mEq/L.",questions:[
+{q:"Why did hypokalemia occur?",a:"Ritodrine is a β2-agonist. Activating β2 receptors stimulates the Na⁺/K⁺-ATPase pump, driving potassium from the extracellular fluid INTO the cells, lowering serum K⁺."},
+{q:"Why tachycardia and tremors?",a:"At high doses, β2-agonists lose specificity and stimulate β1 receptors (heart → tachycardia) and cause skeletal muscle tremors via β2 stimulation."},
+{q:"What would be a safer tocolytic alternative?",a:"Atosiban (selective OT receptor antagonist) or Nifedipine (CCB) — both have fewer systemic cardiovascular side effects."}
+]},
+{title:"Carboprost in an Asthmatic Patient",scenario:"To control refractory postpartum hemorrhage, a physician administers Carboprost IM to a patient with a history of bronchial asthma. Minutes later she develops severe bronchospasm with an SpO₂ of 82%.",questions:[
+{q:"What went wrong?",a:"Carboprost is PGF2α — it causes potent smooth muscle contraction including in the bronchioles. In an asthmatic patient, this triggers severe, life-threatening bronchoconstriction."},
+{q:"What should have been used instead?",a:"Oxytocin or Methylergometrine for PPH. Carboprost is ABSOLUTELY contraindicated in asthma."},
+{q:"What is the immediate management?",a:"Stop Carboprost, administer inhaled bronchodilators (Salbutamol nebulizer), supplemental O₂, consider IV steroids. Treat PPH with alternative agents."}
+]},
+{title:"Ergot Alkaloid Cardiovascular Event",scenario:"Following vaginal delivery, a patient experiences massive PPH due to uterine atony. She receives Methylergometrine IM. The bleeding stops, but she complains of severe chest pain radiating to her left arm.",questions:[
+{q:"What happened?",a:"Methylergometrine has strong alpha-adrenergic properties causing severe vasoconstriction, including of the coronary arteries → coronary vasospasm → myocardial ischemia/acute MI."},
+{q:"Could this have been avoided?",a:"Yes — Methylergometrine is relatively contraindicated in patients with hypertension or coronary artery disease. Oxytocin would have been safer."},
+{q:"Why is Methylergometrine still used despite this risk?",a:"It is extremely effective for refractory PPH because of its powerful, sustained tetanic contraction that mechanically compresses bleeding uterine vessels."}
+]},
+{title:"Integrative Scenario: Full Labor Management",scenario:"A 25-year-old female at 40 weeks gestation presents for delivery. The cervix is closed. She is given Drug A to prep the cervix. Three days later, her cervix is fully open but contractions are weak, so IV Drug B is given. After delivery, she experiences severe hemorrhage and is given IM Drug C. The bleeding stops but she develops transient hypertension.",questions:[
+{q:"Identify Drugs A, B, and C.",a:"Drug A = Dinoprostone (Prostaglandin) for cervical ripening. Drug B = Oxytocin for rhythmic uterine contractions. Drug C = Methylergometrine for postpartum hemorrhage (tetanic contraction)."},
+{q:"Why was the transient hypertension expected with Drug C?",a:"Methylergometrine has alpha-adrenergic properties causing peripheral vasoconstriction → transient rise in blood pressure."},
+{q:"What would happen if Drug C was given before the baby was born?",a:"CATASTROPHIC — Methylergometrine causes continuous tetanic contractions without relaxation, trapping the fetus and cutting off placental blood flow → fetal asphyxiation and death."}
+]}
+];
+
+const anatomyData = [
+{title:"🧬 Oxytocin Receptor (Gq-coupled)",brief:"Myometrial G-protein coupled receptor",detail:"Located on uterine smooth muscle cells. When oxytocin binds, it activates Gq → PLC → IP3 → Ca²⁺ release from SR → calmodulin activation → MLCK → RHYTHMIC contraction. Upregulated by estrogen near term."},
+{title:"🔬 Prostaglandin Receptors (EP, FP)",brief:"Receptors for PGE2 and PGF2α",detail:"EP receptors mediate cervical ripening (collagen degradation, increased GAGs, water content). FP receptors mediate uterine contraction AND bronchoconstriction (hence Carboprost CI in asthma)."},
+{title:"💜 Progesterone Receptor",brief:"Nuclear receptor maintaining pregnancy",detail:"Progesterone binds → maintains uterine quiescence, prevents contractions. Mifepristone BLOCKS this receptor → removes the 'progesterone block' → uterus contracts → abortion."},
+{title:"⚡ β2-Adrenoceptor",brief:"Gs-coupled receptor on myometrium",detail:"When activated by Ritodrine/Salbutamol → Gs → Adenylyl Cyclase → ↑cAMP → ↓available Ca²⁺ → uterine relaxation. Also present on bronchi (bronchodilation) and skeletal muscle (tremors, K⁺ shift)."},
+{title:"🧲 Calcium Channels (L-type)",brief:"Voltage-gated channels in myometrium",detail:"Allow Ca²⁺ influx during depolarization → triggers contraction. Blocked by Nifedipine (CCB). MgSO₄ blocks these AND promotes Ca²⁺ efflux via separate mechanism."},
+{title:"❤️ Ductus Arteriosus",brief:"Fetal shunt between pulmonary artery and aorta",detail:"Maintained PATENT by prostaglandins (PGE2, PGI2). Allows blood to bypass non-functional fetal lungs. NSAIDs inhibit PG → premature closure → pulmonary hypertension → RV failure. Closes naturally at birth when PG levels drop."},
+{title:"🔄 Cyclooxygenase (COX) Enzyme",brief:"Enzyme that synthesizes prostaglandins",detail:"COX converts arachidonic acid → PGs. Indomethacin inhibits COX → decreases PG synthesis → reduces uterine contractions (useful in dysmenorrhea). BUT in fetus: reduces PGs needed for patent ductus."},
+{title:"🧠 Hypothalamic-Posterior Pituitary Axis",brief:"Oxytocin synthesis and release pathway",detail:"Oxytocin is SYNTHESIZED in hypothalamic paraventricular and supraoptic nuclei. Transported via axons to POSTERIOR PITUITARY for storage. Released by suckling reflex and cervical stretch (Ferguson reflex)."}
+];
+
+const investigationBadges = [
+{name:"Serum K⁺ ↓ (Hypokalemia)",detail:"Caused by β2-agonists (Ritodrine) driving K⁺ into cells via Na⁺/K⁺-ATPase activation. Monitor electrolytes during tocolysis."},
+{name:"Fetal Echo: RV Dilation",detail:"Sign of premature ductus arteriosus closure from maternal NSAID use. Pulmonary hypertension → right ventricular overload."},
+{name:"Absent DTRs (Deep Tendon Reflexes)",detail:"Sign of MgSO₄ toxicity. Mg²⁺ blocks neuromuscular transmission. If reflexes absent → approaching dangerous toxicity → give IV Calcium."},
+{name:"Bishop Score ≤ 6",detail:"Indicates unfavorable (unripe) cervix. Requires prostaglandin cervical ripening BEFORE oxytocin induction."},
+{name:"Uterine Hyperstimulation on CTG",detail:"Excessive contractions (tachysystole) from oxytocin overdose. Stop infusion immediately. May cause fetal distress."},
+{name:"Troponin ↑ + ST Changes",detail:"Post-Methylergometrine MI. Ergot alkaloids can cause coronary vasospasm → myocardial ischemia → elevated cardiac biomarkers."},
+{name:"SpO₂ < 90% Post-Carboprost",detail:"Bronchospasm from PGF2α in asthmatic patient. Immediate bronchodilator therapy needed."},
+{name:"Serum Mg²⁺ > 4 mEq/L",detail:"Elevated magnesium level. Therapeutic range: 4-7 mEq/L. Above 7: loss of reflexes. Above 10: respiratory arrest. Treat with IV Calcium."}
+];
+
+const mnemonicsData = [
+{title:"Oxytocic Drugs",word:"O-P-E-M",subtitle:"Remember the 4 classes of Oxytocics",items:[
+{letter:"O",text:"Oxytocin — Rhythmic contractions, labor induction, milk ejection"},
+{letter:"P",text:"Prostaglandins — Cervical ripening (Dinoprostone, Carboprost, Misoprostol)"},
+{letter:"E",text:"Ergot alkaloids — Methylergometrine, PPH ONLY (tetanic contractions)"},
+{letter:"M",text:"Mifepristone — Progesterone antagonist, medical abortion"}
+]},
+{title:"Tocolytic Drugs",word:"A-B-C-M-I",subtitle:"Remember the 5 classes of Tocolytics",items:[
+{letter:"A",text:"Atosiban — Oxytocin receptor antagonist (modified OT)"},
+{letter:"B",text:"Beta-agonists — Ritodrine, Salbutamol (↑cAMP → relax)"},
+{letter:"C",text:"Calcium Channel Blockers — Nifedipine (block Ca²⁺ entry)"},
+{letter:"M",text:"Magnesium Sulphate — Ca²⁺ efflux (CI: Myasthenia Gravis!)"},
+{letter:"I",text:"Indomethacin — COX inhibitor (CI: 3rd trimester → ductus closure)"}
+]},
+{title:"MgSO₄ Pearls",word:"M-A-G",subtitle:"3 Key Facts about Magnesium Sulfate",items:[
+{letter:"M",text:"Myasthenia Gravis — ABSOLUTE contraindication"},
+{letter:"A",text:"Antidote — IV Calcium (competitively overcomes Mg blockade)"},
+{letter:"G",text:"Guards against seizures — used in preeclampsia/eclampsia"}
+]},
+{title:"Methylergometrine Rules",word:"P-O-S-T",subtitle:"When & Why to use Ergot Alkaloids",items:[
+{letter:"P",text:"Postpartum hemorrhage — the ONLY indication"},
+{letter:"O",text:"Only AFTER delivery — never during labor"},
+{letter:"S",text:"Sustained (tetanic) contraction — compresses vessels"},
+{letter:"T",text:"Trouble with heart — risk of coronary vasospasm/MI"}
+]},
+{title:"Induction Sequence",word:"R-C-P",subtitle:"Steps for Inducing Labor",items:[
+{letter:"R",text:"Ripen the cervix FIRST — with Prostaglandins (Dinoprostone)"},
+{letter:"C",text:"Contract the uterus SECOND — with Oxytocin IV (rhythmic)"},
+{letter:"P",text:"Post-delivery hemorrhage — Methylergometrine if needed"}
+]},
+{title:"Ritodrine Side Effects",word:"T-H-T",subtitle:"Classic β2-agonist adverse effects",items:[
+{letter:"T",text:"Tachycardia — loss of β2 specificity at high doses → β1 stimulation"},
+{letter:"H",text:"Hypokalemia — K⁺ driven INTO cells by Na⁺/K⁺-ATPase"},
+{letter:"T",text:"Tremors — β2 effect on skeletal muscle"}
+]}
+];
+
+// ==================== STATE ====================
+let quizState = {
+current: 0,
+score: 0,
+wrong: 0,
+streak: 0,
+maxStreak: 0,
+answered: new Array(quizData.length).fill(false),
+answers: new Array(quizData.length).fill(null)
+};
+
+let flippedCount = 0;
+
+// ==================== INIT ====================
+function init() {
+loadState();
+renderQuiz();
+renderFlashcards();
+renderCases();
+renderAnatomy();
+renderBadges();
+renderMnemonics();
+updateStats();
+const savedTab = localStorage.getItem('lastTab');
+if (savedTab) switchTab(savedTab, true);
+}
+
+function loadState() {
+try {
+const saved = localStorage.getItem('repro_quiz_state');
+if (saved) {
+const parsed = JSON.parse(saved);
+quizState = {...quizState, ...parsed};
+}
+flippedCount = parseInt(localStorage.getItem('repro_flipped') || '0');
+} catch(e) {}
+}
+
+function saveState() {
+localStorage.setItem('repro_quiz_state', JSON.stringify(quizState));
+localStorage.setItem('repro_flipped', flippedCount.toString());
+}
+
+function updateStats() {
+const totalAnswered = quizState.answered.filter(Boolean).length;
+const progress = Math.round((totalAnswered / quizData.length) * 100);
+document.getElementById('globalScore').textContent = quizState.score;
+document.getElementById('globalTotal').textContent = quizData.length;
+document.getElementById('globalStreak').textContent = quizState.streak;
+document.getElementById('globalProgress').textContent = progress;
+document.getElementById('globalFlipped').textContent = flippedCount;
+saveState();
+}
+
+// ==================== TABS ====================
+function switchTab(tabName, silent) {
+document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+const tabEl = document.getElementById('tab-' + tabName);
+if (tabEl) tabEl.classList.add('active');
+const btns = document.querySelectorAll('.tab-btn');
+btns.forEach(b => {
+if (b.textContent.toLowerCase().includes(tabName.substring(0,4)) ||
+(tabName === 'overview' && b.textContent.includes('Overview')) ||
+(tabName === 'quiz' && b.textContent.includes('Quiz')) ||
+(tabName === 'flashcards' && b.textContent.includes('Flashcard')) ||
+(tabName === 'cases' && b.textContent.includes('Cases')) ||
+(tabName === 'mechanism' && b.textContent.includes('Mechanism')) ||
+(tabName === 'diagnosis' && b.textContent.includes('Dx')) ||
+(tabName === 'treatment' && b.textContent.includes('Treatment')) ||
+(tabName === 'mnemonics' && b.textContent.includes('Mnemonic'))
+) {
+b.classList.add('active');
+}
+});
+if (!silent) localStorage.setItem('lastTab', tabName);
+}
+
+// ==================== SEARCH ====================
+function handleSearch(val) {
+const v = val.toLowerCase();
+document.querySelectorAll('.searchable, .sign-item').forEach(el => {
+const text = (el.textContent + ' ' + (el.dataset.search || '')).toLowerCase();
+el.style.display = (!v || text.includes(v)) ? '' : 'none';
+});
+}
+
+// ==================== QUIZ ====================
+function renderQuiz() {
+const container = document.getElementById('quizContainer');
+container.innerHTML = '';
+document.getElementById('quizComplete').classList.add('hidden');
+
+const q = quizData[quizState.current];
+const i = quizState.current;
+const wasAnswered = quizState.answered[i];
+const prevAnswer = quizState.answers[i];
+
+const progress = ((i + 1) / quizData.length) * 100;
+document.getElementById('quizProgressBar').style.width = progress + '%';
+document.getElementById('quizCorrect').textContent = quizState.score;
+document.getElementById('quizWrong').textContent = quizState.wrong;
+document.getElementById('quizStreak').textContent = quizState.streak;
+
+let optionsHTML = q.opts.map((opt, oi) => {
+const letters = ['A','B','C','D','E'];
+let cls = 'quiz-option';
+if (wasAnswered) {
+cls += ' disabled';
+if (oi === q.ans) cls += ' correct';
+else if (oi === prevAnswer && prevAnswer !== q.ans) cls += ' wrong';
+}
+return `<div class="${cls}" onclick="answerQuiz(${oi})" data-idx="${oi}">
+<span class="opt-letter">${letters[oi]}</span>
+<span>${opt}</span>
+</div>`;
+}).join('');
+
+let expHTML = '';
+if (wasAnswered) {
+const isCorrect = prevAnswer === q.ans;
+expHTML = `<div class="quiz-explanation show ${isCorrect ? 'correct-exp' : 'wrong-exp'}">
+<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.exp}
+</div>`;
+}
+
+container.innerHTML = `
+<div class="quiz-question">
+<div class="q-number">Question ${i + 1} of ${quizData.length}</div>
+<div class="q-text">${q.q}</div>
+<div class="quiz-options">${optionsHTML}</div>
+${expHTML}
+</div>
+<div class="quiz-nav">
+<button class="btn btn-secondary" onclick="prevQuiz()" ${i === 0 ? 'disabled style="opacity:0.5"' : ''}>⬅️ Previous</button>
+<button class="btn btn-primary" onclick="nextQuiz()">${i === quizData.length - 1 ? '🏁 Finish' : 'Next ➡️'}</button>
+</div>
+`;
+}
+
+function answerQuiz(idx) {
+const i = quizState.current;
+if (quizState.answered[i]) return;
+quizState.answered[i] = true;
+quizState.answers[i] = idx;
+const correct = idx === quizData[i].ans;
+if (correct) {
+quizState.score++;
+quizState.streak++;
+if (quizState.streak > quizState.maxStreak) quizState.maxStreak = quizState.streak;
+} else {
+quizState.wrong++;
+quizState.streak = 0;
+}
+updateStats();
+renderQuiz();
+}
+
+function nextQuiz() {
+if (quizState.current < quizData.length - 1) {
+quizState.current++;
+renderQuiz();
+} else {
+showQuizComplete();
+}
+}
+
+function prevQuiz() {
+if (quizState.current > 0) {
+quizState.current--;
+renderQuiz();
+}
+}
+
+function showQuizComplete() {
+document.getElementById('quizContainer').innerHTML = '';
+document.getElementById('quizComplete').classList.remove('hidden');
+document.getElementById('finalScore').textContent = quizState.score + '/' + quizData.length;
+const pct = Math.round((quizState.score / quizData.length) * 100);
+let msg = '', sub = '';
+if (pct >= 90) { msg = '🏆 Outstanding!'; sub = 'You have mastered Reproductive Pharmacology!'; }
+else if (pct >= 75) { msg = '🎉 Great Job!'; sub = 'You know this material very well. Review the few you missed!'; }
+else if (pct >= 60) { msg = '👍 Good Effort!'; sub = 'You\'re getting there. Focus on the concepts you missed.'; }
+else { msg = '📚 Keep Studying!'; sub = 'Review the lecture materials and try again. You\'ve got this!'; }
+document.getElementById('finalMessage').textContent = msg;
+document.getElementById('finalSub').textContent = sub + ` (Best streak: ${quizState.maxStreak} 🔥)`;
+}
+
+function resetQuiz() {
+quizState = {current:0, score:0, wrong:0, streak:0, maxStreak:0, answered:new Array(quizData.length).fill(false), answers:new Array(quizData.length).fill(null)};
+saveState();
+updateStats();
+renderQuiz();
+}
+
+// ==================== FLASHCARDS ====================
+function renderFlashcards() {
+const grid = document.getElementById('flashcardGrid');
+grid.innerHTML = flashcardData.map((fc, i) => `
+<div class="flashcard" onclick="flipCard(this, ${i})" id="fc-${i}">
+<div class="flashcard-inner">
+<div class="flashcard-front">
+<div class="fc-icon">${fc.icon}</div>
+<p>${fc.front}</p>
+<div class="fc-hint">Click to reveal</div>
+</div>
+<div class="flashcard-back">
+<p>${fc.back}</p>
+</div>
+</div>
+</div>
+`).join('');
+}
+
+function flipCard(el, idx) {
+if (!el.classList.contains('flipped')) {
+flippedCount++;
+updateStats();
+}
+el.classList.toggle('flipped');
+}
+
+// ==================== CASES ====================
+function renderCases() {
+const container = document.getElementById('casesContainer');
+container.innerHTML = casesData.map((c, ci) => `
+<div class="case-card">
+<div class="case-header">
+<div class="case-number">${ci + 1}</div>
+<h3>${c.title}</h3>
+</div>
+<div class="case-scenario">${c.scenario}</div>
+<div class="case-questions">
+${c.questions.map((q, qi) => `
+<div class="case-q">
+<p>Q${qi+1}: ${q.q}</p>
+<button class="btn btn-secondary" onclick="toggleCaseAnswer('ca-${ci}-${qi}')">🔍 Reveal Answer</button>
+<div class="case-answer" id="ca-${ci}-${qi}">${q.a}</div>
+</div>
+`).join('')}
+</div>
+</div>
+`).join('');
+}
+
+function toggleCaseAnswer(id) {
+const el = document.getElementById(id);
+el.classList.toggle('show');
+}
+
+// ==================== ANATOMY ====================
+function renderAnatomy() {
+const grid = document.getElementById('anatomyGrid');
+grid.innerHTML = anatomyData.map((a, i) => `
+<div class="anatomy-item" onclick="toggleAnatomy(this)" id="anat-${i}">
+<h4>${a.title}</h4>
+<div class="anatomy-brief">${a.brief}</div>
+<div class="anatomy-detail">${a.detail}</div>
+</div>
+`).join('');
+}
+
+function toggleAnatomy(el) {
+el.classList.toggle('expanded');
+}
+
+// ==================== BADGES ====================
+function renderBadges() {
+const grid = document.getElementById('invBadges');
+grid.innerHTML = investigationBadges.map((b, i) => `
+<div class="inv-badge" onclick="showBadgeDetail(${i})">${b.name}</div>
+`).join('');
+}
+
+function showBadgeDetail(idx) {
+const el = document.getElementById('badgeDetail');
+el.style.display = 'block';
+el.innerHTML = `<strong>${investigationBadges[idx].name}:</strong> ${investigationBadges[idx].detail}`;
+}
+
+// ==================== MNEMONICS ====================
+function renderMnemonics() {
+const container = document.getElementById('mnemonicContainer');
+container.innerHTML = mnemonicsData.map((m, i) => `
+<div class="mnemonic-card" onclick="toggleMnemonic('mn-${i}')">
+<div class="mnemonic-title">🧠 ${m.title}</div>
+<div class="mnemonic-word">${m.word}</div>
+<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">${m.subtitle} — click to expand</p>
+<ul class="mnemonic-list" id="mn-${i}">
+${m.items.map(it => `<li><span class="letter">${it.letter}</span><span>${it.text}</span></li>`).join('')}
+</ul>
+</div>
+`).join('');
+}
+
+function toggleMnemonic(id) {
+document.getElementById(id).classList.toggle('show');
+}
+
+// ==================== START ====================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

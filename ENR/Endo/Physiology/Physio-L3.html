@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Thyroid & Parathyroid — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1525;
+  --bg3: #141c30;
+  --card: #1a2240;
+  --card2: #1e2850;
+  --border: #2a3560;
+  --gold: #d4a843;
+  --gold2: #f0c060;
+  --teal: #2dd4bf;
+  --teal2: #5eead4;
+  --rose: #fb7185;
+  --rose2: #fda4af;
+  --blue: #60a5fa;
+  --blue2: #93c5fd;
+  --violet: #a78bfa;
+  --green: #4ade80;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+  --radius: 14px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── CANVAS BG ── */
+#canvas-bg {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; opacity: 0.35;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative; z-index: 10;
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1d3a 50%, #0a1428 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px 0;
+}
+.header-inner {
+  max-width: 1300px; margin: 0 auto;
+}
+.badge-row {
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase;
+}
+.badge-gold { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+.badge-teal { background: rgba(45,212,191,0.12); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+.badge-rose { background: rgba(251,113,133,0.12); color: var(--rose); border: 1px solid rgba(251,113,133,0.25); }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 900;
+  line-height: 1.15;
+  background: linear-gradient(135deg, var(--gold2) 0%, var(--teal2) 60%, var(--blue2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.subtitle { color: var(--text2); font-size: 14px; font-style: italic; margin-bottom: 20px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: flex; gap: 24px; padding: 14px 0;
+  border-top: 1px solid rgba(42,53,96,0.6);
+  flex-wrap: wrap;
+}
+.stat-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+}
+.stat-val { color: var(--gold); font-weight: 600; font-size: 18px; }
+.stat-lbl { color: var(--text3); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; overflow-x: auto;
+  padding: 0 40px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 20;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 14px 18px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-family: 'Source Serif 4', serif;
+  font-size: 13px; font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: all 0.25s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab-icon { font-size: 15px; }
+
+/* ── MAIN ── */
+main {
+  position: relative; z-index: 5;
+  max-width: 1300px; margin: 0 auto;
+  padding: 40px;
+}
+.tab-panel { display: none; animation: fadeIn 0.3s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 700;
+  color: var(--gold2);
+  margin-bottom: 6px;
+}
+.section-sub { color: var(--text2); font-style: italic; font-size: 13px; margin-bottom: 28px; }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color: rgba(212,168,67,0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--gold2); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-text { color: var(--text2); font-size: 13.5px; line-height: 1.7; }
+
+/* ── TAG ── */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin: 2px 2px 0 0;
+}
+.tag-exam  { background: rgba(212,168,67,0.18); color: var(--gold); }
+.tag-clinical { background: rgba(45,212,191,0.15); color: var(--teal); }
+.tag-danger { background: rgba(251,113,133,0.15); color: var(--rose); }
+.tag-nerve { background: rgba(167,139,250,0.15); color: var(--violet); }
+.tag-artery { background: rgba(251,113,133,0.15); color: var(--rose); }
+.tag-embryo { background: rgba(96,165,250,0.15); color: var(--blue); }
+
+/* ── ALERT ── */
+.alert {
+  border-left: 3px solid var(--gold);
+  background: rgba(212,168,67,0.07);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px; margin: 14px 0;
+  font-size: 13px; color: var(--text2);
+}
+.alert.danger { border-left-color: var(--rose); background: rgba(251,113,133,0.07); }
+.alert.teal { border-left-color: var(--teal); background: rgba(45,212,191,0.07); }
+.alert-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* ── SEARCH ── */
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 16px; margin-bottom: 28px;
+  transition: border-color 0.2s;
+}
+.search-box:focus-within { border-color: var(--gold); }
+.search-box input {
+  background: none; border: none; outline: none;
+  color: var(--text); font-family: 'Source Serif 4', serif;
+  font-size: 14px; flex: 1;
+}
+.search-box input::placeholder { color: var(--text3); }
+
+/* ── QUIZ ── */
+.progress-bar-wrap {
+  background: var(--bg3); border-radius: 20px;
+  height: 6px; margin-bottom: 6px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), var(--teal));
+  transition: width 0.5s ease;
+}
+.quiz-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text3);
+}
+.score-badge {
+  background: rgba(212,168,67,0.15); color: var(--gold);
+  border-radius: 20px; padding: 4px 14px; font-weight: 700;
+}
+.streak-badge {
+  background: rgba(45,212,191,0.12); color: var(--teal);
+  border-radius: 20px; padding: 4px 14px; font-weight: 700;
+}
+.quiz-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; margin-bottom: 24px;
+}
+.quiz-q-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 10px;
+}
+.quiz-q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--text); line-height: 1.5; margin-bottom: 20px;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--bg3); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px 16px;
+  cursor: pointer; transition: all 0.2s;
+  color: var(--text2); font-size: 14px;
+}
+.quiz-option:hover:not(.disabled) { border-color: var(--gold); color: var(--text); background: var(--card2); }
+.quiz-option.correct { border-color: var(--correct); background: rgba(34,197,94,0.1); color: var(--text); }
+.quiz-option.wrong { border-color: var(--wrong); background: rgba(239,68,68,0.1); color: var(--text); }
+.quiz-option.disabled { cursor: default; }
+.opt-letter {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  font-size: 11px; color: var(--gold);
+  background: rgba(212,168,67,0.12); border-radius: 6px;
+  min-width: 24px; height: 24px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.quiz-explanation {
+  margin-top: 16px; padding: 14px 16px;
+  border-radius: 10px; font-size: 13px; line-height: 1.7;
+  display: none;
+}
+.quiz-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+.quiz-explanation.correct-exp { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: var(--text2); }
+.quiz-explanation.wrong-exp { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: var(--text2); }
+.exp-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.anim-pulse { animation: pulse 0.4s ease; }
+.anim-shake { animation: shake 0.4s ease; }
+
+.quiz-controls { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.btn {
+  padding: 10px 22px; border-radius: 10px; border: none; cursor: pointer;
+  font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 13px;
+  transition: all 0.2s;
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #c8971e);
+  color: #0a0e1a;
+}
+.btn-gold:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-ghost {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2);
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── FLASHCARDS ── */
+.fc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.fc-wrapper { perspective: 1000px; height: 200px; cursor: pointer; }
+.fc-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+}
+.fc-wrapper.flipped .fc-inner { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden;
+  border-radius: 14px; border: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; text-align: center;
+}
+.fc-front { background: var(--card); }
+.fc-back { background: var(--card2); transform: rotateY(180deg); border-color: rgba(212,168,67,0.3); }
+.fc-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text3); margin-bottom: 10px;
+}
+.fc-front .fc-label { color: var(--teal); }
+.fc-back .fc-label { color: var(--gold); }
+.fc-q { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.fc-a { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.fc-hint { font-size: 11px; color: var(--text3); margin-top: 12px; }
+
+/* ── CLINICAL CASES ── */
+.case-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+}
+.case-header {
+  background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(45,212,191,0.08));
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px;
+}
+.case-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--gold); margin-bottom: 6px;
+}
+.case-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--text); }
+.case-body { padding: 24px; }
+.case-vignette {
+  background: var(--bg3); border-radius: 10px; padding: 16px;
+  font-style: italic; color: var(--text2); font-size: 14px;
+  line-height: 1.8; margin-bottom: 20px;
+  border-left: 3px solid var(--teal);
+}
+.case-questions { display: flex; flex-direction: column; gap: 16px; }
+.case-q-item {}
+.case-q-text { font-weight: 600; color: var(--text); font-size: 14px; margin-bottom: 8px; }
+.reveal-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.25);
+  color: var(--gold); border-radius: 8px; padding: 6px 14px;
+  cursor: pointer; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  font-weight: 600; transition: all 0.2s;
+}
+.reveal-btn:hover { background: rgba(212,168,67,0.2); }
+.case-answer {
+  margin-top: 8px; padding: 12px 16px;
+  background: rgba(45,212,191,0.06); border: 1px solid rgba(45,212,191,0.2);
+  border-radius: 10px; font-size: 13px; color: var(--text2);
+  display: none;
+}
+.case-answer.visible { display: block; animation: fadeIn 0.3s ease; }
+
+/* ── ANATOMY INTERACTIVE ── */
+.anatomy-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px; margin-bottom: 28px;
+}
+.anatomy-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; cursor: pointer;
+  transition: all 0.2s;
+}
+.anatomy-item:hover, .anatomy-item.active {
+  border-color: var(--teal); background: var(--card2);
+  box-shadow: 0 0 0 3px rgba(45,212,191,0.12);
+}
+.anatomy-item-icon { font-size: 22px; margin-bottom: 8px; }
+.anatomy-item-name { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--text); }
+.anatomy-item-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.anatomy-detail {
+  background: var(--card2); border: 1px solid rgba(45,212,191,0.25);
+  border-radius: 14px; padding: 24px; margin-bottom: 28px;
+  display: none;
+}
+.anatomy-detail.visible { display: block; animation: fadeIn 0.3s ease; }
+.anatomy-detail-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--teal2); margin-bottom: 12px; }
+
+/* ── FLOWCHART ── */
+.flow-chain {
+  display: flex; flex-direction: column; gap: 0; position: relative;
+}
+.flow-node {
+  display: flex; align-items: center; gap: 14px;
+}
+.flow-box {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 18px;
+  font-size: 13px; color: var(--text); line-height: 1.5;
+  flex: 1; transition: border-color 0.2s;
+}
+.flow-box:hover { border-color: var(--gold); }
+.flow-icon { font-size: 18px; width: 36px; flex-shrink: 0; text-align: center; }
+.flow-arrow {
+  text-align: center; color: var(--text3); font-size: 18px;
+  padding: 4px 0 4px 50px;
+}
+
+/* ── EMBRYOLOGY / COMPARISON TABLE ── */
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0;
+  font-size: 13px;
+}
+th {
+  background: rgba(212,168,67,0.1); color: var(--gold);
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 10px 14px; color: var(--text2); font-size: 13px;
+  border-bottom: 1px solid rgba(42,53,96,0.5);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(30,40,80,0.5); }
+.td-gold { color: var(--gold2); font-weight: 600; }
+.td-teal { color: var(--teal); font-weight: 600; }
+.td-rose { color: var(--rose); font-weight: 600; }
+
+/* ── MNEMONICS ── */
+.mnemonic-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; margin-bottom: 20px;
+}
+.mnem-header {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(96,165,250,0.08));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+}
+.mnem-icon { font-size: 24px; }
+.mnem-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--violet); }
+.mnem-word {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; font-weight: 700;
+  background: linear-gradient(90deg, var(--violet), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-left: auto;
+}
+.mnem-body { padding: 20px 22px; display: none; }
+.mnem-body.open { display: block; animation: fadeIn 0.25s ease; }
+.mnem-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid rgba(42,53,96,0.4);
+}
+.mnem-row:last-child { border-bottom: none; }
+.mnem-letter {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 20px;
+  color: var(--violet); min-width: 28px;
+}
+.mnem-meaning { color: var(--text2); font-size: 13.5px; line-height: 1.6; }
+.mnem-meaning strong { color: var(--text); }
+
+/* ── SURGICAL PEARLS ── */
+.pearl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+.pearl {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+  position: relative; overflow: hidden;
+  transition: all 0.2s;
+}
+.pearl::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%; border-radius: 4px 0 0 4px;
+}
+.pearl.danger::before { background: var(--rose); }
+.pearl.warning::before { background: var(--gold); }
+.pearl.info::before { background: var(--teal); }
+.pearl:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.pearl-icon { font-size: 22px; margin-bottom: 10px; }
+.pearl-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.pearl-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.pearl-arabic {
+  margin-top: 10px; padding: 8px 10px;
+  background: rgba(212,168,67,0.07); border-radius: 8px;
+  font-size: 12px; color: var(--text3); font-style: italic;
+  direction: rtl; text-align: right;
+}
+
+/* ── QUIZ FINAL SUMMARY ── */
+.quiz-summary {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px; text-align: center;
+  display: none;
+}
+.quiz-summary.show { display: block; animation: fadeIn 0.4s ease; }
+.qs-score { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 900; color: var(--gold2); }
+.qs-label { color: var(--text2); margin-bottom: 20px; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  header { padding: 20px 18px 0; }
+  main { padding: 24px 18px; }
+  .tab-bar { padding: 0 12px; }
+  .tab-btn { padding: 12px 10px; font-size: 12px; }
+}
+
+/* highlight search */
+mark { background: rgba(212,168,67,0.3); color: var(--gold2); border-radius: 3px; padding: 0 2px; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<canvas id="canvas-bg"></canvas>
+
+<header>
+  <div class="header-inner">
+    <div class="badge-row">
+      <span class="badge badge-gold">📚 Anatomy & Embryology</span>
+      <span class="badge badge-teal">🔬 Medical School</span>
+      <span class="badge badge-rose">⚠️ High-Yield Exam Prep</span>
+    </div>
+    <h1>Thyroid & Parathyroid Glands</h1>
+    <p class="subtitle">Gross Anatomy · Blood Supply · Embryology · Surgical Correlates — Interactive Study Platform</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div>
+          <div class="stat-val" id="stat-score">0%</div>
+          <div class="stat-lbl">Quiz Score</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div>
+          <div class="stat-val" id="stat-streak">0🔥</div>
+          <div class="stat-lbl">Streak</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div>
+          <div class="stat-val" id="stat-progress">0%</div>
+          <div class="stat-lbl">Progress</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div>
+          <div class="stat-val">25</div>
+          <div class="stat-lbl">MCQs</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div>
+          <div class="stat-val">24</div>
+          <div class="stat-lbl">Flashcards</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div>
+          <div class="stat-val">5</div>
+          <div class="stat-lbl">Clinical Cases</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="overview"><span class="tab-icon">🏠</span> Overview</button>
+  <button class="tab-btn" data-tab="quiz"><span class="tab-icon">🧪</span> Quiz Mode</button>
+  <button class="tab-btn" data-tab="flashcards"><span class="tab-icon">🃏</span> Flashcards</button>
+  <button class="tab-btn" data-tab="cases"><span class="tab-icon">🏥</span> Clinical Cases</button>
+  <button class="tab-btn" data-tab="anatomy"><span class="tab-icon">🫁</span> Anatomy</button>
+  <button class="tab-btn" data-tab="embryo"><span class="tab-icon">🧬</span> Embryology</button>
+  <button class="tab-btn" data-tab="surgery"><span class="tab-icon">🔪</span> Surgical Pearls</button>
+  <button class="tab-btn" data-tab="mnemonics"><span class="tab-icon">🧠</span> Mnemonics</button>
+</nav>
+
+<main>
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div class="tab-panel active" id="tab-overview">
+  <p class="section-title">Overview</p>
+  <p class="section-sub">High-yield summary of all key concepts — scan before studying, review after</p>
+
+  <div class="search-box">
+    <span>🔍</span>
+    <input type="text" id="search-input" placeholder="Search key terms… (e.g. recurrent laryngeal, pretracheal, foramen cecum)">
+  </div>
+
+  <div id="search-results" style="display:none; margin-bottom:20px;"></div>
+
+  <div class="grid-3" style="margin-bottom:32px;">
+    <div class="card">
+      <div class="card-title">🦋 Structure</div>
+      <div class="card-text">Butterfly-shaped; two lateral lobes + isthmus ± pyramidal lobe. Vertebral levels <strong>C5–T1</strong>. Extends from <em>oblique line of thyroid cartilage</em> to 5th/6th tracheal ring.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">🧱 Fascial Coverings</div>
+      <div class="card-text"><strong>True capsule:</strong> condensed connective tissue.<br><strong>False capsule:</strong> pretracheal fascia — anchors gland to larynx. <span class="tag tag-exam">⚠️ Exam</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">↕️ Swallowing Sign</div>
+      <div class="card-text">Thyroid masses move <em>upward</em> on swallowing due to pretracheal fascia attachment. Key clinical differentiator from other neck masses. <span class="tag tag-exam">⚠️ Exam</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🫀 Arterial Supply</div>
+      <div class="card-text">
+        <strong>Superior thyroid a.</strong> — from ECA, with external laryngeal n.<br>
+        <strong>Inferior thyroid a.</strong> — from thyrocervical trunk, with recurrent laryngeal n.<br>
+        <strong>Thyroidea ima</strong> — 10%, from aorta/brachiocephalic
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🩸 Venous Drainage</div>
+      <div class="card-text">
+        <strong>Superior + Middle</strong> → Internal jugular v.<br>
+        <strong>Inferior</strong> → Brachiocephalic veins
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🧬 Embryology</div>
+      <div class="card-text">Thyroid: from <strong>foramen cecum</strong> → descends via thyroglossal duct → obliterates. Parathyroids: Superior from <strong>4th pouch</strong>; Inferior from <strong>3rd pouch</strong>. <span class="tag tag-exam">⚠️ Exam</span></div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">⚡ High-Yield Summary Cards</p>
+  <div class="grid-2" style="margin-bottom:32px;">
+    <div class="card" style="border-color: rgba(251,113,133,0.3);">
+      <div class="card-title" style="color:var(--rose2);">🔪 Surgical Ligation Rules</div>
+      <div class="card-text">
+        <div class="alert">
+          <div class="alert-label">🩺 Superior thyroid artery</div>
+          Ligate <strong>CLOSE to the gland</strong> — the external laryngeal nerve travels with the artery but diverges near the upper pole. Clamping far away risks nerve entrapment.
+        </div>
+        <div class="alert danger">
+          <div class="alert-label">⚠️ Inferior thyroid artery</div>
+          Ligate <strong>FAR from the gland</strong> (at its origin from thyrocervical trunk) — the recurrent laryngeal nerve interdigitates with branches near the gland. <span class="tag tag-exam">EXAM</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-color: rgba(96,165,250,0.3);">
+      <div class="card-title" style="color:var(--blue2);">🧬 Parathyroid Embryological Reversal</div>
+      <div class="card-text">
+        <table style="margin:0;">
+          <tr><th>Gland</th><th>Pouch</th><th>Final Position</th></tr>
+          <tr><td class="td-gold">Superior parathyroid</td><td>4th pouch</td><td>Middle of posterior border</td></tr>
+          <tr><td class="td-teal">Inferior parathyroid</td><td>3rd pouch</td><td>Base of posterior border</td></tr>
+        </table>
+        <div class="alert teal" style="margin-top:12px;">
+          <div class="alert-label">🔑 Why reversed?</div>
+          The 3rd pouch also gives rise to the thymus — both descend together, causing the inferior parathyroids to travel farther down than their superior counterparts. Hence the embryological inversion.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">🗂️ Isthmus Relations</p>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      <div>
+        <div class="card-title">Anterior to Isthmus</div>
+        <ul style="color:var(--text2); font-size:13px; line-height:2; padding-left:18px;">
+          <li>Skin & subcutaneous fascia</li>
+          <li>Investing layer of cervical fascia</li>
+          <li>Sternohyoid muscle</li>
+          <li>Sternothyroid muscle</li>
+          <li>Anterior jugular veins</li>
+        </ul>
+      </div>
+      <div>
+        <div class="card-title">Posterior to Isthmus</div>
+        <div class="alert" style="margin:0;">
+          <div class="alert-label">⚠️ Key Exam Fact</div>
+          Tracheal rings <strong>2, 3, and 4</strong> — "234" rule
+        </div>
+        <p style="font-size:12px; color:var(--text3); margin-top:8px;">Note: The sternomastoid and omohyoid do NOT cover the isthmus — they relate only to the lateral lobes.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">📖 Essay Questions</p>
+  <div style="display:flex; flex-direction:column; gap:14px;">
+    <div class="card">
+      <div class="card-title">Q1 — Fascial Coverings & Clinical Diagnosis</div>
+      <div class="card-text">Describe the fascial coverings of the thyroid gland and explain the clinical mechanism by which a physician can differentiate a thyroid mass from other neck masses.</div>
+      <div class="alert teal" style="margin-top:12px; font-size:12px;">
+        <strong>Key points:</strong> True capsule (condensed CT) + False capsule (pretracheal fascia) → suspensory ligament → moves with swallowing → differentiates thyroid mass from lymph nodes/other neck masses.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Q2 — Medial & Posterior Relations</div>
+      <div class="card-text">Detail the medial and posterior anatomical relations of the thyroid lobes, emphasizing nervous and vascular structures at risk during surgery.</div>
+      <div class="alert teal" style="margin-top:12px; font-size:12px;">
+        <strong>Key nerves:</strong> External laryngeal n. (upper) | Recurrent laryngeal n. (lower) | Carotid sheath contents (CCA, IJV, vagus).
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Q3 — Comparative Arterial Supply & Ligation</div>
+      <div class="card-text">Compare and contrast the superior and inferior thyroid arteries regarding origin, course, accompanying nerves, and surgical ligation principles.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Q5 — Thyroid Embryological Descent</div>
+      <div class="card-text">Explain the embryological descent of the thyroid gland and how failures lead to thyroglossal cysts and pyramidal lobes.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Q6 — Parathyroid Glands</div>
+      <div class="card-text">Describe anatomical location, embryological origins, arterial supply, and physiological role of the parathyroid glands.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ QUIZ ══════════════════════ -->
+<div class="tab-panel" id="tab-quiz">
+  <p class="section-title">Quiz Mode</p>
+  <p class="section-sub">25 MCQs — immediate feedback with explanations — track your score</p>
+
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quiz-progress-bar" style="width:0%"></div></div>
+  <div class="quiz-meta">
+    <span id="quiz-counter">Q0 / 25</span>
+    <span class="score-badge" id="quiz-score-disp">Score: 0</span>
+    <span class="streak-badge" id="quiz-streak-disp">Streak: 0 🔥</span>
+  </div>
+
+  <div id="quiz-container"></div>
+  <div class="quiz-summary" id="quiz-summary">
+    <div>🎓</div>
+    <div class="qs-score" id="qs-score-num">—</div>
+    <div class="qs-label" id="qs-score-label">out of 25 questions correct</div>
+    <div style="margin-top:20px; color:var(--text2); font-size:14px;" id="qs-msg"></div>
+    <div class="quiz-controls" style="justify-content:center; margin-top:24px;">
+      <button class="btn btn-gold" onclick="resetQuiz()">🔄 Restart Quiz</button>
+    </div>
+  </div>
+  <div class="quiz-controls" id="quiz-controls">
+    <button class="btn btn-ghost" onclick="prevQuestion()">← Previous</button>
+    <button class="btn btn-gold" onclick="nextQuestion()">Next Question →</button>
+    <button class="btn btn-ghost" onclick="resetQuiz()">🔄 Restart</button>
+  </div>
+</div>
+
+<!-- ══════════════════════ FLASHCARDS ══════════════════════ -->
+<div class="tab-panel" id="tab-flashcards">
+  <p class="section-title">Flashcards</p>
+  <p class="section-sub">Click any card to flip — 24 cards covering all key concepts</p>
+  <div class="fc-grid" id="fc-grid"></div>
+</div>
+
+<!-- ══════════════════════ CLINICAL CASES ══════════════════════ -->
+<div class="tab-panel" id="tab-cases">
+  <p class="section-title">Clinical Cases</p>
+  <p class="section-sub">Exam-style vignettes — reveal answers step by step</p>
+  <div id="cases-container"></div>
+</div>
+
+<!-- ══════════════════════ ANATOMY ══════════════════════ -->
+<div class="tab-panel" id="tab-anatomy">
+  <p class="section-title">Interactive Anatomy</p>
+  <p class="section-sub">Click any structure to expand details</p>
+
+  <div class="anatomy-grid" id="anatomy-grid"></div>
+  <div class="anatomy-detail" id="anatomy-detail">
+    <div class="anatomy-detail-title" id="anat-detail-title"></div>
+    <div id="anat-detail-body"></div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">📊 Relations Summary Table</p>
+  <div class="card" style="overflow-x:auto;">
+    <table>
+      <tr><th>Surface</th><th>Upper Part</th><th>Lower Part</th></tr>
+      <tr><td class="td-gold">Lateral (Superficial)</td><td colspan="2">SCM, Sternohyoid, Sternothyroid, Sup. belly of Omohyoid</td></tr>
+      <tr><td class="td-teal">Medial</td><td>Larynx, Pharynx, External laryngeal n.</td><td>Trachea, Esophagus, Recurrent laryngeal n.</td></tr>
+      <tr><td class="td-rose">Posterior</td><td colspan="2">Carotid sheath (CCA, IJV, Vagus), Prevertebral muscles</td></tr>
+    </table>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin: 28px 0 16px;">🔄 Surgical Consequence Flowchart</p>
+  <div class="card">
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-icon">🔪</div>
+        <div class="flow-box"><strong>Thyroidectomy performed</strong> — total or subtotal resection</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">⚠️</div>
+        <div class="flow-box"><strong>Inferior thyroid artery ligated near gland</strong> — recurrent laryngeal nerve at risk</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">🗣️</div>
+        <div class="flow-box"><strong>RLN injured</strong> → ipsilateral vocal cord paralysis → hoarseness / respiratory distress (if bilateral)</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">🦴</div>
+        <div class="flow-box"><strong>Parathyroids devascularized</strong> (inferior thyroid a. is their primary supply) → hypoparathyroidism</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">⚡</div>
+        <div class="flow-box"><strong>Hypocalcemia</strong> → carpopedal spasm → tetany (48h post-op)</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">💊</div>
+        <div class="flow-box"><strong>Treatment:</strong> IV calcium gluconate (acute) → lifelong Ca²⁺ + Vitamin D supplementation</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ EMBRYOLOGY ══════════════════════ -->
+<div class="tab-panel" id="tab-embryo">
+  <p class="section-title">Embryology</p>
+  <p class="section-sub">Development, descent, anomalies, and pharyngeal pouch derivatives</p>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">🧬 Thyroid Descent</p>
+  <div class="card" style="margin-bottom:24px;">
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-icon">👅</div>
+        <div class="flow-box"><strong>Week 3–4:</strong> Endodermal thickening at <em>foramen cecum</em> (junction of anterior 2/3 and posterior 1/3 of developing tongue)</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">📉</div>
+        <div class="flow-box"><strong>Descent:</strong> Diverticulum extends downward via <em>thyroglossal duct</em>, passing anterior to hyoid bone and laryngeal cartilages</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">✂️</div>
+        <div class="flow-box"><strong>Week 7:</strong> Thyroglossal duct normally <em>obliterates completely</em> — bilobed gland reaches final position (C5–T1)</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node">
+        <div class="flow-icon">🔺</div>
+        <div class="flow-box"><strong>Remnant:</strong> <em>Pyramidal lobe</em> = vestigial superior extension of thyroglossal duct, sometimes tethered to hyoid by <em>levator glandulae thyroidae</em></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">🚨 Developmental Anomalies</p>
+  <div class="grid-2" style="margin-bottom:28px;">
+    <div class="card" style="border-color:rgba(251,113,133,0.3);">
+      <div class="card-title" style="color:var(--rose2);">🫧 Thyroglossal Duct Cyst</div>
+      <div class="card-text">
+        <strong>Mechanism:</strong> Incomplete obliteration of thyroglossal duct → epithelial-lined cyst<br><br>
+        <strong>Location:</strong> Midline, most common just inferior to hyoid bone<br><br>
+        <strong>Hallmark sign:</strong> Elevates when patient protrudes their tongue (persistent connection to tongue base)<br><br>
+        <strong>Complications:</strong> Infection → thyroglossal fistula<br><br>
+        <strong>Treatment:</strong> Sistrunk procedure (remove cyst + mid-body of hyoid bone)
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,165,250,0.3);">
+      <div class="card-title" style="color:var(--blue2);">🌍 Ectopic Thyroid</div>
+      <div class="card-text">
+        <strong>Lingual thyroid:</strong> Failure of descent → thyroid tissue remains at foramen cecum. May be the only functional thyroid tissue!<br><br>
+        <strong>Retrosternal/intrathoracic:</strong> Excessive descent; may compress mediastinal structures<br><br>
+        <strong>Key rule:</strong> Before removing any ectopic thyroid, confirm functioning thyroid tissue exists elsewhere (radioiodine scan)
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">🫁 Pharyngeal Pouch Derivatives</p>
+  <div class="card" style="margin-bottom:24px; overflow-x:auto;">
+    <table>
+      <tr><th>Pouch</th><th>Derivative</th><th>Clinical Notes</th></tr>
+      <tr><td class="td-gold">1st</td><td>Middle ear cavity, Eustachian tube</td><td></td></tr>
+      <tr><td class="td-gold">2nd</td><td>Palatine tonsil</td><td></td></tr>
+      <tr><td class="td-teal">3rd (ventral)</td><td>Thymus</td><td rowspan="2">3rd pouch descends further than expected</td></tr>
+      <tr><td class="td-teal">3rd (dorsal)</td><td><strong>Inferior parathyroid glands</strong></td></tr>
+      <tr><td class="td-rose">4th (dorsal)</td><td><strong>Superior parathyroid glands</strong></td><td>Less migration → stays higher</td></tr>
+      <tr><td class="td-rose">4th/5th</td><td>Ultimobranchial body → C-cells (parafollicular) of thyroid</td><td>Secrete calcitonin → lower Ca²⁺</td></tr>
+    </table>
+    <div class="alert" style="margin-top:14px;">
+      <div class="alert-label">⚠️ The Reversal Explained</div>
+      The 3rd pouch products (inferior parathyroids + thymus) migrate <em>further caudally</em> during development, ending up <em>inferior</em> to the 4th pouch products (superior parathyroids). This is why their final anatomical position is the reverse of their embryological origin.
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin-bottom:16px;">🔬 Histological Origins (C-cells)</p>
+  <div class="card">
+    <div class="card-title">Parafollicular (C) Cells — Calcitonin</div>
+    <div class="card-text">
+      Derived from the <strong>ultimobranchial body</strong> (4th/5th pouch neural crest component). These cells migrate into the developing thyroid gland and become dispersed between follicles. They secrete <strong>calcitonin</strong> in response to elevated serum calcium, promoting calcium deposition into bone and reducing renal Ca²⁺ reabsorption.
+      <div class="alert teal" style="margin-top:12px;">
+        <div class="alert-label">MCQ Trap</div>
+        C-cells are NOT derived from the foramen cecum (thyroid follicular cells) — they are neural crest derivatives via the ultimobranchial body.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SURGICAL PEARLS ══════════════════════ -->
+<div class="tab-panel" id="tab-surgery">
+  <p class="section-title">Surgical Pearls</p>
+  <p class="section-sub">Critical points for thyroidectomy and neck surgery — all examiner favourites</p>
+  <div class="pearl-grid">
+    <div class="pearl danger">
+      <div class="pearl-icon">🗣️</div>
+      <div class="pearl-title">Recurrent Laryngeal Nerve</div>
+      <div class="pearl-text">Accompanies the <strong>inferior thyroid artery</strong> near the lower pole. Injured by: ligation near gland, traction, clamping.<br><br><strong>Result:</strong> Hoarseness (unilateral) or respiratory distress + aphonia (bilateral).<br><br><strong>Rule:</strong> Ligate inferior thyroid artery <em>far from gland</em> at origin.</div>
+      <div class="pearl-arabic">"اربط الانفيريور ثيرويد عند الاورجن" — ligate at origin to protect RLN</div>
+    </div>
+    <div class="pearl warning">
+      <div class="pearl-icon">🎵</div>
+      <div class="pearl-title">External Laryngeal Nerve</div>
+      <div class="pearl-text">Travels with the <strong>superior thyroid artery</strong> then diverges near the upper pole. Supplies cricothyroid muscle → pitch control.<br><br><strong>Result:</strong> Loss of high-pitched voice, monotone, vocal fatigue.<br><br><strong>Rule:</strong> Ligate superior thyroid artery <em>close to gland</em> (nerve has already diverged there).</div>
+      <div class="pearl-arabic">"اربط السوبيريور ثيرويد عند الجلاند" — ligate near gland to protect ELN</div>
+    </div>
+    <div class="pearl danger">
+      <div class="pearl-icon">💉</div>
+      <div class="pearl-title">Parathyroid Devascularization</div>
+      <div class="pearl-text">The <strong>inferior thyroid artery</strong> is the primary blood supply to ALL 4 parathyroid glands.<br><br>Even if parathyroids are preserved anatomically, ischemic damage → functional hypoparathyroidism → hypocalcemia within 48h → tetany, Chvostek's/Trousseau's signs.</div>
+    </div>
+    <div class="pearl info">
+      <div class="pearl-icon">🩸</div>
+      <div class="pearl-title">Thyroidea Ima Artery</div>
+      <div class="pearl-text">Present in <strong>10%</strong> of people. Arises from arch of aorta or brachiocephalic trunk. Runs anterior to trachea to supply isthmus.<br><br><strong>Surgical danger:</strong> Emergency tracheostomy → midline pulsatile arterial bleeding inferior to isthmus. Must be anticipated!</div>
+    </div>
+    <div class="pearl warning">
+      <div class="pearl-icon">🫁</div>
+      <div class="pearl-title">Swallowing Test</div>
+      <div class="pearl-text">Ask patient to swallow water while observing neck.<br><br><strong>Moves up:</strong> Thyroid mass / thyroglossal cyst (attached via pretracheal fascia / thyroglossal duct)<br><br><strong>Does NOT move:</strong> Lymph nodes, lipomas, other neck masses</div>
+    </div>
+    <div class="pearl info">
+      <div class="pearl-icon">👅</div>
+      <div class="pearl-title">Tongue Protrusion Test</div>
+      <div class="pearl-text">Ask patient to protrude tongue while observing neck.<br><br><strong>Moves up with tongue:</strong> Thyroglossal duct cyst (persisting connection to foramen cecum)<br><br><strong>Does NOT move with tongue:</strong> Thyroid mass proper</div>
+    </div>
+    <div class="pearl danger">
+      <div class="pearl-icon">⚠️</div>
+      <div class="pearl-title">Tracheostomy Levels</div>
+      <div class="pearl-text"><strong>Emergency (cricothyrotomy):</strong> Through cricothyroid membrane — safest, fastest<br><br><strong>Elective tracheostomy:</strong> Usually below isthmus (tracheal rings 3–4) or through isthmus (rings 2–3–4) after retracting it<br><br><strong>Risk:</strong> Thyroidea ima artery if present</div>
+    </div>
+    <div class="pearl warning">
+      <div class="pearl-icon">🧬</div>
+      <div class="pearl-title">Intraoperative PTH Monitoring</div>
+      <div class="pearl-text">Rapid PTH assay during parathyroid surgery. PTH half-life = <strong>3–5 minutes</strong>. If level drops >50% after excision → confirms parathyroid adenoma removed.<br><br>Used to confirm successful parathyroidectomy in hyperparathyroidism.</div>
+    </div>
+    <div class="pearl info">
+      <div class="pearl-icon">🔬</div>
+      <div class="pearl-title">Post-op Workup</div>
+      <div class="pearl-text"><strong>For nerve injury:</strong> Nasopharyngeal laryngoscopy → vocal cord mobility<br><br><strong>For parathyroid damage:</strong> Serum Ca²⁺ (low) + Serum PTH (low) + Serum phosphate (elevated)<br><br><strong>Signs to look for:</strong> Chvostek's (facial tap), Trousseau's (BP cuff)</div>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:20px; margin: 28px 0 16px;">🏥 Integrative Operative Scenario</p>
+  <div class="card" style="border-color: rgba(251,113,133,0.3);">
+    <div class="card-title" style="font-size:17px;">45-year-old female — Subtotal thyroidectomy for multinodular goiter</div>
+    <div class="card-text">
+      <div class="alert danger" style="margin-bottom:16px;">
+        <div class="alert-label">⚠️ The Error</div>
+        Inferior vascular pedicle ligated <em>close to the gland</em> instead of at origin — both the recurrent laryngeal nerve and the parathyroid blood supply are compromised.
+      </div>
+      <table>
+        <tr><th>Step</th><th>Event</th><th>Mechanism</th></tr>
+        <tr><td>Intraoperative</td><td>Pedicle ligated close to lower pole</td><td>RLN intertwined with arterial branches near gland</td></tr>
+        <tr><td>Immediate post-op</td><td>Hoarseness + respiratory distress</td><td>Unilateral or bilateral RLN palsy → cord paralysis</td></tr>
+        <tr><td>48h post-op</td><td>Carpopedal spasm, tetany</td><td>Parathyroid ischemia → PTH ↓ → Ca²⁺ ↓</td></tr>
+        <tr><td>Workup</td><td>Laryngoscopy + Ca²⁺/PTH levels</td><td>Confirm injury type and severity</td></tr>
+        <tr><td>Long-term</td><td>Ca²⁺ + Vit D supplementation</td><td>Compensate for permanent hypoparathyroidism</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ MNEMONICS ══════════════════════ -->
+<div class="tab-panel" id="tab-mnemonics">
+  <p class="section-title">Mnemonics</p>
+  <p class="section-sub">Custom memory aids — click to expand</p>
+  <div id="mnemonics-container"></div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CANVAS ANIMATED BACKGROUND
+// ══════════════════════════════════════════════════════════════
+(function(){
+  const canvas = document.getElementById('canvas-bg');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<55;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*2+0.5,
+      dx:(Math.random()-0.5)*0.3,
+      dy:(Math.random()-0.5)*0.3,
+      o:Math.random()*0.4+0.1
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(212,168,67,${p.o})`;
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>canvas.width)p.dx*=-1;
+      if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    });
+    // draw some faint connecting lines
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const d=Math.hypot(particles[i].x-particles[j].x,particles[i].y-particles[j].y);
+        if(d<100){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(45,212,191,${0.08*(1-d/100)})`;
+          ctx.lineWidth=0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════════════════════════
+// TAB SYSTEM
+// ══════════════════════════════════════════════════════════════
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id='tab-'+btn.dataset.tab;
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    tabPanels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+    localStorage.setItem('thyroid-tab',btn.dataset.tab);
+  });
+});
+// Restore last tab
+const savedTab=localStorage.getItem('thyroid-tab');
+if(savedTab){
+  const btn=document.querySelector(`[data-tab="${savedTab}"]`);
+  if(btn) btn.click();
+}
+
+// ══════════════════════════════════════════════════════════════
+// STATS
+// ══════════════════════════════════════════════════════════════
+let quizScore=parseInt(localStorage.getItem('thyroid-quiz-score')||'0');
+let quizAnswered=parseInt(localStorage.getItem('thyroid-quiz-answered')||'0');
+let streak=0;
+function updateStats(){
+  const pct=quizAnswered>0?Math.round(quizScore/quizAnswered*100):0;
+  document.getElementById('stat-score').textContent=pct+'%';
+  document.getElementById('stat-streak').textContent=streak+'🔥';
+  const prog=Math.round(quizAnswered/25*100);
+  document.getElementById('stat-progress').textContent=prog+'%';
+}
+updateStats();
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ DATA
+// ══════════════════════════════════════════════════════════════
+const quizData = [
+  {
+    q:"Which fascial layer forms the false capsule of the thyroid gland and anchors it to the larynx?",
+    opts:["Investing layer of deep cervical fascia","Prevertebral fascia","Pretracheal fascia","Carotid sheath","Buccopharyngeal fascia"],
+    ans:2,
+    exp:"The pretracheal fascia envelops the gland outside its true capsule, forming a suspensory ligament that fixes it to the larynx, causing it to move during deglutition. The other options are different fascial compartments not responsible for forming the thyroid's false capsule."
+  },
+  {
+    q:"Based on embryological development, the superior parathyroid glands are derived from which pharyngeal pouch?",
+    opts:["Foramen cecum","Second pharyngeal pouch","Third pharyngeal pouch","Fourth pharyngeal pouch","Ultimobranchial body"],
+    ans:3,
+    exp:"The embryological origins are reversed — superior glands originate from the 4th pharyngeal pouch, while inferior glands descend from the 3rd pouch (along with the thymus, which is why they travel further caudally)."
+  },
+  {
+    q:"To safely ligate the inferior thyroid artery and protect the recurrent laryngeal nerve, where should ligation occur?",
+    opts:["As close to the lower pole of the gland as possible","At the upper border of the isthmus","Far from the gland, near its origin from the thyrocervical trunk","Deep to the prevertebral fascia","At the apex of the pyramidal lobe"],
+    ans:2,
+    exp:"The recurrent laryngeal nerve interdigitates with branches of the inferior thyroid artery very close to the gland. Ligating at its origin (thyrocervical trunk) avoids this dangerous zone."
+  },
+  {
+    q:"Which tracheal rings lie immediately posterior to the isthmus of the thyroid gland?",
+    opts:["Rings 1, 2, and 3","Rings 2, 3, and 4","Only the cricoid cartilage","Rings 4, 5, and 6","Rings 3, 4, and 5"],
+    ans:1,
+    exp:"The posterior surface of the isthmus rests specifically against the 2nd, 3rd, and 4th tracheal rings — remember '234'. Ring 1 is too high and lies behind the cricoid."
+  },
+  {
+    q:"Which vessel provides the primary blood supply to the parathyroid glands?",
+    opts:["Superior thyroid artery","Inferior thyroid artery","Thyroidea ima artery","Superior laryngeal artery","Ascending cervical artery"],
+    ans:1,
+    exp:"The inferior thyroid artery supplies the lower two-thirds of the thyroid lobe AND provides the primary arterial supply to all four parathyroid glands. This is why ligation near the gland risks both RLN injury and parathyroid ischemia."
+  },
+  {
+    q:"A midline neck mass elevates when the patient protrudes their tongue. From which structure did this developmental tract originate?",
+    opts:["Ultimobranchial body","Tuberculum impar","Hypobranchial eminence","Foramen cecum","First pharyngeal cleft"],
+    ans:3,
+    exp:"The thyroid gland and thyroglossal duct originate from the foramen cecum at the junction of the anterior 2/3 and posterior 1/3 of the developing tongue. Remnant cysts maintain this connection, hence tongue protrusion elevates them."
+  },
+  {
+    q:"The superior thyroid artery is closely accompanied by which nerve during its descent to the apex of the thyroid?",
+    opts:["Recurrent laryngeal nerve","Internal laryngeal nerve","External laryngeal nerve","Vagus nerve","Hypoglossal nerve"],
+    ans:2,
+    exp:"The superior thyroid artery descends accompanied by the external laryngeal nerve before the nerve diverges near the upper pole to supply the cricothyroid muscle. Injury causes loss of high-pitched voice."
+  },
+  {
+    q:"Which structure is located on the medial surface of the LOWER part of the thyroid lobe?",
+    opts:["Larynx","Pharynx","External laryngeal nerve","Recurrent laryngeal nerve","Superior belly of omohyoid"],
+    ans:3,
+    exp:"The lower medial surface relates to the trachea, esophagus, and recurrent laryngeal nerve. The larynx, pharynx, and external laryngeal nerve relate to the UPPER medial surface."
+  },
+  {
+    q:"Which muscle pair covers the anterior surface of the thyroid ISTHMUS specifically?",
+    opts:["Sternohyoid and Sternomastoid","Sternohyoid and Sternothyroid","Omohyoid and Sternomastoid","Sternothyroid and Omohyoid","Prevertebral muscles"],
+    ans:1,
+    exp:"The isthmus is covered anteriorly by skin, fascia, sternohyoid, and sternothyroid muscles. Sternomastoid and omohyoid do NOT cover the isthmus — they relate to the lateral lobes."
+  },
+  {
+    q:"The inferior thyroid vein typically drains into which structure?",
+    opts:["Internal jugular vein","External jugular vein","Subclavian vein","Brachiocephalic vein","Superior vena cava"],
+    ans:3,
+    exp:"The inferior thyroid veins emerge from the lower border of the isthmus and drain into the brachiocephalic veins (right or left). The superior and middle thyroid veins drain into the internal jugular vein."
+  },
+  {
+    q:"The pyramidal lobe connects to the hyoid bone via which fibromuscular band?",
+    opts:["Cricothyroid ligament","Thyrohyoid membrane","Levator glandulae thyroidae","Suspensory ligament of Berry","Pretracheal fascia"],
+    ans:2,
+    exp:"The pyramidal lobe connects to the hyoid bone via the levator glandulae thyroidae — a structural remnant of the thyroglossal duct descent pathway."
+  },
+  {
+    q:"What is the correct vertebral extent of the thyroid gland in a normal adult?",
+    opts:["C3 to C6","C4 to C7","C5 to T1","C6 to T2","C7 to T3"],
+    ans:2,
+    exp:"The thyroid gland lies at vertebral levels C5 to T1, extending from the oblique line of the thyroid cartilage (C5) down to the 5th or 6th tracheal ring (T1 level)."
+  },
+  {
+    q:"Parafollicular C-cells of the thyroid, which secrete calcitonin, are derived from which embryological structure?",
+    opts:["Foramen cecum","Thyroglossal duct","Ultimobranchial body","Third pharyngeal pouch","Second pharyngeal pouch"],
+    ans:2,
+    exp:"C-cells are derived from the ultimobranchial body (neural crest cells incorporated via the 4th/5th pharyngeal pouch), NOT from the endodermal thyroid primordium. They are neural crest derivatives."
+  },
+  {
+    q:"The superior thyroid artery originates from which parent vessel?",
+    opts:["Internal carotid artery","External carotid artery","Subclavian artery","Thyrocervical trunk","Brachiocephalic trunk"],
+    ans:1,
+    exp:"The superior thyroid artery is the first branch of the external carotid artery (ECA). It descends to the apex of the thyroid accompanied by the external laryngeal nerve."
+  },
+  {
+    q:"The inferior thyroid artery originates from which parent vessel?",
+    opts:["External carotid artery","Internal carotid artery","Thyrocervical trunk of the subclavian artery","Arch of the aorta","Costocervical trunk"],
+    ans:2,
+    exp:"The inferior thyroid artery arises from the thyrocervical trunk, which is a branch of the subclavian artery. It ascends then turns medially to reach the lower pole of the thyroid."
+  },
+  {
+    q:"A patient develops acute respiratory distress and hoarseness immediately after thyroidectomy. What is the most likely anatomical injury?",
+    opts:["Superior laryngeal artery laceration","External laryngeal nerve transection","Recurrent laryngeal nerve bilateral injury","Tracheal ring fracture","Thyroglossal duct rupture"],
+    ans:2,
+    exp:"Bilateral recurrent laryngeal nerve injury causes bilateral vocal cord paralysis, leading to both respiratory distress (adducted cords obstructing airway) and aphonia/hoarseness. Immediate laryngoscopy and possible tracheostomy are required."
+  },
+  {
+    q:"The thyroidea ima artery, when present, is found in approximately what percentage of the population?",
+    opts:["2%","5%","10%","20%","30%"],
+    ans:2,
+    exp:"The thyroidea ima artery is present in approximately 10% of individuals. It arises from the arch of the aorta or brachiocephalic trunk and runs anterior to the trachea to supply the isthmus."
+  },
+  {
+    q:"48 hours post-thyroidectomy, a patient develops carpopedal spasm. What is the most likely biochemical finding?",
+    opts:["Hyperkalemia","Hypocalcemia","Hypermagnesemia","Hyperthyroidism","Hyperphosphatemia (alone)"],
+    ans:1,
+    exp:"Carpopedal spasm (tetany) developing 48h post-thyroidectomy indicates hypocalcemia secondary to hypoparathyroidism (parathyroid glands removed or rendered ischemic). Serum Ca²⁺ will be low, PTH will be low."
+  },
+  {
+    q:"Which surface of the thyroid lobe is related to the carotid sheath?",
+    opts:["Anterior surface","Medial surface","Lateral surface","Posterior surface","Superior pole"],
+    ans:3,
+    exp:"The posterior surface of each thyroid lobe lies against the carotid sheath, which contains the common carotid artery, internal jugular vein, and vagus nerve."
+  },
+  {
+    q:"The superior and middle thyroid veins drain into which vessel?",
+    opts:["External jugular vein","Brachiocephalic vein","Internal jugular vein","Subclavian vein","Anterior jugular vein"],
+    ans:2,
+    exp:"The superior thyroid vein (from the apex) and the middle thyroid vein (from the lateral surface) both drain into the internal jugular vein. Only the inferior thyroid vein drains into the brachiocephalic veins."
+  },
+  {
+    q:"Which lymph node group receives the primary lymphatic drainage from the thyroid gland?",
+    opts:["Submandibular nodes","Parotid nodes","Upper and lower deep cervical nodes and pretracheal nodes","Posterior triangle nodes","Occipital nodes"],
+    ans:2,
+    exp:"The thyroid drains into the upper and lower deep cervical lymph nodes, as well as the pretracheal nodes. These nodes are important staging targets in thyroid malignancy."
+  },
+  {
+    q:"The lateral (superficial) surface of the thyroid lobe is covered by which of the following muscle groups?",
+    opts:["Sternohyoid and sternothyroid only","SCM, sternohyoid, sternothyroid, and superior belly of omohyoid","Prevertebral muscles","Stylohyoid and digastric","Thyrohyoid and mylohyoid"],
+    ans:1,
+    exp:"The lateral surface is covered by: sternocleidomastoid (SCM), sternohyoid, sternothyroid, and the superior belly of the omohyoid. These are the four strap muscles covering the thyroid laterally."
+  },
+  {
+    q:"A lingual thyroid is best described as:",
+    opts:["A thyroid lobe that has descended too far into the mediastinum","Thyroid tissue remaining at the foramen cecum due to failure of descent","A cyst formed from incomplete thyroglossal duct obliteration","An accessory thyroid lobe in the lateral neck","Thyroid tissue attached to the hyoid bone"],
+    ans:1,
+    exp:"A lingual thyroid is ectopic thyroid tissue that failed to descend from its origin at the foramen cecum, remaining in the posterior tongue. Critically, it may be the only functional thyroid tissue, so radioiodine scanning is essential before any surgical removal."
+  },
+  {
+    q:"Which statement about the Berry's ligament (posterior suspensory ligament) is most accurate?",
+    opts:["It is the pretracheal fascia (false capsule)","It connects the pyramidal lobe to the hyoid bone","It is a condensation of the true capsule fixing the posterior gland to the cricoid/trachea","It is formed by the investing layer of deep cervical fascia","It is absent in most people"],
+    ans:2,
+    exp:"Berry's (suspensory) ligament is a posterior condensation of the true fibrous capsule that directly fixes the posterior aspect of the thyroid to the cricoid cartilage and upper tracheal rings. The recurrent laryngeal nerve passes very close to it — making division of Berry's ligament during thyroidectomy a high-risk moment for nerve injury."
+  },
+  {
+    q:"Post-thyroidectomy, which investigation is most appropriate to evaluate possible recurrent laryngeal nerve injury?",
+    opts:["CT scan of neck","Ultrasound of thyroid bed","Serum calcium level","Nasopharyngeal laryngoscopy to assess vocal cord mobility","Nerve conduction studies"],
+    ans:3,
+    exp:"Direct visualization of vocal cord mobility via nasopharyngeal laryngoscopy is the most appropriate first-line investigation to evaluate RLN injury. It confirms whether the cord is adducted, abducted, or paralyzed. Serum calcium is relevant for parathyroid injury."
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ LOGIC
+// ══════════════════════════════════════════════════════════════
+let currentQ = 0;
+let answered = new Array(quizData.length).fill(null); // null / 'correct' / 'wrong'
+let score = 0;
+let streak_count = 0;
+
+function renderQuiz(){
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  const q = quizData[currentQ];
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  card.innerHTML = `
+    <div class="quiz-q-num">Question ${currentQ+1} of ${quizData.length}</div>
+    <div class="quiz-q-text">${q.q}</div>
+    <div class="quiz-options" id="opts-${currentQ}">
+      ${q.opts.map((o,i)=>`
+        <div class="quiz-option ${answered[currentQ]?'disabled':''} ${answered[currentQ]&&i===q.ans?'correct':''} ${answered[currentQ]&&answered[currentQ]==='wrong'&&i===answered[currentQ+'-chosen']?'wrong':''}"
+          id="opt-${currentQ}-${i}" onclick="selectAnswer(${i})">
+          <div class="opt-letter">${String.fromCharCode(65+i)}</div>
+          <div>${o}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="quiz-explanation ${answered[currentQ]?'show':''} ${answered[currentQ]==='correct'?'correct-exp':'wrong-exp'}" id="exp-${currentQ}">
+      <div class="exp-label">${answered[currentQ]==='correct'?'✅ Correct!':'❌ Incorrect'}</div>
+      ${q.exp}
+    </div>
+  `;
+  container.appendChild(card);
+
+  // Re-apply correct/wrong styling if already answered
+  if(answered[currentQ]){
+    q.opts.forEach((_,i)=>{
+      const el = document.getElementById(`opt-${currentQ}-${i}`);
+      if(el){
+        el.classList.add('disabled');
+        if(i===q.ans) el.classList.add('correct');
+      }
+    });
+    const chosen = answered[currentQ+'-chosen'];
+    if(chosen!==undefined && chosen!==q.ans){
+      const wrongEl = document.getElementById(`opt-${currentQ}-${chosen}`);
+      if(wrongEl) wrongEl.classList.add('wrong');
+    }
+  }
+
+  // Update progress
+  const prog = Math.round(currentQ/quizData.length*100);
+  document.getElementById('quiz-progress-bar').style.width = prog+'%';
+  document.getElementById('quiz-counter').textContent = `Q${currentQ+1} / ${quizData.length}`;
+}
+
+function selectAnswer(idx){
+  if(answered[currentQ]) return;
+  const q = quizData[currentQ];
+  const isCorrect = idx === q.ans;
+
+  answered[currentQ] = isCorrect ? 'correct' : 'wrong';
+  answered[currentQ+'-chosen'] = idx;
+
+  if(isCorrect){
+    score++;
+    streak_count++;
+  } else {
+    streak_count = 0;
+  }
+
+  // Update UI
+  const allOpts = document.querySelectorAll(`#opts-${currentQ} .quiz-option`);
+  allOpts.forEach((o,i)=>{
+    o.classList.add('disabled');
+    if(i===q.ans) o.classList.add('correct');
+  });
+  if(!isCorrect){
+    const wrongEl = document.getElementById(`opt-${currentQ}-${idx}`);
+    if(wrongEl) wrongEl.classList.add('wrong');
+  }
+
+  const exp = document.getElementById(`exp-${currentQ}`);
+  if(exp){
+    exp.className = `quiz-explanation show ${isCorrect?'correct-exp':'wrong-exp'}`;
+    exp.querySelector('.exp-label').textContent = isCorrect ? '✅ Correct!' : '❌ Incorrect — Correct answer highlighted';
+  }
+
+  // Animate card
+  const card = document.querySelector('.quiz-card');
+  if(card){
+    card.classList.add(isCorrect?'anim-pulse':'anim-shake');
+    setTimeout(()=>card.classList.remove('anim-pulse','anim-shake'),500);
+  }
+
+  // Update stats
+  const totalAnswered = answered.filter(a=>a!==null&&typeof a==='string').length;
+  const scorePct = totalAnswered>0?Math.round(score/totalAnswered*100):0;
+  document.getElementById('quiz-score-disp').textContent = `Score: ${score}/${totalAnswered}`;
+  document.getElementById('quiz-streak-disp').textContent = `Streak: ${streak_count} 🔥`;
+  document.getElementById('stat-score').textContent = scorePct+'%';
+  document.getElementById('stat-streak').textContent = streak_count+'🔥';
+  const prog = Math.round(totalAnswered/quizData.length*100);
+  document.getElementById('stat-progress').textContent = prog+'%';
+
+  localStorage.setItem('thyroid-quiz-score', score);
+  localStorage.setItem('thyroid-quiz-answered', totalAnswered);
+
+  // Show final if all answered
+  if(totalAnswered === quizData.length){
+    setTimeout(showQuizSummary, 800);
+  }
+}
+
+function nextQuestion(){
+  if(currentQ < quizData.length-1){ currentQ++; renderQuiz(); }
+  else showQuizSummary();
+}
+
+function prevQuestion(){
+  if(currentQ > 0){ currentQ--; renderQuiz(); }
+}
+
+function showQuizSummary(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('quiz-controls').style.display='none';
+  const summ = document.getElementById('quiz-summary');
+  summ.classList.add('show');
+  document.getElementById('qs-score-num').textContent = score+'/'+quizData.length;
+  document.getElementById('qs-score-label').textContent = `${score} correct out of ${quizData.length} questions`;
+  const pct = Math.round(score/quizData.length*100);
+  let msg = '';
+  if(pct>=90) msg='🎉 Excellent! You are well prepared for your exam!';
+  else if(pct>=70) msg='👍 Good performance — review the questions you missed.';
+  else if(pct>=50) msg='📚 Keep studying — focus on the high-yield topics highlighted in red.';
+  else msg='💪 Don\'t worry — use the flashcards and re-read the anatomy sections, then retry!';
+  document.getElementById('qs-msg').textContent = msg;
+}
+
+function resetQuiz(){
+  currentQ=0; score=0; streak_count=0;
+  answered=new Array(quizData.length).fill(null);
+  localStorage.removeItem('thyroid-quiz-score');
+  localStorage.removeItem('thyroid-quiz-answered');
+  document.getElementById('quiz-container').style.display='';
+  document.getElementById('quiz-controls').style.display='';
+  document.getElementById('quiz-summary').classList.remove('show');
+  document.getElementById('quiz-score-disp').textContent='Score: 0';
+  document.getElementById('quiz-streak-disp').textContent='Streak: 0 🔥';
+  updateStats();
+  renderQuiz();
+}
+
+renderQuiz();
+
+// ══════════════════════════════════════════════════════════════
+// FLASHCARDS DATA
+// ══════════════════════════════════════════════════════════════
+const flashcards = [
+  {q:"What fascial layer forms the FALSE capsule of the thyroid?", a:"Pretracheal fascia — anchors gland to larynx, causing it to move upward on swallowing."},
+  {q:"What fascial layer forms the TRUE capsule of the thyroid?", a:"Condensed connective tissue (fibrous capsule) — sends septa into the gland, dividing it into lobules."},
+  {q:"What is Berry's (posterior suspensory) ligament?", a:"A posterior condensation of the true capsule fixing the thyroid to the cricoid cartilage and trachea. RLN passes very close to it."},
+  {q:"Which tracheal rings does the isthmus overlie?", a:"Tracheal rings 2, 3, and 4 — the '234 rule'."},
+  {q:"From which parent artery does the superior thyroid artery arise?", a:"External carotid artery (ECA) — first anterior branch."},
+  {q:"From which parent vessel does the inferior thyroid artery arise?", a:"Thyrocervical trunk of the subclavian artery."},
+  {q:"Which nerve accompanies the superior thyroid artery?", a:"External laryngeal nerve — diverges near the upper pole. Injury → loss of high-pitched voice, cricothyroid paralysis."},
+  {q:"Which nerve accompanies the inferior thyroid artery?", a:"Recurrent laryngeal nerve — interdigitates near the gland. Injury → vocal cord paralysis, hoarseness/respiratory distress."},
+  {q:"Where should you ligate the superior thyroid artery during thyroidectomy?", a:"CLOSE to the gland — the external laryngeal nerve has already diverged there."},
+  {q:"Where should you ligate the inferior thyroid artery during thyroidectomy?", a:"FAR from the gland (at its origin) — the RLN is intertwined with branches near the gland."},
+  {q:"What is the thyroidea ima artery?", a:"An artery present in ~10% — arises from aortic arch or brachiocephalic trunk; runs anterior to trachea to supply isthmus. Risk in emergency tracheostomy."},
+  {q:"What veins does the superior thyroid vein drain into?", a:"Internal jugular vein."},
+  {q:"What vein does the inferior thyroid vein drain into?", a:"Brachiocephalic vein (right or left)."},
+  {q:"Where does the thyroid develop from embryologically?", a:"Endodermal cells at the foramen cecum (junction of anterior 2/3 and posterior 1/3 of tongue). Descends via thyroglossal duct."},
+  {q:"What is a thyroglossal duct cyst?", a:"Cyst from incomplete obliteration of thyroglossal duct. Located in midline, usually inferior to hyoid. Moves up on tongue protrusion."},
+  {q:"Which pharyngeal pouch gives rise to the SUPERIOR parathyroid glands?", a:"4th pharyngeal pouch (dorsal)."},
+  {q:"Which pharyngeal pouch gives rise to the INFERIOR parathyroid glands?", a:"3rd pharyngeal pouch (dorsal) — descends further with the thymus. Hence 'reversed' position."},
+  {q:"What is the primary blood supply to the parathyroid glands?", a:"Inferior thyroid artery — supplies all 4 parathyroid glands primarily."},
+  {q:"What is the clinical result of parathyroid gland damage during thyroidectomy?", a:"Hypoparathyroidism → hypocalcemia → tetany, carpopedal spasm (Chvostek's & Trousseau's signs) ~48h post-op."},
+  {q:"What embryological structure do parafollicular C-cells derive from?", a:"Ultimobranchial body (neural crest cells via 4th/5th pouch). NOT from the foramen cecum."},
+  {q:"What is the levator glandulae thyroidae?", a:"A fibromuscular band connecting the pyramidal lobe to the hyoid bone — remnant of thyroglossal duct descent."},
+  {q:"What muscles cover the LATERAL surface of the thyroid?", a:"SCM, Sternohyoid, Sternothyroid, Superior belly of Omohyoid."},
+  {q:"What structures lie on the MEDIAL surface of the UPPER thyroid lobe?", a:"Larynx, pharynx, and external laryngeal nerve."},
+  {q:"What are the vertebral levels of the thyroid gland?", a:"C5 to T1 — from the oblique line of thyroid cartilage to the 5th/6th tracheal ring."}
+];
+
+function buildFlashcards(){
+  const grid = document.getElementById('fc-grid');
+  flashcards.forEach((fc,i)=>{
+    const wrapper = document.createElement('div');
+    wrapper.className = 'fc-wrapper';
+    wrapper.innerHTML = `
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Question ${i+1} of ${flashcards.length}</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">👆 Click to reveal answer</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Answer</div>
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>
+    `;
+    wrapper.addEventListener('click',()=>wrapper.classList.toggle('flipped'));
+    grid.appendChild(wrapper);
+  });
+}
+buildFlashcards();
+
+// ══════════════════════════════════════════════════════════════
+// CLINICAL CASES DATA
+// ══════════════════════════════════════════════════════════════
+const casesData = [
+  {
+    title:"The Moving Neck Mass",
+    vignette:"A 34-year-old woman presents to her GP with a 3-month history of a slowly enlarging swelling in the lower anterior neck. On examination, the mass is firm, smooth, and non-tender. When the patient is asked to swallow a sip of water, the mass moves upward.",
+    qs:[
+      {q:"1. What clinical mechanism causes the mass to move upward on swallowing?",
+       a:"The thyroid gland is fixed to the larynx via the pretracheal fascia (false capsule), which acts as a suspensory ligament. When the larynx ascends during swallowing, the gland — and any mass arising from it — moves upward synchronously."},
+      {q:"2. Which specific fascial structure is responsible for this movement?",
+       a:"The pretracheal fascia (false capsule) — it envelops the thyroid gland externally and is firmly attached to the anterior surface of the laryngeal cartilages."},
+      {q:"3. How does this sign help differentiate a thyroid mass from a lymph node or lipoma?",
+       a:"Lymph nodes, lipomas, and other soft tissue masses are NOT attached to the laryngeal framework, so they do NOT move with swallowing. Only structures attached to the larynx (thyroid gland, thyroglossal duct cysts) move on deglutition."},
+      {q:"4. What additional test would differentiate this from a thyroglossal duct cyst?",
+       a:"Ask the patient to protrude their tongue. A thyroglossal duct cyst will ALSO move upward with tongue protrusion (due to its persistent connection via the duct to the foramen cecum). A thyroid mass will NOT move with tongue protrusion alone."}
+    ]
+  },
+  {
+    title:"The Post-Thyroidectomy Voice Change",
+    vignette:"A surgeon rapidly controls bleeding at the superior pole of the thyroid by blindly clamping the superior vascular pedicle far from the gland. Immediately post-operatively, the patient reports that her voice sounds 'different' — she can no longer sing high notes, and her voice tires quickly. Her airway is patent.",
+    qs:[
+      {q:"1. Which nerve was most likely injured and how?",
+       a:"The external laryngeal nerve (ELN) was injured. It accompanies the superior thyroid artery during its descent but diverges to supply the cricothyroid muscle near the upper pole. Clamping the artery FAR from the gland captures the nerve before it diverges."},
+      {q:"2. What muscle does this nerve supply and what is its function?",
+       a:"The cricothyroid muscle — it tenses the vocal cords and is responsible for high-pitched phonation and pitch variation. Its paralysis causes a weak, monotone voice with fatigue on prolonged speech."},
+      {q:"3. Why would bilateral injury to this nerve be potentially more serious?",
+       a:"Bilateral cricothyroid paralysis eliminates all pitch variation and causes a significantly weak, breathy voice. However — unlike bilateral RLN injury — it does NOT compromise the airway, so it is not immediately life-threatening."},
+      {q:"4. What is the correct surgical principle to avoid this injury?",
+       a:"Ligate the superior thyroid artery as CLOSE to the upper pole of the gland as possible — at this point, the ELN has already diverged away from the artery and is no longer at risk of being captured in the ligature."}
+    ]
+  },
+  {
+    title:"Post-op Tetany: The Parathyroid Crisis",
+    vignette:"A 52-year-old man undergoes total thyroidectomy for papillary thyroid carcinoma. The operation is completed without apparent complication. On post-operative day 2, nursing staff note that the patient is agitated and has developed muscle cramps. Examination reveals perioral tingling, Chvostek's sign, and carpopedal spasm. Serum calcium returns at 1.6 mmol/L (normal 2.2–2.6).",
+    qs:[
+      {q:"1. What is the diagnosis?",
+       a:"Post-thyroidectomy hypoparathyroidism causing hypocalcemia and tetany. The parathyroid glands were either accidentally removed en-bloc with the thyroid, or their primary blood supply (inferior thyroid artery) was disrupted, causing ischemic infarction."},
+      {q:"2. Why do symptoms typically appear 48 hours after surgery?",
+       a:"The existing calcium stored in bone continues to maintain serum calcium for 24–48 hours after PTH secretion ceases. Once these reserves are depleted and PTH-mediated calcium reabsorption in the kidney stops, serum calcium falls critically — hence the 48h delay."},
+      {q:"3. Which vessel supplies the parathyroid glands, and why is its ligation near the thyroid dangerous?",
+       a:"The inferior thyroid artery. When ligated close to the gland (where RLN injury also occurs), the terminal branches to the parathyroid glands are also sacrificed, rendering all four glands ischemic simultaneously."},
+      {q:"4. What is the immediate and long-term management?",
+       a:"Immediate: IV calcium gluconate. Long-term: oral calcium carbonate + calcitriol (active vitamin D) supplementation — lifelong if parathyroid damage is permanent. PTH levels and serum calcium should be monitored regularly."}
+    ]
+  },
+  {
+    title:"The Midline Cyst in a Child",
+    vignette:"A 12-year-old boy is brought to a paediatric surgical clinic with a 6-month history of a painless, fluctuant midline lump just below the hyoid bone. It is non-tender and transilluminates. When the boy protrudes his tongue, the lump elevates. His voice is normal and he has no signs of hypothyroidism.",
+    qs:[
+      {q:"1. What is the diagnosis and its embryological basis?",
+       a:"Thyroglossal duct cyst. The thyroid descends from the foramen cecum of the tongue via the thyroglossal duct. Incomplete obliteration of the duct leaves an epithelial-lined remnant — a cyst — most commonly just below the hyoid bone."},
+      {q:"2. Why does the cyst elevate with tongue protrusion?",
+       a:"The thyroglossal duct maintains a fibrous connection to the foramen cecum at the base of the tongue. When the tongue is protruded, this remnant pulls the cyst upward. This is pathognomonic and distinguishes it from other midline neck swellings."},
+      {q:"3. Before removing the cyst surgically, what crucial investigation must be performed?",
+       a:"A thyroid radionuclide scan (technetium or radioiodine) to confirm the presence of a functioning thyroid gland in its normal position. In rare cases, the thyroglossal duct cyst contains the only thyroid tissue — removing it without this check would cause permanent hypothyroidism."},
+      {q:"4. Describe the Sistrunk procedure and explain why simple cyst excision is insufficient.",
+       a:"The Sistrunk procedure involves excision of the cyst along with the mid-body of the hyoid bone and the fibrous tract up to the foramen cecum. Simple excision has a high recurrence rate (~50%) because the duct lining tracks through and around the hyoid — failure to remove the hyoid mid-segment leaves residual duct epithelium that can reform a cyst."}
+    ]
+  },
+  {
+    title:"Emergency Tracheostomy Complication",
+    vignette:"A 40-year-old male is brought to the emergency department with acute airway obstruction following a bee sting (anaphylaxis). Cricothyrotomy is not immediately possible. An emergency tracheostomy is performed by a junior surgeon who makes a midline incision just inferior to the thyroid isthmus. As the trachea is entered, there is sudden, brisk, pulsatile bleeding from a vessel running anterior to the trachea in the midline.",
+    qs:[
+      {q:"1. Which vessel is responsible for this bleeding?",
+       a:"The thyroidea ima artery — present in approximately 10% of individuals. It arises from the arch of the aorta or brachiocephalic trunk and ascends anterior to the trachea in the midline to supply the thyroid isthmus."},
+      {q:"2. Why is this vessel particularly dangerous in this emergency context?",
+       a:"Its pulsatile, arterial-pressure bleeding is difficult to control rapidly and obscures the surgical field during an already time-critical airway procedure. The vessel is unpredictable (10% population, variable origin) and may not be remembered or anticipated under pressure."},
+      {q:"3. What initial maneuver should the surgeon perform?",
+       a:"Apply direct pressure to control hemorrhage, secure the airway first (insert tracheal tube once trachea is entered), then systematically identify and ligate the thyroidea ima artery. Do not sacrifice airway for hemostasis — the airway is the priority."},
+      {q:"4. What preoperative or intraoperative imaging could have warned of this vessel?",
+       a:"A pre-operative CT angiogram of the neck would identify this variant. Intraoperatively, Doppler ultrasound can detect unexpected midline vascular structures before incision, especially in elective or semi-elective cases."}
+    ]
+  }
+];
+
+function buildCases(){
+  const container = document.getElementById('cases-container');
+  casesData.forEach((c,ci)=>{
+    const card = document.createElement('div');
+    card.className = 'case-card';
+    const qs = c.qs.map((q,qi)=>`
+      <div class="case-q-item">
+        <div class="case-q-text">${q.q}</div>
+        <button class="reveal-btn" onclick="revealAnswer(${ci},${qi})">👁️ Reveal Answer</button>
+        <div class="case-answer" id="case-${ci}-${qi}">${q.a}</div>
+      </div>
+    `).join('');
+    card.innerHTML = `
+      <div class="case-header">
+        <div class="case-num">Clinical Case ${ci+1}</div>
+        <div class="case-title">${c.title}</div>
+      </div>
+      <div class="case-body">
+        <div class="case-vignette">${c.vignette}</div>
+        <div class="case-questions">${qs}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function revealAnswer(ci,qi){
+  const el = document.getElementById(`case-${ci}-${qi}`);
+  el.classList.toggle('visible');
+  const btn = el.previousElementSibling;
+  btn.textContent = el.classList.contains('visible') ? '🙈 Hide Answer' : '👁️ Reveal Answer';
+}
+
+buildCases();
+
+// ══════════════════════════════════════════════════════════════
+// ANATOMY INTERACTIVE DATA
+// ══════════════════════════════════════════════════════════════
+const anatomyItems = [
+  {icon:"🦋", name:"Overall Structure", sub:"Shape & extent",
+   detail:"<p>The thyroid is a butterfly-shaped gland consisting of <strong>two lateral lobes</strong> connected by an <strong>isthmus</strong>, with an inconstant <strong>pyramidal lobe</strong> projecting upwards from the isthmus.</p><p style='margin-top:10px;'><strong>Vertebral extent:</strong> C5 to T1 — from the oblique line of the thyroid cartilage (C5) to the 5th/6th tracheal ring (T1 level).</p>"},
+  {icon:"🧱", name:"Fascial Coverings", sub:"True & false capsules",
+   detail:"<p><strong>True capsule:</strong> Dense fibrous connective tissue investing the gland; sends septa into gland dividing it into lobules.</p><p style='margin-top:10px;'><strong>False capsule (pretracheal fascia):</strong> Derived from the middle layer of deep cervical fascia. Envelops the gland externally, fixes it to the larynx via a suspensory ligament effect. This is why the thyroid — and thyroid masses — move upward on swallowing.</p><div class='alert' style='margin-top:12px;'><div class='alert-label'>⚠️ Exam</div>If a neck mass moves on swallowing → it is attached to larynx via pretracheal fascia = thyroid mass</div>"},
+  {icon:"💪", name:"Lateral Surface Relations", sub:"Strap muscles",
+   detail:"<p>The lateral (superficial) surface is covered by (lateral to medial):</p><ul style='margin:10px 0; padding-left:20px; color:var(--text2); line-height:2;'><li>Sternocleidomastoid</li><li>Sternohyoid</li><li>Sternothyroid</li><li>Superior belly of omohyoid</li></ul>"},
+  {icon:"⬆️", name:"Upper Medial Relations", sub:"Larynx & ELN",
+   detail:"<p>The <strong>upper medial surface</strong> relates to:</p><ul style='margin:10px 0; padding-left:20px; color:var(--text2); line-height:2;'><li>Larynx (thyroid & cricoid cartilages)</li><li>Lower pharynx (inferior pharyngeal constrictor)</li><li>External laryngeal nerve (running with superior thyroid a.)</li></ul>"},
+  {icon:"⬇️", name:"Lower Medial Relations", sub:"Trachea & RLN",
+   detail:"<p>The <strong>lower medial surface</strong> relates to:</p><ul style='margin:10px 0; padding-left:20px; color:var(--text2); line-height:2;'><li>Trachea</li><li>Esophagus (behind trachea, slightly to left)</li><li><strong>Recurrent laryngeal nerve</strong> — in the groove between trachea and esophagus</li></ul><div class='alert danger' style='margin-top:10px;'><div class='alert-label'>⚠️ Surgical Risk</div>RLN is at risk in lower pole dissection — lies in tracheo-oesophageal groove</div>"},
+  {icon:"🩸", name:"Posterior Surface", sub:"Carotid sheath",
+   detail:"<p>The posterior surface of each lobe lies against the <strong>carotid sheath</strong>, which contains:</p><ul style='margin:10px 0; padding-left:20px; color:var(--text2); line-height:2;'><li>Common carotid artery (medial)</li><li>Internal jugular vein (lateral)</li><li>Vagus nerve (posterior, between CCA & IJV)</li></ul><p style='margin-top:8px;'>Also related to <strong>prevertebral muscles</strong> (longus colli & longus capitis) deep to the carotid sheath.</p>"},
+  {icon:"🌁", name:"Isthmus", sub:"Anterior neck bridge",
+   detail:"<p>The isthmus connects the inferior poles of both lobes.</p><p style='margin-top:8px;'><strong>Anterior relations:</strong> skin, superficial fascia, investing layer, sternohyoid, sternothyroid, anterior jugular veins</p><p style='margin-top:8px;'><strong>Posterior relations:</strong> Tracheal rings 2, 3, and 4 ('234 rule')</p><div class='alert' style='margin-top:12px;'><div class='alert-label'>Note</div>Sternomastoid and omohyoid do NOT cover the isthmus — they cover the lateral lobes only.</div>"},
+  {icon:"🔺", name:"Pyramidal Lobe", sub:"Embryological remnant",
+   detail:"<p>A variable superior extension of the isthmus (or left lobe) present in ~50% of individuals. Represents the lower end of the obliterated thyroglossal duct.</p><p style='margin-top:10px;'>May be connected to the hyoid bone by a fibromuscular band — the <strong>levator glandulae thyroidae</strong>.</p>"},
+  {icon:"🫀", name:"Superior Thyroid Artery", sub:"ECA → upper pole",
+   detail:"<p>Arises from the <strong>external carotid artery</strong> (first branch). Descends to the apex of the thyroid lobe.</p><p style='margin-top:8px;'><strong>Accompanies:</strong> External laryngeal nerve</p><p style='margin-top:8px;'><strong>Supplies:</strong> Upper third of lobe + upper half of isthmus</p><p style='margin-top:8px;'><strong>Surgical rule:</strong> Ligate CLOSE to the gland</p>"},
+  {icon:"🩸", name:"Inferior Thyroid Artery", sub:"Thyrocervical trunk → lower pole",
+   detail:"<p>Arises from the <strong>thyrocervical trunk</strong> of the subclavian artery. Ascends then turns medially to the lower pole.</p><p style='margin-top:8px;'><strong>Accompanies:</strong> Recurrent laryngeal nerve (intimately intertwined near gland)</p><p style='margin-top:8px;'><strong>Supplies:</strong> Lower two-thirds of lobe + lower isthmus + all 4 parathyroid glands</p><p style='margin-top:8px;'><strong>Surgical rule:</strong> Ligate FAR from gland (at origin from thyrocervical trunk)</p>"},
+  {icon:"⚡", name:"Recurrent Laryngeal Nerve", sub:"High-risk structure",
+   detail:"<p>Branches of the vagus nerve. <strong>Right RLN</strong> loops under the right subclavian artery; <strong>Left RLN</strong> loops under the arch of the aorta.</p><p style='margin-top:8px;'>Both ascend in the <strong>tracheo-oesophageal groove</strong> to enter the larynx at the cricothyroid joint.</p><p style='margin-top:8px;'><strong>Supplies:</strong> All intrinsic laryngeal muscles EXCEPT cricothyroid</p><div class='alert danger' style='margin-top:10px;'><div class='alert-label'>⚠️ Key Danger Zone</div>RLN crosses the inferior thyroid artery near Berry's ligament — the most dangerous point in thyroidectomy</div>"},
+  {icon:"🎵", name:"External Laryngeal Nerve", sub:"Voice pitch control",
+   detail:"<p>Terminal branch of the superior laryngeal nerve (from vagus). Travels with the superior thyroid artery before diverging near the upper pole.</p><p style='margin-top:8px;'><strong>Supplies:</strong> Cricothyroid muscle only</p><p style='margin-top:8px;'><strong>Injury effects:</strong> Loss of high-pitched phonation, monotone voice, vocal fatigue. Voice may sound deeper or weak on projection.</p><p style='margin-top:8px;'>Called the 'nerve of the opera singer' — famous soprano cases reported post-thyroidectomy.</p>"}
+];
+
+function buildAnatomy(){
+  const grid = document.getElementById('anatomy-grid');
+  anatomyItems.forEach((item,i)=>{
+    const el = document.createElement('div');
+    el.className = 'anatomy-item';
+    el.innerHTML = `<div class="anatomy-item-icon">${item.icon}</div><div class="anatomy-item-name">${item.name}</div><div class="anatomy-item-sub">${item.sub}</div>`;
+    el.addEventListener('click',()=>{
+      document.querySelectorAll('.anatomy-item').forEach(a=>a.classList.remove('active'));
+      el.classList.add('active');
+      const detail = document.getElementById('anatomy-detail');
+      document.getElementById('anat-detail-title').textContent = item.icon+' '+item.name;
+      document.getElementById('anat-detail-body').innerHTML = `<div style="color:var(--text2);font-size:14px;line-height:1.8;">${item.detail}</div>`;
+      detail.classList.add('visible');
+      detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+    grid.appendChild(el);
+  });
+}
+buildAnatomy();
+
+// ══════════════════════════════════════════════════════════════
+// MNEMONICS DATA
+// ══════════════════════════════════════════════════════════════
+const mnemonics = [
+  {
+    icon:"🔪",
+    title:"Surgical Ligation Rule",
+    word:"CLOSE-FAR",
+    rows:[
+      {letter:"CLOSE", meaning:"<strong>Superior thyroid artery</strong> → Ligate CLOSE to gland (external laryngeal nerve has already diverged there)"},
+      {letter:"FAR", meaning:"<strong>Inferior thyroid artery</strong> → Ligate FAR from gland at origin (recurrent laryngeal nerve is intertwined near gland)"}
+    ]
+  },
+  {
+    icon:"🧬",
+    title:"Parathyroid Pouch Origins — 'SUPERIOR STAYS' mnemonic",
+    word:"4-3-FLIP",
+    rows:[
+      {letter:"4", meaning:"<strong>4th pouch</strong> → Superior parathyroids (less migration, 'stays higher')"},
+      {letter:"3", meaning:"<strong>3rd pouch</strong> → Inferior parathyroids (descends with thymus, ends up lower)"},
+      {letter:"FLIP", meaning:"Origins are <strong>FLIPPED</strong> — the pouch number and final anatomical position are reversed!"}
+    ]
+  },
+  {
+    icon:"🫁",
+    title:"Thyroid Isthmus Posterior Relations — '234' Rule",
+    word:"TWO-THREE-FOUR",
+    rows:[
+      {letter:"2", meaning:"Tracheal ring <strong>2</strong>"},
+      {letter:"3", meaning:"Tracheal ring <strong>3</strong>"},
+      {letter:"4", meaning:"Tracheal ring <strong>4</strong>"},
+      {letter:"Tip", meaning:"The isthmus is cut during tracheostomy — these are the rings you'll see posteriorly"}
+    ]
+  },
+  {
+    icon:"🩸",
+    title:"Venous Drainage — 'SuMo vs Infra-Brachio'",
+    word:"SuMo-IB",
+    rows:[
+      {letter:"Su", meaning:"<strong>Su</strong>perior thyroid vein → Internal jugular vein (IJV)"},
+      {letter:"Mo", meaning:"<strong>Mo</strong>iddle thyroid vein → Internal jugular vein (IJV)"},
+      {letter:"I", meaning:"<strong>I</strong>nferior thyroid vein → <strong>B</strong>rachiocephalic vein"},
+      {letter:"Tip", meaning:"'SuMo' (both drain to IJV); only Inferior drains down to Brachiocephalic"}
+    ]
+  },
+  {
+    icon:"👅",
+    title:"Thyroglossal Cyst vs Thyroid Mass — Movement Tests",
+    word:"DUAL-MOVE",
+    rows:[
+      {letter:"S", meaning:"<strong>Swallowing</strong> → BOTH thyroid mass AND thyroglossal cyst move upward"},
+      {letter:"T", meaning:"<strong>Tongue protrusion</strong> → ONLY thyroglossal cyst moves (persistent duct connection)"},
+      {letter:"Tip", meaning:"If it moves on BOTH swallowing AND tongue protrusion = thyroglossal cyst. If only swallowing = thyroid mass proper"}
+    ]
+  },
+  {
+    icon:"💊",
+    title:"Post-Thyroidectomy Complications Timeline",
+    word:"VOICE-THEN-CRAMPS",
+    rows:[
+      {letter:"VOICE", meaning:"<strong>Immediate/hours:</strong> RLN injury → hoarseness or respiratory distress (bilateral)"},
+      {letter:"THEN", meaning:"<strong>24–48 hours later:</strong> Parathyroid failure → PTH drops → calcium reserves depleted"},
+      {letter:"CRAMPS", meaning:"<strong>48h post-op:</strong> Hypocalcemia → tetany, carpopedal spasm, Chvostek's/Trousseau's signs"}
+    ]
+  },
+  {
+    icon:"🫀",
+    title:"Arterial Supply Origins — 'EXTRA THYRO-BRACHIO-AORTIC'",
+    word:"ETA",
+    rows:[
+      {letter:"E", meaning:"<strong>E</strong>xternal carotid → Superior thyroid artery"},
+      {letter:"T", meaning:"<strong>T</strong>hyrocervical trunk (subclavian) → Inferior thyroid artery"},
+      {letter:"A", meaning:"<strong>A</strong>orta/Brachiocephalic → Thyroidea ima artery (10% variant)"}
+    ]
+  }
+];
+
+function buildMnemonics(){
+  const container = document.getElementById('mnemonics-container');
+  mnemonics.forEach((m,i)=>{
+    const card = document.createElement('div');
+    card.className = 'mnemonic-card';
+    const rows = m.rows.map(r=>`
+      <div class="mnem-row">
+        <div class="mnem-letter">${r.letter}</div>
+        <div class="mnem-meaning">${r.meaning}</div>
+      </div>
+    `).join('');
+    card.innerHTML = `
+      <div class="mnem-header" onclick="toggleMnem(${i})">
+        <div class="mnem-icon">${m.icon}</div>
+        <div><div class="mnem-title">${m.title}</div></div>
+        <div class="mnem-word">${m.word}</div>
+      </div>
+      <div class="mnem-body" id="mnem-body-${i}">${rows}</div>
+    `;
+    container.appendChild(card);
+  });
+  // Open first by default
+  document.getElementById('mnem-body-0').classList.add('open');
+}
+
+function toggleMnem(i){
+  const body = document.getElementById(`mnem-body-${i}`);
+  body.classList.toggle('open');
+}
+
+buildMnemonics();
+
+// ══════════════════════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════════════════════
+const searchData = [
+  {term:"pretracheal fascia", info:"Forms the FALSE capsule of the thyroid. Anchors gland to larynx → gland moves on swallowing.", tab:"overview"},
+  {term:"true capsule", info:"Condensed connective tissue directly investing the thyroid, sending septa into gland.", tab:"anatomy"},
+  {term:"recurrent laryngeal nerve", info:"Accompanies inferior thyroid artery near gland. Injury → hoarseness/respiratory distress. Ligate ITA far from gland.", tab:"surgery"},
+  {term:"external laryngeal nerve", info:"Accompanies superior thyroid artery. Injury → loss of high-pitch voice. Ligate STA close to gland.", tab:"surgery"},
+  {term:"foramen cecum", info:"Origin of thyroid gland on developing tongue. Also origin of thyroglossal duct.", tab:"embryo"},
+  {term:"thyroglossal duct cyst", info:"Remnant of descent. Moves on swallowing AND tongue protrusion. Sistrunk procedure for removal.", tab:"embryo"},
+  {term:"234", info:"Isthmus lies posterior to tracheal rings 2, 3, and 4.", tab:"anatomy"},
+  {term:"C5 T1", info:"Vertebral extent of thyroid gland — C5 (oblique line of thyroid cartilage) to T1 (5th/6th tracheal ring).", tab:"overview"},
+  {term:"4th pouch", info:"Origin of SUPERIOR parathyroid glands.", tab:"embryo"},
+  {term:"3rd pouch", info:"Origin of INFERIOR parathyroid glands (descends with thymus).", tab:"embryo"},
+  {term:"inferior thyroid artery", info:"From thyrocervical trunk. Supplies lower 2/3 of lobe + parathyroids. Accompanies RLN. Ligate FAR from gland.", tab:"anatomy"},
+  {term:"superior thyroid artery", info:"From external carotid artery. Accompanies ELN. Ligate CLOSE to gland.", tab:"anatomy"},
+  {term:"thyroidea ima", info:"Present in 10%. From aortic arch or brachiocephalic trunk. Runs anterior to trachea. Risk in tracheostomy.", tab:"surgery"},
+  {term:"hypocalcemia", info:"Result of parathyroid gland damage in thyroidectomy → tetany, carpopedal spasm ~48h post-op.", tab:"surgery"},
+  {term:"brachiocephalic", info:"The inferior thyroid veins drain into the brachiocephalic veins.", tab:"anatomy"},
+  {term:"ultimobranchial body", info:"Origin of C-cells (parafollicular cells) that secrete calcitonin. Neural crest derivative via 4th/5th pouch.", tab:"embryo"},
+  {term:"pyramidal lobe", info:"Remnant of thyroglossal duct descent. Connected to hyoid by levator glandulae thyroidae.", tab:"anatomy"},
+  {term:"levator glandulae thyroidae", info:"Fibromuscular band connecting pyramidal lobe to hyoid bone.", tab:"anatomy"},
+  {term:"berry's ligament", info:"Posterior suspensory ligament of thyroid. Fixes gland to cricoid/trachea. RLN passes close to it.", tab:"anatomy"},
+  {term:"sistrunk", info:"Procedure for thyroglossal duct cyst: remove cyst + mid-body hyoid + duct tract to foramen cecum.", tab:"embryo"},
+];
+
+document.getElementById('search-input').addEventListener('input', function(){
+  const val = this.value.toLowerCase().trim();
+  const results = document.getElementById('search-results');
+  if(!val){ results.style.display='none'; return; }
+  const matches = searchData.filter(d=>d.term.toLowerCase().includes(val)||d.info.toLowerCase().includes(val));
+  if(!matches.length){ results.style.display='none'; return; }
+  results.style.display='block';
+  results.innerHTML = `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">${matches.length} result(s) for "${val}"</div>`+
+    matches.map(m=>`
+      <div class="card" style="margin-bottom:12px;cursor:pointer;" onclick="document.querySelector('[data-tab=${m.tab}]').click()">
+        <div class="card-title" style="font-size:13px;">${m.term.replace(new RegExp(val,'gi'),t=>`<mark>${t}</mark>`)}</div>
+        <div class="card-text" style="font-size:13px;">${m.info}</div>
+        <div style="margin-top:8px;"><span class="tag tag-teal">→ ${m.tab.charAt(0).toUpperCase()+m.tab.slice(1)} tab</span></div>
+      </div>
+    `).join('');
+});
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

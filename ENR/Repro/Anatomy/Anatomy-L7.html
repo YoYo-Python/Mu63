@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KME · Perineum Anatomy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c14;
+  --surface: #111420;
+  --card: #161b2e;
+  --border: #1e2540;
+  --accent: #7c6af7;
+  --accent2: #e85d8c;
+  --accent3: #38d9a9;
+  --accent4: #f9a825;
+  --text: #e8eaf6;
+  --muted: #8892b0;
+  --danger: #ff6b6b;
+  --success: #38d9a9;
+  --warn: #f9a825;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --glow: 0 0 24px rgba(124,106,247,0.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+
+/* ORBS */
+.orb-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.13;animation:orb-drift 18s ease-in-out infinite alternate}
+.orb1{width:500px;height:500px;background:var(--accent);top:-100px;left:-100px;animation-delay:0s}
+.orb2{width:400px;height:400px;background:var(--accent2);bottom:-80px;right:-80px;animation-delay:-6s}
+.orb3{width:350px;height:350px;background:var(--accent3);top:40%;left:60%;animation-delay:-12s}
+@keyframes orb-drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.12)}}
+
+/* LAYOUT */
+.app{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 16px 60px}
+
+/* HEADER */
+.header{padding:32px 0 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.kme-badge{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--accent);background:rgba(124,106,247,0.12);border:1px solid rgba(124,106,247,0.3);padding:4px 10px;border-radius:20px;letter-spacing:2px}
+.header-title{font-family:var(--font-head);font-size:clamp(22px,4vw,34px);font-weight:800;line-height:1.1}
+.header-title span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header-sub{color:var(--muted);font-size:14px;margin-top:4px}
+.header-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;font-family:var(--font-mono);color:var(--muted);display:flex;align-items:center;gap:6px}
+.stat-pill strong{color:var(--text)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:20px}
+.search-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 44px 12px 16px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
+.search-results{display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--border);border-radius:var(--radius);z-index:100;max-height:320px;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.search-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.search-item:hover{background:rgba(124,106,247,0.08)}
+.search-item-tag{font-size:10px;font-family:var(--font-mono);color:var(--accent);margin-bottom:3px}
+.search-item-text{font-size:13px}
+
+/* NAV TABS */
+.nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px}
+.tab-btn{padding:9px 16px;border-radius:var(--radius-sm);border:none;background:none;color:var(--muted);font-family:var(--font-head);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(124,106,247,0.35)}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block;animation:fade-in .3s ease}
+@keyframes fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card-title{font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-family:var(--font-mono);font-weight:600;letter-spacing:.5px}
+.badge-accent{background:rgba(124,106,247,0.15);color:var(--accent);border:1px solid rgba(124,106,247,0.3)}
+.badge-red{background:rgba(232,93,140,0.15);color:var(--accent2);border:1px solid rgba(232,93,140,0.3)}
+.badge-green{background:rgba(56,217,169,0.15);color:var(--accent3);border:1px solid rgba(56,217,169,0.3)}
+.badge-warn{background:rgba(249,168,37,0.15);color:var(--warn);border:1px solid rgba(249,168,37,0.3)}
+.exam-flag{background:rgba(249,168,37,0.08);border:1px solid rgba(249,168,37,0.3);border-left:3px solid var(--warn);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin:8px 0;display:flex;gap:8px;align-items:flex-start}
+.exam-flag .flag-icon{color:var(--warn);flex-shrink:0;margin-top:1px}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+
+/* OVERVIEW */
+.overview-hero{background:linear-gradient(135deg,rgba(124,106,247,0.12),rgba(232,93,140,0.08));border:1px solid rgba(124,106,247,0.2);border-radius:var(--radius);padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.overview-hero::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(124,106,247,0.2),transparent);border-radius:50%}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:transform .2s,box-shadow .2s}
+.topic-card:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.topic-num{font-family:var(--font-mono);font-size:10px;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.topic-card h3{font-family:var(--font-head);font-size:15px;font-weight:700;margin-bottom:8px}
+.topic-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.key-fact{background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.2);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin:6px 0;display:flex;gap:8px;align-items:flex-start}
+.key-fact .kf-icon{color:var(--accent3);flex-shrink:0}
+.structure-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
+.structure-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:all .2s}
+.structure-item:hover,.structure-item.open{border-color:var(--accent);background:rgba(124,106,247,0.06)}
+.structure-item h4{font-family:var(--font-head);font-size:13px;font-weight:700;margin-bottom:4px}
+.structure-item p{font-size:12px;color:var(--muted);display:none}
+.structure-item.open p{display:block;margin-top:6px;color:var(--text)}
+
+/* QUIZ */
+.quiz-progress{margin-bottom:20px}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;animation:fade-in .25s ease}
+.q-number{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:1px}
+.q-text{font-size:16px;font-weight:500;line-height:1.5;margin-bottom:20px}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:left;color:var(--text);font-family:var(--font-body);font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:10px}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(124,106,247,0.08)}
+.opt-btn.correct{border-color:var(--success);background:rgba(56,217,169,0.1);animation:pulse-green .4s ease}
+.opt-btn.wrong{border-color:var(--danger);background:rgba(255,107,107,0.1);animation:shake .35s ease}
+.opt-btn:disabled{cursor:default}
+.opt-letter{font-family:var(--font-mono);font-size:12px;font-weight:600;min-width:22px;height:22px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.opt-btn.correct .opt-letter{background:var(--success);color:#000}
+.opt-btn.wrong .opt-letter{background:var(--danger);color:#fff}
+@keyframes pulse-green{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.explanation{background:rgba(124,106,247,0.07);border:1px solid rgba(124,106,247,0.2);border-radius:var(--radius-sm);padding:14px;margin-top:14px;font-size:13px;line-height:1.6;display:none}
+.explanation.show{display:block;animation:fade-in .3s ease}
+.explanation strong{color:var(--accent)}
+.quiz-controls{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:var(--radius-sm);border:none;font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#5e54d4);color:#fff;box-shadow:0 4px 14px rgba(124,106,247,0.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,106,247,0.4)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.score-card{background:linear-gradient(135deg,rgba(124,106,247,0.15),rgba(56,217,169,0.08));border:1px solid rgba(124,106,247,0.25);border-radius:var(--radius);padding:32px;text-align:center}
+.score-big{font-family:var(--font-head);font-size:64px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.score-label{font-size:14px;color:var(--muted);margin-bottom:20px}
+
+/* FLASHCARDS */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.fc{perspective:1000px;height:180px;cursor:pointer}
+.fc-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);position:relative}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;justify-content:center;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:linear-gradient(135deg,rgba(124,106,247,0.15),rgba(232,93,140,0.08));border:1px solid rgba(124,106,247,0.25);transform:rotateY(180deg)}
+.fc-tag{font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px}
+.fc-q{font-size:14px;font-weight:500;line-height:1.4}
+.fc-a{font-size:13px;line-height:1.5;color:var(--text)}
+.fc-hint{position:absolute;bottom:12px;right:14px;font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+
+/* CLINICAL CASES */
+.case-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.case-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.case-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);background:rgba(124,106,247,0.12);border:1px solid rgba(124,106,247,0.25);padding:4px 10px;border-radius:20px;letter-spacing:1px}
+.case-title{font-family:var(--font-head);font-size:17px;font-weight:700}
+.vignette{background:rgba(22,27,46,0.8);border-left:3px solid var(--accent2);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 16px;font-size:14px;line-height:1.6;margin-bottom:16px}
+.case-q{font-size:14px;font-weight:500;margin:12px 0 8px;padding-left:14px;border-left:2px solid var(--border)}
+.reveal-btn{background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:var(--radius-sm);padding:8px 16px;font-family:var(--font-head);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:6px;letter-spacing:.3px}
+.reveal-btn:hover{border-color:var(--accent3);color:var(--accent3)}
+.case-answer{background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.2);border-radius:var(--radius-sm);padding:14px;font-size:13px;line-height:1.6;margin-top:10px;display:none}
+.case-answer.show{display:block;animation:fade-in .3s ease}
+.step-block{margin-bottom:8px;padding-left:12px;border-left:2px solid var(--accent);font-size:13px;line-height:1.5}
+.step-block strong{color:var(--accent3);display:block;font-family:var(--font-mono);font-size:11px;margin-bottom:2px}
+
+/* ANATOMY TAB */
+.flow-chart{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;overflow-x:auto}
+.flow-row{display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+.flow-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;min-width:160px;text-align:center;transition:all .2s}
+.flow-box:hover{border-color:var(--accent);transform:scale(1.03)}
+.flow-box.highlight{border-color:var(--accent);background:rgba(124,106,247,0.1)}
+.flow-box.highlight2{border-color:var(--accent2);background:rgba(232,93,140,0.08)}
+.flow-box.highlight3{border-color:var(--accent3);background:rgba(56,217,169,0.08)}
+.flow-arrow{color:var(--muted);font-size:18px;flex-shrink:0}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px}
+.compare-table th{background:rgba(124,106,247,0.12);color:var(--accent);font-family:var(--font-head);font-size:12px;letter-spacing:.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02)}
+.tick{color:var(--accent3)}
+.cross{color:var(--danger)}
+
+/* MNEMONICS */
+.mnem-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.mnem-word{font-family:var(--font-head);font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;letter-spacing:2px}
+.mnem-list{list-style:none}
+.mnem-list li{padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;display:flex;gap:10px;align-items:baseline}
+.mnem-list li:last-child{border:none}
+.mnem-letter{font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;min-width:24px}
+.mnem-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* VIVA */
+.viva-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;cursor:pointer}
+.viva-q{padding:14px 18px;font-size:14px;font-weight:500;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:background .2s}
+.viva-q:hover{background:rgba(124,106,247,0.05)}
+.viva-chevron{color:var(--muted);font-size:18px;transition:transform .25s;flex-shrink:0}
+.viva-item.open .viva-chevron{transform:rotate(180deg)}
+.viva-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s}
+.viva-item.open .viva-a{padding:0 18px 16px;max-height:400px}
+.viva-a-inner{background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.2);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;line-height:1.6;color:var(--text)}
+
+/* STATS DASHBOARD */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.stat-val{font-family:var(--font-head);font-size:32px;font-weight:800;line-height:1}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .nav{gap:2px}
+  .tab-btn{padding:7px 11px;font-size:12px}
+  .header-right{display:none}
+  .q-text{font-size:14px}
+}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="orb-wrap"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="kme-badge">KME · ANATOMY</div>
+    <h1 class="header-title">The <span>Perineum</span></h1>
+    <div class="header-sub">Anatomy & Clinical Structures · Mansoura University</div>
+  </div>
+  <div class="header-right">
+    <div class="stat-pill">🎯 Score <strong id="hdr-score">0</strong></div>
+    <div class="stat-pill">🔥 Streak <strong id="hdr-streak">0</strong></div>
+    <div class="stat-pill">✅ <strong id="hdr-progress">0%</strong></div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input class="search-input" id="searchInput" placeholder="🔍  Search concepts, structures, clinical pearls…" autocomplete="off">
+  <span class="search-icon">⌕</span>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+  <button class="tab-btn" data-tab="quiz">❓ Quiz</button>
+  <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+  <button class="tab-btn" data-tab="cases">🏥 Cases</button>
+  <button class="tab-btn" data-tab="anatomy">🦴 Anatomy</button>
+  <button class="tab-btn" data-tab="mnemonics">🧠 Mnemonics</button>
+  <button class="tab-btn" data-tab="viva">💬 Viva</button>
+</nav>
+
+<!-- ==================== OVERVIEW ==================== -->
+<div class="section active" id="tab-overview">
+  <div class="overview-hero">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <span style="font-size:36px">🔬</span>
+      <div>
+        <div style="font-family:var(--font-head);font-size:20px;font-weight:800">Perineum — Core Architecture</div>
+        <div style="font-size:13px;color:var(--muted)">3 Topics · 25 MCQs · 20 Flashcards · 6 Clinical Cases · 5 Mnemonics</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge badge-accent">⚠️ High Yield</span>
+      <span class="badge badge-red">Gland Locations</span>
+      <span class="badge badge-green">Fascial Planes</span>
+      <span class="badge badge-warn">Episiotomy</span>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="topic-card">
+      <div class="topic-num">TOPIC 01</div>
+      <h3>🪣 Ischiorectal Fossa</h3>
+      <p>Wedge-shaped fat-filled space lateral to anal canal. Key site of abscess and pudendal canal.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-num">TOPIC 02</div>
+      <h3>📦 Perineal Pouches</h3>
+      <p>Deep (closed) vs Superficial (open anteriorly). Gland locations and fascial spread of urine.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-num">TOPIC 03</div>
+      <h3>🏛 Perineal Body</h3>
+      <p>Central fibromuscular pillar anchoring pelvic floor. Disruption → organ prolapse in females.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Exam Flags — Highest Yield</div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span>Inferior rectal nerve and vessels <strong>traverse the ischiorectal fossa from lateral to medial</strong>.</span></div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span>Ischiorectal abscess → <strong>cruciate incision at most fluctuant point</strong>; if untreated → anal/cutaneous fistula.</span></div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span><strong>Bulbourethral gland</strong> body is in the <strong>DEEP</strong> pouch; its DUCT pierces the perineal membrane to open in the <strong>SUPERFICIAL</strong> pouch.</span></div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span>Urethral rupture in superficial pouch → urine tracks anteriorly under <strong>Scarpa's fascia</strong> on abdominal wall (NOT into thighs or anal triangle).</span></div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span><strong>Greater vestibular gland</strong> (female) is in the <strong>SUPERFICIAL</strong> perineal pouch.</span></div>
+    <div class="exam-flag"><span class="flag-icon">⚠️</span><span>Damage to perineal body during labour → prolapse of uterus; <strong>episiotomy</strong> controls tearing.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔑 Key Structures — Click to expand</div>
+    <div class="structure-grid" id="structureGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗺 Perineum Boundaries</div>
+    <div class="key-fact"><span class="kf-icon">◆</span><span><strong>Anterior angle:</strong> Symphysis pubis (lower border)</span></div>
+    <div class="key-fact"><span class="kf-icon">◆</span><span><strong>Posterior angle:</strong> Tip of coccyx</span></div>
+    <div class="key-fact"><span class="kf-icon">◆</span><span><strong>Lateral angles:</strong> Ischial tuberosities</span></div>
+    <div class="key-fact"><span class="kf-icon">◆</span><span><strong>Divided by:</strong> Imaginary transverse line between ischial tuberosities → Urogenital triangle (anterior) + Anal triangle (posterior)</span></div>
+    <div class="key-fact"><span class="kf-icon">◆</span><span><strong>Location:</strong> Below pelvic diaphragm, overlying pelvic outlet</span></div>
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div class="section" id="tab-quiz">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="q-score" style="color:var(--accent)">0</div><div class="stat-lbl">Score</div></div>
+    <div class="stat-card"><div class="stat-val" id="q-streak" style="color:var(--accent4)">0</div><div class="stat-lbl">🔥 Streak</div></div>
+    <div class="stat-card"><div class="stat-val" id="q-correct" style="color:var(--accent3)">0</div><div class="stat-lbl">Correct</div></div>
+    <div class="stat-card"><div class="stat-val" id="q-total" style="color:var(--muted)">25</div><div class="stat-lbl">Total Qs</div></div>
+  </div>
+  <div class="quiz-progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-meta"><span id="progressLabel">Question 1 of 25</span><span id="progressPct">0%</span></div>
+  </div>
+  <div id="quizContainer"></div>
+</div>
+
+<!-- ==================== FLASHCARDS ==================== -->
+<div class="section" id="tab-flashcards">
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <span style="font-size:14px;color:var(--muted)">20 cards · Click to flip · All key structures</span>
+      <button class="btn btn-secondary" onclick="resetFlashcards()">↺ Reset All</button>
+    </div>
+  </div>
+  <div class="fc-grid" id="fcGrid"></div>
+</div>
+
+<!-- ==================== CLINICAL CASES ==================== -->
+<div class="section" id="tab-cases">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">🏥 Clinical Case Vignettes</div>
+    <p style="font-size:13px;color:var(--muted)">USMLE-style exam scenarios. Work through each case before revealing the answer.</p>
+  </div>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- ==================== ANATOMY ==================== -->
+<div class="section" id="tab-anatomy">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">🦴 Fascial Planes & Pouch Architecture</div>
+    <div class="flow-chart">
+      <div class="flow-row"><div class="flow-box highlight">Pelvic Cavity</div><div class="flow-arrow">↓</div><div class="flow-box">Pelvic Diaphragm (Levator Ani)</div></div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↓</div></div>
+      <div class="flow-row">
+        <div class="flow-box highlight">Deep Perineal Pouch</div>
+        <div style="font-size:12px;color:var(--muted)">Roof = Pelvic fascia<br>Floor = Perineal membrane<br><span class="badge badge-accent">CLOSED all sides</span></div>
+      </div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↓ Perineal Membrane</div></div>
+      <div class="flow-row">
+        <div class="flow-box highlight2">Superficial Perineal Pouch</div>
+        <div style="font-size:12px;color:var(--muted)">Roof = Perineal membrane<br>Floor = Colles fascia<br><span class="badge badge-red">OPEN anteriorly!</span></div>
+      </div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↑ Anterior opening</div></div>
+      <div class="flow-row">
+        <div class="flow-box highlight3">Anterior Abdominal Wall</div>
+        <div style="font-size:12px;color:var(--muted)">Deep to Scarpa's fascia<br>← Path of urine extravasation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Pouch Comparison</div>
+    <div style="overflow-x:auto">
+    <table class="compare-table">
+      <tr><th>Feature</th><th>Deep Perineal Pouch</th><th>Superficial Perineal Pouch</th></tr>
+      <tr><td>Roof</td><td>Pelvic fascia</td><td>Perineal membrane</td></tr>
+      <tr><td>Floor</td><td>Perineal membrane</td><td>Colles fascia (membranous layer)</td></tr>
+      <tr><td>Closure</td><td><span class="tick">✓</span> Completely closed</td><td><span class="cross">✗</span> Open anteriorly</td></tr>
+      <tr><td>Male gland</td><td>Bulbourethral gland (body)</td><td>Bulb of penis, Corpus spongiosum</td></tr>
+      <tr><td>Female gland</td><td>—</td><td>Greater vestibular gland</td></tr>
+      <tr><td>Key muscles</td><td>Deep transverse perineal, External urethral sphincter</td><td>Bulbospongiosus, Ischiocavernosus, Superficial transverse perineal</td></tr>
+      <tr><td>Injury result</td><td>Fluid contained locally</td><td>Fluid → anterior abdominal wall</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Ischiorectal Fossa Walls</div>
+    <div style="overflow-x:auto">
+    <table class="compare-table">
+      <tr><th>Wall</th><th>Structure</th><th>Clinical Relevance</th></tr>
+      <tr><td>Medial</td><td>Levator ani + External anal sphincter</td><td>Abscess can erode into anal canal</td></tr>
+      <tr><td>Lateral</td><td>Obturator internus + Obturator fascia</td><td>Contains pudendal canal</td></tr>
+      <tr><td>Roof (apex)</td><td>Origin of levator ani from obturator fascia</td><td>Narrows the wedge at top</td></tr>
+      <tr><td>Floor (base)</td><td>Skin over perianal region</td><td>Site of cruciate incision</td></tr>
+      <tr><td>Contents</td><td>Pad of fat, inferior rectal vessels/nerve</td><td>Fat allows distension; pus collects here</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 Pudendal Nerve Pathway</div>
+    <div class="flow-chart">
+      <div class="flow-row">
+        <div class="flow-box highlight">Pudendal nerve (S2,3,4)</div><div class="flow-arrow">→</div>
+        <div class="flow-box">Exits greater sciatic foramen</div><div class="flow-arrow">→</div>
+        <div class="flow-box">Hooks round ischial spine</div>
+      </div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↓</div></div>
+      <div class="flow-row">
+        <div class="flow-box">Lesser sciatic foramen</div><div class="flow-arrow">→</div>
+        <div class="flow-box highlight">Pudendal canal (Alcock's canal)</div>
+      </div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↓ Branches</div></div>
+      <div class="flow-row" style="flex-wrap:wrap;gap:8px">
+        <div class="flow-box highlight2">Inferior rectal n. (→ crosses fossa)</div>
+        <div class="flow-box highlight2">Perineal n. (→ posterior scrotal/labial)</div>
+        <div class="flow-box highlight2">Dorsal n. penis/clitoris</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💧 Urine Extravasation Pathway (Straddle Injury)</div>
+    <div class="flow-chart">
+      <div class="flow-row"><div class="flow-box highlight2">Urethral rupture in superficial pouch</div></div>
+      <div class="flow-row" style="margin-left:30px"><div class="flow-arrow">↓ Urine escapes</div></div>
+      <div class="flow-row">
+        <div class="flow-box">Posterior: Closed (Colles fascia fused to perineal membrane)</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-box">Lateral: Closed (attached to pubic arch)</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-box">Inferior: Closed (Colles fascia)</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-box highlight3">Anterior: OPEN → Penis, Scrotum, Anterior abdominal wall (deep to Scarpa's fascia)</div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-box" style="border-color:var(--danger);background:rgba(255,107,107,0.08)">NOT into thighs (Colles attached to fascia lata)<br>NOT into anal triangle (separate)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MNEMONICS ==================== -->
+<div class="section" id="tab-mnemonics">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">🧠 Custom Mnemonics — Perineum</div>
+    <p style="font-size:13px;color:var(--muted)">Designed for exam recall. Each letter = one key fact.</p>
+  </div>
+  <div id="mnemContainer"></div>
+</div>
+
+<!-- ==================== VIVA ==================== -->
+<div class="section" id="tab-viva">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">💬 Viva Q&A</div>
+    <p style="font-size:13px;color:var(--muted)">Classic oral exam questions with complete model answers. Click to expand.</p>
+  </div>
+  <div id="vivaContainer"></div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const STRUCTURES = [
+  {name:"Ischiorectal Fossa",detail:"Wedge-shaped, fat-filled space lateral to anal canal. Allows distension during defecation. Common site for abscess formation. Must drain with cruciate incision."},
+  {name:"Pudendal Canal",detail:"Formed by splitting of obturator fascia on lateral wall of ischiorectal fossa. Contains internal pudendal vessels and pudendal nerve. Also called Alcock's canal."},
+  {name:"Perineal Body",detail:"Fibromuscular mass in perineal midline. Male: between anal canal and bulb of penis. Female: between anal canal and lower vagina. Central anchor for pelvic floor muscles."},
+  {name:"Perineal Membrane",detail:"Floor of deep pouch, Roof of superficial pouch. A tough fibromuscular sheet. The bulbourethral gland duct pierces it downward. Also called the urogenital diaphragm (with the muscles above it)."},
+  {name:"Colles Fascia",detail:"Membranous layer of superficial fascia of the pelvis. Forms the floor of the superficial perineal pouch. Continues anteriorly as Scarpa's fascia on the abdominal wall."},
+  {name:"Bulbourethral Gland",detail:"DEEP pouch (in males). Its duct pierces the perineal membrane to open in the superficial pouch alongside the spongy urethra. KEY EXAM POINT: body deep, duct superficial."},
+  {name:"Greater Vestibular Gland",detail:"Female homologue of bulbourethral gland. Located in the SUPERFICIAL perineal pouch (unlike bulbourethral in males which is deep). Opens into vestibule of vagina."},
+  {name:"Levator Ani",detail:"Forms the pelvic diaphragm. Medial wall of ischiorectal fossa (with external anal sphincter). Attaches superiorly to perineal body. Key pelvic floor support."},
+  {name:"Internal Pudendal Artery",detail:"Travels through pudendal canal. Terminates in deep pouch as: deep artery of penis/clitoris + dorsal artery of penis/clitoris. Inferior rectal and perineal arteries are earlier branches."},
+  {name:"External Anal Sphincter",detail:"Part of the medial wall of ischiorectal fossa. Attaches posteriorly to perineal body. Voluntary control via inferior rectal nerve (branch of pudendal)."},
+  {name:"Scarpa's Fascia",detail:"Membranous layer of superficial fascia of anterior abdominal wall. Continuous with Colles fascia of perineum. Path through which urine and pus spread upward from superficial pouch."},
+  {name:"Obturator Internus",detail:"Forms the lateral wall of the ischiorectal fossa. Its fascia splits to form the pudendal canal (Alcock's canal). Below its origin from the obturator fascia forms the lateral fossa wall."},
+];
+
+const QUESTIONS = [
+  {q:"Which of the following forms the lateral wall of the ischiorectal fossa?",opts:["External anal sphincter","Levator ani","Obturator internus and its fascia","Sacrotuberous ligament","Gluteus maximus"],ans:2,exp:"The lateral boundary is formed by the lower part of the obturator internus and the obturator fascia, which also contains the pudendal canal. The external anal sphincter and levator ani form the medial wall."},
+  {q:"How is the pudendal canal (Alcock's canal) structurally formed?",opts:["Splitting of the perineal membrane","Splitting of the fascia covering the obturator internus muscle","Invagination of Colles fascia","Thickening of the pelvic fascia","Separation of the levator ani fibers"],ans:1,exp:"The pudendal canal is a fascial tunnel formed by the splitting of the obturator fascia on the lateral wall of the ischiorectal fossa. It contains the internal pudendal vessels and pudendal nerve."},
+  {q:"An infection in the ischiorectal fossa spreads rapidly. What natural contents allow this space to distend easily?",opts:["Dense fibromuscular tissue","Pad of fat","Large venous plexuses","Deep transverse perineal muscle","Glandular secretions"],ans:1,exp:"The ischiorectal fossa is filled with a pad of fat that allows distension of the anal canal during defecation. This same fat-filled space makes it a common site for pus to collect (ischiorectal abscess)."},
+  {q:"Which nerve traverses the ischiorectal fossa from lateral to medial side?",opts:["Pudendal nerve","Dorsal nerve of the penis","Inferior rectal nerve","Perineal nerve","Posterior scrotal nerve"],ans:2,exp:"The inferior rectal nerve and vessels emerge from the pudendal canal laterally and cross the fossa to reach the medial side (external anal sphincter and perianal skin). The pudendal nerve itself stays within the canal."},
+  {q:"Which of the following is located in the DEEP perineal pouch?",opts:["Greater vestibular gland","Bulbourethral gland","Bulb of the penis","Ischiocavernosus muscle","Crus of clitoris"],ans:1,exp:"The bulbourethral gland (Cowper's gland) is specifically localized to the deep perineal pouch in males. Options C, D, and E are all contents of the superficial perineal pouch. The greater vestibular gland (A) is in the superficial pouch of females."},
+  {q:"Why does a ruptured urethra in the superficial perineal pouch cause urine to leak into the anterior abdominal wall?",opts:["The pouch lacks a roof","The perineal membrane is naturally fenestrated","The pouch is anteriorly open and continuous with the space deep to Scarpa's fascia","Colles fascia tears easily","The deep transverse perineal muscle pumps fluid upward"],ans:2,exp:"The superficial perineal pouch is open anteriorly, allowing fluid to travel deep to the membranous layer of superficial fascia of the abdominal wall (Scarpa's fascia). Posteriorly and laterally the pouch is closed by fascial attachments."},
+  {q:"What structure forms the FLOOR of the deep perineal pouch?",opts:["Pelvic fascia","Perineal membrane","Colles fascia","Scarpa's fascia","Levator ani"],ans:1,exp:"The perineal membrane serves as the floor of the deep pouch (and simultaneously the roof of the superficial pouch). The pelvic fascia is the roof of the deep pouch. Colles fascia is the floor of the superficial pouch."},
+  {q:"Which muscle in the deep perineal pouch is part of the urogenital diaphragm?",opts:["Bulbospongiosus","Ischiocavernosus","Superficial transverse perineal","External urethral sphincter","External anal sphincter"],ans:3,exp:"The deep pouch contains the external urethral sphincter and the deep transverse perineal muscle (forming the urogenital diaphragm). Bulbospongiosus, ischiocavernosus, and superficial transverse perineal are in the superficial pouch. External anal sphincter is in the anal triangle."},
+  {q:"In a male, which structure pierces the perineal membrane to exit the deep pouch inferiorly?",opts:["Bulbourethral gland body","Ducts of the bulbourethral gland","Deep transverse perineal muscle","Prostate gland","Pudendal nerve main trunk"],ans:1,exp:"While the bulbourethral gland body resides in the deep pouch, its ducts pierce the perineal membrane to enter the superficial pouch, where they open into the spongy urethra. This is a classic exam point."},
+  {q:"Where is the Greater Vestibular gland located in females?",opts:["Ischiorectal fossa","Deep perineal pouch","Superficial perineal pouch","Pelvic cavity","Pudendal canal"],ans:2,exp:"Unlike the male bulbourethral gland (which is in the DEEP pouch), the female greater vestibular gland (Bartholin's gland) is located in the SUPERFICIAL perineal pouch. This asymmetry is frequently tested."},
+  {q:"The perineal body serves as an attachment point for all of the following EXCEPT:",opts:["Bulbospongiosus","Ischiocavernosus","External anal sphincter","Levator ani","Superficial transverse perineal muscle"],ans:1,exp:"Ischiocavernosus covers the crura of the penis/clitoris laterally and does NOT attach to the midline perineal body. All other listed muscles (bulbospongiosus, external anal sphincter, levator ani, transverse perineal) converge on the perineal body."},
+  {q:"What defines the boundary dividing the urogenital and anal triangles of the perineum?",opts:["A line between the pubic symphysis and coccyx","The sacrotuberous ligaments","An imaginary line between the two ischial tuberosities","The pubic arch","The perineal membrane"],ans:2,exp:"The perineum is divided into anterior (urogenital) and posterior (anal) triangles by an imaginary transverse line connecting the two ischial tuberosities."},
+  {q:"If an ischiorectal abscess is left untreated, what is the most likely severe complication?",opts:["Rupture into the abdominal wall","Anal or cutaneous fistula","Prolapse of the uterus","Tearing of the perineal body","Paralysis of the deep transverse perineal muscle"],ans:1,exp:"An untreated ischiorectal abscess will erode through tissue and open into the anal canal or skin, creating an anal or cutaneous fistula. It requires immediate drainage via cruciate incision at the most fluctuant point. Abdominal wall spread is characteristic of superficial pouch injuries, not fossa abscesses."},
+  {q:"The dorsal nerve of the penis is a continuation/terminal branch of which nerve?",opts:["Inferior rectal nerve","Pudendal nerve","Posterior scrotal nerve","Perineal nerve","Obturator nerve"],ans:1,exp:"The pudendal nerve gives rise to the inferior rectal nerve, then the perineal nerve (which gives posterior scrotal branches), and continues as the dorsal nerve of the penis (or clitoris). It is the terminal branch of the pudendal nerve."},
+  {q:"The roof of the SUPERFICIAL perineal pouch is formed by the:",opts:["Colles fascia","Scarpa's fascia","Perineal membrane","Pelvic fascia","Levator ani"],ans:2,exp:"The perineal membrane separates the deep pouch (above) from the superficial pouch (below), thus forming the ROOF of the superficial pouch and the FLOOR of the deep pouch. Colles fascia is the floor of the superficial pouch."},
+  {q:"Which of the following correctly defines the perineum?",opts:["The upper part of the abdominal cavity","The lower part of the pelvic cavity overlying the pelvic outlet below the pelvic diaphragm","The space exclusively containing the anal canal","The fat pad superior to levator ani","The muscular ring around the urethra"],ans:1,exp:"The perineum is defined as the lower part of the pelvic cavity that overlies the pelvic outlet below the pelvic diaphragm (levator ani). It is bounded by the symphysis pubis anteriorly, coccyx posteriorly, and ischial tuberosities laterally."},
+  {q:"Which artery terminates by giving the deep and dorsal arteries of the penis/clitoris inside the deep perineal pouch?",opts:["External pudendal artery","Obturator artery","Internal pudendal artery","Inferior rectal artery","Perineal artery"],ans:2,exp:"The internal pudendal artery travels forward through the pudendal canal and into the deep perineal pouch, where it terminates as the deep artery and dorsal artery of the penis (or clitoris). The inferior rectal and perineal arteries are earlier branches."},
+  {q:"The posterior scrotal (or labial) nerves are direct branches of the:",opts:["Inferior rectal nerve","Dorsal nerve of penis","Perineal nerve","Obturator nerve","Pelvic splanchnic nerves"],ans:2,exp:"The perineal nerve is a branch of the pudendal nerve that gives rise to the posterior scrotal nerves (in males) or posterior labial nerves (in females). The dorsal nerve of the penis/clitoris is the other terminal branch of the pudendal nerve."},
+  {q:"Which structure is present in BOTH the superficial and deep perineal pouch of a male?",opts:["Urethra","Bulbourethral gland","Prostate","Ischiocavernosus","Superficial transverse perineal muscle"],ans:0,exp:"The urethra passes through both pouches: the membranous urethra lies in the deep pouch, while the spongy (anterior) urethra continues into the superficial pouch within the corpus spongiosum/bulb of penis. The bulbourethral gland body is only in the deep pouch."},
+  {q:"What is the anterior angle boundary of the diamond-shaped perineum?",opts:["Tip of coccyx","Ischial tuberosities","Symphysis pubis (lower border)","Pubic arch","Sacrotuberous ligament"],ans:2,exp:"The perineum is a diamond-shaped region with the symphysis pubis at the anterior angle, the coccyx at the posterior angle, and the ischial tuberosities at the lateral angles. The pubic arch forms the anterolateral borders."},
+  {q:"Why is the deep perineal pouch described as a 'completely closed space'?",opts:["Because Colles fascia wraps around it completely","Because the pelvic fascia (roof) and perineal membrane (floor) fuse anteriorly AND posteriorly","Because the levator ani completely seals it above","Because Scarpa's fascia closes it off","Because it contains no communicating ducts"],ans:1,exp:"The deep perineal pouch is closed because its roof (pelvic fascia) and floor (perineal membrane) fuse together BOTH anteriorly and posteriorly, sealing the space on all sides. This means injury here keeps fluid contained locally — unlike the superficial pouch which is open anteriorly."},
+  {q:"A male patient after straddle injury has scrotal and penile swelling with urine tracking onto his anterior abdominal wall, but NOT into his thighs. What explains the thigh-sparing?",opts:["Obturator fascia blocks the spread","Scarpa's fascia is attached to the fascia lata of the thigh, blocking inferior spread","The deep pouch contains the injury","The sacrotuberous ligament blocks lateral spread","The greater vestibular gland absorbs the fluid"],ans:1,exp:"Colles fascia (floor of superficial pouch) is attached laterally to the fascia lata of the thigh, preventing urine from spreading down into the thighs. Posteriorly, Colles fascia fuses with the perineal membrane, blocking posterior spread. The fluid is thus forced anteriorly and superiorly."},
+  {q:"During episiotomy, which structure is the surgeon specifically trying to protect from uncontrolled tearing?",opts:["Perineal membrane","Pudendal canal","Perineal body","External urethral sphincter","Ischiocavernosus"],ans:2,exp:"Episiotomy is performed to make a controlled incision and prevent uncontrolled tearing of the perineal body. Disruption of this fibromuscular mass damages the attachments of multiple pelvic floor muscles, potentially leading to organ prolapse."},
+  {q:"Which of the following correctly describes the medial wall of the ischiorectal fossa?",opts:["Lower part of obturator internus only","Levator ani and external anal sphincter","Pelvic fascia and Colles fascia","Gluteus maximus and sacrotuberous ligament","Deep transverse perineal muscle"],ans:1,exp:"The medial wall of the ischiorectal fossa is formed by the levator ani (pelvic diaphragm) above and the external anal sphincter below. The lateral wall is formed by the obturator internus and its fascia."},
+  {q:"In a female, the perineal body lies between which two structures?",opts:["Anal canal and bulb of penis","Anal canal and lower part of vagina","Urethra and vaginal vestibule","Vagina and pubic symphysis","Clitoris and anal canal"],ans:1,exp:"In females, the perineal body is located in the midline between the anal canal (posteriorly) and the lower part of the vagina (anteriorly). In males, it lies between the anal canal and the bulb of the penis."},
+];
+
+const FLASHCARDS = [
+  {q:"What type of space is the ischiorectal fossa and what does it contain?",a:"A wedge-shaped space on each side of the anal canal, filled with a pad of fat (allowing distension during defecation), the inferior rectal vessels and nerve, and communicating with the pudendal canal laterally."},
+  {q:"Name the medial and lateral walls of the ischiorectal fossa.",a:"Medial wall: Levator ani + External anal sphincter. Lateral wall: Lower part of obturator internus + Obturator fascia (which contains the pudendal canal)."},
+  {q:"How is the pudendal canal formed and what does it contain?",a:"Formed by the splitting of the obturator fascia (fascia covering obturator internus) on the lateral wall of the ischiorectal fossa. Contains: Internal pudendal vessels + Pudendal nerve."},
+  {q:"An ischiorectal abscess — what is the treatment and what happens if untreated?",a:"Treatment: Immediate drainage via cruciate incision at the most fluctuant point. If untreated: An anal or cutaneous fistula forms as pus erodes through tissue."},
+  {q:"What are the boundaries of the deep perineal pouch?",a:"Roof: Pelvic fascia. Floor: Perineal membrane. Anteriorly & posteriorly: Closed by fusion of roof and floor. It is a COMPLETELY CLOSED space."},
+  {q:"What are the boundaries of the superficial perineal pouch?",a:"Roof: Perineal membrane. Floor: Colles fascia (membranous layer of superficial pelvic fascia). OPEN anteriorly — continuous with the space deep to Scarpa's fascia on the abdominal wall."},
+  {q:"Where is the bulbourethral gland body? Where does its duct open?",a:"BODY: In the deep perineal pouch. DUCT: Pierces the perineal membrane to open in the superficial perineal pouch (into the spongy urethra). KEY EXAM POINT."},
+  {q:"Where is the greater vestibular gland in females?",a:"In the SUPERFICIAL perineal pouch (unlike the male bulbourethral gland, which is in the DEEP pouch). This asymmetry is frequently examined."},
+  {q:"Why does urethral rupture in the superficial pouch cause urine to spread to the anterior abdominal wall?",a:"Because the superficial pouch is open anteriorly and continuous with the space deep to Scarpa's fascia on the abdominal wall. The pouch is closed posteriorly (Colles fascia fused to perineal membrane) and laterally (attached to pubic arch and fascia lata)."},
+  {q:"Where is the perineal body in males vs females?",a:"Males: Between the anal canal and the bulb of the penis. Females: Between the anal canal and the lower part of the vagina. It is a fibromuscular mass in the midline."},
+  {q:"List the muscles that attach to the perineal body.",a:"(1) Levator ani — superiorly. (2) Transverse perineal muscles — laterally. (3) Bulbospongiosus — anteriorly. (4) External urethral sphincter — anteriorly. (5) External anal sphincter — posteriorly. (NOT ischiocavernosus)."},
+  {q:"What is the clinical significance of the perineal body?",a:"Provides crucial support to pelvic organs (especially in females). Damage during labour → prolapse of the uterus and other pelvic organs. Episiotomy prevents uncontrolled tearing of the perineal body."},
+  {q:"Define the perineum and its boundaries.",a:"The lower part of the pelvic cavity overlying the pelvic outlet below the pelvic diaphragm. Boundaries: Anterior = symphysis pubis; Posterior = tip of coccyx; Lateral = ischial tuberosities."},
+  {q:"How is the perineum divided into triangles?",a:"By an imaginary transverse line connecting the two ischial tuberosities: Anterior = Urogenital triangle; Posterior = Anal triangle."},
+  {q:"Where does the inferior rectal nerve travel and why is this important?",a:"It emerges from the pudendal canal on the lateral wall and CROSSES the ischiorectal fossa from lateral to medial (to reach the external anal sphincter). Important because it can be damaged in surgical dissection of the fossa."},
+  {q:"What is the terminal branching pattern of the internal pudendal artery?",a:"Travels in pudendal canal → enters deep perineal pouch → terminates as: (1) Deep artery of penis/clitoris + (2) Dorsal artery of penis/clitoris. Earlier branches: inferior rectal artery, perineal artery."},
+  {q:"What are the branches of the pudendal nerve in order?",a:"(1) Inferior rectal nerve — crosses fossa medially. (2) Perineal nerve → posterior scrotal/labial nerves. (3) Dorsal nerve of penis/clitoris — terminal branch."},
+  {q:"What is Scarpa's fascia and how is it clinically relevant to the perineum?",a:"Membranous (deep) layer of superficial fascia of the anterior abdominal wall. Continuous with Colles fascia of the perineum. Path through which urine or pus from the superficial pouch spreads superiorly onto the abdominal wall."},
+  {q:"Why does urine NOT spread into the thighs after superficial pouch urethral rupture?",a:"Because Colles fascia is attached laterally to the fascia lata of the thigh, preventing inferior spread. The fluid follows the path of least resistance anteriorly under Scarpa's fascia."},
+  {q:"What structure spans both pouches? How?",a:"The URETHRA. Membranous urethra lies in the deep pouch (within the external urethral sphincter); spongy/anterior urethra continues into the superficial pouch within the bulb and corpus spongiosum."},
+];
+
+const CASES = [
+  {
+    num:"CASE 01", title:"Perianal Pain & Fluctuant Swelling",
+    vignette:"A 45-year-old male presents with 3 days of worsening perianal pain, fever (38.8°C), and a visible fluctuant swelling lateral to the anal orifice. He reports the swelling is becoming rapidly larger. On examination there is erythema and induration in the right perianal region.",
+    questions:[
+      {q:"1. What anatomical space is involved in this infection?",a:"The ischiorectal fossa — a wedge-shaped fat-filled space lateral to the anal canal. The fat content allows easy distension and pus collection."},
+      {q:"2. How should this abscess be managed urgently?",a:"Immediate surgical drainage via a cruciate (cross-shaped) incision at the most fluctuant point. This is the standard treatment — 'once abscess, once drain.'"},
+      {q:"3. What serious complication arises if this is left untreated?",a:"An anal fistula (communication between anal canal and skin) or cutaneous fistula. The pus erodes through the wall of the anal canal or the perianal skin."},
+      {q:"4. Name the nerve and vessels that cross this space and could be at risk.",a:"The inferior rectal nerve and inferior rectal vessels traverse the ischiorectal fossa from lateral (pudendal canal) to medial (external anal sphincter/perianal skin)."},
+    ]
+  },
+  {
+    num:"CASE 02", title:"Straddle Injury — Urine Tracking Upward",
+    vignette:"A 30-year-old male motorcyclist sustains a perineal straddle injury when his bike stops suddenly. He presents with inability to void, blood at the urethral meatus, and progressive swelling of the scrotum, penis, and lower anterior abdominal wall. Notably, there is NO swelling in the thighs or anal region.",
+    questions:[
+      {q:"1. What anatomical pouch is injured and what is the mechanism of spread?",a:"The urethra is torn within the SUPERFICIAL perineal pouch. Urine extravasates and follows the path of least resistance: anteriorly into the space deep to Scarpa's fascia on the abdominal wall and inferiorly into the scrotum/penis."},
+      {q:"2. Why does urine NOT spread into the thighs?",a:"Colles fascia (floor of superficial pouch) is attached laterally to the fascia lata of the thigh, acting as a barrier to lateral/inferior spread."},
+      {q:"3. Why does urine NOT spread posteriorly into the anal triangle?",a:"Colles fascia fuses posteriorly with the perineal membrane, sealing off the posterior route. The superficial pouch is ONLY open anteriorly."},
+      {q:"4. What would happen if the injury were in the DEEP pouch instead?",a:"Fluid would be contained locally because the deep perineal pouch is a completely closed space (pelvic fascia and perineal membrane fuse anteriorly and posteriorly). No upward spread would occur."},
+    ]
+  },
+  {
+    num:"CASE 03", title:"Surgical Dissection — Pudendal Canal",
+    vignette:"A colorectal surgeon is performing lateral dissection within the right ischiorectal fossa during an anorectal procedure. She notices a fascial tunnel along the lateral wall of the fossa containing important neurovascular structures.",
+    questions:[
+      {q:"1. What is this fascial tunnel called and how is it formed?",a:"The pudendal canal (Alcock's canal). It is formed by the splitting of the obturator fascia (the fascia covering the obturator internus muscle) on the lateral wall of the ischiorectal fossa."},
+      {q:"2. What are the contents of this canal?",a:"The internal pudendal vessels (artery and vein) and the pudendal nerve (S2, S3, S4)."},
+      {q:"3. If the pudendal nerve is damaged here, what sensory and motor deficits result?",a:"Loss of sensation to the perineum (including scrotum/labia, penis/clitoris). Motor loss to the external anal sphincter (via inferior rectal nerve) and external urethral sphincter. Sexual dysfunction (erection/ejaculation impaired)."},
+      {q:"4. Name the nerve that exits this canal and crosses the fossa medially.",a:"The inferior rectal nerve, which exits the pudendal canal and crosses the ischiorectal fossa from lateral to medial to innervate the external anal sphincter and perianal skin."},
+    ]
+  },
+  {
+    num:"CASE 04", title:"Perineal Tear During Childbirth — Organ Prolapse",
+    vignette:"A 28-year-old primigravida undergoes a prolonged second stage of labour. Despite the midwife's efforts, she sustains a severe perineal tear extending deeply into the midline. Two years later she presents with a feeling of 'something coming down' per vaginum, worsened by straining, and stress incontinence.",
+    questions:[
+      {q:"1. Which structure was critically damaged during the tear?",a:"The perineal body — the fibromuscular mass located in the midline between the anal canal and lower vagina in females."},
+      {q:"2. Why does damage to this structure cause pelvic organ prolapse?",a:"The perineal body is the central anchor for multiple pelvic floor muscles: levator ani (superiorly), transverse perineal muscles (laterally), bulbospongiosus and external urethral sphincter (anteriorly), and external anal sphincter (posteriorly). Its destruction removes the central pillar of pelvic floor support."},
+      {q:"3. What surgical procedure is performed to prevent this complication?",a:"Episiotomy — a controlled incision of the perineum made during delivery to prevent uncontrolled tearing of the perineal body."},
+      {q:"4. Which muscles do NOT attach to the perineal body?",a:"Ischiocavernosus muscle (it covers the crus of the clitoris/penis laterally and does not converge on the midline perineal body)."},
+    ]
+  },
+  {
+    num:"CASE 05", title:"Identifying a Gland in the Urogenital Triangle",
+    vignette:"During a cadaveric dissection, a student identifies a small paired gland located immediately adjacent to the membranous urethra, above the perineal membrane in a male pelvis. He traces its duct, which pierces the perineal membrane before opening into a more superficial structure.",
+    questions:[
+      {q:"1. What gland has been identified?",a:"The bulbourethral gland (Cowper's gland). It is a small paired gland in the deep perineal pouch of males."},
+      {q:"2. In which pouch does the gland body reside?",a:"In the DEEP perineal pouch (above the perineal membrane, alongside the membranous urethra, deep transverse perineal muscle, and external urethral sphincter)."},
+      {q:"3. Where does the duct open and how does it get there?",a:"The duct pierces the perineal membrane to open in the SUPERFICIAL perineal pouch, where it drains into the spongy urethra. This is the KEY exam point: body = deep, duct = pierces membrane, opens = superficial."},
+      {q:"4. What is the female homologue and where is it located?",a:"The greater vestibular gland (Bartholin's gland). It is located in the SUPERFICIAL perineal pouch in females (different from the male bulbourethral gland which is in the deep pouch)."},
+    ]
+  },
+  {
+    num:"CASE 06", title:"Integrated — The Straddle Injury (Long Scenario)",
+    vignette:"A 30-year-old male sustains a straddle injury resulting in a urethral tear. Physical examination shows massive swelling extending into the scrotum, penis, and upward into the anterior abdominal wall, but NOT into the thighs or anal triangle. There is blood at the urethral meatus and the patient cannot void.",
+    questions:[
+      {q:"Step 1: Identify the injured structure and anatomical pouch.",a:"Urethral rupture within the SUPERFICIAL perineal pouch (below the perineal membrane, within the space bounded by Colles fascia inferiorly and the perineal membrane superiorly)."},
+      {q:"Step 2: Explain the distribution of swelling step-by-step.",a:"Urine extravasates into the superficial pouch → posteriorly blocked (Colles fascia fused with perineal membrane) → laterally blocked (Colles attached to fascia lata) → fluid forced anteriorly → tracks deep to Scarpa's fascia onto abdominal wall → also fills loose areolar tissue of scrotum and penis."},
+      {q:"Step 3: What fascial planes set the limits of spread?",a:"(1) Posterior limit: Fusion of Colles fascia with the posterior edge of the perineal membrane. (2) Lateral limit: Colles fascia attached to fascia lata of thigh. (3) Anterior pathway: Open — continuous with space deep to Scarpa's fascia."},
+      {q:"Step 4: What is the broader anatomical principle?",a:"Fascial planes dictate the path of least resistance for fluid spread in the body. Understanding fascial attachments allows prediction of exactly where abscesses, urine, blood, or pus will and will not spread."},
+    ]
+  },
+];
+
+const MNEMONICS = [
+  {
+    word:"FLOPD",
+    title:"Contents of the Deep Perineal Pouch",
+    items:[
+      {l:"F",t:"Fascia — Pelvic fascia (roof)"},
+      {l:"L",t:"Levator ani (forms the pelvic diaphragm above)"},
+      {l:"O",t:"Orifice — Membranous urethra passes through"},
+      {l:"P",t:"Pouch closed: fused anteriorly AND posteriorly"},
+      {l:"D",t:"Deep transverse perineal + external urethral sphincter + Bulbourethral gland body"},
+    ],
+    sub:"Remember: the deep pouch is CLOSED (no escape anteriorly — unlike superficial)"
+  },
+  {
+    word:"BISCAS",
+    title:"Superficial Perineal Pouch Contents",
+    items:[
+      {l:"B",t:"Bulb of penis (corpus spongiosum) / vestibular bulb"},
+      {l:"I",t:"Ischiocavernosus covers Crura of penis/clitoris"},
+      {l:"S",t:"Superficial transverse perineal muscle"},
+      {l:"C",t:"Colles fascia = floor"},
+      {l:"A",t:"Anterior opening — Open to abdominal wall!"},
+      {l:"S",t:"Spongy urethra + Greater vestibular gland (female)"},
+    ],
+    sub:"Open Anteriorly = Anti — remember BISCAS is OPEN for business anteriorly"
+  },
+  {
+    word:"LAIR",
+    title:"Ischiorectal Fossa Medial Wall",
+    items:[
+      {l:"L",t:"Levator ani (upper medial wall)"},
+      {l:"A",t:"Anal canal runs through it"},
+      {l:"I",t:"Inferior rectal nerve/vessels cross LATERALLY to MEDIALLY"},
+      {l:"R",t:"Rectal sphincter (external anal sphincter) — lower medial wall"},
+    ],
+    sub:"The LAIR is where abscesses hide — drain immediately with cruciate incision!"
+  },
+  {
+    word:"PERINEAL",
+    title:"Perineal Body Muscle Attachments",
+    items:[
+      {l:"P",t:"Posterior: External anal sphincter"},
+      {l:"E",t:"External urethral sphincter (anterior)"},
+      {l:"R",t:"Right and left Transverse perineal muscles (superficial + deep)"},
+      {l:"I",t:"In the midline — between anal canal and vagina/bulb of penis"},
+      {l:"N",t:"NOT ischiocavernosus (it stays lateral)"},
+      {l:"E",t:"Essential support for pelvic organs"},
+      {l:"A",t:"Anterior: Bulbospongiosus"},
+      {l:"L",t:"Levator ani — from above (superior attachment)"},
+    ],
+    sub:"Damage during labour = prolapse → Episiotomy protects the PERINEAL body"
+  },
+  {
+    word:"BUBBLES",
+    title:"Bulbourethral Gland — The Key Rule",
+    items:[
+      {l:"B",t:"Body is in the DEEP pouch"},
+      {l:"U",t:"Under the perineal membrane (deep)"},
+      {l:"B",t:"But the duct CROSSES the membrane"},
+      {l:"B",t:"Below the membrane = SUPERFICIAL pouch"},
+      {l:"L",t:"Lands in the spongy urethra"},
+      {l:"E",t:"Entirely opposite to Greater Vestibular (female) which is SUPERFICIAL"},
+      {l:"S",t:"So: Deep body, Superficial duct opening — always examinable!"},
+    ],
+    sub:"Female = Greater Vestibular = SUPERFICIAL. Male = Bulbourethral BODY = DEEP."
+  },
+];
+
+const VIVA = [
+  {q:"Define the perineum and give its boundaries.",a:"The perineum is the lower part of the pelvic cavity overlying the pelvic outlet, situated below the pelvic diaphragm (levator ani). It is diamond-shaped with: Anterior angle = symphysis pubis (lower border); Posterior angle = tip of coccyx; Lateral angles = ischial tuberosities. An imaginary transverse line between the ischial tuberosities divides it into the anterior urogenital triangle and the posterior anal triangle."},
+  {q:"Describe the anatomical boundaries of the ischiorectal fossa.",a:"The ischiorectal fossa is a wedge-shaped, fat-filled space on each side of the anal canal. Medial wall: levator ani (above) and external anal sphincter (below). Lateral wall: lower part of obturator internus and obturator fascia (which forms the pudendal canal). Roof (apex): origin of levator ani from the obturator fascia. Base (floor): skin and subcutaneous tissue of the perianal region. Contents: pad of fat, inferior rectal vessels and nerve, and the pudendal canal laterally."},
+  {q:"How is the pudendal canal formed and what does it contain?",a:"The pudendal canal (Alcock's canal) is formed by the splitting of the fascia covering the obturator internus muscle on the lateral wall of the ischiorectal fossa. It runs forward in the lateral wall. Contents: the internal pudendal artery and vein, and the pudendal nerve (S2, S3, S4). The inferior rectal nerve emerges from the canal and crosses the fossa medially to reach the external anal sphincter and perianal skin."},
+  {q:"Compare and contrast the deep and superficial perineal pouches.",a:"Deep perineal pouch: Roof = pelvic fascia; Floor = perineal membrane; completely CLOSED (roof and floor fuse anteriorly and posteriorly). Contains: deep transverse perineal muscle, external urethral sphincter, membranous urethra, internal pudendal vessels, and the bulbourethral gland body (in males). Superficial perineal pouch: Roof = perineal membrane; Floor = Colles fascia; OPEN anteriorly, continuous with the space deep to Scarpa's fascia on the abdominal wall. Contains: bulb of penis/vestibular bulb, crura of penis/clitoris, ischiocavernosus and bulbospongiosus muscles, superficial transverse perineal muscles, greater vestibular gland (females), spongy urethra."},
+  {q:"Explain the anatomical basis for urine spreading to the anterior abdominal wall after urethral injury.",a:"When the urethra is torn within the superficial perineal pouch (e.g., straddle injury), urine extravasates into the pouch. The posterior spread is blocked because Colles fascia fuses with the perineal membrane posteriorly. Lateral spread is blocked because Colles fascia is attached to the fascia lata of the thigh. The only open direction is anteriorly, where the superficial pouch is continuous with the space deep to Scarpa's fascia on the anterior abdominal wall. Urine therefore tracks upward onto the abdominal wall and also fills the loose tissue of the scrotum and penis. It does NOT spread into the thighs or anal triangle."},
+  {q:"Describe the perineal body — its position, attachments, and clinical significance.",a:"The perineal body is a fibromuscular mass at the midline of the perineum. In males: between the anal canal and bulb of penis. In females: between the anal canal and the lower vagina. Muscle attachments: Levator ani (superiorly), transverse perineal muscles (laterally), bulbospongiosus and external urethral sphincter (anteriorly), external anal sphincter (posteriorly). NOTE: ischiocavernosus does NOT attach to it. Clinical significance: It is the central pillar of the pelvic floor. Damage during labour disrupts these muscle attachments, removing support from pelvic organs and causing prolapse of the uterus, bladder, or rectum. Episiotomy is performed to make a controlled incision and prevent uncontrolled laceration of the perineal body."},
+  {q:"Where is the bulbourethral gland and why is its location a common exam question?",a:"The bulbourethral gland (Cowper's gland) body is located in the DEEP perineal pouch, embedded within the external urethral sphincter/deep transverse perineal muscle, adjacent to the membranous urethra. However, its duct pierces the perineal membrane (floor of the deep pouch/roof of the superficial pouch) to open in the SUPERFICIAL perineal pouch, draining into the spongy urethra. This split location — body in deep, duct crosses into superficial — is a classic exam trap. In contrast, the female greater vestibular gland is entirely in the superficial pouch."},
+  {q:"What is the consequence of an untreated ischiorectal abscess?",a:"An ischiorectal abscess is a collection of pus in the fat of the ischiorectal fossa, usually from spread of infection from the anal canal crypts. If left untreated, the pus erodes through surrounding tissue, creating a fistula — either an anal fistula (between the abscess cavity and the anal canal lumen) or a cutaneous fistula (between the abscess and the skin). Treatment is immediate surgical drainage via a cruciate incision at the point of maximum fluctuation. The rule is: 'Once abscess, once drain.'"},
+  {q:"Describe the branching pattern of the pudendal nerve.",a:"The pudendal nerve (S2, S3, S4) exits the pelvis through the greater sciatic foramen, hooks around the ischial spine and sacrospinous ligament, re-enters through the lesser sciatic foramen, and travels in the pudendal canal (Alcock's canal). Within the canal it gives: (1) Inferior rectal nerve — crosses the ischiorectal fossa from lateral to medial to supply the external anal sphincter and perianal skin. (2) Perineal nerve — enters the superficial pouch, gives posterior scrotal/labial nerves and deep branches to superficial pouch muscles. (3) Dorsal nerve of penis/clitoris — terminal branch, supplies the dorsum of the penis/clitoris."},
+  {q:"Why is the ischiocavernosus not attached to the perineal body?",a:"The ischiocavernosus muscle covers and compresses the crus of the penis (or clitoris), which is attached laterally to the ischiopubic ramus. Its action is to maintain erection by impeding venous outflow from the crus. It originates from the ischial tuberosity and ischiopubic ramus and inserts into the crus — a lateral structure. The perineal body is a midline structure, and ischiocavernosus never converges on the midline. This is an important negative attachment to remember (all other perineal muscles attach centrally)."},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  qIndex: 0,
+  answered: false,
+  score: 0,
+  streak: 0,
+  correct: 0,
+  quizDone: false,
+  answeredQs: new Array(QUESTIONS.length).fill(null),
+};
+
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('kme_perineum_v1') || '{}');
+    if(s.score !== undefined) Object.assign(state, s);
+  }catch(e){}
+}
+function saveState(){
+  localStorage.setItem('kme_perineum_v1', JSON.stringify(state));
+}
+loadState();
+
+// ============================================================
+// TABS
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    localStorage.setItem('kme_perineum_tab', btn.dataset.tab);
+  });
+});
+// restore last tab
+const lastTab = localStorage.getItem('kme_perineum_tab');
+if(lastTab){
+  const btn = document.querySelector(`[data-tab="${lastTab}"]`);
+  if(btn) btn.click();
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+const searchIndex = [];
+STRUCTURES.forEach(s => searchIndex.push({tag:'Structure', text: s.name + ' — ' + s.detail}));
+QUESTIONS.forEach((q,i) => searchIndex.push({tag:'Quiz Q'+(i+1), text: q.q + ' ' + q.exp}));
+FLASHCARDS.forEach((f,i) => searchIndex.push({tag:'Flashcard '+(i+1), text: f.q + ' ' + f.a}));
+VIVA.forEach((v,i) => searchIndex.push({tag:'Viva Q'+(i+1), text: v.q + ' ' + v.a}));
+MNEMONICS.forEach(m => searchIndex.push({tag:'Mnemonic', text: m.word + ' ' + m.title + ' ' + m.items.map(x=>x.t).join(' ')}));
+
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if(q.length < 2){searchResults.style.display='none';return;}
+  const hits = searchIndex.filter(item => item.text.toLowerCase().includes(q)).slice(0,8);
+  if(!hits.length){searchResults.style.display='none';return;}
+  searchResults.innerHTML = hits.map(h => {
+    const idx = h.text.toLowerCase().indexOf(q);
+    const snippet = h.text.substring(Math.max(0,idx-30), idx+80) + '…';
+    return `<div class="search-item"><div class="search-item-tag">${h.tag}</div><div class="search-item-text">${snippet}</div></div>`;
+  }).join('');
+  searchResults.style.display='block';
+});
+document.addEventListener('click', e => { if(!searchInput.contains(e.target)) searchResults.style.display='none'; });
+
+// ============================================================
+// OVERVIEW — STRUCTURE GRID
+// ============================================================
+const sg = document.getElementById('structureGrid');
+STRUCTURES.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'structure-item';
+  div.innerHTML = `<h4>${s.name}</h4><p>${s.detail}</p>`;
+  div.addEventListener('click', () => {
+    div.classList.toggle('open');
+  });
+  sg.appendChild(div);
+});
+
+// ============================================================
+// QUIZ
+// ============================================================
+function updateHeader(){
+  document.getElementById('hdr-score').textContent = state.score;
+  document.getElementById('hdr-streak').textContent = state.streak;
+  const pct = Math.round((state.answeredQs.filter(x=>x!==null).length/QUESTIONS.length)*100);
+  document.getElementById('hdr-progress').textContent = pct+'%';
+  document.getElementById('q-score').textContent = state.score;
+  document.getElementById('q-streak').textContent = state.streak;
+  document.getElementById('q-correct').textContent = state.correct;
+}
+
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  if(state.quizDone){
+    const pct = Math.round(state.correct/QUESTIONS.length*100);
+    container.innerHTML = `
+      <div class="score-card">
+        <div class="score-big">${state.correct}/${QUESTIONS.length}</div>
+        <div class="score-label">${pct}% Correct · ${state.score} points · 🔥 Best streak included</div>
+        <div style="font-size:22px;margin:12px 0">${pct>=80?'🏆 Excellent! Ready for the exam!':pct>=60?'💪 Good work! Review the mistakes.':'📚 Keep studying — you\'ve got this!'}</div>
+        <button class="btn btn-primary" onclick="restartQuiz()">🔁 Restart Quiz</button>
+      </div>`;
+    return;
+  }
+  const q = QUESTIONS[state.qIndex];
+  const letters = ['A','B','C','D','E'];
+  const pct = Math.round((state.qIndex/QUESTIONS.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = `Question ${state.qIndex+1} of ${QUESTIONS.length}`;
+  document.getElementById('progressPct').textContent = pct+'%';
+
+  container.innerHTML = `
+    <div class="q-card">
+      <div class="q-number">QUESTION ${state.qIndex+1} / ${QUESTIONS.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="options">
+        ${q.opts.map((opt,i) => `
+          <button class="opt-btn" onclick="selectAnswer(${i})" id="opt-${i}">
+            <span class="opt-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </button>`).join('')}
+      </div>
+      <div class="explanation" id="explanation">
+        <strong>✅ Explanation:</strong><br>${q.exp}
+      </div>
+      <div class="quiz-controls">
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">Score: <strong style="color:var(--accent)">${state.score}</strong> &nbsp;|&nbsp; 🔥 ${state.streak}</div>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+      </div>
+    </div>`;
+}
+
+function selectAnswer(idx){
+  if(state.answered) return;
+  state.answered = true;
+  const q = QUESTIONS[state.qIndex];
+  const opts = document.querySelectorAll('.opt-btn');
+  opts.forEach(o => o.disabled = true);
+  if(idx === q.ans){
+    opts[idx].classList.add('correct');
+    state.score += 10 + state.streak;
+    state.streak++;
+    state.correct++;
+    state.answeredQs[state.qIndex] = true;
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    state.streak = 0;
+    state.answeredQs[state.qIndex] = false;
+  }
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('nextBtn').style.display='inline-block';
+  updateHeader();
+  saveState();
+}
+
+function nextQuestion(){
+  state.qIndex++;
+  state.answered = false;
+  if(state.qIndex >= QUESTIONS.length){
+    state.quizDone = true;
+    saveState();
+  }
+  renderQuiz();
+}
+
+function restartQuiz(){
+  state.qIndex = 0;
+  state.answered = false;
+  state.score = 0;
+  state.streak = 0;
+  state.correct = 0;
+  state.quizDone = false;
+  state.answeredQs = new Array(QUESTIONS.length).fill(null);
+  saveState();
+  updateHeader();
+  renderQuiz();
+}
+renderQuiz();
+updateHeader();
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+function renderFlashcards(){
+  const grid = document.getElementById('fcGrid');
+  grid.innerHTML = FLASHCARDS.map((f,i) => `
+    <div class="fc" id="fc-${i}" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front">
+          <div class="fc-tag">Q · CARD ${i+1} OF ${FLASHCARDS.length}</div>
+          <div class="fc-q">${f.q}</div>
+          <div class="fc-hint">tap to flip ↺</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-tag">A · CARD ${i+1}</div>
+          <div class="fc-a">${f.a}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function resetFlashcards(){
+  document.querySelectorAll('.fc').forEach(fc => fc.classList.remove('flipped'));
+}
+renderFlashcards();
+
+// ============================================================
+// CLINICAL CASES
+// ============================================================
+const cc = document.getElementById('casesContainer');
+CASES.forEach((c,ci) => {
+  const card = document.createElement('div');
+  card.className = 'case-card';
+  let qsHtml = c.questions.map((cq,qi) => `
+    <div class="case-q">${cq.q}</div>
+    <button class="reveal-btn" onclick="revealCase(${ci},${qi})">Reveal Answer</button>
+    <div class="case-answer" id="ca-${ci}-${qi}">
+      <div>${cq.a}</div>
+    </div>`).join('');
+  card.innerHTML = `
+    <div class="case-header">
+      <span class="case-num">${c.num}</span>
+      <span class="case-title">${c.title}</span>
+    </div>
+    <div class="vignette">${c.vignette}</div>
+    ${qsHtml}`;
+  cc.appendChild(card);
+});
+function revealCase(ci, qi){
+  const el = document.getElementById(`ca-${ci}-${qi}`);
+  el.classList.toggle('show');
+}
+
+// ============================================================
+// MNEMONICS
+// ============================================================
+const mc = document.getElementById('mnemContainer');
+MNEMONICS.forEach(m => {
+  const div = document.createElement('div');
+  div.className = 'mnem-card';
+  div.innerHTML = `
+    <div class="mnem-word">${m.word}</div>
+    <div style="font-family:var(--font-head);font-size:14px;color:var(--muted);margin-bottom:12px">${m.title}</div>
+    <ul class="mnem-list">
+      ${m.items.map(it => `<li><span class="mnem-letter">${it.l}</span><div><div>${it.t}</div></div></li>`).join('')}
+    </ul>
+    <div style="margin-top:12px;font-size:12px;background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.2);border-radius:6px;padding:8px 12px;color:var(--accent3)">💡 ${m.sub}</div>`;
+  mc.appendChild(div);
+});
+
+// ============================================================
+// VIVA
+// ============================================================
+const vc = document.getElementById('vivaContainer');
+VIVA.forEach((v,i) => {
+  const div = document.createElement('div');
+  div.className = 'viva-item';
+  div.innerHTML = `
+    <div class="viva-q" onclick="toggleViva(${i})">
+      <span>Q${i+1}: ${v.q}</span>
+      <span class="viva-chevron">▾</span>
+    </div>
+    <div class="viva-a" id="viva-${i}">
+      <div class="viva-a-inner">${v.a}</div>
+    </div>`;
+  vc.appendChild(div);
+});
+function toggleViva(i){
+  const item = document.querySelectorAll('.viva-item')[i];
+  item.classList.toggle('open');
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

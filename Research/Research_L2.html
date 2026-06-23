@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>KME · Case-Control Studies</title>
 
 <!-- Only external resources used: Google Fonts + FontAwesome icons. Everything else runs fully offline. -->
@@ -355,6 +355,13 @@ table.kme-table tr:last-child td{border-bottom:none;}
   .kme-section-head h2{font-size:22px;}
 }
 </style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 </head>
 <body>
 
@@ -905,6 +912,13 @@ table.kme-table tr:last-child td{border-bottom:none;}
   updateScore();
 
 })();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../service-worker.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>

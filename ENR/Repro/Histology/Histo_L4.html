@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Female Genital Histology — Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07091a;
+  --bg2: #0d1130;
+  --bg3: #111840;
+  --card: rgba(255,255,255,0.04);
+  --card-hover: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.08);
+  --gold: #d4a843;
+  --gold2: #f0c96a;
+  --teal: #2dd4c8;
+  --rose: #f472b6;
+  --violet: #a78bfa;
+  --sky: #38bdf8;
+  --text: #e8eaf6;
+  --muted: #8892b0;
+  --danger: #f87171;
+  --success: #4ade80;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Animated Background ── */
+.bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bg-canvas::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 10% 20%, rgba(45,212,200,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 800px at 90% 70%, rgba(212,168,67,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 50% 100%, rgba(167,139,250,0.04) 0%, transparent 70%);
+}
+.cell {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,212,200,0.12) 0%, transparent 70%);
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  0% { transform: translateY(110vh) scale(0.5) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-20vh) scale(1.2) rotate(180deg); opacity: 0; }
+}
+
+/* ── Layout ── */
+.app { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+
+/* ── Header ── */
+header {
+  text-align: center; padding: 3rem 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.header-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(45,212,200,0.2));
+  border: 1px solid rgba(212,168,67,0.3);
+  border-radius: 50px; padding: 0.3rem 1.2rem;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--gold2); text-transform: uppercase; margin-bottom: 1rem;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700; line-height: 1.1;
+  background: linear-gradient(135deg, var(--gold2), var(--teal) 50%, var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+header p { color: var(--muted); font-size: 1rem; }
+
+/* ── Stats Bar ── */
+.stats-bar {
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 2rem;
+}
+.stat-chip {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 50px; padding: 0.5rem 1.2rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; font-weight: 600;
+  transition: all 0.3s;
+}
+.stat-chip:hover { background: var(--card-hover); border-color: var(--gold); }
+.stat-chip .label { color: var(--muted); font-weight: 400; }
+.stat-chip .val { color: var(--gold2); }
+
+/* ── Navigation Tabs ── */
+.nav-tabs {
+  display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 2.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 50px; padding: 0.4rem;
+}
+.tab-btn {
+  padding: 0.6rem 1.2rem; border: none; cursor: pointer;
+  border-radius: 50px; font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--muted); background: transparent;
+  transition: all 0.25s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.tab-btn.active {
+  color: var(--bg); font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  box-shadow: 0 4px 20px rgba(212,168,67,0.4);
+}
+
+/* ── Panels ── */
+.panel { display: none; animation: fadeIn 0.4s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Cards ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem;
+  transition: all 0.3s;
+}
+.card:hover { background: var(--card-hover); border-color: rgba(212,168,67,0.2); transform: translateY(-2px); }
+
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
+.cards-grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.2rem; }
+
+/* ── Section Headings ── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--gold2); margin-bottom: 0.3rem;
+}
+.section-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+/* ── Tags ── */
+.tag {
+  display: inline-block; padding: 0.2rem 0.7rem;
+  border-radius: 50px; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.tag-gold { background: rgba(212,168,67,0.15); color: var(--gold2); border: 1px solid rgba(212,168,67,0.3); }
+.tag-teal { background: rgba(45,212,200,0.15); color: var(--teal); border: 1px solid rgba(45,212,200,0.3); }
+.tag-rose { background: rgba(244,114,182,0.15); color: var(--rose); border: 1px solid rgba(244,114,182,0.3); }
+.tag-violet { background: rgba(167,139,250,0.15); color: var(--violet); border: 1px solid rgba(167,139,250,0.3); }
+.tag-sky { background: rgba(56,189,248,0.15); color: var(--sky); border: 1px solid rgba(56,189,248,0.3); }
+
+/* ── Overview Panel ── */
+.overview-hero {
+  background: linear-gradient(135deg, rgba(45,212,200,0.08), rgba(212,168,67,0.06));
+  border: 1px solid rgba(45,212,200,0.2);
+  border-radius: var(--radius); padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative; overflow: hidden;
+}
+.overview-hero::before {
+  content: '🔬';
+  position: absolute; right: 1.5rem; top: 50%;
+  transform: translateY(-50%); font-size: 5rem; opacity: 0.15;
+}
+.overview-hero h2 {
+  font-family: var(--font-display); font-size: 1.5rem; color: var(--teal);
+  margin-bottom: 0.5rem;
+}
+.overview-hero p { color: var(--muted); line-height: 1.7; max-width: 70%; }
+
+.topic-card { position: relative; overflow: hidden; }
+.topic-card .icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+.topic-card h3 {
+  font-family: var(--font-display); font-size: 1.2rem;
+  color: var(--text); margin-bottom: 0.5rem;
+}
+.topic-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1rem; }
+.topic-card .accent-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.key-fact {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(212,168,67,0.06); border: 1px solid rgba(212,168,67,0.15);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-sm); margin-bottom: 0.75rem;
+  font-size: 0.9rem; line-height: 1.6;
+}
+.key-fact .kf-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+.exam-alert {
+  background: rgba(244,114,182,0.08); border: 1px solid rgba(244,114,182,0.25);
+  border-left: 3px solid var(--rose);
+  border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+  margin-bottom: 0.75rem; font-size: 0.9rem; line-height: 1.6;
+  color: #fce7f3;
+}
+.exam-alert strong { color: var(--rose); }
+
+/* ── Cycle Timeline ── */
+.cycle-timeline {
+  display: flex; gap: 0; margin: 1.5rem 0;
+  border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cycle-phase {
+  flex: 1; padding: 1.2rem 0.8rem; text-align: center;
+  position: relative; cursor: default;
+  transition: all 0.3s;
+}
+.cycle-phase:hover { filter: brightness(1.2); transform: scaleY(1.02); }
+.cycle-phase h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; }
+.cycle-phase p { font-size: 0.72rem; opacity: 0.8; line-height: 1.4; }
+.phase-menstrual { background: linear-gradient(180deg, rgba(248,113,113,0.3), rgba(248,113,113,0.1)); }
+.phase-proliferative { background: linear-gradient(180deg, rgba(56,189,248,0.3), rgba(56,189,248,0.1)); }
+.phase-secretory { background: linear-gradient(180deg, rgba(74,222,128,0.3), rgba(74,222,128,0.1)); }
+
+/* ── Structures Grid ── */
+.structure-item {
+  cursor: pointer; transition: all 0.3s;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1rem;
+  text-align: center;
+}
+.structure-item:hover { border-color: var(--teal); background: rgba(45,212,200,0.07); }
+.structure-item.active { border-color: var(--gold); background: rgba(212,168,67,0.08); }
+.structure-item .s-icon { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
+.structure-item h4 { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.structure-detail {
+  margin-top: 1.2rem; padding: 1.2rem;
+  background: rgba(212,168,67,0.05); border: 1px solid rgba(212,168,67,0.2);
+  border-radius: var(--radius-sm); display: none;
+  animation: fadeIn 0.3s ease;
+}
+.structure-detail.show { display: block; }
+.structure-detail h4 { color: var(--gold2); margin-bottom: 0.5rem; font-family: var(--font-display); font-size: 1.1rem; }
+.structure-detail p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+/* ── Quiz Panel ── */
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+}
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.05); border-radius: 50px;
+  height: 8px; flex: 1; min-width: 150px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 50px;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.quiz-stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+.quiz-stat { text-align: center; }
+.quiz-stat .qs-val { font-size: 1.4rem; font-weight: 700; color: var(--gold2); font-family: var(--font-display); }
+.quiz-stat .qs-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.question-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.question-card .q-num {
+  font-size: 0.75rem; font-weight: 700; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.7rem;
+}
+.question-card .q-text {
+  font-size: 1.05rem; line-height: 1.65; color: var(--text);
+  margin-bottom: 1.5rem; font-family: var(--font-display); font-size: 1.1rem;
+}
+
+.option-btn {
+  width: 100%; text-align: left; padding: 0.9rem 1.2rem;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font-body); font-size: 0.9rem;
+  cursor: pointer; margin-bottom: 0.6rem;
+  transition: all 0.2s; display: flex; align-items: center; gap: 0.8rem;
+}
+.option-btn:hover:not(:disabled) { background: rgba(45,212,200,0.08); border-color: var(--teal); }
+.option-btn .opt-letter {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.option-btn.correct { background: rgba(74,222,128,0.12); border-color: var(--success); }
+.option-btn.correct .opt-letter { background: var(--success); border-color: var(--success); color: #000; }
+.option-btn.wrong { background: rgba(248,113,113,0.12); border-color: var(--danger); }
+.option-btn.wrong .opt-letter { background: var(--danger); border-color: var(--danger); color: #fff; }
+.option-btn:disabled { cursor: default; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.01)} }
+.shake { animation: shake 0.4s ease; }
+.pulse-ok { animation: pulse 0.4s ease; }
+
+.explanation {
+  margin-top: 1rem; padding: 1rem 1.2rem;
+  background: rgba(45,212,200,0.06); border: 1px solid rgba(45,212,200,0.2);
+  border-radius: var(--radius-sm); font-size: 0.88rem;
+  line-height: 1.65; color: #cdd9e5; display: none;
+}
+.explanation.show { display: block; animation: fadeIn 0.3s ease; }
+.explanation .correct-tag { color: var(--success); font-weight: 700; }
+.explanation .wrong-tags { color: var(--danger); }
+
+.quiz-nav { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+.btn {
+  padding: 0.7rem 1.8rem; border: none; border-radius: 50px;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.25s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--bg); box-shadow: 0 4px 15px rgba(212,168,67,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,168,67,0.4); }
+.btn-ghost {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+}
+.btn-ghost:hover { background: var(--card-hover); }
+.btn-teal {
+  background: linear-gradient(135deg, var(--teal), #0db9af);
+  color: var(--bg); box-shadow: 0 4px 15px rgba(45,212,200,0.3);
+}
+.btn-teal:hover { transform: translateY(-2px); }
+
+.score-screen {
+  text-align: center; padding: 3rem 1rem; display: none;
+}
+.score-screen.show { display: block; animation: fadeIn 0.5s ease; }
+.score-circle {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: conic-gradient(var(--gold) 0%, var(--teal) var(--pct,0%), rgba(255,255,255,0.05) var(--pct,0%) 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem; position: relative;
+}
+.score-circle::after {
+  content: ''; position: absolute; inset: 8px;
+  background: var(--bg); border-radius: 50%;
+}
+.score-inner { position: relative; z-index: 1; text-align: center; }
+.score-inner .pct { font-size: 2rem; font-weight: 800; font-family: var(--font-display); color: var(--gold2); }
+.score-inner .lbl { font-size: 0.7rem; color: var(--muted); }
+.score-msg { font-family: var(--font-display); font-size: 1.5rem; color: var(--text); margin-bottom: 0.5rem; }
+.score-sub { color: var(--muted); margin-bottom: 2rem; }
+
+/* ── Flashcards ── */
+.flashcards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.2rem; }
+.flashcard-wrap { perspective: 1000px; height: 200px; cursor: pointer; }
+.flashcard {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.23,1,0.32,1);
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: var(--radius); padding: 1.5rem;
+  display: flex; flex-direction: column; justify-content: center;
+  border: 1px solid var(--border);
+}
+.card-front {
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border-color: rgba(45,212,200,0.2);
+}
+.card-back {
+  background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(45,212,200,0.08));
+  border-color: rgba(212,168,67,0.3);
+  transform: rotateY(180deg);
+}
+.card-face .fc-label {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem;
+}
+.card-face .fc-text {
+  font-family: var(--font-display); font-size: 1.05rem; line-height: 1.5; color: var(--text);
+}
+.card-front .fc-text { color: var(--teal); }
+.card-back .fc-text { color: var(--gold2); font-size: 0.92rem; font-family: var(--font-body); }
+.card-face .fc-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.7rem; }
+
+.fc-progress { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+.fc-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.filter-btn {
+  padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold2); background: rgba(212,168,67,0.1); }
+
+/* ── Cases ── */
+.case-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem;
+}
+.case-header {
+  padding: 1.2rem 1.5rem;
+  background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(45,212,200,0.05));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1rem;
+}
+.case-num {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--sky));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.9rem; color: white; flex-shrink: 0;
+}
+.case-header h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--text); }
+.case-header p { font-size: 0.8rem; color: var(--muted); }
+.case-body { padding: 1.5rem; }
+.case-vignette {
+  background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15);
+  border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem; font-size: 0.9rem; line-height: 1.7;
+}
+.case-q { margin-bottom: 0.8rem; }
+.case-q strong { color: var(--violet); }
+.reveal-btn {
+  background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3);
+  color: var(--violet); padding: 0.6rem 1.4rem; border-radius: 50px;
+  cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  transition: all 0.3s; font-family: var(--font-body);
+}
+.reveal-btn:hover { background: rgba(167,139,250,0.2); }
+.case-answer {
+  margin-top: 1rem; padding: 1.2rem;
+  background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2);
+  border-radius: var(--radius-sm); display: none;
+  animation: fadeIn 0.4s ease;
+}
+.case-answer.show { display: block; }
+.case-answer h5 { color: var(--success); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.7rem; }
+.case-answer p { font-size: 0.88rem; line-height: 1.7; color: var(--muted); }
+.case-answer strong { color: var(--text); }
+
+/* ── Histology Explorer ── */
+.histo-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.histo-tab-btn {
+  padding: 0.5rem 1.1rem; border-radius: 50px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+  transition: all 0.2s;
+}
+.histo-tab-btn.active { background: rgba(45,212,200,0.15); border-color: var(--teal); color: var(--teal); }
+.histo-panel { display: none; }
+.histo-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+.flow-chart {
+  display: flex; flex-direction: column; gap: 0; align-items: center; margin: 1.5rem 0;
+}
+.flow-step {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.9rem 1.5rem;
+  text-align: center; width: 100%; max-width: 480px;
+  position: relative;
+}
+.flow-step.highlight {
+  border-color: var(--gold); background: rgba(212,168,67,0.08);
+}
+.flow-step h5 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+.flow-step p { font-size: 0.78rem; color: var(--muted); }
+.flow-arrow {
+  width: 2px; height: 24px; background: linear-gradient(180deg, var(--teal), var(--gold));
+  position: relative;
+}
+.flow-arrow::after {
+  content: '▼'; position: absolute; bottom: -4px; left: 50%;
+  transform: translateX(-50%); color: var(--gold); font-size: 0.7rem;
+}
+
+.layer-stack { display: flex; flex-direction: column; gap: 0.4rem; }
+.layer {
+  padding: 0.8rem 1.2rem; border-radius: var(--radius-sm);
+  display: flex; align-items: center; gap: 1rem;
+  transition: all 0.3s; cursor: default;
+}
+.layer:hover { transform: translateX(8px); }
+.layer .l-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+}
+.layer h5 { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+.layer p { font-size: 0.75rem; color: var(--muted); }
+
+/* ── Mnemonics ── */
+.mnemonic-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.mnemonic-header {
+  padding: 1.2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+}
+.mnemonic-header h3 {
+  font-family: var(--font-display); font-size: 1.2rem; color: var(--text);
+}
+.mnemonic-acronym {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+  letter-spacing: 0.1em; margin-bottom: 0.5rem;
+}
+.mnemonic-body { padding: 0 1.5rem 1.5rem; display: none; }
+.mnemonic-body.show { display: block; animation: fadeIn 0.3s ease; }
+.mnemonic-item {
+  display: flex; gap: 1rem; padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.mnemonic-item:last-child { border: none; }
+.mnemonic-letter {
+  font-size: 1.4rem; font-weight: 700; font-family: var(--font-display);
+  width: 30px; flex-shrink: 0; line-height: 1;
+}
+.mnemonic-def { font-size: 0.88rem; line-height: 1.5; }
+.mnemonic-def strong { display: block; color: var(--text); }
+.mnemonic-def span { color: var(--muted); }
+
+/* ── Search ── */
+.search-wrap {
+  position: relative; margin-bottom: 1.5rem;
+}
+.search-wrap input {
+  width: 100%; padding: 0.9rem 1.2rem 0.9rem 3rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 50px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem;
+  transition: all 0.3s;
+}
+.search-wrap input:focus {
+  outline: none; border-color: var(--gold); background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 3px rgba(212,168,67,0.1);
+}
+.search-wrap input::placeholder { color: var(--muted); }
+.search-icon {
+  position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 1rem;
+}
+.search-result {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+  margin-bottom: 0.6rem; font-size: 0.88rem; line-height: 1.6;
+}
+.search-result .sr-tag { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.3rem; }
+.search-result .sr-text { color: var(--text); }
+.search-result mark { background: rgba(212,168,67,0.3); color: var(--gold2); border-radius: 2px; }
+
+/* ── Placenta Villi Visual ── */
+.villi-evolution {
+  display: flex; gap: 0.8rem; align-items: stretch; margin: 1.5rem 0; flex-wrap: wrap;
+}
+.villi-stage {
+  flex: 1; min-width: 140px;
+  border-radius: var(--radius-sm); padding: 1.2rem 1rem;
+  text-align: center; border: 1px solid var(--border);
+  position: relative;
+}
+.villi-stage h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; }
+.villi-stage p { font-size: 0.73rem; color: var(--muted); line-height: 1.5; }
+.villi-stage .villi-day { font-size: 0.65rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.stage-primary { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); }
+.stage-primary h4 { color: var(--danger); }
+.stage-secondary { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); }
+.stage-secondary h4 { color: var(--sky); }
+.stage-tertiary { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); }
+.stage-tertiary h4 { color: var(--success); }
+
+/* ── Footer ── */
+footer { text-align: center; padding: 3rem 1rem 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .cycle-timeline { flex-direction: column; }
+  .nav-tabs { padding: 0.3rem; }
+  .tab-btn { font-size: 0.78rem; padding: 0.5rem 0.8rem; }
+  .villi-evolution { flex-direction: column; }
+}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<!-- Animated background cells -->
+<div class="bg-canvas" id="bgCanvas"></div>
+
+<div class="app">
+  <!-- Header -->
+  <header>
+    <div class="header-badge">📚 Academic Medical Study Platform</div>
+    <h1>Female Genital System Histology</h1>
+    <p>Uterus · Cervix · Placenta · Vagina · Mammary Gland — Exam-Ready Study Guide</p>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-chip"><span class="label">Quiz Score</span><span class="val" id="statScore">0/25</span></div>
+    <div class="stat-chip"><span class="label">Streak</span><span class="val" id="statStreak">🔥 0</span></div>
+    <div class="stat-chip"><span class="label">Flashcards</span><span class="val" id="statCards">0/25</span></div>
+    <div class="stat-chip"><span class="label">Progress</span><span class="val" id="statProgress">0%</span></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('overview')" role="tab">🔬 Overview</button>
+    <button class="tab-btn" onclick="switchTab('quiz')" role="tab">🧠 Quiz</button>
+    <button class="tab-btn" onclick="switchTab('flashcards')" role="tab">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('cases')" role="tab">🏥 Clinical Cases</button>
+    <button class="tab-btn" onclick="switchTab('histo')" role="tab">🔭 Histology</button>
+    <button class="tab-btn" onclick="switchTab('mnemonics')" role="tab">💡 Mnemonics</button>
+    <button class="tab-btn" onclick="switchTab('search')" role="tab">🔍 Search</button>
+  </nav>
+
+  <!-- ═══════════════ OVERVIEW PANEL ═══════════════ -->
+  <div class="panel active" id="panel-overview">
+    <div class="overview-hero">
+      <h2>Topic at a Glance</h2>
+      <p>This module covers the histological architecture and endocrine regulation of the female reproductive tract — including the cyclical endometrial transformations, placental barrier development, cervicovaginal epithelial transitions, and lactating mammary gland structure.</p>
+    </div>
+
+    <!-- Topic Cards -->
+    <div class="section-title">Core Topics</div>
+    <div class="section-sub">Four major areas tested in your exam</div>
+    <div class="cards-grid" style="margin-bottom:2.5rem">
+      <div class="card topic-card">
+        <div class="accent-line" style="background: linear-gradient(90deg,#f87171,#f472b6)"></div>
+        <span class="icon">🔴</span>
+        <h3>Uterus & Menstrual Cycle</h3>
+        <p>Endometrial layers, vascular supply, and the hormonal cascade controlling each phase of the menstrual cycle.</p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <span class="tag tag-rose">Spiral arteries</span>
+          <span class="tag tag-gold">Progesterone</span>
+          <span class="tag tag-sky">Estrogen</span>
+        </div>
+      </div>
+      <div class="card topic-card">
+        <div class="accent-line" style="background: linear-gradient(90deg,#38bdf8,#818cf8)"></div>
+        <span class="icon">🔵</span>
+        <h3>Cervix & Vagina</h3>
+        <p>Epithelial transitions at the endo/exocervix junction and the glycogen-based acidic defense of the vagina.</p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <span class="tag tag-sky">Squamocolumnar</span>
+          <span class="tag tag-teal">Glycogen</span>
+          <span class="tag tag-violet">Lactic acid</span>
+        </div>
+      </div>
+      <div class="card topic-card">
+        <div class="accent-line" style="background: linear-gradient(90deg,#4ade80,#2dd4c8)"></div>
+        <span class="icon">🟢</span>
+        <h3>Placenta</h3>
+        <p>Chorionic villi genesis from primary to tertiary, and the thinning of the placental barrier from the 4th month.</p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <span class="tag tag-teal">Syncytiotrophoblast</span>
+          <span class="tag tag-gold">Cytotrophoblast</span>
+        </div>
+      </div>
+      <div class="card topic-card">
+        <div class="accent-line" style="background: linear-gradient(90deg,#d4a843,#f0c96a)"></div>
+        <span class="icon">🟡</span>
+        <h3>Mammary Gland</h3>
+        <p>Compound branched tubuloalveolar gland — structural changes from puberty through pregnancy and lactation.</p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <span class="tag tag-gold">Apocrine</span>
+          <span class="tag tag-rose">Merocrine</span>
+          <span class="tag tag-violet">Prolactin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menstrual Cycle Timeline -->
+    <div class="section-title">Menstrual Cycle Phases</div>
+    <div class="section-sub">Hormonal control → Histological consequence</div>
+    <div class="cycle-timeline" style="margin-bottom:2.5rem">
+      <div class="cycle-phase phase-menstrual">
+        <h4 style="color:#f87171">🔴 Menstrual<br><small style="font-weight:400;color:#fca5a5">Days 1–5</small></h4>
+        <p>Corpus luteum dies → ↓ Progesterone → Spiral arteries constrict → Ischemia → Functional layer sheds</p>
+      </div>
+      <div class="cycle-phase phase-proliferative">
+        <h4 style="color:#38bdf8">🔵 Proliferative<br><small style="font-weight:400;color:#7dd3fc">Days 6–14</small></h4>
+        <p>Follicles mature → ↑ Estrogen → Epithelium, stroma & glands proliferate via mitosis → Spiral arteries re-grow</p>
+      </div>
+      <div class="cycle-phase phase-secretory">
+        <h4 style="color:#4ade80">🟢 Secretory<br><small style="font-weight:400;color:#86efac">Days 15–28</small></h4>
+        <p>Corpus luteum secretes → ↑ Progesterone → Glands dilate & tortuous → Glycogen accumulates → Ready for implantation</p>
+      </div>
+    </div>
+
+    <!-- Key Facts -->
+    <div class="section-title">⚠️ High-Yield Exam Facts</div>
+    <div class="section-sub">Direct from lecture notes — these WILL be tested</div>
+    <div class="key-fact"><span class="kf-icon">🏆</span><div><strong>Myometrium in pregnancy:</strong> Smooth muscle cells undergo both hypertrophy AND hyperplasia, AND take on a fibroblast-like role synthesizing collagen to strengthen the uterine wall.</div></div>
+    <div class="key-fact"><span class="kf-icon">🏆</span><div><strong>Placental barrier in late pregnancy:</strong> The cytotrophoblast disappears from the 4th–5th month onwards. Late barrier = Syncytiotrophoblast + basement membrane + mesenchyme + capillary basement membrane + endothelium (NO cytotrophoblast).</div></div>
+    <div class="key-fact"><span class="kf-icon">🏆</span><div><strong>Mammary gland type:</strong> Compound branched tubuloalveolar gland. 15–25 lobes, each with its own lactiferous duct. This is an explicit exam question per the lecture.</div></div>
+    <div class="key-fact"><span class="kf-icon">🏆</span><div><strong>Vaginal defense:</strong> The vagina has NO glands. Glycogen is made by the squamous cells themselves, metabolized by flora into lactic acid — maintaining acidity.</div></div>
+    <div class="key-fact"><span class="kf-icon">🏆</span><div><strong>Basal layer survival:</strong> Straight arteries supplying the stratum basalis do NOT respond to progesterone withdrawal — hence the basal layer survives menstruation and regenerates the functional layer.</div></div>
+
+    <div class="exam-alert"><strong>⚠️ EXAM ALERT:</strong> "During pregnancy, smooth muscle cells take a second function: synthesizing collagen to make the uterine wall strong." — Direct lecture quote.</div>
+    <div class="exam-alert"><strong>⚠️ EXAM ALERT:</strong> "If asked about the placental barrier in late pregnancy, say everything EXCEPT cytotrophoblast." — Direct lecture quote.</div>
+    <div class="exam-alert"><strong>⚠️ EXAM ALERT:</strong> Endocervix = simple columnar mucus-secreting. Exocervix = non-keratinized stratified squamous. Junction is abrupt at the external os.</div>
+  </div>
+
+  <!-- ═══════════════ QUIZ PANEL ═══════════════ -->
+  <div class="panel" id="panel-quiz">
+    <div class="section-title">🧠 Quiz Mode</div>
+    <div class="section-sub">25 exam-style MCQs — answer, check, and learn</div>
+
+    <div class="quiz-header">
+      <div style="display:flex;flex-direction:column;gap:0.4rem;flex:1;min-width:200px">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted)">
+          <span>Progress</span><span id="qProgressText">0 / 25</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="qProgressBar" style="width:0%"></div></div>
+      </div>
+      <div class="quiz-stats">
+        <div class="quiz-stat"><div class="qs-val" id="qCorrect">0</div><div class="qs-lbl">Correct</div></div>
+        <div class="quiz-stat"><div class="qs-val" id="qWrong">0</div><div class="qs-lbl">Wrong</div></div>
+        <div class="quiz-stat"><div class="qs-val" id="qStreak">0🔥</div><div class="qs-lbl">Streak</div></div>
+      </div>
+    </div>
+
+    <div id="quizContent"></div>
+
+    <div class="score-screen" id="scoreScreen">
+      <div class="score-circle" id="scoreCircle">
+        <div class="score-inner">
+          <div class="pct" id="scorePct">0%</div>
+          <div class="lbl">Score</div>
+        </div>
+      </div>
+      <div class="score-msg" id="scoreMsg">Well Done!</div>
+      <div class="score-sub" id="scoreSub">You completed the quiz.</div>
+      <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right:0.8rem">↩ Retry Quiz</button>
+      <button class="btn btn-ghost" onclick="switchTab('flashcards')">📖 Review Flashcards</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FLASHCARDS PANEL ═══════════════ -->
+  <div class="panel" id="panel-flashcards">
+    <div class="section-title">🃏 Flashcards</div>
+    <div class="section-sub">Click any card to reveal the answer — 25 concepts covered</div>
+
+    <div class="fc-progress">
+      <div><span style="color:var(--gold2);font-weight:700" id="fcSeen">0</span><span style="color:var(--muted)"> / 25 seen</span></div>
+      <button class="btn btn-ghost" onclick="shuffleCards()" style="padding:0.5rem 1.2rem;font-size:0.82rem">🔀 Shuffle</button>
+    </div>
+
+    <div class="fc-filter">
+      <button class="filter-btn active" onclick="filterCards('all',this)">All</button>
+      <button class="filter-btn" onclick="filterCards('uterus',this)">🔴 Uterus</button>
+      <button class="filter-btn" onclick="filterCards('cervix',this)">🔵 Cervix/Vagina</button>
+      <button class="filter-btn" onclick="filterCards('placenta',this)">🟢 Placenta</button>
+      <button class="filter-btn" onclick="filterCards('mammary',this)">🟡 Mammary</button>
+    </div>
+
+    <div class="flashcards-grid" id="flashcardsGrid"></div>
+  </div>
+
+  <!-- ═══════════════ CLINICAL CASES PANEL ═══════════════ -->
+  <div class="panel" id="panel-cases">
+    <div class="section-title">🏥 Clinical Cases</div>
+    <div class="section-sub">6 exam-style vignettes with structured answers</div>
+    <div id="casesContent"></div>
+  </div>
+
+  <!-- ═══════════════ HISTOLOGY EXPLORER ═══════════════ -->
+  <div class="panel" id="panel-histo">
+    <div class="section-title">🔭 Histology Explorer</div>
+    <div class="section-sub">Interactive structures and pathway flowcharts</div>
+
+    <div class="histo-tabs">
+      <button class="histo-tab-btn active" onclick="switchHistoTab('menstrual')">Menstrual Cycle</button>
+      <button class="histo-tab-btn" onclick="switchHistoTab('villi')">Chorionic Villi</button>
+      <button class="histo-tab-btn" onclick="switchHistoTab('barrier')">Placental Barrier</button>
+      <button class="histo-tab-btn" onclick="switchHistoTab('structures')">Key Structures</button>
+    </div>
+
+    <!-- Menstrual Flow -->
+    <div class="histo-panel active" id="histo-menstrual">
+      <div class="section-title" style="font-size:1.2rem">Menstrual Phase — Step by Step</div>
+      <div class="flow-chart">
+        <div class="flow-step highlight"><h5>🔴 Corpus Luteum Degenerates</h5><p>Day ~28 — progesterone source disappears</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step"><h5>📉 Progesterone drops to zero</h5><p>The key hormonal trigger</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step highlight"><h5>🔀 Spiral Arteries Constrict</h5><p>Hormone-sensitive; supply the stratum functionalis only</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step"><h5>⛔ Ischemia develops</h5><p>Upper 2/3 of endometrium loses blood supply</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step"><h5>💀 Necrosis of Stratum Functionalis</h5><p>Glands, epithelium, and stroma of upper 2/3 die</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step highlight"><h5>🩸 Sloughing + Bleeding</h5><p>Menstrual flow — lasts 3–5 days</p></div>
+        <div class="flow-arrow"></div>
+        <div class="flow-step"><h5>✅ Stratum Basalis Survives</h5><p>Supplied by straight arteries — NOT progesterone-sensitive. Regenerates the functional layer.</p></div>
+      </div>
+
+      <div style="margin-top:2rem">
+        <div class="section-title" style="font-size:1.2rem">Proliferative Phase — Estrogen Drive</div>
+        <div class="flow-chart">
+          <div class="flow-step"><h5>🌱 Follicles Mature</h5><p>Early in cycle — rising FSH</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step highlight"><h5>📈 Estrogen Secreted</h5><p>From granulosa cells of maturing follicles</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><h5>🔬 Mitosis Stimulated</h5><p>Surface epithelium, stroma, uterine glands, and spiral arteries all proliferate</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step highlight"><h5>📏 Functional Layer Rebuilt</h5><p>Thin → thick; glands straight and narrow</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem">
+        <div class="section-title" style="font-size:1.2rem">Secretory Phase — Progesterone Action</div>
+        <div class="flow-chart">
+          <div class="flow-step"><h5>🥚 Ovulation Occurs</h5><p>Day 14 — LH surge</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step highlight"><h5>🔵 Corpus Luteum Forms</h5><p>From ruptured follicle</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><h5>📈 Progesterone Rises</h5><p>Main hormone of the secretory phase</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step highlight"><h5>🌀 Glands Become Tortuous</h5><p>Dilated, corkscrew-shaped, filled with glycogen</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><h5>🍬 Glycogen Stored</h5><p>Nourishment ready for potential embryo</p></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step highlight"><h5>🤰 If Fertilized → Implantation</h5><p>Stroma cells become decidual cells (accumulate glycogen, grow processes)</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chorionic Villi -->
+    <div class="histo-panel" id="histo-villi">
+      <div class="section-title" style="font-size:1.2rem">Chorionic Villi Development</div>
+      <div class="villi-evolution">
+        <div class="villi-stage stage-primary">
+          <div class="villi-day">Day 2 post-implantation</div>
+          <h4>🔴 Primary Villi</h4>
+          <p>Inner cytotrophoblast (distinct cell boundaries) + Outer syncytiotrophoblast (no boundaries — continuous belt)</p>
+          <div style="margin-top:0.6rem"><span class="tag tag-rose">2 layers</span></div>
+        </div>
+        <div class="villi-stage stage-secondary">
+          <div class="villi-day">Day ~15 / Week 2</div>
+          <h4>🔵 Secondary Villi</h4>
+          <p>Primary villi invaded by mesenchymal connective tissue core — gives structural support</p>
+          <div style="margin-top:0.6rem"><span class="tag tag-sky">3 layers</span></div>
+        </div>
+        <div class="villi-stage stage-tertiary">
+          <div class="villi-day">End of Month 1</div>
+          <h4>🟢 Tertiary Villi</h4>
+          <p>Capillary loops develop within mesenchymal core — fetal circulation established. Now functional!</p>
+          <div style="margin-top:0.6rem"><span class="tag tag-teal">4 layers + vessels</span></div>
+        </div>
+      </div>
+      <div class="exam-alert" style="margin-top:1rem"><strong>⚠️ EXAM TIP:</strong> Cytotrophoblast = inner layer with DISTINCT cell boundaries. Syncytiotrophoblast = outer CONTINUOUS layer with NO boundaries. The syncytiotrophoblast borders the maternal blood in the intervillous space.</div>
+    </div>
+
+    <!-- Placental Barrier -->
+    <div class="histo-panel" id="histo-barrier">
+      <div class="section-title" style="font-size:1.2rem">Placental Barrier — Early vs Late Pregnancy</div>
+      <div class="cards-grid-2" style="margin-bottom:1.5rem">
+        <div>
+          <div style="font-weight:700;color:var(--sky);margin-bottom:1rem;font-size:0.9rem">EARLY PREGNANCY (5 layers)</div>
+          <div class="layer-stack">
+            <div class="layer" style="background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.2)">
+              <div class="l-num" style="background:rgba(244,114,182,0.3);color:#f472b6">1</div>
+              <div><h5>Syncytiotrophoblast</h5><p>Continuous outer layer, no cell boundaries</p></div>
+            </div>
+            <div class="layer" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.2)">
+              <div class="l-num" style="background:rgba(56,189,248,0.3);color:#38bdf8">2</div>
+              <div><h5>Cytotrophoblast</h5><p>Inner layer with distinct boundaries — present early</p></div>
+            </div>
+            <div class="layer" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.2)">
+              <div class="l-num" style="background:rgba(167,139,250,0.3);color:#a78bfa">3</div>
+              <div><h5>Trophoblast Basement Membrane</h5><p>Between trophoblast and mesenchyme</p></div>
+            </div>
+            <div class="layer" style="background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.2)">
+              <div class="l-num" style="background:rgba(212,168,67,0.3);color:#d4a843">4</div>
+              <div><h5>Mesenchymal Connective Tissue</h5><p>Core of the villus</p></div>
+            </div>
+            <div class="layer" style="background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.2)">
+              <div class="l-num" style="background:rgba(74,222,128,0.3);color:#4ade80">5</div>
+              <div><h5>Capillary Basement Membrane</h5><p>Wraps fetal capillaries</p></div>
+            </div>
+            <div class="layer" style="background:rgba(45,212,200,0.12);border:1px solid rgba(45,212,200,0.2)">
+              <div class="l-num" style="background:rgba(45,212,200,0.3);color:#2dd4c8">6</div>
+              <div><h5>Capillary Endothelium</h5><p>Fetal blood vessel lining — innermost</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--gold2);margin-bottom:1rem;font-size:0.9rem">LATE PREGNANCY (4th month+)</div>
+          <div class="layer-stack">
+            <div class="layer" style="background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.2)">
+              <div class="l-num" style="background:rgba(244,114,182,0.3);color:#f472b6">1</div>
+              <div><h5>Syncytiotrophoblast</h5><p>REMAINS — maintains barrier function</p></div>
+            </div>
+            <div class="layer" style="background:rgba(248,113,113,0.06);border:1px dashed rgba(248,113,113,0.3)">
+              <div class="l-num" style="background:rgba(248,113,113,0.1);color:#f87171">✗</div>
+              <div><h5 style="color:var(--danger);text-decoration:line-through">Cytotrophoblast</h5><p style="color:var(--danger)">DISAPPEARS from 4th–5th month — thins barrier for better exchange</p></div>
+            </div>
+            <div class="layer" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.2)">
+              <div class="l-num" style="background:rgba(167,139,250,0.3);color:#a78bfa">2</div>
+              <div><h5>Trophoblast Basement Membrane</h5><p>Persists</p></div>
+            </div>
+            <div class="layer" style="background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.2)">
+              <div class="l-num" style="background:rgba(212,168,67,0.3);color:#d4a843">3</div>
+              <div><h5>Mesenchymal C.T.</h5><p>Persists</p></div>
+            </div>
+            <div class="layer" style="background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.2)">
+              <div class="l-num" style="background:rgba(74,222,128,0.3);color:#4ade80">4</div>
+              <div><h5>Capillary Basement Membrane</h5><p>Persists</p></div>
+            </div>
+            <div class="layer" style="background:rgba(45,212,200,0.12);border:1px solid rgba(45,212,200,0.2)">
+              <div class="l-num" style="background:rgba(45,212,200,0.3);color:#2dd4c8">5</div>
+              <div><h5>Capillary Endothelium</h5><p>Persists</p></div>
+            </div>
+          </div>
+          <div class="exam-alert" style="margin-top:1rem"><strong>⚠️ KEY:</strong> Late pregnancy barrier = everything EXCEPT cytotrophoblast</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Structures -->
+    <div class="histo-panel" id="histo-structures">
+      <div class="section-title" style="font-size:1.2rem">Clickable Structures</div>
+      <div class="section-sub">Click a structure to see its histological description</div>
+      <div class="cards-grid" id="structuresGrid" style="margin-bottom:1rem"></div>
+      <div class="structure-detail" id="structureDetail">
+        <h4 id="structureDetailTitle"></h4>
+        <p id="structureDetailText"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MNEMONICS PANEL ═══════════════ -->
+  <div class="panel" id="panel-mnemonics">
+    <div class="section-title">💡 Mnemonics</div>
+    <div class="section-sub">6 custom memory tools built from your lecture content — click to expand</div>
+    <div id="mnemonicsContent" style="display:flex;flex-direction:column;gap:1rem"></div>
+  </div>
+
+  <!-- ═══════════════ SEARCH PANEL ═══════════════ -->
+  <div class="panel" id="panel-search">
+    <div class="section-title">🔍 Smart Search</div>
+    <div class="section-sub">Search across all topics, facts, and mechanisms</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="e.g. spiral artery, cytotrophoblast, glycogen..." oninput="doSearch(this.value)">
+    </div>
+    <div id="searchResults"><div style="color:var(--muted);text-align:center;padding:3rem">Start typing to search all content…</div></div>
+  </div>
+
+  <footer>
+    <p>📚 Female Genital System Histology Study Platform · Built for exam excellence</p>
+    <p style="margin-top:0.5rem;opacity:0.5">All content sourced from your lecture notes and audio transcripts</p>
+  </footer>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const QUESTIONS = [
+  {
+    q: "Which hormonal event directly triggers necrosis of the stratum functionalis?",
+    opts: ["Surge in estrogen","Spike in prolactin","Degeneration of the corpus luteum causing zero progesterone","Increased secretion of glycogen","Proliferation of straight arteries"],
+    ans: 2,
+    explain: "✅ Correct: Zero progesterone (from corpus luteum degeneration) causes spiral arteries to constrict → ischemia → necrosis of the functional layer.\n❌ Others: Estrogen builds the layer. Prolactin acts on breasts. Glycogen defines secretory phase. Straight arteries don't constrict here.",
+    topic: "Uterus"
+  },
+  {
+    q: "How do mammary gland alveolar cells secrete lipid droplets during lactation?",
+    opts: ["Merocrine action","Apocrine action","Holocrine action","Cytocrine action","Endocytosis"],
+    ans: 1,
+    explain: "✅ Correct: Lipids are secreted by apocrine action (part of the cell membrane buds off with the lipid).\n❌ Others: Merocrine (exocytosis) is used for proteins. Holocrine involves complete cell death — not used here.",
+    topic: "Mammary"
+  },
+  {
+    q: "What mechanism provides the biological acidity of the vaginal canal?",
+    opts: ["Secretion of HCl by parietal-like cells","Lactic acid production by mucosal glands","Apocrine secretion of fatty acids","Bacterial metabolism of epithelial glycogen into lactic acid","Breakdown of superficial keratin"],
+    ans: 3,
+    explain: "✅ Correct: Vaginal squamous cells accumulate glycogen → normal bacterial flora metabolizes glycogen into lactic acid → low pH environment.\n❌ Others: The vagina has NO glands. There are no parietal cells or keratin in the vaginal epithelium.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "During the proliferative phase, which process predominates in the endometrium?",
+    opts: ["Glycogen accumulation in glands","Constriction of spiral arteries","Mitosis and regeneration driven by estrogen","Decidualization of stroma","Shedding of the basal layer"],
+    ans: 2,
+    explain: "✅ Correct: Estrogen (from maturing follicles) stimulates mitotic proliferation of epithelium, stroma, glands, and spiral arteries.\n❌ Others: Glycogen accumulation is secretory phase. Constriction is menstrual. Basal layer is NEVER shed.",
+    topic: "Uterus"
+  },
+  {
+    q: "How does the myometrium adapt structurally during pregnancy?",
+    opts: ["Smooth muscle cells atrophy","Skeletal muscle fibers infiltrate the wall","Smooth muscles undergo hyperplasia, hypertrophy, and synthesize collagen","Endometrial glands invade the muscle","Straight arteries transform into spiral arteries"],
+    ans: 2,
+    explain: "✅ Correct: Smooth muscle cells increase in size (hypertrophy) AND number (hyperplasia), AND adopt a fibroblast-like function to produce collagen, strengthening the wall.\n❌ Others: Atrophy is wrong. It remains smooth muscle only. Gland invasion into muscle = adenomyosis (pathology).",
+    topic: "Uterus"
+  },
+  {
+    q: "How are secondary chorionic villi formed?",
+    opts: ["Addition of capillary loops to primary villi","Invasion of primary villi by mesenchymal connective tissue","Loss of the syncytiotrophoblast layer","Fusion of cytotrophoblast cells","Degradation of decidua basalis"],
+    ans: 1,
+    explain: "✅ Correct: Primary villi (cytotrophoblast + syncytiotrophoblast) are invaded by mesenchymal connective tissue core around day 15, forming secondary villi.\n❌ Others: Capillaries make them TERTIARY, not secondary. Syncytiotrophoblast remains until birth.",
+    topic: "Placenta"
+  },
+  {
+    q: "In the secretory phase of the menstrual cycle, what is the primary state of the uterine glands?",
+    opts: ["Straight and narrow","Atrophic and devoid of cells","Dilated, tortuous, and full of glycogen","Actively shedding into the lumen","Filled with foamy lipid droplets"],
+    ans: 2,
+    explain: "✅ Correct: Progesterone acts on the glands making them dilated and tortuous, with glycogen accumulation for potential embryo nourishment.\n❌ Others: Straight/narrow = early proliferative. Foamy lipid droplets = mammary gland during lactation.",
+    topic: "Uterus"
+  },
+  {
+    q: "What acts to squeeze milk out of the mammary alveoli during suckling?",
+    opts: ["Skeletal muscle in the stroma","Constriction of intralobular ducts","Contraction of myoepithelial cells","Expansion of the lactiferous sinus","Apocrine shedding"],
+    ans: 2,
+    explain: "✅ Correct: Myoepithelial cells (basket cells) wrap around alveoli and ducts, contain actin filaments, and contract under oxytocin to expel milk.\n❌ Others: No skeletal muscle in the gland. Apocrine describes a secretion mechanism, not expulsion.",
+    topic: "Mammary"
+  },
+  {
+    q: "What characterizes the transformation of endometrial stroma in preparation for implantation?",
+    opts: ["Fibroblasts shrink and lose processes","Stroma cells accumulate glycogen and become 'decidual cells'","Stroma undergoes massive necrosis","They become ciliated","They convert into smooth muscle"],
+    ans: 1,
+    explain: "✅ Correct: Under progesterone influence, fibroblasts enlarge, grow cytoplasmic processes, and accumulate glycogen — the decidual reaction. These become decidual cells.\n❌ Others: They ENLARGE, not shrink. Cilia are on the surface epithelium, not stroma.",
+    topic: "Uterus"
+  },
+  {
+    q: "How do milk proteins reach the alveolar lumen?",
+    opts: ["Merocrine secretion (exocytosis)","Apocrine secretion","Paracellular transport","Holocrine secretion","Simple diffusion"],
+    ans: 0,
+    explain: "✅ Correct: Proteins (casein, whey, etc.) are packaged in vesicles and released by merocrine (exocytotic) secretion without cell loss.\n❌ Others: Lipids use apocrine secretion. Holocrine involves cell death (sebaceous glands). Proteins are too large for simple diffusion.",
+    topic: "Mammary"
+  },
+  {
+    q: "What causes the transition to the late-stage (thin) placental barrier?",
+    opts: ["Complete loss of syncytiotrophoblast","Atrophy of the cytotrophoblast layer from the 4th month onwards","Destruction of the fetal capillaries","Replacement of mesenchyme with bone","Loss of the basement membrane"],
+    ans: 1,
+    explain: "✅ Correct: The cytotrophoblast (inner layer with distinct boundaries) progressively atrophies and disappears from the 4th–5th month, thinning the barrier to facilitate better gas and nutrient exchange.\n❌ Others: Syncytiotrophoblast remains throughout. Fetal capillaries are essential and persist.",
+    topic: "Placenta"
+  },
+  {
+    q: "What drives the proliferation of mammary gland terminal ducts into alveoli during pregnancy?",
+    opts: ["Drop in estrogen","Absence of prolactin","Combined influence of estrogen, progesterone, prolactin, and placental lactogen","Accumulation of lactic acid","Oxytocin exclusively"],
+    ans: 2,
+    explain: "✅ Correct: All four hormones act synergistically — estrogen (ductal growth), progesterone (lobular growth), prolactin and placental lactogen (alveolar proliferation + secretory differentiation).\n❌ Others: Lactic acid is a vaginal defense mechanism. Prolactin must be PRESENT, not absent.",
+    topic: "Mammary"
+  },
+  {
+    q: "How does the stratum basalis survive the menstrual phase?",
+    opts: ["It lacks blood vessels entirely","It is supplied by straight arteries which are not sensitive to progesterone withdrawal","It receives direct diffusion from the uterine cavity","It secretes its own progesterone","It is composed of fibrocartilage"],
+    ans: 1,
+    explain: "✅ Correct: The straight arteries supplying the basal layer do NOT constrict when progesterone falls — unlike the spiral arteries of the functional layer. Hence the basal layer survives to regenerate.\n❌ Others: It IS vascularized. There is no autonomous progesterone production there.",
+    topic: "Uterus"
+  },
+  {
+    q: "By what process do vaginal epithelial cells contribute to the acidic environment?",
+    opts: ["Glandular secretion of acid","Active synthesis and accumulation of glycogen within the squamous cells","Uptake of glycogen from the uterine glands","Absorption from bacterial waste products","Transport of lactic acid from the myometrium"],
+    ans: 1,
+    explain: "✅ Correct: The non-keratinized stratified squamous cells themselves synthesize and store glycogen. This is then metabolized by the resident bacterial flora into lactic acid.\n❌ Others: The vagina has NO glands. Glycogen is made by the epithelial cells themselves.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "What mechanism prevents shedding of the endocervical mucosa during menstruation?",
+    opts: ["Lack of spiral arteries and different vascular/hormonal responsiveness compared to the endometrium","It is covered by keratin","It lacks epithelium","It is located outside the uterus entirely","Constant high estrogen levels in the cervix only"],
+    ans: 0,
+    explain: "✅ Correct: The endocervix does not undergo the same ischemic changes because its lamina propria lacks the hormone-sensitive spiral arteries of the uterine endometrium.\n❌ Others: It IS inside the uterus (lower segment). It IS lined by simple columnar epithelium — NOT keratinized.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "Which accurately describes the structure of the mammary gland?",
+    opts: ["Simple tubular gland with one lobe","Compound alveolar gland with 5–10 lobes","Compound branched tubuloalveolar gland with 15–25 lobes","Holocrine sebaceous-type gland","Simple branched acinar gland"],
+    ans: 2,
+    explain: "✅ Correct: The mammary gland is a COMPOUND BRANCHED TUBULOALVEOLAR gland with 15–25 lobes, each separated by dense fibrous connective tissue and draining via its own lactiferous duct. This is explicitly flagged as an exam question in the lecture!\n❌ Others: All distractors change either the type or the lobe count.",
+    topic: "Mammary"
+  },
+  {
+    q: "The endocervix epithelium transitions to exocervix epithelium at which landmark?",
+    opts: ["Internal os","Isthmus","External os","Body of the uterus","Vaginal fornix"],
+    ans: 2,
+    explain: "✅ Correct: At the external os, there is an abrupt transition from the simple columnar mucus-secreting epithelium of the endocervix to the non-keratinized stratified squamous epithelium of the exocervix. This is the squamocolumnar junction.\n❌ Others: The internal os marks the junction between uterine body and cervix.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "A biopsy shows villi with only two cell layers: an outer continuous syncytium and an inner distinct-boundary cell layer, but no connective tissue or capillaries. What stage are these villi?",
+    opts: ["Tertiary villi","Secondary villi","Primary villi","Anchoring villi","Mature villi"],
+    ans: 2,
+    explain: "✅ Correct: Primary villi consist only of cytotrophoblast (inner, distinct cell boundaries) + syncytiotrophoblast (outer, continuous). No mesenchyme yet, no capillaries. This is the earliest stage, ~day 2 post-implantation.\n❌ Others: Secondary adds mesenchyme; tertiary adds capillaries.",
+    topic: "Placenta"
+  },
+  {
+    q: "During which phase of the cycle do uterine glands appear straight, narrow, and non-secretory?",
+    opts: ["Menstrual phase","Secretory phase","Proliferative phase","Premenstrual phase","Ovulatory phase"],
+    ans: 2,
+    explain: "✅ Correct: During the proliferative/estrogenic phase, the rebuilding uterine glands are straight and narrow — they haven't yet been stimulated by progesterone to become tortuous and secretory.\n❌ Others: Secretory glands are dilated and tortuous. Menstrual phase sees destruction, not straight glands.",
+    topic: "Uterus"
+  },
+  {
+    q: "What is the FIRST histological sign of implantation preparation in the endometrial stroma?",
+    opts: ["Shedding of the surface epithelium","Spiral arteries begin to dilate","Stromal fibroblasts enlarge and accumulate glycogen (decidual reaction)","Uterine glands begin secreting lipids","Myometrium begins producing collagen"],
+    ans: 2,
+    explain: "✅ Correct: The decidual reaction — stromal fibroblasts enlarging, growing processes, and accumulating glycogen — is the hallmark histological sign of the uterus preparing for implantation under progesterone influence.\n❌ Others: Spiral artery changes come later. Lipid secretion is mammary, not endometrial.",
+    topic: "Uterus"
+  },
+  {
+    q: "Why does the vaginal epithelium appear 'net-like' on histological section?",
+    opts: ["Because it is keratinized","Because the cells contain massive amounts of dissolved glycogen","Because lymphatic vessels are prominent","Because goblet cells create mucus pockets","Because collagen fibers run between cells"],
+    ans: 1,
+    explain: "✅ Correct: The massive amounts of glycogen dissolved within the vaginal squamous cells give the cytoplasm a pale, vacuolated, net-like appearance on H&E staining. This is a direct exam point from the lecture.\n❌ Others: The vaginal epithelium is NON-keratinized. There are no goblet cells.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "A 35-year-old pregnant woman has a placental biopsy at week 20. Which cell type would you expect to be ABSENT or significantly reduced?",
+    opts: ["Syncytiotrophoblast","Capillary endothelial cells","Cytotrophoblast cells","Mesenchymal stromal cells","Fetal red blood cells"],
+    ans: 2,
+    explain: "✅ Correct: By week 20 (month 5), the cytotrophoblast has undergone significant atrophy — it disappears from the 4th–5th month onwards. The syncytiotrophoblast persists throughout pregnancy.\n❌ Others: Syncytiotrophoblast remains. Capillaries and mesenchyme remain essential for barrier and support.",
+    topic: "Placenta"
+  },
+  {
+    q: "Which of the following comparisons between the endometrium and endocervix is CORRECT?",
+    opts: ["Both shed during menstruation","Both are lined by stratified squamous epithelium","Endometrium has simple columnar; endocervix has stratified squamous","Endometrium sheds; endocervix does NOT shed — different epithelia and vascular supply","Endocervix has spiral arteries; endometrium has straight arteries"],
+    ans: 3,
+    explain: "✅ Correct: Endometrium (functional layer) sheds due to its spiral arteries being progesterone-sensitive. Endocervix does NOT shed — it has simple columnar mucus-secreting epithelium and lacks the same hormonal vascular sensitivity.\n❌ Others: All other options reverse or confuse the anatomical features.",
+    topic: "Cervix/Vagina"
+  },
+  {
+    q: "During lactation, which hormone is primarily responsible for milk EJECTION (not production)?",
+    opts: ["Estrogen","Progesterone","Prolactin","Oxytocin","Placental lactogen"],
+    ans: 3,
+    explain: "✅ Correct: Oxytocin causes contraction of myoepithelial cells surrounding alveoli and ducts, leading to milk ejection (let-down reflex). Prolactin drives milk PRODUCTION.\n❌ Others: Estrogen and progesterone drive structural development. Placental lactogen aids proliferation during pregnancy.",
+    topic: "Mammary"
+  },
+  {
+    q: "Which of the following is a CORRECT description of the syncytiotrophoblast?",
+    opts: ["Inner cell layer with distinct cellular boundaries","Multinucleated continuous cell layer with NO distinct boundaries that borders maternal blood","Invaded by mesenchyme to form tertiary villi","Disappears by the 4th month of pregnancy","Single layer of cuboidal cells lining the intervillous space"],
+    ans: 1,
+    explain: "✅ Correct: The syncytiotrophoblast is the OUTER continuous layer with NO distinct cell boundaries (multinucleated syncytium). It borders the maternal blood in the intervillous space and persists throughout pregnancy.\n❌ Others: The inner cell with distinct boundaries is the CYTOTROPHOBLAST. Cytotrophoblast (not syncytio) disappears in late pregnancy.",
+    topic: "Placenta"
+  }
+];
+
+const FLASHCARDS = [
+  { q:"What are the two layers of the endometrium and their blood supply?", a:"Stratum functionalis (upper 2/3): supplied by SPIRAL arteries (progesterone-sensitive). Stratum basalis (lower 1/3): supplied by STRAIGHT arteries (not hormone-sensitive — survives menstruation).", category:"uterus" },
+  { q:"What is the sequence of events in the menstrual phase?", a:"Corpus luteum degenerates → Progesterone drops to zero → Spiral arteries constrict → Ischemia of functional layer → Necrosis and shedding → Bleeding (3–5 days)", category:"uterus" },
+  { q:"What hormone drives the proliferative phase and what changes occur?", a:"ESTROGEN (from maturing ovarian follicles). Causes mitosis of: surface epithelium, stroma, uterine glands (straight/narrow), and re-growth of spiral arteries.", category:"uterus" },
+  { q:"What happens to the uterine glands in the secretory phase?", a:"Under PROGESTERONE influence (from corpus luteum): glands become DILATED, TORTUOUS (corkscrew), and filled with GLYCOGEN — ready to nourish potential embryo.", category:"uterus" },
+  { q:"How does the myometrium adapt during pregnancy?", a:"Smooth muscle cells undergo: (1) Hypertrophy (increase in SIZE), (2) Hyperplasia (increase in NUMBER), AND (3) adopt fibroblast-like function synthesizing COLLAGEN to strengthen the uterine wall.", category:"uterus" },
+  { q:"What is the decidual reaction?", a:"Under progesterone, endometrial stromal fibroblasts ENLARGE, grow cytoplasmic processes, and accumulate GLYCOGEN — becoming 'decidual cells'. This prepares the uterus for implantation.", category:"uterus" },
+  { q:"What epithelium lines the endocervix vs exocervix?", a:"Endocervix = SIMPLE COLUMNAR mucus-secreting epithelium (does NOT shed during menstruation). Exocervix = NON-KERATINIZED stratified squamous. Junction = ABRUPT at the external os.", category:"cervix" },
+  { q:"Why doesn't the endocervix shed during menstruation?", a:"Because its vascular supply and hormonal responsiveness DIFFER from the endometrium — it lacks the progesterone-sensitive spiral arteries that cause ischemia and sloughing.", category:"cervix" },
+  { q:"Describe the vaginal defense mechanism in full.", a:"1. Non-keratinized stratified squamous epithelium accumulates GLYCOGEN. 2. Normal bacterial flora (Lactobacillus) metabolizes glycogen into LACTIC ACID. 3. This creates an ACIDIC environment hostile to pathogens.", category:"cervix" },
+  { q:"Why does the vaginal epithelium look 'net-like' under the microscope?", a:"Because massive amounts of GLYCOGEN dissolved in the cytoplasm of the squamous cells gives them a pale, vacuolated, NET-LIKE appearance on H&E staining.", category:"cervix" },
+  { q:"What are primary chorionic villi?", a:"First stage — appear ~Day 2 post-implantation. Consist of: INNER cytotrophoblast (distinct cell boundaries) + OUTER syncytiotrophoblast (continuous, no boundaries). No mesenchyme. No capillaries.", category:"placenta" },
+  { q:"How do primary villi become secondary? And secondary become tertiary?", a:"Primary → Secondary: Mesenchymal C.T. INVADES the core (~Day 15). Secondary → Tertiary: CAPILLARY LOOPS develop within the mesenchymal core (end of month 1). Now functionally active!", category:"placenta" },
+  { q:"What are the 6 layers of the early placental barrier (in order)?", a:"1. Syncytiotrophoblast 2. Cytotrophoblast 3. Trophoblast basement membrane 4. Mesenchymal connective tissue 5. Capillary basement membrane 6. Capillary endothelium", category:"placenta" },
+  { q:"What happens to the placental barrier after the 4th month of pregnancy?", a:"The CYTOTROPHOBLAST DISAPPEARS (atrophies). Leaving only 5 layers: Syncytiotrophoblast → Trophoblast BM → Mesenchyme → Capillary BM → Capillary endothelium. This THINS the barrier for better exchange.", category:"placenta" },
+  { q:"What is the key difference between cytotrophoblast and syncytiotrophoblast?", a:"Cytotrophoblast = INNER layer with DISTINCT cell boundaries (individual cells). Syncytiotrophoblast = OUTER layer, CONTINUOUS (multinucleated syncytium, NO boundaries). Syncytio borders maternal blood.", category:"placenta" },
+  { q:"What is the full classification of the mammary gland?", a:"COMPOUND BRANCHED TUBULOALVEOLAR gland. 15–25 lobes, separated by dense fibrous C.T. and adipose. Each lobe drains via its own LACTIFEROUS DUCT. This is a direct exam question!", category:"mammary" },
+  { q:"What hormones drive mammary gland proliferation during pregnancy?", a:"Four hormones act synergistically: ESTROGEN (ductal growth) + PROGESTERONE (lobular growth) + PROLACTIN + PLACENTAL LACTOGEN → massive alveolar proliferation, stroma reduction.", category:"mammary" },
+  { q:"How are proteins vs lipids secreted in the lactating mammary gland?", a:"PROTEINS: Merocrine secretion (exocytosis — no cell loss). LIPIDS: Apocrine secretion (part of the cell membrane buds off with the lipid droplet).", category:"mammary" },
+  { q:"What is the role of myoepithelial cells in the mammary gland?", a:"Myoepithelial (basket) cells wrap around alveoli and ducts. They contain actin filaments and contract under OXYTOCIN stimulus to SQUEEZE milk out during the let-down reflex.", category:"mammary" },
+  { q:"What is the histological difference between the resting and lactating mammary gland?", a:"Resting: Predominantly stroma (dense C.T. + fat), few small alveoli. Lactating: Massive alveolar expansion (dilated, secretory), REDUCED stroma, alveoli filled with pale foamy acidophilic milk secretion.", category:"mammary" },
+  { q:"What cell type does NOT shed during menstruation and why?", a:"The STRATUM BASALIS (basal layer) survives because it is supplied by STRAIGHT ARTERIES that do NOT respond to progesterone withdrawal. It then regenerates the functional layer.", category:"uterus" },
+  { q:"What is the functional significance of collagen synthesis by myometrial smooth muscle during pregnancy?", a:"The collagen increases the TENSILE STRENGTH of the uterine wall to accommodate the growing fetus and withstand the mechanical demands of pregnancy and labor.", category:"uterus" },
+  { q:"Why are tertiary chorionic villi considered 'fully functional'?", a:"Because they contain CAPILLARY LOOPS (fetal vasculature) within the mesenchymal core — enabling actual gas, nutrient, and waste EXCHANGE between fetal and maternal circulations.", category:"placenta" },
+  { q:"What is the full epithelial journey from the uterine body to the vagina?", a:"Uterine body: Simple columnar ciliated + secretory → Isthmus (transition) → Endocervix: Simple columnar mucus-secreting → External os (ABRUPT junction) → Exocervix: Non-keratinized stratified squamous → Vagina: Non-keratinized stratified squamous (glycogen-rich).", category:"cervix" },
+  { q:"What does the H&E appearance of the secretory phase endometrium look like?", a:"Glands appear DILATED, TORTUOUS (saw-tooth/corkscrew shape), with pale cytoplasm due to GLYCOGEN accumulation. Stroma is edematous. Spiral arteries are prominent and coiled.", category:"uterus" }
+];
+
+const CASES = [
+  {
+    num: 1, title: "Menstrual Cascade",
+    vignette: "A 28-year-old woman presents with regular, painless menstruation occurring every 28 days. A mid-cycle uterine biopsy shows proliferating glands with mitotic figures, a rebuilt surface epithelium, and prominent spiral arteries. Five days later, histology shows necrosis of the upper 2/3 of the endometrium with vascular collapse.",
+    questions: [
+      { q: "Q1. What hormonal event caused the transition from the proliferative to the necrotic histological picture?", a: "<strong>Answer:</strong> The degeneration of the corpus luteum caused progesterone levels to drop to zero. Without progesterone, the spiral arteries (which are hormone-sensitive) constricted, leading to ischemia and necrosis of the stratum functionalis (upper 2/3 of the endometrium). The basal layer is spared because it is supplied by straight arteries unaffected by progesterone withdrawal." },
+      { q: "Q2. Why is the lower 1/3 of the endometrium intact in the second biopsy?", a: "<strong>Answer:</strong> The stratum basalis is supplied by straight arteries that are NOT sensitive to progesterone withdrawal. They remain patent, maintaining blood supply to the basal gland bottoms, allowing the layer to survive and subsequently regenerate the functional layer." }
+    ]
+  },
+  {
+    num: 2, title: "Pregnant Uterus",
+    vignette: "A 24-year-old G1P0 woman at 10 weeks gestation undergoes elective cesarean section follow-up. Myometrial histology reveals smooth muscle cells significantly enlarged and in greater numbers than normal, with collagen fibers interspersed among the muscle bundles. A placental biopsy shows villi with 6 distinct layers separating maternal and fetal blood.",
+    questions: [
+      { q: "Q1. How do you explain the myometrial findings?", a: "<strong>Answer:</strong> During pregnancy, myometrial smooth muscle cells undergo <strong>hypertrophy</strong> (increase in size) and <strong>hyperplasia</strong> (increase in number). They also adopt a fibroblast-like synthetic function, producing <strong>collagen</strong> to strengthen the uterine wall — a secondary (non-contractile) function they do not perform outside pregnancy." },
+      { q: "Q2. List the 6 layers of the placental barrier visible in the biopsy.", a: "<strong>Answer (innermost to outermost, fetal to maternal):</strong><br>1. Capillary endothelium<br>2. Capillary basement membrane<br>3. Mesenchymal connective tissue<br>4. Trophoblast basement membrane<br>5. Cytotrophoblast<br>6. Syncytiotrophoblast (borders maternal blood)" }
+    ]
+  },
+  {
+    num: 3, title: "Late Placental Biopsy",
+    vignette: "A placental biopsy obtained at 36 weeks of gestation shows villi in which the outer continuous multinucleated layer is directly apposed to the basement membrane, without any intervening discrete cell layer. The mesenchymal core is present along with capillaries and their basement membranes.",
+    questions: [
+      { q: "Q1. Which layer is absent and why?", a: "<strong>Answer:</strong> The <strong>cytotrophoblast</strong> is absent. From the 4th–5th month of pregnancy, the cytotrophoblast (inner layer with distinct cell boundaries) undergoes progressive atrophy and disappears. This is a normal physiological change that THINS the placental barrier from 6 to 5 effective layers, enhancing diffusion efficiency for gas and nutrient exchange." },
+      { q: "Q2. What are the layers of the late placental barrier in order?", a: "<strong>Answer:</strong> 1. Syncytiotrophoblast → 2. Trophoblast BM → 3. Mesenchymal C.T. → 4. Capillary BM → 5. Capillary endothelium. The CYTOTROPHOBLAST is conspicuously absent — this is the exam-critical distinguishing feature of the late placental barrier." }
+    ]
+  },
+  {
+    num: 4, title: "Vaginal Defense",
+    vignette: "A vaginal swab from a 22-year-old healthy woman reveals a pH of 4.0 and abundant Lactobacillus organisms. Histological sectioning of a vaginal wall biopsy shows stratified squamous epithelium with pale, vacuolated cells in the superficial layers. No glands are seen in the lamina propria.",
+    questions: [
+      { q: "Q1. Explain the mechanism producing the acidic pH.", a: "<strong>Answer:</strong> The non-keratinized stratified squamous epithelium of the vagina <strong>synthesizes and accumulates glycogen</strong> within the epithelial cells. Normal resident flora (predominantly Lactobacillus species) metabolize this glycogen into <strong>lactic acid</strong>, maintaining the low pH (3.5–4.5) that protects against pathogenic organisms." },
+      { q: "Q2. What is the histological basis for the 'pale, vacuolated' appearance of the superficial cells?", a: "<strong>Answer:</strong> The pale, vacuolated (net-like) cytoplasm reflects the <strong>massive glycogen content</strong> dissolved within the squamous cells. Glycogen is washed out during H&E tissue processing, leaving empty vacuoles — giving the characteristic net-like appearance specifically described in the lecture." }
+    ]
+  },
+  {
+    num: 5, title: "Lactating Breast",
+    vignette: "A 26-year-old woman, 3 weeks postpartum, undergoes breast biopsy for a palpable lump (found to be benign galactocele). Microscopy shows dilated alveoli packed with foamy, pale secretion. The stroma is markedly reduced compared to a nulliparous control. Myoepithelial cells are visible wrapping the alveoli.",
+    questions: [
+      { q: "Q1. How are the two components of milk secreted at the cellular level?", a: "<strong>Answer:</strong> <strong>Proteins</strong> (casein, whey): packaged in membrane-bound vesicles and released by <strong>merocrine (exocytotic) secretion</strong> — no cell material is lost. <strong>Lipids</strong> (fat globules): accumulate in the apical cytoplasm and are released by <strong>apocrine secretion</strong> — the lipid droplet buds off while enveloped in a portion of the cell membrane." },
+      { q: "Q2. What is the role of myoepithelial cells and what stimulates them?", a: "<strong>Answer:</strong> Myoepithelial (basket) cells are contractile cells that wrap around alveoli and lactiferous ducts. They contain actin filaments and contract in response to <strong>oxytocin</strong> (released during suckling via neuroendocrine reflex), producing the milk ejection (let-down) reflex that propels milk to the nipple." }
+    ]
+  },
+  {
+    num: 6, title: "Integrative Case — Week 20 Pregnancy",
+    vignette: "A 25-year-old married female is diagnosed by ultrasonography to be in the 20th week of pregnancy (5 months). Biopsies are taken from the placenta and breast for academic study.",
+    questions: [
+      { q: "Q1. What structural changes are expected in the placenta at this stage?", a: "<strong>Answer:</strong> At 20 weeks (month 5), the chorionic villi are <strong>tertiary villi</strong> (primary → mesenchyme invaded → capillaries established). The key feature at this stage: the <strong>cytotrophoblast is in the process of disappearing</strong> (atrophies from month 4–5 onwards). The barrier now consists of: Syncytiotrophoblast + basement membrane + mesenchyme + capillary BM + capillary endothelium — MINUS the cytotrophoblast." },
+      { q: "Q2. What structural changes are expected in the breast?", a: "<strong>Answer:</strong> Under the combined influence of estrogen, progesterone, prolactin, and placental lactogen, the breast undergoes dramatic changes: (1) Terminal ducts proliferate into <strong>alveoli</strong> (alveolar proliferation). (2) The fibrous connective tissue <strong>stroma is markedly reduced</strong>. (3) Alveoli become lined by cuboidal secretory cells. (4) The gland is transitioning toward a fully lactating phenotype. Histologically: reduced stroma, expanded lobules, cuboidal epithelium with early secretory activity." }
+    ]
+  }
+];
+
+const MNEMONICS = [
+  {
+    title: "Menstrual Phases", topic: "Uterus",
+    acronym: "MPS",
+    color: "#f87171",
+    phrase: "\"My Period Starts\"",
+    items: [
+      { letter: "M", word: "Menstrual", def: "Days 1–5. Corpus luteum → zero progesterone → spiral arteries constrict → necrosis of functionalis." },
+      { letter: "P", word: "Proliferative", def: "Days 6–14. Estrogen from follicles → mitosis of epithelium, stroma, glands (straight), arteries." },
+      { letter: "S", word: "Secretory", def: "Days 15–28. Progesterone from corpus luteum → glands dilated, tortuous, glycogen-filled." }
+    ]
+  },
+  {
+    title: "Placental Barrier Layers", topic: "Placenta",
+    acronym: "SCTMCE",
+    color: "#4ade80",
+    phrase: "\"Some Cells Take Maternal Capillary Exchange\"",
+    items: [
+      { letter: "S", word: "Syncytiotrophoblast", def: "Outer continuous layer, no boundaries. Borders maternal blood." },
+      { letter: "C", word: "Cytotrophoblast", def: "Inner discrete cells (disappear after month 4!)." },
+      { letter: "T", word: "Trophoblast Basement Membrane", def: "Between trophoblast and mesenchyme." },
+      { letter: "M", word: "Mesenchymal Connective Tissue", def: "Core of the villus — structural support." },
+      { letter: "C", word: "Capillary Basement Membrane", def: "Wraps fetal capillaries." },
+      { letter: "E", word: "Endothelium (capillary)", def: "Innermost layer — fetal blood vessel lining." }
+    ]
+  },
+  {
+    title: "Villi Stages", topic: "Placenta",
+    acronym: "PST",
+    color: "#38bdf8",
+    phrase: "\"Please Stop There\" — Primary, Secondary, Tertiary",
+    items: [
+      { letter: "P", word: "Primary Villi", def: "Day 2 post-implantation. Cytotrophoblast + Syncytiotrophoblast only (2 layers)." },
+      { letter: "S", word: "Secondary Villi", def: "Day 15. Mesenchymal C.T. core added → 3 components." },
+      { letter: "T", word: "Tertiary Villi", def: "End of Month 1. Capillary loops develop → fully functional exchange!" }
+    ]
+  },
+  {
+    title: "Myometrium in Pregnancy", topic: "Uterus",
+    acronym: "HHC",
+    color: "#a78bfa",
+    phrase: "\"Huge Hypertrophied Collagen\" — What the myometrium does in pregnancy",
+    items: [
+      { letter: "H", word: "Hypertrophy", def: "Individual smooth muscle cells INCREASE IN SIZE." },
+      { letter: "H", word: "Hyperplasia", def: "Smooth muscle cells INCREASE IN NUMBER." },
+      { letter: "C", word: "Collagen synthesis", def: "Cells adopt fibroblast-like function → produce collagen → wall strength." }
+    ]
+  },
+  {
+    title: "Vaginal Acidity Steps", topic: "Cervix/Vagina",
+    acronym: "SGLA",
+    color: "#f472b6",
+    phrase: "\"Squamous Glycogen → Lactobacillus → Acid\"",
+    items: [
+      { letter: "S", word: "Squamous cells", def: "Non-keratinized stratified squamous epithelium synthesizes glycogen." },
+      { letter: "G", word: "Glycogen accumulates", def: "Inside the cells — gives net-like H&E appearance." },
+      { letter: "L", word: "Lactobacillus metabolizes", def: "Normal flora converts glycogen to lactic acid." },
+      { letter: "A", word: "Acid environment", def: "Low pH (3.5–4.5) → biological defense against pathogens." }
+    ]
+  },
+  {
+    title: "Mammary Gland Secretion", topic: "Mammary",
+    acronym: "PAM",
+    color: "#d4a843",
+    phrase: "\"Proteins Are Merocrine, (lipids are) Apocrine\" — PAM helps lactation",
+    items: [
+      { letter: "P", word: "Proteins → Merocrine", def: "Casein, whey proteins secreted by exocytosis. No cell material lost." },
+      { letter: "A", word: "fAts → Apocrine", def: "Lipid droplets bud off with cell membrane. Apocrine secretion." },
+      { letter: "M", word: "Myoepithelial contraction", def: "Oxytocin causes myoepithelial cells to contract → milk ejection (let-down)." }
+    ]
+  }
+];
+
+const STRUCTURES = [
+  { icon: "🔴", name: "Stratum Functionalis", title: "Stratum Functionalis (Upper 2/3)", text: "The shed layer. Supplied by SPIRAL arteries which are PROGESTERONE-SENSITIVE. Contains the surface epithelium, most of the uterine glands, and stroma. Undergoes cyclical proliferation, secretion, and necrosis. Completely shed during menstruation and regrown from the basalis each cycle." },
+  { icon: "🟤", name: "Stratum Basalis", title: "Stratum Basalis (Lower 1/3)", text: "The permanent layer. Supplied by STRAIGHT arteries — NOT hormone-sensitive. Contains the bottoms of uterine glands. NEVER sheds. Responsible for regenerating the functional layer after each menstruation via mitosis of glandular epithelium." },
+  { icon: "🌀", name: "Spiral Arteries", title: "Spiral Arteries", text: "Highly coiled arteries supplying the stratum functionalis. UNIQUE in being SENSITIVE to progesterone withdrawal — when progesterone drops (corpus luteum degeneration), they CONSTRICT, causing ischemia and necrosis of the functional layer. This is the direct mechanism of menstruation." },
+  { icon: "📏", name: "Straight Arteries", title: "Straight Arteries", text: "Unbranched arteries supplying the stratum basalis. NOT sensitive to progesterone withdrawal. Remain patent throughout the menstrual cycle, ensuring the basal layer always has blood supply — critical for endometrial regeneration each cycle." },
+  { icon: "🟡", name: "Syncytiotrophoblast", title: "Syncytiotrophoblast", text: "OUTER trophoblast layer. A continuous multinucleated syncytium — NO distinct cell boundaries. Directly borders maternal blood in the intervillous space. Persists throughout pregnancy. NOT lost in late pregnancy. Invades the endometrium during implantation and is the key hormone-secreting layer (hCG, progesterone, estrogen)." },
+  { icon: "🔵", name: "Cytotrophoblast", title: "Cytotrophoblast (Langhans Cells)", text: "INNER trophoblast layer. Individual cells with DISTINCT cell boundaries. Present in early pregnancy as the inner cell layer of the trophoblast. Progressively ATROPHIES and DISAPPEARS from the 4th–5th month of pregnancy. Exam critical: Late placental barrier does NOT include cytotrophoblast." },
+  { icon: "🍶", name: "Myoepithelial Cells", title: "Myoepithelial (Basket) Cells", text: "Contractile cells that envelop mammary alveoli and lactiferous ducts. Contain actin filaments. Contract under OXYTOCIN stimulation during suckling to produce the milk ejection (let-down) reflex. NOT secretory — purely contractile. Derived from ectoderm despite the 'myo-' prefix." },
+  { icon: "🌿", name: "Uterine Glands", title: "Uterine Glands (Endometrial Glands)", text: "Simple tubular glands that run through the endometrium. Their appearance changes with the cycle: PROLIFERATIVE = straight, narrow. SECRETORY = dilated, tortuous, glycogen-rich (saw-tooth appearance). During menstruation: shed with the functionalis (except their basal portions which remain in the basalis)." }
+];
+
+const SEARCH_INDEX = [
+  { tag: "Uterus / Menstrual Phase", text: "Corpus luteum degenerates → progesterone drops to zero → spiral arteries constrict → ischemia → necrosis of stratum functionalis → shedding (menstruation)" },
+  { tag: "Uterus / Proliferative Phase", text: "Maturing follicles secrete estrogen → mitosis of surface epithelium, stroma, uterine glands, and spiral arteries → glands appear straight and narrow" },
+  { tag: "Uterus / Secretory Phase", text: "Corpus luteum secretes progesterone → uterine glands become dilated, tortuous, and accumulate glycogen to nourish the embryo" },
+  { tag: "Uterus / Myometrium Pregnancy", text: "Smooth muscle cells undergo hypertrophy (size increase), hyperplasia (number increase), and synthesize collagen (fibroblast-like function) to strengthen the uterine wall" },
+  { tag: "Uterus / Stratum Basalis", text: "Lower 1/3 of endometrium. Supplied by straight arteries NOT sensitive to progesterone withdrawal. Never shed. Contains bases of uterine glands. Regenerates functional layer each cycle." },
+  { tag: "Uterus / Spiral Arteries", text: "Supply stratum functionalis. Hormone (progesterone) sensitive. Constrict when progesterone drops → cause menstrual ischemia and necrosis. Key mechanism of menstruation." },
+  { tag: "Uterus / Decidual Reaction", text: "Stromal fibroblasts under progesterone enlarge, grow cytoplasmic processes, and accumulate glycogen — become decidual cells — preparing the uterus for implantation" },
+  { tag: "Cervix / Endocervix", text: "Simple columnar mucus-secreting epithelium. Does NOT shed during menstruation. Different vascular supply from endometrium. Located above the external os." },
+  { tag: "Cervix / Exocervix", text: "Non-keratinized stratified squamous epithelium. Located below the external os. Junction with endocervix is ABRUPT — squamocolumnar junction (SCJ)." },
+  { tag: "Vagina / Defense Mechanism", text: "Non-keratinized stratified squamous epithelium synthesizes and stores glycogen. Bacterial flora (Lactobacillus) metabolize glycogen into lactic acid. Creates acidic environment (pH 3.5–4.5) protective against pathogens. The vagina has NO glands." },
+  { tag: "Vagina / H&E Appearance", text: "Superficial cells appear pale and vacuolated (net-like) due to massive glycogen content dissolved out during processing. No goblet cells, no glands in the lamina propria." },
+  { tag: "Placenta / Primary Villi", text: "Day 2 post-implantation. Two layers only: outer syncytiotrophoblast (continuous, no cell boundaries) + inner cytotrophoblast (distinct boundaries). No mesenchyme, no capillaries." },
+  { tag: "Placenta / Secondary Villi", text: "Day 15 (~Week 2). Mesenchymal connective tissue invades the core of primary villi → 3 components. Still no capillaries." },
+  { tag: "Placenta / Tertiary Villi", text: "End of month 1. Capillary loops develop in the mesenchymal core → fetal circulation established → functional exchange can begin. Fully mature villi." },
+  { tag: "Placenta / Early Barrier (6 layers)", text: "1. Syncytiotrophoblast 2. Cytotrophoblast 3. Trophoblast BM 4. Mesenchymal C.T. 5. Capillary BM 6. Capillary endothelium" },
+  { tag: "Placenta / Late Barrier (after month 4)", text: "Cytotrophoblast DISAPPEARS from month 4–5. Remaining layers: Syncytiotrophoblast → Trophoblast BM → Mesenchyme → Capillary BM → Capillary endothelium. Answer = everything EXCEPT cytotrophoblast." },
+  { tag: "Placenta / Syncytiotrophoblast", text: "Outer continuous multinucleated layer, NO cell boundaries. Borders maternal blood in intervillous space. Persists throughout pregnancy. Secretes hCG, progesterone, estrogen." },
+  { tag: "Placenta / Cytotrophoblast", text: "Inner discrete cells with DISTINCT boundaries (Langhans cells). Present early. Atrophies and DISAPPEARS from 4th–5th month. Key exam point: NOT present in late placental barrier." },
+  { tag: "Mammary / Gland Classification", text: "Compound branched tubuloalveolar gland. 15–25 lobes. Each lobe separated by dense fibrous C.T. Each lobe drains via its OWN lactiferous duct. Explicitly flagged as exam question in lecture." },
+  { tag: "Mammary / Pregnancy Changes", text: "Estrogen + progesterone + prolactin + placental lactogen → terminal ducts proliferate into alveoli, stroma markedly reduced, lobules expand. Breast transitions from predominantly stromal to predominantly glandular." },
+  { tag: "Mammary / Lactation Secretion", text: "PROTEINS → Merocrine (exocytotic) secretion. LIPIDS → Apocrine secretion (lipid buds off with cell membrane). Both routes active simultaneously in lactating alveolar cells." },
+  { tag: "Mammary / Milk Ejection", text: "Myoepithelial (basket) cells contract under OXYTOCIN stimulation (suckling reflex) → squeeze milk from alveoli into lactiferous ducts → let-down reflex" },
+  { tag: "Mammary / Myoepithelial Cells", text: "Basket cells wrap around alveoli and ducts. Contain actin. Contract under oxytocin. Responsible for milk ejection, NOT milk production. Prolactin drives production." },
+  { tag: "Exam Alert / Myometrium", text: "EXAM QUOTE: During pregnancy, smooth muscle cells take a second function — synthesizing collagen to make the uterine wall strong." },
+  { tag: "Exam Alert / Late Barrier", text: "EXAM QUOTE: If asked about the placental barrier in late pregnancy, say everything EXCEPT cytotrophoblast." },
+  { tag: "Exam Alert / Mammary Type", text: "EXAM QUOTE: The type of mammary gland is compound branched tubuloalveolar. This is an exam question." },
+  { tag: "Exam Alert / Vaginal Epithelium", text: "EXAM QUOTE: Every organ opening to the outside world is lined by stratified squamous epithelium. Vaginal epithelium contains massive amounts of glycogen — net-like appearance." }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let state = JSON.parse(localStorage.getItem('histo_state') || '{}');
+state = Object.assign({ qIdx: 0, correct: 0, wrong: 0, streak: 0, answered: [], fcSeen: [], activeTab: 'overview' }, state);
+
+function saveState() { try { localStorage.setItem('histo_state', JSON.stringify(state)); } catch(e){} }
+function updateStats() {
+  document.getElementById('statScore').textContent = `${state.correct}/${QUESTIONS.length}`;
+  document.getElementById('statStreak').textContent = `🔥 ${state.streak}`;
+  document.getElementById('statCards').textContent = `${state.fcSeen.length}/25`;
+  const pct = Math.round(((state.correct + state.fcSeen.length/2) / (QUESTIONS.length + 12.5)) * 100);
+  document.getElementById('statProgress').textContent = `${Math.min(pct,100)}%`;
+}
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => { if(b.textContent.toLowerCase().includes(id.substring(0,4))) b.classList.add('active'); });
+  // safer active tab detection
+  const tabs = document.querySelectorAll('.tab-btn');
+  const ids = ['overview','quiz','flashcards','cases','histo','mnemonics','search'];
+  tabs.forEach((t,i) => { t.classList.toggle('active', ids[i] === id); });
+  state.activeTab = id; saveState();
+  if(id === 'quiz') renderQuiz();
+  if(id === 'flashcards') renderFlashcards('all');
+  if(id === 'cases') renderCases();
+  if(id === 'mnemonics') renderMnemonics();
+  if(id === 'histo') renderStructures();
+}
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+function renderQuiz() {
+  if(state.qIdx >= QUESTIONS.length) { showScore(); return; }
+  const q = QUESTIONS[state.qIdx];
+  const total = QUESTIONS.length;
+
+  document.getElementById('qProgressText').textContent = `${state.qIdx} / ${total}`;
+  document.getElementById('qProgressBar').style.width = `${(state.qIdx/total)*100}%`;
+  document.getElementById('qCorrect').textContent = state.correct;
+  document.getElementById('qWrong').textContent = state.wrong;
+  document.getElementById('qStreak').textContent = state.streak + '🔥';
+
+  const already = state.answered[state.qIdx];
+  const html = `
+    <div class="question-card" id="qCard">
+      <div class="q-num">Question ${state.qIdx+1} of ${total} · <span class="tag tag-teal" style="font-size:0.65rem">${q.topic}</span></div>
+      <div class="q-text">${q.q}</div>
+      ${q.opts.map((o,i) => `
+        <button class="option-btn ${already !== undefined ? (i === q.ans ? 'correct' : (i === already ? 'wrong' : '')) : ''}"
+          id="opt${i}" onclick="selectAnswer(${i})" ${already !== undefined ? 'disabled' : ''}>
+          <span class="opt-letter">${'ABCDE'[i]}</span>${o}
+        </button>
+      `).join('')}
+      <div class="explanation ${already !== undefined ? 'show' : ''}" id="explain">${q.explain.replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" onclick="prevQ()" ${state.qIdx === 0 ? 'disabled' : ''}>← Prev</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next →</button>
+      ${state.qIdx === total - 1 ? '<button class="btn btn-teal" onclick="showScore()">See Results 🏆</button>' : ''}
+    </div>
+  `;
+  document.getElementById('quizContent').innerHTML = html;
+  document.getElementById('scoreScreen').classList.remove('show');
+}
+
+function selectAnswer(i) {
+  if(state.answered[state.qIdx] !== undefined) return;
+  const q = QUESTIONS[state.qIdx];
+  state.answered[state.qIdx] = i;
+  if(i === q.ans) {
+    state.correct++; state.streak++;
+    document.getElementById('opt'+i).classList.add('correct','pulse-ok');
+  } else {
+    state.wrong++; state.streak = 0;
+    document.getElementById('opt'+i).classList.add('wrong','shake');
+    document.getElementById('opt'+q.ans).classList.add('correct');
+  }
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  document.getElementById('explain').classList.add('show');
+  document.getElementById('qCorrect').textContent = state.correct;
+  document.getElementById('qWrong').textContent = state.wrong;
+  document.getElementById('qStreak').textContent = state.streak + '🔥';
+  updateStats(); saveState();
+}
+
+function nextQ() { if(state.qIdx < QUESTIONS.length - 1) { state.qIdx++; saveState(); renderQuiz(); } else { showScore(); } }
+function prevQ() { if(state.qIdx > 0) { state.qIdx--; saveState(); renderQuiz(); } }
+
+function showScore() {
+  document.getElementById('quizContent').innerHTML = '';
+  const sc = document.getElementById('scoreScreen');
+  sc.classList.add('show');
+  const pct = Math.round((state.correct / QUESTIONS.length) * 100);
+  document.getElementById('scorePct').textContent = pct + '%';
+  document.getElementById('scoreCircle').style.setProperty('--pct', pct + '%');
+  let msg = pct >= 90 ? '🏆 Outstanding!' : pct >= 75 ? '🎯 Great Work!' : pct >= 60 ? '📖 Keep Studying!' : '💪 Review & Retry!';
+  let sub = `You got ${state.correct} correct out of ${QUESTIONS.length} questions.`;
+  document.getElementById('scoreMsg').textContent = msg;
+  document.getElementById('scoreSub').textContent = sub;
+  updateStats();
+}
+
+function resetQuiz() {
+  state.qIdx = 0; state.correct = 0; state.wrong = 0; state.streak = 0; state.answered = [];
+  saveState(); document.getElementById('scoreScreen').classList.remove('show'); renderQuiz();
+}
+
+// ══════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════
+let currentCards = [...FLASHCARDS];
+function renderFlashcards(filter) {
+  const filtered = filter === 'all' ? currentCards : currentCards.filter(c => c.category === filter);
+  const grid = document.getElementById('flashcardsGrid');
+  grid.innerHTML = filtered.map((c,i) => `
+    <div class="flashcard-wrap" onclick="flipCard(this,${i})">
+      <div class="flashcard" id="fc${i}">
+        <div class="card-face card-front">
+          <div class="fc-label">❓ Question</div>
+          <div class="fc-text">${c.q}</div>
+          <div class="fc-hint">Tap to reveal answer</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="fc-label">✅ Answer</div>
+          <div class="fc-text">${c.a}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('fcSeen').textContent = state.fcSeen.length;
+}
+
+function flipCard(wrap, i) {
+  wrap.querySelector('.flashcard').classList.toggle('flipped');
+  if(!state.fcSeen.includes(i)) { state.fcSeen.push(i); document.getElementById('fcSeen').textContent = state.fcSeen.length; updateStats(); saveState(); }
+}
+
+function filterCards(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFlashcards(filter);
+}
+
+function shuffleCards() {
+  currentCards = [...FLASHCARDS].sort(() => Math.random() - 0.5);
+  const activeFilter = document.querySelector('.filter-btn.active').textContent.toLowerCase().replace(/[^a-z]/g,'');
+  const catMap = { all:'all', uterus:'uterus', cervix:'cervix', vagina:'cervix', placenta:'placenta', mammary:'mammary' };
+  renderFlashcards(catMap[activeFilter] || 'all');
+}
+
+// ══════════════════════════════════════════
+// CASES
+// ══════════════════════════════════════════
+function renderCases() {
+  document.getElementById('casesContent').innerHTML = CASES.map(c => `
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-num">${c.num}</div>
+        <div>
+          <h3>Case ${c.num}: ${c.title}</h3>
+          <p>Click "Reveal Answer" to see the model answer</p>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="case-vignette">${c.vignette}</div>
+        ${c.questions.map((q,qi) => `
+          <div class="case-q">
+            <p><strong style="color:var(--violet)">${q.q}</strong></p>
+            <button class="reveal-btn" onclick="revealAnswer(this)">🔍 Reveal Answer</button>
+            <div class="case-answer">
+              <h5>✅ Model Answer</h5>
+              <p>${q.a}</p>
+            </div>
+          </div>
+        `).join('<hr style="border-color:var(--border);margin:1rem 0">')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function revealAnswer(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? '🔼 Hide Answer' : '🔍 Reveal Answer';
+}
+
+// ══════════════════════════════════════════
+// HISTOLOGY EXPLORER
+// ══════════════════════════════════════════
+function switchHistoTab(id) {
+  document.querySelectorAll('.histo-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.histo-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('histo-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function renderStructures() {
+  document.getElementById('structuresGrid').innerHTML = STRUCTURES.map((s,i) => `
+    <div class="structure-item" onclick="showStructure(${i})">
+      <span class="s-icon">${s.icon}</span>
+      <h4>${s.name}</h4>
+    </div>
+  `).join('');
+}
+
+function showStructure(i) {
+  document.querySelectorAll('.structure-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const d = document.getElementById('structureDetail');
+  document.getElementById('structureDetailTitle').textContent = STRUCTURES[i].title;
+  document.getElementById('structureDetailText').textContent = STRUCTURES[i].text;
+  d.classList.add('show');
+}
+
+// ══════════════════════════════════════════
+// MNEMONICS
+// ══════════════════════════════════════════
+function renderMnemonics() {
+  document.getElementById('mnemonicsContent').innerHTML = MNEMONICS.map((m,i) => `
+    <div class="mnemonic-card" style="border-color:${m.color}22">
+      <div class="mnemonic-header" onclick="toggleMnemonic(${i})" style="background:${m.color}11">
+        <div>
+          <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.1em">${m.topic}</div>
+          <h3>${m.title}</h3>
+          <div class="mnemonic-acronym" style="color:${m.color}">${m.acronym}</div>
+          <div style="font-size:0.85rem;color:var(--muted);font-style:italic">${m.phrase}</div>
+        </div>
+        <div style="font-size:1.5rem;color:${m.color}" id="mArrow${i}">▼</div>
+      </div>
+      <div class="mnemonic-body" id="mb${i}">
+        ${m.items.map(item => `
+          <div class="mnemonic-item">
+            <div class="mnemonic-letter" style="color:${m.color}">${item.letter}</div>
+            <div class="mnemonic-def">
+              <strong>${item.word}</strong>
+              <span>${item.def}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleMnemonic(i) {
+  const body = document.getElementById('mb'+i);
+  const arrow = document.getElementById('mArrow'+i);
+  body.classList.toggle('show');
+  arrow.textContent = body.classList.contains('show') ? '▲' : '▼';
+}
+
+// ══════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════
+function doSearch(val) {
+  const container = document.getElementById('searchResults');
+  if(!val.trim()) { container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:3rem">Start typing to search all content…</div>'; return; }
+  const q = val.toLowerCase();
+  const results = SEARCH_INDEX.filter(item => item.text.toLowerCase().includes(q) || item.tag.toLowerCase().includes(q));
+  if(!results.length) { container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:2rem">No results found. Try different keywords.</div>'; return; }
+  container.innerHTML = results.map(r => `
+    <div class="search-result">
+      <div class="sr-tag">${r.tag}</div>
+      <div class="sr-text">${r.text.replace(new RegExp(val,'gi'), m => `<mark>${m}</mark>`)}</div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// ANIMATED BG
+// ══════════════════════════════════════════
+function createCells() {
+  const canvas = document.getElementById('bgCanvas');
+  for(let i = 0; i < 12; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const size = 40 + Math.random() * 80;
+    cell.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      animation-duration:${15+Math.random()*20}s;
+      animation-delay:${-Math.random()*20}s;
+      opacity:${0.2+Math.random()*0.4};
+      background: radial-gradient(circle, ${['rgba(45,212,200,0.15)','rgba(212,168,67,0.12)','rgba(167,139,250,0.12)'][Math.floor(Math.random()*3)]} 0%, transparent 70%);
+    `;
+    canvas.appendChild(cell);
+  }
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+createCells();
+renderQuiz();
+renderFlashcards('all');
+renderCases();
+renderMnemonics();
+renderStructures();
+updateStats();
+// Restore last tab
+if(state.activeTab && state.activeTab !== 'overview') switchTab(state.activeTab);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

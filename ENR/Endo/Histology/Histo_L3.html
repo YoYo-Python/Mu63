@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Histology Study Platform — Adrenal Glands, Pancreatic Islets & DNES</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1e2a42;
+  --accent-1: #6366f1;
+  --accent-2: #8b5cf6;
+  --accent-3: #a78bfa;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-yellow: #f59e0b;
+  --accent-blue: #3b82f6;
+  --accent-pink: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-orange: #f97316;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #2a3550;
+  --gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --gradient-2: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --gradient-3: linear-gradient(135deg, #10b981, #059669);
+  --gradient-4: linear-gradient(135deg, #f59e0b, #f97316);
+  --gradient-5: linear-gradient(135deg, #ec4899, #8b5cf6);
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Animated Background */
+.bg-animation {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.08;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.bg-orb:nth-child(1) {
+  width: 500px; height: 500px;
+  background: var(--accent-1);
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+
+.bg-orb:nth-child(2) {
+  width: 400px; height: 400px;
+  background: var(--accent-pink);
+  top: 50%; right: -100px;
+  animation-delay: -7s;
+  animation-duration: 25s;
+}
+
+.bg-orb:nth-child(3) {
+  width: 350px; height: 350px;
+  background: var(--accent-cyan);
+  bottom: -50px; left: 30%;
+  animation-delay: -14s;
+  animation-duration: 22s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(50px, -80px) scale(1.1); }
+  50% { transform: translate(-30px, 60px) scale(0.9); }
+  75% { transform: translate(70px, 30px) scale(1.05); }
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 26, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-title .logo {
+  width: 42px; height: 42px;
+  background: var(--gradient-1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.header-title h1 {
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-title .subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.header-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stat-badge .num {
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-badge.green .num { color: var(--accent-green); }
+.stat-badge.blue .num { color: var(--accent-blue); }
+.stat-badge.yellow .num { color: var(--accent-yellow); }
+
+/* Search */
+.search-container {
+  max-width: 1400px;
+  margin: 16px auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.search-box {
+  width: 100%;
+  padding: 14px 20px 14px 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  outline: none;
+}
+
+.search-box:focus {
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+.search-icon {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 24px;
+  right: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+  z-index: 200;
+  box-shadow: var(--shadow-lg);
+}
+
+.search-results.active { display: block; }
+
+.search-result-item {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+}
+
+.search-result-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.search-result-item .sr-tab {
+  font-size: 11px;
+  color: var(--accent-3);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.search-result-item mark {
+  background: rgba(99,102,241,0.3);
+  color: var(--text-primary);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* Tabs */
+.tab-nav {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  position: relative;
+  z-index: 10;
+  scrollbar-width: none;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:hover {
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.03);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border-color: var(--border);
+  border-bottom-color: var(--bg-card);
+}
+
+/* Main */
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.tab-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 20px;
+}
+
+.section-header .icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.section-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--accent-1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.card .card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.card .tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-right: 4px;
+}
+
+.tag-high-yield { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+.tag-exam { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
+.tag-clinical { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.tag-pearl { background: rgba(99,102,241,0.15); color: var(--accent-1); }
+
+.card .accent-bar {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--gradient-1);
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.timeline-item:hover {
+  border-color: var(--accent-1);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-1);
+  border: 2px solid var(--bg-primary);
+}
+
+.timeline-item h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--accent-3);
+}
+
+.timeline-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Quiz */
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-progress {
+  margin-bottom: 24px;
+}
+
+.quiz-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: var(--gradient-1);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.quiz-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.quiz-question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 20px;
+}
+
+.quiz-q-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-1);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.quiz-q-text {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-option {
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.quiz-option:hover:not(.disabled) {
+  border-color: var(--accent-1);
+  background: rgba(99,102,241,0.05);
+}
+
+.quiz-option .opt-letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.quiz-option.correct {
+  border-color: var(--accent-green);
+  background: rgba(16,185,129,0.08);
+  animation: pulseGreen 0.5s ease;
+}
+
+.quiz-option.correct .opt-letter {
+  background: var(--accent-green);
+  color: white;
+}
+
+.quiz-option.wrong {
+  border-color: var(--accent-red);
+  background: rgba(239,68,68,0.08);
+  animation: shakeX 0.5s ease;
+}
+
+.quiz-option.wrong .opt-letter {
+  background: var(--accent-red);
+  color: white;
+}
+
+.quiz-option.disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.quiz-option.disabled.correct {
+  opacity: 1;
+}
+
+@keyframes pulseGreen {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.quiz-explanation {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  display: none;
+}
+
+.quiz-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+
+.quiz-explanation strong { color: var(--accent-green); }
+
+.quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--gradient-1);
+  color: white;
+}
+
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover { border-color: var(--accent-1); }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quiz-score-card {
+  text-align: center;
+  padding: 48px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.quiz-score-card .score-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--gradient-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.quiz-score-card h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.quiz-score-card p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Flashcards */
+.flashcard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.flashcard-wrapper {
+  perspective: 1000px;
+  height: 260px;
+  cursor: pointer;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard-wrapper.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.flashcard-front {
+  background: var(--bg-card);
+}
+
+.flashcard-front h4 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.flashcard-front .flip-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 16px;
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, #1a2236, #1e2a42);
+  transform: rotateY(180deg);
+  border-color: var(--accent-1);
+}
+
+.flashcard-back p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.flashcard-back .fb-label {
+  font-size: 11px;
+  color: var(--accent-1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* Clinical Cases */
+.case-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: var(--transition);
+}
+
+.case-card:hover { border-color: var(--accent-2); }
+
+.case-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-pink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.case-scenario {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent-2);
+}
+
+.case-questions {
+  margin-top: 12px;
+}
+
+.case-q {
+  margin-bottom: 16px;
+}
+
+.case-q h5 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent-cyan);
+}
+
+.case-answer {
+  padding: 14px 18px;
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.15);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.case-answer.show { display: block; }
+
+.reveal-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--accent-2);
+  border-radius: var(--radius-xs);
+  color: var(--accent-2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 8px;
+}
+
+.reveal-btn:hover {
+  background: rgba(139,92,246,0.1);
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background: rgba(99,102,241,0.1);
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent-3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Flowchart */
+.flowchart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 24px 0;
+  padding: 20px;
+}
+
+.flow-step {
+  padding: 16px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 420px;
+  width: 100%;
+  transition: var(--transition);
+  position: relative;
+}
+
+.flow-step:hover {
+  border-color: var(--accent-1);
+  transform: scale(1.02);
+}
+
+.flow-step.highlight {
+  border-color: var(--accent-green);
+  background: rgba(16,185,129,0.06);
+}
+
+.flow-arrow {
+  font-size: 24px;
+  color: var(--accent-1);
+  padding: 4px 0;
+}
+
+/* Anatomy grid */
+.anatomy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.anatomy-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.anatomy-item:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
+}
+
+.anatomy-item .ai-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.anatomy-item .ai-header .ai-icon {
+  font-size: 24px;
+}
+
+.anatomy-item .ai-body {
+  padding: 0 20px 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  display: none;
+}
+
+.anatomy-item.expanded .ai-body { display: block; animation: fadeIn 0.3s ease; }
+
+/* Mnemonic */
+.mnemonic-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mnemonic-card:hover { border-color: var(--accent-yellow); }
+
+.mnemonic-card .mn-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--accent-yellow);
+  letter-spacing: 2px;
+}
+
+.mnemonic-card .mn-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.mnemonic-card .mn-list {
+  display: none;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+
+.mnemonic-card.expanded .mn-list { display: block; }
+
+.mnemonic-card .mn-list li {
+  list-style: none;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mnemonic-card .mn-list li strong {
+  color: var(--accent-yellow);
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+/* Viva */
+.viva-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.viva-q {
+  padding: 18px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.viva-q:hover { background: rgba(255,255,255,0.02); }
+
+.viva-q .vq-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--gradient-5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.viva-q .vq-chevron {
+  margin-left: auto;
+  transition: var(--transition);
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.viva-card.expanded .vq-chevron { transform: rotate(180deg); }
+
+.viva-a {
+  padding: 0 24px 18px 64px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  display: none;
+}
+
+.viva-card.expanded .viva-a { display: block; animation: fadeIn 0.3s ease; }
+
+/* Investigation badges */
+.inv-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.inv-badge {
+  padding: 6px 14px;
+  background: rgba(6,182,212,0.1);
+  border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.inv-badge:hover {
+  background: rgba(6,182,212,0.2);
+}
+
+/* Treatment urgency */
+.treatment-card {
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  border-left: 4px solid;
+}
+
+.treatment-card.urgent { border-left-color: var(--accent-red); }
+.treatment-card.important { border-left-color: var(--accent-yellow); }
+.treatment-card.routine { border-left-color: var(--accent-green); }
+
+.treatment-card h4 { font-size: 15px; margin-bottom: 6px; }
+.treatment-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Motivation toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 16px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-green);
+  border-radius: var(--radius-sm);
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 1000;
+  display: none;
+  animation: slideInUp 0.4s ease;
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .header-stats { width: 100%; justify-content: flex-start; }
+  .card-grid { grid-template-columns: 1fr; }
+  .flashcard-grid { grid-template-columns: 1fr; }
+  .anatomy-grid { grid-template-columns: 1fr; }
+  .tab-btn { padding: 10px 14px; font-size: 12px; }
+  .quiz-question-card { padding: 20px; }
+  .quiz-q-text { font-size: 15px; }
+  .search-icon { left: 36px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-1); }
+
+/* Exam warning box */
+.exam-alert {
+  padding: 16px 20px;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: var(--radius-sm);
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--accent-yellow);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.exam-alert .ea-icon { font-size: 20px; flex-shrink: 0; }
+
+/* Key signs grid */
+.signs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.sign-item {
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sign-item .si-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sign-item .si-desc {
+  color: var(--text-secondary);
+}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-animation">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="logo">🔬</div>
+      <div>
+        <h1>Histology Study Platform</h1>
+        <div class="subtitle">Adrenal Glands • Pancreatic Islets • DNES</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-badge green">✅ Progress: <span class="num" id="statProgress">0%</span></div>
+      <div class="stat-badge blue">🎯 Score: <span class="num" id="statScore">0/25</span></div>
+      <div class="stat-badge yellow">🔥 Streak: <span class="num" id="statStreak">0</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="search-container">
+  <span class="search-icon">🔍</span>
+  <input type="text" class="search-box" id="searchBox" placeholder="Search across all topics (e.g. 'spongiocyte', 'chromaffin', 'APUD')..." />
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+  <button class="tab-btn" data-tab="quiz">🧪 Quiz</button>
+  <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+  <button class="tab-btn" data-tab="cases">🏥 Clinical Cases</button>
+  <button class="tab-btn" data-tab="anatomy">🔬 Structures</button>
+  <button class="tab-btn" data-tab="diagnosis">🔎 Diagnosis</button>
+  <button class="tab-btn" data-tab="treatment">💊 Integration</button>
+  <button class="tab-btn" data-tab="mnemonics">🧠 Mnemonics</button>
+</nav>
+
+<main class="main-content">
+
+<!-- ========== OVERVIEW TAB ========== -->
+<div class="tab-panel active" id="tab-overview">
+
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-1)">📋</div>
+    <div>
+      <h2>Overview</h2>
+      <p>Quick-reference summary of adrenal glands, pancreatic islets, and DNES histology</p>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="accent-bar" style="background:var(--gradient-1)"></div>
+      <div class="card-icon">🟡</div>
+      <h3>Adrenal Cortex</h3>
+      <p>Three zones (G-F-R) secrete steroid hormones: Aldosterone, Cortisol, DHEA. Cells have abundant sER, tubular mitochondrial cristae, and lipid droplets. Steroids diffuse out — no granule storage.</p>
+      <span class="tag tag-high-yield">HIGH-YIELD</span>
+      <span class="tag tag-exam">⚠️ EXAM</span>
+    </div>
+    <div class="card">
+      <div class="accent-bar" style="background:var(--gradient-5)"></div>
+      <div class="card-icon">🟤</div>
+      <h3>Adrenal Medulla</h3>
+      <p>Chromaffin cells (modified sympathetic neurons) arranged in cords. Store catecholamines in electron-dense granules. Epi = smaller, less dense. Norepi = larger, denser. Released by exocytosis.</p>
+      <span class="tag tag-high-yield">HIGH-YIELD</span>
+    </div>
+    <div class="card">
+      <div class="accent-bar" style="background:var(--gradient-3)"></div>
+      <div class="card-icon">🟢</div>
+      <h3>Pancreatic Islets</h3>
+      <p>1M+ islets, mostly in tail. β(60%) central=insulin, α(30%) peripheral=glucagon, δ(5-10%)=somatostatin, PP(rare)=pancreatic polypeptide. Identified by immunohistochemistry.</p>
+      <span class="tag tag-exam">⚠️ EXAM</span>
+      <span class="tag tag-clinical">CLINICAL PEARL</span>
+    </div>
+    <div class="card">
+      <div class="accent-bar" style="background:var(--gradient-4)"></div>
+      <div class="card-icon">🔵</div>
+      <h3>DNES (APUD Cells)</h3>
+      <p>Scattered endocrine cells in GIT, respiratory, pancreas. Uptake amine precursors (tryptophan/tyrosine) → decarboxylate → active amines (serotonin). Act mainly via paracrine signaling.</p>
+      <span class="tag tag-pearl">KEY CONCEPT</span>
+    </div>
+  </div>
+
+  <div class="exam-alert">
+    <span class="ea-icon">⚠️</span>
+    <div><strong>EXAM ALERT:</strong> "Steroid hormones are NOT stored inside the cell in the form of granules. They diffuse through the cell membrane to the bloodstream as they are small lipid-soluble molecules." This is a frequently tested concept.</div>
+  </div>
+
+  <div class="section-header" style="margin-top:36px;">
+    <div class="icon" style="background:var(--gradient-2)">🗺️</div>
+    <div>
+      <h2>Structural Timeline: Adrenal Gland Layers</h2>
+      <p>From capsule (outer) to medulla (inner)</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>🔹 Capsule</h4>
+      <p>Dense irregular connective tissue with blood vessels. Sends trabeculae inward carrying vessels.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>🟡 Zona Glomerulosa (15%)</h4>
+      <p>Rounded/arched cords of columnar cells. Fewest lipid droplets among cortex zones. Secretes <strong>Aldosterone</strong> (mineralocorticoid).</p>
+    </div>
+    <div class="timeline-item">
+      <h4>🟡 Zona Fasciculata (65–80%)</h4>
+      <p>Long, straight parallel cords 1-2 cells thick. "Spongiocytes" = massively vacuolated from dissolved lipid. Secretes <strong>Cortisol</strong> (glucocorticoid). Widest zone.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>🟡 Zona Reticularis (10%)</h4>
+      <p>Irregular, anastomosing branching cords. Smaller cells, less lipid, abundant <strong>lipofuscin</strong> (dark staining). Secretes weak <strong>Androgens (DHEA)</strong>.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>🟤 Medulla</h4>
+      <p>Chromaffin cells in cords + sinusoidal capillaries + sympathetic ganglion cells. Stores catecholamines (Epi 80%, Norepi 20%) in dense granules. Reddish-brown from vascularity.</p>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:36px;">
+    <div class="icon" style="background:var(--gradient-4)">🎯</div>
+    <div>
+      <h2>Key Histological Signs</h2>
+      <p>High-yield identifiers for exam recognition</p>
+    </div>
+  </div>
+
+  <div class="signs-grid">
+    <div class="sign-item">
+      <div class="si-title">🫧 Spongiocytes <span class="tag tag-exam">EXAM</span></div>
+      <div class="si-desc">Vacuolated cells in Z. Fasciculata from dissolved lipid droplets in H&E preparation.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">🟤 Lipofuscin Pigment <span class="tag tag-high-yield">HIGH-YIELD</span></div>
+      <div class="si-desc">Brown residual bodies in Z. Reticularis from high metabolic turnover = darker staining.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">⚪ Tubular Cristae <span class="tag tag-pearl">KEY CONCEPT</span></div>
+      <div class="si-desc">Unique to steroid-secreting mitochondria (not shelf-like as in protein cells). Increased enzyme surface area.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">🔵 sER Abundance <span class="tag tag-high-yield">HIGH-YIELD</span></div>
+      <div class="si-desc">Smooth ER dominant in steroid cells (cholesterol synthesis). rER dominant in protein-secreting cells.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">⚫ Chromaffin Granules <span class="tag tag-exam">EXAM</span></div>
+      <div class="si-desc">Epi = small + less dense. Norepi = large + highly dense. 150-350nm diameter. EM distinction.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">🟢 β-cell Location <span class="tag tag-clinical">CLINICAL</span></div>
+      <div class="si-desc">Beta cells (insulin) = 60%, centrally located. Alpha cells (glucagon) = 30%, peripheral. Identified by IHC.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">💎 Silver Staining <span class="tag tag-pearl">KEY CONCEPT</span></div>
+      <div class="si-desc">Argentaffin cells = stain with silver nitrate. Enterochromaffin = stain with chromium salts. For identifying DNES.</div>
+    </div>
+    <div class="sign-item">
+      <div class="si-title">📦 No Granule Storage <span class="tag tag-exam">EXAM-FAVORITE</span></div>
+      <div class="si-desc">Steroids are lipid-soluble → diffuse directly through plasma membrane. Catecholamines/polypeptides use exocytosis.</div>
+    </div>
+  </div>
+
+  <!-- Viva section in overview -->
+  <div class="section-header" style="margin-top:36px;">
+    <div class="icon" style="background:var(--gradient-5)">🗣️</div>
+    <div>
+      <h2>Viva Questions (12)</h2>
+      <p>Click each question to reveal the model answer</p>
+    </div>
+  </div>
+
+  <div id="vivaContainer"></div>
+
+</div>
+
+<!-- ========== QUIZ TAB ========== -->
+<div class="tab-panel" id="tab-quiz">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-3)">🧪</div>
+    <div>
+      <h2>Quiz Mode</h2>
+      <p>25 MCQs covering all topics • Immediate feedback • Score tracking</p>
+    </div>
+  </div>
+  <div class="quiz-container" id="quizContainer"></div>
+</div>
+
+<!-- ========== FLASHCARDS TAB ========== -->
+<div class="tab-panel" id="tab-flashcards">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-4)">🃏</div>
+    <div>
+      <h2>Flashcards</h2>
+      <p>Click any card to flip • 24 cards covering all key concepts</p>
+    </div>
+  </div>
+  <div class="flashcard-grid" id="flashcardGrid"></div>
+</div>
+
+<!-- ========== CLINICAL CASES TAB ========== -->
+<div class="tab-panel" id="tab-cases">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-5)">🏥</div>
+    <div>
+      <h2>Clinical / Applied Scenarios</h2>
+      <p>6 exam-style vignettes with step-by-step answers</p>
+    </div>
+  </div>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- ========== ANATOMY/STRUCTURES TAB ========== -->
+<div class="tab-panel" id="tab-anatomy">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-2)">🔬</div>
+    <div>
+      <h2>Structures & Pathophysiology</h2>
+      <p>Click each structure for details • Flowcharts of key mechanisms</p>
+    </div>
+  </div>
+
+  <h3 style="margin:24px 0 12px; font-size:17px;">📌 Key Structures (Click to expand)</h3>
+  <div class="anatomy-grid" id="anatomyGrid"></div>
+
+  <div class="section-header" style="margin-top:36px;">
+    <div class="icon" style="background:var(--gradient-1)">🔄</div>
+    <div>
+      <h2>Mechanistic Flowcharts</h2>
+      <p>Step-by-step pathways</p>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 8px; color:var(--accent-3);">Flowchart 1: Steroid Hormone Synthesis & Release</h3>
+  <div class="flowchart" id="flowchart1"></div>
+
+  <h3 style="margin:20px 0 8px; color:var(--accent-3);">Flowchart 2: APUD Cell Secretion Mechanism</h3>
+  <div class="flowchart" id="flowchart2"></div>
+</div>
+
+<!-- ========== DIAGNOSIS TAB ========== -->
+<div class="tab-panel" id="tab-diagnosis">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-2)">🔎</div>
+    <div>
+      <h2>Diagnostic & Identification Techniques</h2>
+      <p>How to identify each cell type / region in histological sections</p>
+    </div>
+  </div>
+
+  <div class="exam-alert">
+    <span class="ea-icon">💡</span>
+    <div>Identifying specific cell types within the Pancreatic Islets requires <strong>Immunohistochemistry (IHC)</strong>, not routine H&E staining. All islet cells appear similar under H&E.</div>
+  </div>
+
+  <h3 style="margin:24px 0 12px; font-size:16px; color:var(--accent-cyan);">🔬 Investigative Techniques</h3>
+  <div class="inv-badges">
+    <span class="inv-badge" title="Standard staining for general tissue morphology">H&E Staining</span>
+    <span class="inv-badge" title="Identifies enterochromaffin cells in DNES">Chromium Salt Staining</span>
+    <span class="inv-badge" title="Identifies argentaffin cells in DNES">Silver Nitrate (AgNO₃)</span>
+    <span class="inv-badge" title="Gold standard for islet cell identification">Immunohistochemistry (IHC)</span>
+    <span class="inv-badge" title="Distinguishes epi vs norepi granules">Electron Microscopy (EM)</span>
+    <span class="inv-badge" title="Identifies lipids (retained by fixation)">Osmium Tetroxide / Sudan Stains</span>
+  </div>
+
+  <h3 style="margin:28px 0 12px; font-size:16px; color:var(--accent-cyan);">📊 Comparison: Identification Methods by Structure</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Structure/Cell</th>
+          <th>Best ID Method</th>
+          <th>H&E Appearance</th>
+          <th>EM Features</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Z. Glomerulosa</strong></td>
+          <td>H&E (position + arrangement)</td>
+          <td>Arched cords beneath capsule, moderate staining</td>
+          <td>sER, tubular mito cristae, fewer lipid droplets</td>
+        </tr>
+        <tr>
+          <td><strong>Z. Fasciculata</strong></td>
+          <td>H&E (spongiocytes)</td>
+          <td>Pale vacuolated cells in straight cords, widest zone</td>
+          <td>Massive lipid droplets, abundant sER, tubular mito</td>
+        </tr>
+        <tr>
+          <td><strong>Z. Reticularis</strong></td>
+          <td>H&E (dark staining + position)</td>
+          <td>Smaller dark cells, anastomosing cords, lipofuscin</td>
+          <td>Less lipid, lipofuscin granules, sER, tubular mito</td>
+        </tr>
+        <tr>
+          <td><strong>Chromaffin Cells</strong></td>
+          <td>Chromium salts / EM</td>
+          <td>Large pale cells in cords, faint granules</td>
+          <td>Dense granules 150-350nm (epi: small/light; norepi: large/dark)</td>
+        </tr>
+        <tr>
+          <td><strong>Islet β cells</strong></td>
+          <td>Immunohistochemistry (anti-insulin)</td>
+          <td>Indistinguishable from other islet cells</td>
+          <td>Characteristic crystalline granules</td>
+        </tr>
+        <tr>
+          <td><strong>Islet α cells</strong></td>
+          <td>Immunohistochemistry (anti-glucagon)</td>
+          <td>Indistinguishable from other islet cells</td>
+          <td>Peripheral location, specific granule morphology</td>
+        </tr>
+        <tr>
+          <td><strong>DNES / APUD cells</strong></td>
+          <td>Silver nitrate or Chromium salts</td>
+          <td>Scattered, hard to identify with H&E alone</td>
+          <td>Basal secretory granules</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin:28px 0 12px; font-size:16px; color:var(--accent-cyan);">🧭 Diagnostic Algorithm: "Unknown Endocrine Cell"</h3>
+  <div class="flowchart">
+    <div class="flow-step">🔬 Observe cell under LM: Is it in a discrete gland or scattered in mucosa?</div>
+    <div class="flow-arrow">⬇️</div>
+    <div class="flow-step">If <strong>discrete gland</strong> → Is it in adrenal or pancreas?</div>
+    <div class="flow-arrow">⬇️</div>
+    <div class="flow-step">If <strong>adrenal, outer yellow zone</strong> → Check for vacuoles (spongiocytes = Z.Fasciculata) or dark stain (Z.Reticularis)</div>
+    <div class="flow-arrow">⬇️</div>
+    <div class="flow-step">If <strong>adrenal, inner reddish zone</strong> → Check EM for dense granules → Chromaffin cells (Medulla)</div>
+    <div class="flow-arrow">⬇️</div>
+    <div class="flow-step">If <strong>pale cluster in pancreas</strong> → Use IHC → anti-insulin (β), anti-glucagon (α), anti-somatostatin (δ)</div>
+    <div class="flow-arrow">⬇️</div>
+    <div class="flow-step">If <strong>scattered in GIT/respiratory mucosa</strong> → Use Silver/Chromium stains → DNES/APUD cells</div>
+  </div>
+
+</div>
+
+<!-- ========== TREATMENT/INTEGRATION TAB ========== -->
+<div class="tab-panel" id="tab-treatment">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-4)">💊</div>
+    <div>
+      <h2>Functional Integration & Comparisons</h2>
+      <p>Comparison tables, hormone classification, and essay answers</p>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 12px; color:var(--accent-orange);">📊 Table 1: Zones of the Adrenal Cortex</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Z. Glomerulosa</th><th>Z. Fasciculata</th><th>Z. Reticularis</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Position</strong></td><td>Outermost (beneath capsule)</td><td>Middle (widest)</td><td>Innermost (next to medulla)</td></tr>
+        <tr><td><strong>% of cortex</strong></td><td>15%</td><td>65-80%</td><td>10%</td></tr>
+        <tr><td><strong>Cell arrangement</strong></td><td>Rounded/arched cords</td><td>Long straight parallel cords (1-2 cells)</td><td>Irregular anastomosing cords</td></tr>
+        <tr><td><strong>Cell type</strong></td><td>Columnar/pyramidal</td><td>Large polyhedral (spongiocytes)</td><td>Small, darkly staining</td></tr>
+        <tr><td><strong>Lipid content</strong></td><td>Moderate</td><td>Very high (most vacuolated)</td><td>Low</td></tr>
+        <tr><td><strong>Special feature</strong></td><td>Arched "glomeruli" pattern</td><td>Spongy appearance, pale</td><td>Lipofuscin pigment, heavy stain</td></tr>
+        <tr><td><strong>Hormone</strong></td><td>Aldosterone (mineralocorticoid)</td><td>Cortisol (glucocorticoid)</td><td>DHEA (weak androgens) + some cortisol</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin:28px 0 12px; color:var(--accent-orange);">📊 Table 2: Cells of the Pancreatic Islets</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>α Cells</th><th>β Cells</th><th>δ Cells</th><th>PP/F Cells</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Percentage</strong></td><td>30%</td><td>60%</td><td>5-10%</td><td>Rare</td></tr>
+        <tr><td><strong>Location in islet</strong></td><td>Mainly peripheral</td><td>Mainly central</td><td>Scattered</td><td>Mainly head of pancreas</td></tr>
+        <tr><td><strong>Hormone</strong></td><td>Glucagon</td><td>Insulin</td><td>Somatostatin</td><td>Pancreatic Polypeptide</td></tr>
+        <tr><td><strong>Function</strong></td><td>↑ Blood glucose</td><td>↓ Blood glucose</td><td>Inhibits α & β cells</td><td>Regulates exocrine pancreas</td></tr>
+        <tr><td><strong>Best identification</strong></td><td>IHC (anti-glucagon)</td><td>IHC (anti-insulin)</td><td>IHC (anti-somatostatin)</td><td>IHC (anti-PP)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin:28px 0 12px; color:var(--accent-orange);">📊 Table 3: Steroid vs. Catecholamine vs. Polypeptide Secretion</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Steroids (Cortex)</th><th>Catecholamines (Medulla)</th><th>Polypeptides (Islets)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Chemical nature</strong></td><td>Lipid (cholesterol-derived)</td><td>Modified amino acids</td><td>Proteins/peptides</td></tr>
+        <tr><td><strong>Stored in granules?</strong></td><td>NO — diffuse out</td><td>YES — exocytosis</td><td>YES — exocytosis</td></tr>
+        <tr><td><strong>Key organelle</strong></td><td>sER + tubular mito</td><td>rER + dense granules</td><td>rER + Golgi + granules</td></tr>
+        <tr><td><strong>Lipid droplets</strong></td><td>Abundant (cholesterol store)</td><td>Absent</td><td>Absent</td></tr>
+        <tr><td><strong>Release mechanism</strong></td><td>Passive diffusion</td><td>Regulated exocytosis</td><td>Regulated exocytosis</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin:28px 0 12px; color:var(--accent-orange);">📝 Model Essay Answers</h3>
+
+  <div class="case-card">
+    <div class="case-num">Essay Q1</div>
+    <h4 style="font-size:15px; margin-bottom:8px;">Describe the histological and ultrastructural (EM) features of steroid-secreting cells and explain how these features correlate with their function.</h4>
+    <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="case-answer">
+      <p>Steroid-secreting cells (e.g., in the adrenal cortex) are characterized by an acidophilic, highly vacuolated cytoplasm due to large stores of lipid droplets containing cholesterol. Ultrastructurally, they possess:<br>
+      • <strong>Abundant smooth ER (sER)</strong>: houses enzymes for cholesterol synthesis and initial steroid conversion steps.<br>
+      • <strong>Spherical mitochondria with tubular cristae</strong>: increased surface area for enzymes catalyzing specific steroid synthesis steps + ATP production. (This contrasts with shelf-like cristae in protein-secreting cells.)<br>
+      • <strong>Lipid droplets</strong>: store cholesterol precursor; dissolve during H&E prep creating the "spongiocyte" appearance (Z. Fasciculata).<br>
+      • <strong>No secretory granules</strong>: steroid hormones are small, lipid-soluble molecules that diffuse directly through the plasma membrane into adjacent fenestrated sinusoidal capillaries.<br>
+      These features collectively optimize continuous steroid production and immediate release.</p>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-num">Essay Q2</div>
+    <h4 style="font-size:15px; margin-bottom:8px;">Compare and contrast the three zones of the adrenal cortex regarding their cellular arrangement, lipid content, and secreted hormones.</h4>
+    <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="case-answer">
+      <p><strong>Zona Glomerulosa (15%):</strong> Rounded/arched cords of columnar/pyramidal cells beneath the capsule. Moderate lipid content. Secretes mineralocorticoids (primarily aldosterone).<br><br>
+      <strong>Zona Fasciculata (65-80%):</strong> Long, straight, parallel cords 1-2 cells thick. Highest lipid content — cells appear as "spongiocytes" due to dissolved lipid vacuoles. Secretes glucocorticoids (primarily cortisol).<br><br>
+      <strong>Zona Reticularis (10%):</strong> Smaller cells in irregular, anastomosing branching cords. Lowest lipid content but high lipofuscin pigment (from metabolic aging), giving darker H&E staining. Secretes weak androgens (DHEA) and some cortisol.<br><br>
+      All three zones share the ultrastructural features of steroid-secreting cells (sER, tubular mitochondrial cristae), but differ in cell size, arrangement, lipid storage, and hormonal product.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MNEMONICS TAB ========== -->
+<div class="tab-panel" id="tab-mnemonics">
+  <div class="section-header">
+    <div class="icon" style="background:var(--gradient-4)">🧠</div>
+    <div>
+      <h2>Mnemonics</h2>
+      <p>Click each mnemonic to expand the breakdown</p>
+    </div>
+  </div>
+  <div id="mnemonicsContainer"></div>
+</div>
+
+</main>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================== DATA =====================
+
+const vivaData = [
+  {q:"Why is the adrenal cortex yellow, while the medulla is reddish-brown?", a:"The cortex is yellow due to massive accumulation of cholesterol-rich lipid droplets within its cells. The medulla is reddish-brown because it lacks these lipid droplets and is extremely rich in wide sinusoidal blood capillaries."},
+  {q:"⚠️ EXAM: How are steroid hormones released from the cells of the adrenal cortex?", a:"They are NOT stored in intracellular secretory granules. Because they are small and lipid-soluble, they are synthesized and immediately diffuse through the lipid bilayer of the cell membrane into adjacent fenestrated capillaries."},
+  {q:"Describe the arrangement of cells in the Zona Fasciculata.", a:"The cells are arranged in long, straight cords that are one or two cells thick. These cords run parallel to each other and are separated by fenestrated sinusoidal capillaries."},
+  {q:"What gives the cells of the Zona Fasciculata the name 'spongiocytes'?", a:"They contain large amounts of lipid droplets. During histological preparation with H&E, the lipids dissolve, leaving the cytoplasm filled with clear vacuoles, resembling a sponge."},
+  {q:"What is the main structural difference in mitochondria between protein-secreting and steroid-secreting cells?", a:"Steroid-secreting cells have spherical mitochondria with TUBULAR cristae (increased surface area for steroid synthesis enzymes). Protein-secreting cells typically have shelf-like (lamellar) cristae."},
+  {q:"What are the two types of granules found in the Adrenal Medulla under EM?", a:"Epinephrine-storing granules are smaller and less electron-dense. Norepinephrine-storing granules are larger and highly electron-dense. Both range 150-350 nm."},
+  {q:"What is the stroma of the Pancreatic Islets of Langerhans?", a:"A very thin reticular capsule separating the endocrine islet from surrounding exocrine acinar tissue, along with reticular fibers supporting internal fenestrated capillaries."},
+  {q:"Where in an Islet of Langerhans would you find the highest concentration of Glucagon-secreting cells?", a:"Alpha cells (glucagon) are primarily localized at the PERIPHERY of the islets (30% of cells)."},
+  {q:"What is the function of Somatostatin within the Pancreatic Islets?", a:"Somatostatin (from delta cells) is an INHIBITORY hormone that acts locally to inhibit secretion of both glucagon (from alpha cells) and insulin (from beta cells)."},
+  {q:"Define 'Paracrine Action' in the context of DNES.", a:"Paracrine action means the secreted hormone/active amine does NOT travel far in the bloodstream but acts locally to affect the activities of immediate neighboring cells in the mucosa."},
+  {q:"What do 'Enterochromaffin' and 'Argentaffin' refer to?", a:"They refer to staining affinities of scattered DNES cells. Enterochromaffin cells stain with chromium salt solutions. Argentaffin cells stain with silver nitrate (argentum = silver)."},
+  {q:"What does APUD stand for, and what does it describe?", a:"APUD = Amine Precursor Uptake and Decarboxylation. It describes how certain DNES cells take up an amino acid precursor (e.g., tryptophan), remove its carboxyl group (decarboxylation), and create an active amine like serotonin."}
+];
+
+const quizData = [
+  {q:"Why are steroid hormones NOT stored in secretory granules inside adrenal cortex cells?", options:["They are instantly degraded by lysosomes","They are too large to be packaged by the Golgi","They diffuse directly through the cell membrane because they are lipid-soluble","They are converted into proteins before secretion","They are stored in the rough endoplasmic reticulum instead"], correct:2, explanation:"Steroid hormones are small lipid-soluble molecules that easily diffuse through the lipid bilayer of the cell membrane into the bloodstream. They do not need vesicular storage or exocytosis."},
+  {q:"What is the functional significance of the tubular cristae in the mitochondria of the adrenal cortex?", options:["To store calcium ions for exocytosis","To synthesize rough endoplasmic reticulum","To increase surface area for ATP production and house steroid synthesis enzymes","To trap lipofuscin pigment","To package polypeptide hormones"], correct:2, explanation:"Tubular cristae provide a large surface area for the enzymes required for specific steps in steroid synthesis, alongside ATP production. This is unique to steroidogenic cells."},
+  {q:"What mechanism creates the 'spongiocyte' appearance of the Zona Fasciculata under light microscopy?", options:["High glycogen storage","Accumulation of lipofuscin","Large amounts of lipid droplets dissolving during preparation","Secretory granules bursting","High water retention"], correct:2, explanation:"Lipid droplets storing cholesterol dissolve during H&E preparation, leaving numerous empty vacuoles that create the characteristic 'spongy' appearance."},
+  {q:"Which step initiates the formation of active amines in APUD cells?", options:["Uptake of cholesterol","Uptake of an amine precursor like tyrosine or tryptophan","Acetylation of a protein","Destruction of somatostatin","Glycosylation in the Golgi"], correct:1, explanation:"APUD = Amine Precursor Uptake and Decarboxylation. The first step is uptake of an amino acid precursor such as tyrosine or tryptophan."},
+  {q:"How do DNES cells primarily exert their effect?", options:["Exocrine secretion into ducts","Long-distance endocrine transport to the brain","Paracrine action affecting neighboring cells","Autocrine action targeting themselves exclusively","Synaptic transmission via axons"], correct:2, explanation:"Most DNES hormones act in a paracrine manner, directly regulating the activities of adjacent mucosal or neighboring cells rather than traveling long distances."},
+  {q:"Under an electron microscope, how can you identify an epinephrine-secreting chromaffin cell?", options:["It contains larger, highly electron-dense granules","It has no granules","It contains smaller, less electron-dense granules","It has tubular mitochondrial cristae","It contains massive lipid vacuoles"], correct:2, explanation:"Epinephrine granules are characteristically smaller and less electron-dense than norepinephrine granules. Tubular cristae and lipid vacuoles are cortex features, not medulla."},
+  {q:"What is the mechanism of action of the hormone secreted by the Delta (δ) cells of the pancreatic islets?", options:["Elevates blood glucose","Drives glucose into cells","Acts as an inhibitory hormone on Alpha and Beta cells","Increases exocrine pancreatic secretion","Promotes cholesterol synthesis"], correct:2, explanation:"Delta cells secrete somatostatin, an inhibitory hormone that decreases the secretion of both glucagon (alpha cells) and insulin (beta cells)."},
+  {q:"Which structural arrangement characterizes the Zona Glomerulosa?", options:["Long, straight cords 1-2 cells thick","Anastomosing, highly branched network","Closely packed rounded or arched cords of columnar/pyramidal cells","Scattered cells in acinar tissue","Spherical masses surrounded by reticular fibers"], correct:2, explanation:"Glomerulosa cells form rounded/arched cords resembling 'glomeruli' (little balls) just beneath the capsule."},
+  {q:"What structure provides the primary support (stroma) for the secretory cells and microvasculature of the adrenal gland?", options:["Elastic fibers","Dense regular connective tissue","Reticular fibers","Cartilage","Muscle fibers"], correct:2, explanation:"Reticular fibers form a supportive network for the parenchyma and capillaries within the adrenal gland."},
+  {q:"Why is the adrenal cortex yellowish in a gross fresh specimen?", options:["Heavy vascularization","Massive accumulation of lipofuscin","High content of lipid droplets inside the cells","High concentration of bile","Presence of chromaffin"], correct:2, explanation:"The cortex is filled with cholesterol-rich lipid droplets required for steroid synthesis, conferring its characteristic yellow color."},
+  {q:"The zona fasciculata is the widest zone of the adrenal cortex. What percentage of the cortex does it occupy?", options:["10%","15%","30%","65-80%","90%"], correct:3, explanation:"It comprises 65-80% of the cortical thickness, making it by far the widest zone."},
+  {q:"What specific hormone is produced by the outermost layer of the adrenal cortex?", options:["Cortisol","Aldosterone","Epinephrine","DHEA (Androgens)","Somatostatin"], correct:1, explanation:"The zona glomerulosa (outermost) secretes mineralocorticoids, primarily aldosterone."},
+  {q:"In the synthesis of active amines by DNES cells, what chemical process follows precursor uptake?", options:["Methylation","Hydroxylation","Decarboxylation","Phosphorylation","Amination"], correct:2, explanation:"The 'D' in APUD stands for Decarboxylation — removal of the carboxyl group to form the active amine."},
+  {q:"Which pancreatic islet cell type is most abundant and centrally located?", options:["Alpha cells","Beta cells","Delta cells","F (PP) cells","Chromaffin cells"], correct:1, explanation:"Beta cells make up 60% of the islet and are concentrated mostly in the center."},
+  {q:"Why does the Zona Reticularis stain more heavily with H&E compared to the other cortical zones?", options:["It contains massive lipid droplets","It has no blood vessels","It contains less lipid and more lipofuscin pigment","It secretes basic proteins","It is composed of dense connective tissue"], correct:2, explanation:"Fewer lipid vacuoles and accumulation of lipofuscin (brown residual bodies from high metabolic activity) result in darker, heavier H&E staining."},
+  {q:"What is the mechanism of hormone release for the chromaffin cells of the adrenal medulla?", options:["Diffusion across the lipid membrane","Secretion via ducts into the gut","Exocytosis of stored electron-dense secretory granules","Apoptosis of the cell","Holocrine secretion"], correct:2, explanation:"Chromaffin cells store catecholamines in granules that undergo exocytosis. This contrasts with cortex steroids which diffuse out passively."},
+  {q:"Which stain is utilized to identify Argentaffin cells in the DNES?", options:["Chromium salts","Silver nitrate","H&E","PAS","Sudan Black"], correct:1, explanation:"'Argentaffin' cells have an affinity for silver (argentum), hence stained with silver nitrate. Chromium salts identify enterochromaffin cells."},
+  {q:"What feature separates the Pancreatic Islets from surrounding acinar exocrine tissue?", options:["A thick capsule of dense irregular connective tissue","A layer of adipose tissue","A very thin reticular capsule","A basement membrane only","There is no separation at all"], correct:2, explanation:"The islets are separated from exocrine tissue by a very thin reticular capsule."},
+  {q:"Which region of the pancreas contains the highest concentration of Islets of Langerhans?", options:["Head","Body","Tail","Uncinate process","Main pancreatic duct"], correct:2, explanation:"While present throughout the pancreas, islets are most concentrated in the tail."},
+  {q:"What is the nature of the hormones secreted by the Adrenal Cortex?", options:["Polypeptides","Glycoproteins","Catecholamines","Steroids","Active amines"], correct:3, explanation:"The cortex produces steroid hormones — mineralocorticoids, glucocorticoids, and androgens — all derived from cholesterol."},
+  {q:"How do you accurately identify the specific cell types within a pancreatic islet?", options:["Routine H&E staining showing clear color differences","Electron microscopy looking at tubular cristae","Immunohistochemical staining of their major products","Silver nitrate staining","Sudan III staining"], correct:2, explanation:"By H&E, all islet cells look similar. Immunohistochemistry (IHC) detects specific antigens (insulin, glucagon, somatostatin) to identify each cell type."},
+  {q:"What cells are found in the stroma of the Adrenal Medulla alongside chromaffin cells?", options:["Spongiocytes","Somatotrophs","Few parasympathetic ganglion cells","Few sympathetic ganglion cells","Islet cells"], correct:3, explanation:"The lecturer explicitly corrected the slide text: these are sympathetic ganglion cells (not parasympathetic) that send axons to the cortex."},
+  {q:"What organelle is uniquely abundant in steroid-secreting cells due to its role in cholesterol synthesis?", options:["Rough endoplasmic reticulum (rER)","Smooth endoplasmic reticulum (sER)","Lysosomes","Golgi apparatus","Peroxisomes"], correct:1, explanation:"sER houses enzymes for synthesizing cholesterol into steroid hormones. rER is abundant in protein-secreting cells instead."},
+  {q:"Which cell type produces a hormone that targets the exocrine pancreas rather than blood glucose directly?", options:["Alpha cells","Beta cells","Delta cells","PP (F) cells","Chromaffin cells"], correct:3, explanation:"PP (F) cells secrete Pancreatic Polypeptide, which primarily regulates exocrine pancreas function rather than blood glucose."},
+  {q:"What is the defining characteristic of DNES cells compared to classic endocrine glands?", options:["They secrete steroids","They are scattered universally as individual cells or small groups within other organ mucosae","They possess a thick dense CT capsule","They do not use blood vessels at all","They have no organelles"], correct:1, explanation:"The 'Diffuse' in DNES refers to scattered distribution throughout the epithelium of the GIT, respiratory tract, and pancreas — unlike classic glands which form discrete organs."}
+];
+
+const flashcardData = [
+  {front:"What organelles define a steroid-secreting cell?", back:"Abundant smooth ER (sER) for cholesterol/steroid enzyme housing, and spherical mitochondria with TUBULAR cristae for additional steroid synthesis steps + ATP. Also: cytoplasmic lipid droplets storing cholesterol."},
+  {front:"How are steroid hormones released from adrenal cortex cells?", back:"They are NOT stored in granules. Being small, lipid-soluble molecules, they diffuse directly through the plasma membrane into adjacent fenestrated sinusoidal capillaries."},
+  {front:"Why do Zona Fasciculata cells look 'spongy' (spongiocytes)?", back:"Their massive lipid droplets (cholesterol stores) dissolve during H&E preparation, leaving numerous clear vacuoles that give a sponge-like appearance."},
+  {front:"What is the difference between shelf-like and tubular cristae?", back:"Shelf-like (lamellar) cristae = protein-secreting cells. Tubular cristae = steroid-secreting cells. The tubular form maximizes surface area for steroid synthesis enzymes."},
+  {front:"Why does the Zona Reticularis stain darker with H&E?", back:"It has fewer lipid droplets (less vacuolation) and accumulates lipofuscin pigment (brown residual bodies from high metabolic activity), resulting in heavier staining."},
+  {front:"Zona Glomerulosa: percentage, arrangement, and hormone?", back:"15% of cortex. Rounded/arched cords of columnar/pyramidal cells beneath capsule. Secretes Aldosterone (mineralocorticoid)."},
+  {front:"Zona Fasciculata: percentage, arrangement, and hormone?", back:"65-80% of cortex (widest). Long, straight parallel cords, 1-2 cells thick. Spongiocytes. Secretes Cortisol (glucocorticoid)."},
+  {front:"Zona Reticularis: percentage, arrangement, and hormone?", back:"10% of cortex. Irregular, anastomosing branching cords. Small dark cells with lipofuscin. Secretes weak Androgens (DHEA) + some cortisol."},
+  {front:"What are chromaffin cells?", back:"Large, pale-staining cells of the adrenal medulla, arranged in cords. They are modified sympathetic postganglionic neurons that synthesize and store catecholamines in electron-dense granules (150-350 nm)."},
+  {front:"How do you differentiate Epi vs Norepi cells under EM?", back:"Epinephrine granules: SMALLER, LESS electron-dense. Norepinephrine granules: LARGER, HIGHLY electron-dense."},
+  {front:"What ganglion cells are in the adrenal medulla?", back:"SYMPATHETIC ganglion cells (the lecturer corrected the slide from 'parasympathetic' to 'sympathetic'). They send axons to the cortex."},
+  {front:"How are catecholamines released from the medulla?", back:"By exocytosis of stored electron-dense secretory granules — unlike steroids which diffuse passively out of cortex cells."},
+  {front:"Where are Pancreatic Islets most concentrated?", back:"In the TAIL of the pancreas. There are over 1 million islets total."},
+  {front:"Beta cells: percentage, location, and hormone?", back:"60% of islet cells. Located mainly in the CENTER. Secrete INSULIN (decreases blood glucose)."},
+  {front:"Alpha cells: percentage, location, and hormone?", back:"30% of islet cells. Located mainly at the PERIPHERY. Secrete GLUCAGON (increases blood glucose)."},
+  {front:"Delta cells: percentage and function?", back:"5-10% of islet cells. Secrete SOMATOSTATIN — an inhibitory hormone that reduces secretion from both alpha and beta cells."},
+  {front:"How do you identify specific islet cell types?", back:"Immunohistochemistry (IHC) — NOT routine H&E (all islet cells look similar under H&E). IHC uses antibodies against insulin, glucagon, somatostatin, etc."},
+  {front:"What does DNES stand for?", back:"Diffuse Neuroendocrine System — scattered endocrine cells in GIT, respiratory mucosa, and pancreas that produce polypeptides and neurotransmitter-like molecules."},
+  {front:"What does APUD stand for?", back:"Amine Precursor Uptake and Decarboxylation. The cell uptakes a precursor (tyrosine/tryptophan), decarboxylates it, and forms an active amine (e.g., serotonin)."},
+  {front:"How do DNES cells primarily act?", back:"Via PARACRINE action — affecting neighboring cells locally, rather than traveling long distances in the bloodstream like classic endocrine hormones."},
+  {front:"Argentaffin vs. Enterochromaffin staining?", back:"Argentaffin = stained with Silver nitrate (argentum = silver). Enterochromaffin = stained with Chromium salts."},
+  {front:"What separates the islets from surrounding acinar tissue?", back:"A very thin RETICULAR capsule. Not a thick dense CT capsule."},
+  {front:"What PP (F) cells do and where are they found?", back:"Secrete Pancreatic Polypeptide which regulates the exocrine pancreas (not blood glucose). Found mainly in islets of the pancreatic HEAD."},
+  {front:"Why is the adrenal cortex yellow and the medulla reddish-brown?", back:"Cortex = yellow from cholesterol-rich lipid droplets. Medulla = reddish-brown from dense sinusoidal capillary networks (high vascularity)."}
+];
+
+const caseData = [
+  {
+    num: "Scenario 1",
+    scenario: "During routine H&E preparation of the adrenal gland, the middle layer of the cortex appears full of empty spaces ('spongy-looking cells').",
+    questions: [
+      {q: "What mechanism is involved?", a: "The cells store large amounts of cholesterol in lipid droplets. During histological preparation with H&E, the lipids dissolve in organic solvents, leaving vacuoles that create the characteristic 'spongiocyte' appearance."},
+      {q: "What structure/molecule is implicated?", a: "Lipid droplets in the cells of the Zona Fasciculata — the middle and widest zone (65-80%) of the adrenal cortex."}
+    ]
+  },
+  {
+    num: "Scenario 2",
+    scenario: "An electron micrograph of an endocrine cell reveals abundant smooth ER and mitochondria with tubular, rather than shelf-like, cristae.",
+    questions: [
+      {q: "What mechanism is involved?", a: "These organelles house the enzymes necessary for cholesterol synthesis (sER) and its conversion into steroid hormones (tubular mitochondrial cristae increase surface area for synthesis enzymes)."},
+      {q: "What structure is this cell likely from?", a: "This is a steroid-secreting cell, most likely from the adrenal cortex (any of the three zones)."},
+      {q: "What happens if this is disrupted?", a: "Steroid hormone synthesis (e.g., aldosterone, cortisol, DHEA) would fail, leading to endocrine insufficiency."}
+    ]
+  },
+  {
+    num: "Scenario 3",
+    scenario: "A researcher notes that cells scattered in the GIT mucosa absorb a chemical precursor, convert it to serotonin, and release it to affect only the adjacent mucosal cells.",
+    questions: [
+      {q: "What mechanism and cell type is involved?", a: "Paracrine action via the Amine Precursor Uptake and Decarboxylation (APUD) mechanism. These are DNES cells (also known as APUD cells, enterochromaffin, or argentaffin cells)."},
+      {q: "What are the biochemical steps?", a: "1) Uptake of amine precursor (tryptophan) → 2) Intracellular decarboxylation (removal of carboxyl group) → 3) Formation of active amine (serotonin) → 4) Paracrine secretion to neighboring cells."}
+    ]
+  },
+  {
+    num: "Scenario 4",
+    scenario: "Under EM, a cell in the inner portion of the adrenal gland contains dense granules of 150-350 nm. Some cells have highly dense, large granules, while others have smaller, less dense granules.",
+    questions: [
+      {q: "What cells are these?", a: "Chromaffin cells of the adrenal medulla."},
+      {q: "How do you differentiate them?", a: "Cells with smaller, less electron-dense granules store Epinephrine (~80% of medullary cells). Cells with larger, highly electron-dense granules store Norepinephrine (~20% of medullary cells)."},
+      {q: "How are these hormones released?", a: "By exocytosis of the stored secretory granules — in contrast to steroids which diffuse directly out."}
+    ]
+  },
+  {
+    num: "Scenario 5",
+    scenario: "A section of the tail of the pancreas shows pale-staining clusters of cells amid darkly-staining acinar tissue. Immunohistochemistry identifies a hormone that lowers blood glucose.",
+    questions: [
+      {q: "What structures and cells are identified?", a: "The pale clusters are Pancreatic Islets of Langerhans. The IHC-positive cells producing the glucose-lowering hormone are Beta cells (60% of islet, centrally located), which secrete insulin."},
+      {q: "Why can't H&E alone identify these cells?", a: "All islet cells appear structurally similar under routine H&E. Immunohistochemistry using specific antibodies (anti-insulin, anti-glucagon, etc.) is required for accurate identification."},
+      {q: "What happens if these cells are destroyed?", a: "Blood glucose levels will not decrease properly (as in Type 1 Diabetes Mellitus — beta cell destruction by autoimmune process)."}
+    ]
+  },
+  {
+    num: "Long Integrative Scenario",
+    scenario: "A histological slide of a heavily vascularized organ reveals a distinct outer yellowish layer and an inner reddish-brown layer. Cells in the innermost layer of the outer region are small, arranged in irregular anastomosing cords, and contain high amounts of a brownish pigment.",
+    questions: [
+      {q: "Step 1 — Identify the structure", a: "This is the Zona Reticularis of the Adrenal Cortex (innermost cortical zone, 10% of cortex)."},
+      {q: "Step 2 — Describe the mechanism", a: "These cells synthesize weak androgens (DHEA) and some cortisol. They utilize cholesterol from lipid droplets via sER and tubular mitochondria. Because they are highly active and metabolically 'older,' residual bodies accumulate as lipofuscin pigment, giving them darker staining."},
+      {q: "Step 3 — Best investigative technique", a: "Light microscopy with H&E shows heavy staining and less lipid than zona fasciculata. EM reveals sER, tubular mitochondria, and lipofuscin granules."},
+      {q: "Step 4 — Consequences of disruption", a: "Loss of DHEA secretion, which normally converts to testosterone in both men and women (maintaining axillary/pubic hair and muscle strength in females)."},
+      {q: "Step 5 — Broader principle", a: "Steroidogenic cells adapt structurally (sER, lipid droplets) and show signs of cellular aging (lipofuscin) due to their high metabolic turnover. The structure of a cell directly reflects its function."}
+    ]
+  }
+];
+
+const anatomyData = [
+  {icon:"🟡", title:"Adrenal Capsule", body:"Dense irregular connective tissue encasing the gland. Sends trabeculae inward carrying blood vessels. The stroma within the gland is supported by reticular fibers."},
+  {icon:"🔶", title:"Zona Glomerulosa", body:"Outermost cortical layer (15%). Rounded/arched cords of columnar/pyramidal cells. Moderate lipid. Secretes mineralocorticoids (aldosterone). Named for resemblance to 'glomeruli' (little balls)."},
+  {icon:"🫧", title:"Zona Fasciculata (Spongiocytes)", body:"Middle, widest cortical layer (65-80%). Long straight parallel cords, 1-2 cells thick. Huge lipid droplets → vacuolated 'spongiocyte' appearance on H&E. Secretes glucocorticoids (cortisol)."},
+  {icon:"🟫", title:"Zona Reticularis", body:"Innermost cortical layer (10%). Small cells in irregular anastomosing cords. Less lipid, abundant lipofuscin pigment → darkly staining. Secretes weak androgens (DHEA) and some cortisol."},
+  {icon:"🔴", title:"Adrenal Medulla", body:"Inner part. Chromaffin cells (modified sympathetic neurons) in cords separated by wide sinusoidal capillaries. Stores catecholamines in 150-350nm granules. Also contains a few sympathetic ganglion cells. Reddish-brown from vascularity."},
+  {icon:"🧫", title:"Smooth Endoplasmic Reticulum (sER)", body:"Dominant organelle in steroid-secreting cells. Houses enzymes for cholesterol synthesis and initial conversion steps to steroid hormones. Appears as tubular networks under EM."},
+  {icon:"⚡", title:"Tubular Mitochondrial Cristae", body:"Unique to steroid-secreting cells (contrast: shelf-like/lamellar in protein cells). Spherical mitochondria with tubular internal folds. Houses enzymes for specific steroid synthesis steps + ATP generation."},
+  {icon:"🟢", title:"Pancreatic Islets of Langerhans", body:"Spherical/ovoid endocrine cell clusters (1M+) embedded in exocrine acinar tissue. Most concentrated in the tail. Separated by thin reticular capsule. Contain α, β, δ, and PP cells. All secrete polypeptide hormones into fenestrated capillaries."},
+  {icon:"💎", title:"Beta (β) Cells", body:"60% of islet cells. Centrally located. Secrete insulin → drives glucose into cells → lowers blood glucose. Identified by immunohistochemistry with anti-insulin antibodies."},
+  {icon:"🔥", title:"Alpha (α) Cells", body:"30% of islet cells. Peripherally located. Secrete glucagon → mobilizes glucose from glycogen stores → raises blood glucose. Inhibited by somatostatin from δ cells."},
+  {icon:"🛑", title:"Delta (δ) Cells", body:"5-10% of islet cells. Scattered throughout. Secrete somatostatin → inhibitory hormone that suppresses both α and β cell secretion. Acts locally (paracrine)."},
+  {icon:"🔵", title:"DNES / APUD Cells", body:"Scattered endocrine cells in GIT, respiratory mucosa, pancreas. Not forming a discrete gland. Uptake amine precursor → decarboxylate → active amine (e.g., serotonin). Primarily paracrine action. Identified by silver nitrate (argentaffin) or chromium salts (enterochromaffin)."}
+];
+
+const flowchart1Steps = [
+  "Cholesterol synthesis / uptake from blood",
+  "Storage in cytoplasmic lipid droplets",
+  "Enzymatic conversion via smooth ER (sER)",
+  "Further enzymatic steps in mitochondria (tubular cristae)",
+  "Formation of small lipid-soluble steroid hormone",
+  "Direct DIFFUSION through the cell membrane ⚡",
+  "Entry into fenestrated sinusoidal capillaries → bloodstream"
+];
+
+const flowchart2Steps = [
+  "Uptake of Amine Precursor (e.g., Tyrosine / Tryptophan)",
+  "Intracellular processing",
+  "DECARBOXYLATION (removal of carboxyl group)",
+  "Formation of Active Amine (e.g., Serotonin)",
+  "PARACRINE secretion to neighboring cells"
+];
+
+const mnemonicData = [
+  {
+    title: "G F R",
+    subtitle: "Zones of the Adrenal Cortex (outer → inner)",
+    items: [
+      {letter:"G", text:"Glomerulosa → secretes mineralocorticoids (aldosterone) — 'Go Find Rex' starts with Globes"},
+      {letter:"F", text:"Fasciculata → secretes glucocorticoids (cortisol) — Fasciculata = Fascicles (long straight bundles)"},
+      {letter:"R", text:"Reticularis → secretes androgens (DHEA) — Reticularis = Reticulum (branching network)"}
+    ]
+  },
+  {
+    title: "GFR → Salt, Sugar, Sex",
+    subtitle: "What each zone secretes (in order)",
+    items: [
+      {letter:"G", text:"Glomerulosa → Salt (aldosterone = mineralocorticoid = salt retention)"},
+      {letter:"F", text:"Fasciculata → Sugar (cortisol = glucocorticoid = blood sugar regulation)"},
+      {letter:"R", text:"Reticularis → Sex (DHEA = weak androgen = sex hormone precursor)"}
+    ]
+  },
+  {
+    title: "S.L.T.",
+    subtitle: "Steroid-secreting cell ultrastructure",
+    items: [
+      {letter:"S", text:"Smooth ER (sER) — enzymes for cholesterol → steroid conversion"},
+      {letter:"L", text:"Lipid droplets — cholesterol storage (dissolve = spongiocytes)"},
+      {letter:"T", text:"Tubular cristae in mitochondria — extra surface area for steroid enzymes"}
+    ]
+  },
+  {
+    title: "Big Alpha, Small Beta NO!",
+    subtitle: "Islet cell percentages & positions (actually reversed!)",
+    items: [
+      {letter:"β", text:"Beta = BIGGEST population (60%) but in the CENTER (not the edge)"},
+      {letter:"α", text:"Alpha = second (30%) at the PERIPHERY"},
+      {letter:"δ", text:"Delta = smallest group (5-10%), scattered, secretes the INHIBITOR (somatostatin)"}
+    ]
+  },
+  {
+    title: "SEN",
+    subtitle: "Chromaffin granule EM differences: Small = Epi, Norepi = large",
+    items: [
+      {letter:"S", text:"Small granules + less dense = Epinephrine (epi is 'lighter')"},
+      {letter:"E", text:"Epinephrine = ~80% of medullary cells"},
+      {letter:"N", text:"Norepinephrine = large granules + highly dense = ~20% of cells"}
+    ]
+  },
+  {
+    title: "A.P.U.D.",
+    subtitle: "Steps of DNES cell secretion",
+    items: [
+      {letter:"A", text:"Amine — the final product (e.g., serotonin)"},
+      {letter:"P", text:"Precursor — uptake of amino acid (tryptophan / tyrosine)"},
+      {letter:"U", text:"Uptake — active cellular absorption of the precursor"},
+      {letter:"D", text:"Decarboxylation — removal of carboxyl group → active amine formed"}
+    ]
+  },
+  {
+    title: "Ag = Silver, Cr = Chromium",
+    subtitle: "DNES Staining — Argentaffin vs Enterochromaffin",
+    items: [
+      {letter:"Ag", text:"Argentaffin cells → stained with Silver nitrate (Argentum = silver in Latin)"},
+      {letter:"Cr", text:"Enterochromaffin cells → stained with Chromium salts"},
+      {letter:"💡", text:"Both are types of DNES cells; different staining affinities help identify them"}
+    ]
+  }
+];
+
+const searchableContent = [];
+
+// Build searchable index
+function buildSearchIndex() {
+  vivaData.forEach((v,i) => searchableContent.push({text: v.q + " " + v.a, tab:"overview", label:"Viva Q"+(i+1)}));
+  quizData.forEach((q,i) => searchableContent.push({text: q.q + " " + q.options.join(" ") + " " + q.explanation, tab:"quiz", label:"Quiz Q"+(i+1)}));
+  flashcardData.forEach((f,i) => searchableContent.push({text: f.front + " " + f.back, tab:"flashcards", label:"Flashcard "+(i+1)}));
+  caseData.forEach((c,i) => {
+    let t = c.scenario + " " + c.questions.map(q=>q.q+" "+q.a).join(" ");
+    searchableContent.push({text: t, tab:"cases", label:c.num});
+  });
+  anatomyData.forEach(a => searchableContent.push({text: a.title + " " + a.body, tab:"anatomy", label:a.title}));
+  mnemonicData.forEach(m => {
+    let t = m.title + " " + m.subtitle + " " + m.items.map(i=>i.text).join(" ");
+    searchableContent.push({text: t, tab:"mnemonics", label:"Mnemonic: "+m.title});
+  });
+}
+
+// ===================== STATE =====================
+let state = {
+  currentTab: 'overview',
+  quizCurrent: 0,
+  quizAnswered: new Array(quizData.length).fill(null),
+  quizScore: 0,
+  streak: 0,
+  maxStreak: 0,
+  flashcardsFlipped: new Set(),
+  progress: 0
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('histoStudyState');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = {...state, ...parsed};
+      state.flashcardsFlipped = new Set(parsed.flashcardsFlipped || []);
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    const toSave = {...state, flashcardsFlipped: [...state.flashcardsFlipped]};
+    localStorage.setItem('histoStudyState', JSON.stringify(toSave));
+  } catch(e) {}
+}
+
+function calcProgress() {
+  const quizDone = state.quizAnswered.filter(a => a !== null).length;
+  const flashDone = state.flashcardsFlipped.size;
+  const total = quizData.length + flashcardData.length;
+  state.progress = Math.round(((quizDone + flashDone) / total) * 100);
+}
+
+function updateStats() {
+  calcProgress();
+  const answered = state.quizAnswered.filter(a => a !== null).length;
+  document.getElementById('statProgress').textContent = state.progress + '%';
+  document.getElementById('statScore').textContent = state.quizScore + '/' + answered;
+  document.getElementById('statStreak').textContent = state.streak;
+  saveState();
+}
+
+// ===================== TABS =====================
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  state.currentTab = tabName;
+  saveState();
+}
+
+document.getElementById('tabNav').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (btn) switchTab(btn.dataset.tab);
+});
+
+// ===================== SEARCH =====================
+const searchBox = document.getElementById('searchBox');
+const searchResults = document.getElementById('searchResults');
+
+searchBox.addEventListener('input', () => {
+  const q = searchBox.value.trim().toLowerCase();
+  if (q.length < 2) {
+    searchResults.classList.remove('active');
+    return;
+  }
+  const matches = searchableContent.filter(item => item.text.toLowerCase().includes(q)).slice(0, 12);
+  if (matches.length === 0) {
+    searchResults.innerHTML = '<div class="search-result-item" style="color:var(--text-muted)">No results found</div>';
+    searchResults.classList.add('active');
+    return;
+  }
+  searchResults.innerHTML = matches.map(m => {
+    const idx = m.text.toLowerCase().indexOf(q);
+    const start = Math.max(0, idx - 40);
+    const end = Math.min(m.text.length, idx + q.length + 60);
+    let snippet = (start > 0 ? '...' : '') + m.text.substring(start, end) + (end < m.text.length ? '...' : '');
+    snippet = snippet.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark>$1</mark>');
+    return `<div class="search-result-item" data-tab="${m.tab}">
+      <div class="sr-tab">${m.tab.toUpperCase()} — ${m.label}</div>
+      <div>${snippet}</div>
+    </div>`;
+  }).join('');
+  searchResults.classList.add('active');
+});
+
+searchResults.addEventListener('click', e => {
+  const item = e.target.closest('.search-result-item');
+  if (item && item.dataset.tab) {
+    switchTab(item.dataset.tab);
+    searchResults.classList.remove('active');
+    searchBox.value = '';
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-container')) searchResults.classList.remove('active');
+});
+
+// ===================== VIVA =====================
+function renderViva() {
+  const c = document.getElementById('vivaContainer');
+  c.innerHTML = vivaData.map((v, i) => `
+    <div class="viva-card" id="viva-${i}">
+      <div class="viva-q" onclick="toggleViva(${i})">
+        <span class="vq-num">${i+1}</span>
+        <span>${v.q}</span>
+        <span class="vq-chevron">▼</span>
+      </div>
+      <div class="viva-a">${v.a}</div>
+    </div>
+  `).join('');
+}
+
+function toggleViva(i) {
+  document.getElementById('viva-'+i).classList.toggle('expanded');
+}
+
+// ===================== QUIZ =====================
+function renderQuiz() {
+  const c = document.getElementById('quizContainer');
+  const answered = state.quizAnswered.filter(a => a !== null).length;
+  const allDone = answered === quizData.length;
+
+  if (allDone) {
+    c.innerHTML = `
+      <div class="quiz-score-card">
+        <div class="score-circle">${state.quizScore}/${quizData.length}</div>
+        <h3>${state.quizScore >= 20 ? '🎉 Outstanding!' : state.quizScore >= 15 ? '👏 Great Job!' : state.quizScore >= 10 ? '💪 Good Effort!' : '📚 Keep Studying!'}</h3>
+        <p>You answered ${state.quizScore} out of ${quizData.length} questions correctly.</p>
+        <p style="margin-top:8px; color:var(--accent-yellow);">🔥 Best Streak: ${state.maxStreak}</p>
+        <br>
+        <button class="btn btn-primary" onclick="resetQuiz()">🔄 Retake Quiz</button>
+        <button class="btn btn-secondary" onclick="reviewQuiz()" style="margin-top:10px;">📋 Review All</button>
+      </div>
+    `;
+    return;
+  }
+
+  const qi = state.quizCurrent;
+  const qd = quizData[qi];
+  const wasAnswered = state.quizAnswered[qi] !== null;
+
+  c.innerHTML = `
+    <div class="quiz-progress">
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" style="width:${((qi+1)/quizData.length)*100}%"></div>
+      </div>
+      <div class="quiz-progress-text">
+        <span>Question ${qi+1} of ${quizData.length}</span>
+        <span>Score: ${state.quizScore} | 🔥 Streak: ${state.streak}</span>
+      </div>
+    </div>
+    <div class="quiz-question-card">
+      <div class="quiz-q-num">Question ${qi+1}</div>
+      <div class="quiz-q-text">${qd.q}</div>
+      <div class="quiz-options">
+        ${qd.options.map((opt, oi) => {
+          let cls = '';
+          if (wasAnswered) {
+            cls = 'disabled';
+            if (oi === qd.correct) cls += ' correct';
+            else if (oi === state.quizAnswered[qi] && oi !== qd.correct) cls += ' wrong';
+          }
+          return `<div class="quiz-option ${cls}" onclick="answerQuiz(${qi},${oi})" data-idx="${oi}">
+            <span class="opt-letter">${String.fromCharCode(65+oi)}</span>
+            <span>${opt}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="quiz-explanation ${wasAnswered ? 'show' : ''}" id="quizExpl">
+        <strong>✅ Correct Answer: ${String.fromCharCode(65+qd.correct)}</strong><br><br>
+        ${qd.explanation}
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-secondary" onclick="quizPrev()" ${qi===0?'disabled':''}>← Previous</button>
+      <button class="btn btn-primary" onclick="quizNext()">${qi === quizData.length - 1 ? 'Finish ✓' : 'Next →'}</button>
+    </div>
+  `;
+}
+
+function answerQuiz(qi, oi) {
+  if (state.quizAnswered[qi] !== null) return;
+  state.quizAnswered[qi] = oi;
+  const correct = quizData[qi].correct === oi;
+  if (correct) {
+    state.quizScore++;
+    state.streak++;
+    if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+    showToast(getMotivation(state.streak));
+  } else {
+    state.streak = 0;
+  }
+  updateStats();
+  renderQuiz();
+}
+
+function quizNext() {
+  if (state.quizCurrent < quizData.length - 1) {
+    state.quizCurrent++;
+  } else {
+    // Mark as all done, force re-render to show score
+  }
+  saveState();
+  renderQuiz();
+}
+
+function quizPrev() {
+  if (state.quizCurrent > 0) {
+    state.quizCurrent--;
+    saveState();
+    renderQuiz();
+  }
+}
+
+function resetQuiz() {
+  state.quizCurrent = 0;
+  state.quizAnswered = new Array(quizData.length).fill(null);
+  state.quizScore = 0;
+  state.streak = 0;
+  updateStats();
+  renderQuiz();
+}
+
+function reviewQuiz() {
+  state.quizCurrent = 0;
+  renderQuiz();
+}
+
+function getMotivation(streak) {
+  const msgs = [
+    "✅ Correct!", "🎯 Nice one!", "💪 Keep it up!", "🔥 On fire!",
+    "⚡ Unstoppable!", "🌟 Brilliant!", "🏆 Champion!", "🚀 Rocket mode!",
+    "🧠 Big brain!", "💎 Flawless!"
+  ];
+  return msgs[Math.min(streak - 1, msgs.length - 1)];
+}
+
+// ===================== FLASHCARDS =====================
+function renderFlashcards() {
+  const g = document.getElementById('flashcardGrid');
+  g.innerHTML = flashcardData.map((f, i) => `
+    <div class="flashcard-wrapper ${state.flashcardsFlipped.has(i)?'flipped':''}" onclick="flipCard(${i})">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>❓ ${f.front}</h4>
+          <div class="flip-hint">Click to reveal answer</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fb-label">Answer</div>
+          <p>${f.back}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function flipCard(i) {
+  const wrapper = document.querySelectorAll('.flashcard-wrapper')[i];
+  wrapper.classList.toggle('flipped');
+  if (wrapper.classList.contains('flipped')) {
+    state.flashcardsFlipped.add(i);
+  } else {
+    state.flashcardsFlipped.delete(i);
+  }
+  updateStats();
+}
+
+// ===================== CASES =====================
+function renderCases() {
+  const c = document.getElementById('casesContainer');
+  c.innerHTML = caseData.map((cs, ci) => `
+    <div class="case-card">
+      <div class="case-num">${cs.num}</div>
+      <div class="case-scenario">${cs.scenario}</div>
+      <div class="case-questions">
+        ${cs.questions.map((q, qi) => `
+          <div class="case-q">
+            <h5>${q.q}</h5>
+            <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+            <div class="case-answer">${q.a}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAnswer(btn) {
+  const answer = btn.nextElementSibling;
+  const isShowing = answer.classList.contains('show');
+  answer.classList.toggle('show');
+  btn.textContent = isShowing ? 'Reveal Answer' : 'Hide Answer';
+}
+
+// ===================== ANATOMY =====================
+function renderAnatomy() {
+  const g = document.getElementById('anatomyGrid');
+  g.innerHTML = anatomyData.map((a, i) => `
+    <div class="anatomy-item" id="anat-${i}" onclick="toggleAnatomy(${i})">
+      <div class="ai-header">
+        <span class="ai-icon">${a.icon}</span>
+        <span>${a.title}</span>
+      </div>
+      <div class="ai-body">${a.body}</div>
+    </div>
+  `).join('');
+}
+
+function toggleAnatomy(i) {
+  document.getElementById('anat-'+i).classList.toggle('expanded');
+}
+
+function renderFlowcharts() {
+  const f1 = document.getElementById('flowchart1');
+  f1.innerHTML = flowchart1Steps.map((s, i) => {
+    const isHighlight = s.includes('DIFFUSION') || s.includes('⚡');
+    return `<div class="flow-step ${isHighlight?'highlight':''}">${s}</div>${i < flowchart1Steps.length-1 ? '<div class="flow-arrow">⬇️</div>' : ''}`;
+  }).join('');
+
+  const f2 = document.getElementById('flowchart2');
+  f2.innerHTML = flowchart2Steps.map((s, i) => {
+    const isHighlight = s.includes('DECARBOXYLATION') || s.includes('PARACRINE');
+    return `<div class="flow-step ${isHighlight?'highlight':''}">${s}</div>${i < flowchart2Steps.length-1 ? '<div class="flow-arrow">⬇️</div>' : ''}`;
+  }).join('');
+}
+
+// ===================== MNEMONICS =====================
+function renderMnemonics() {
+  const c = document.getElementById('mnemonicsContainer');
+  c.innerHTML = mnemonicData.map((m, i) => `
+    <div class="mnemonic-card" id="mnem-${i}" onclick="toggleMnemonic(${i})">
+      <div class="mn-title">${m.title}</div>
+      <div class="mn-subtitle">${m.subtitle} — Click to expand</div>
+      <ul class="mn-list">
+        ${m.items.map(it => `<li><strong>${it.letter}</strong> ${it.text}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+function toggleMnemonic(i) {
+  document.getElementById('mnem-'+i).classList.toggle('expanded');
+}
+
+// ===================== TOAST =====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2000);
+}
+
+// ===================== INIT =====================
+function init() {
+  buildSearchIndex();
+  loadState();
+  renderViva();
+  renderQuiz();
+  renderFlashcards();
+  renderCases();
+  renderAnatomy();
+  renderFlowcharts();
+  renderMnemonics();
+  updateStats();
+  if (state.currentTab && state.currentTab !== 'overview') {
+    switchTab(state.currentTab);
+  }
+}
+
+init();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

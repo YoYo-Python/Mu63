@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Thyroid Pharmacology — Study Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1722;
+  --bg-2:#101e2d;
+  --card:#142539;
+  --card-2:#16283d;
+  --card-hover:#1b3049;
+  --border:rgba(232,163,61,0.14);
+  --border-soft:rgba(255,255,255,0.06);
+  --gold:#e8a33d;
+  --gold-soft:rgba(232,163,61,0.16);
+  --violet:#9b6fd1;
+  --violet-soft:rgba(155,111,209,0.16);
+  --teal:#4fb8a8;
+  --teal-soft:rgba(79,184,168,0.16);
+  --danger:#e0524c;
+  --danger-soft:rgba(224,82,76,0.15);
+  --success:#4caf7d;
+  --success-soft:rgba(76,175,125,0.15);
+  --text:#edf0f4;
+  --text-dim:#8fa1b8;
+  --text-faint:#5e7188;
+  --font-display:'Fraunces', serif;
+  --font-body:'IBM Plex Sans', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 8%, rgba(155,111,209,0.10), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(232,163,61,0.08), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(79,184,168,0.07), transparent 50%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+/* ambient drifting particles - iodine droplets */
+.ambient{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+.drop{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, rgba(232,163,61,0.35), rgba(155,111,209,0.12) 60%, transparent 80%);
+  filter:blur(1px);
+  animation:drift linear infinite;
+  opacity:0.5;
+}
+@keyframes drift{
+  0%{transform:translateY(110vh) translateX(0) scale(1);}
+  100%{transform:translateY(-15vh) translateX(40px) scale(1.15);}
+}
+@media (prefers-reduced-motion: reduce){
+  .drop{animation:none; display:none;}
+  *{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+}
+
+.shell{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:28px 20px 80px;}
+
+/* HEADER */
+header.top{
+  display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; justify-content:space-between;
+  padding-bottom:22px; margin-bottom:22px; border-bottom:1px solid var(--border-soft);
+}
+.brand-eyebrow{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:8px; display:flex; align-items:center; gap:8px;
+}
+.brand-eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.35;}}
+h1.brand-title{
+  font-family:var(--font-display); font-weight:600; font-size:clamp(28px,4vw,42px);
+  margin:0; letter-spacing:-0.01em; line-height:1.05;
+}
+h1.brand-title em{font-style:italic; color:var(--gold); font-weight:500;}
+.brand-sub{color:var(--text-dim); font-size:14px; margin-top:8px; max-width:520px; line-height:1.5;}
+.stat-rail{display:flex; gap:10px; flex-wrap:wrap;}
+.stat-pill{
+  background:var(--card); border:1px solid var(--border-soft); border-radius:10px;
+  padding:10px 14px; min-width:92px; text-align:center;
+}
+.stat-pill .num{font-family:var(--font-mono); font-size:19px; font-weight:600; color:var(--gold);}
+.stat-pill .lbl{font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin-top:2px;}
+
+/* TABS */
+nav.tabs{
+  display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:26px;
+  scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+nav.tabs::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
+.tab-btn{
+  flex:0 0 auto; background:transparent; border:1px solid var(--border-soft); color:var(--text-dim);
+  font-family:var(--font-body); font-size:13px; font-weight:500; padding:9px 16px; border-radius:30px;
+  cursor:pointer; white-space:nowrap; transition:all .2s ease; display:flex; align-items:center; gap:7px;
+}
+.tab-btn:hover{border-color:var(--border); color:var(--text); background:var(--card);}
+.tab-btn.active{background:var(--gold-soft); border-color:var(--gold); color:var(--gold); font-weight:600;}
+
+.panel{display:none; animation:fadein .35s ease;}
+.panel.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+h2.section-title{
+  font-family:var(--font-display); font-size:24px; font-weight:600; margin:0 0 6px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-desc{color:var(--text-dim); font-size:13.5px; margin-bottom:20px; max-width:680px; line-height:1.5;}
+
+/* search */
+.search-wrap{position:relative; margin-bottom:22px;}
+.search-wrap input{
+  width:100%; background:var(--card); border:1px solid var(--border-soft); border-radius:10px;
+  padding:12px 16px 12px 38px; color:var(--text); font-family:var(--font-body); font-size:14px;
+}
+.search-wrap input:focus{outline:none; border-color:var(--gold);}
+.search-wrap::before{
+  content:"⌕"; position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-faint); font-size:16px;
+}
+
+/* CARDS GRID generic */
+.grid{display:grid; gap:14px;}
+.grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.grid.cols-2{grid-template-columns:repeat(2,1fr);}
+@media(max-width:760px){.grid.cols-3, .grid.cols-2{grid-template-columns:1fr;}}
+
+.card{
+  background:linear-gradient(160deg, var(--card), var(--card-2)); border:1px solid var(--border-soft);
+  border-radius:var(--radius); padding:18px; transition:.2s ease; position:relative; overflow:hidden;
+}
+.card:hover{border-color:var(--border); transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,0.25);}
+.card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px;}
+.card h3{font-family:var(--font-display); font-size:17px; margin:0; font-weight:600;}
+.card p{font-size:13.5px; color:var(--text-dim); line-height:1.55; margin:6px 0;}
+.tag{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:0.05em; padding:3px 9px; border-radius:20px;
+  text-transform:uppercase; white-space:nowrap; font-weight:600;
+}
+.tag.hy{background:var(--danger-soft); color:var(--danger);}
+.tag.exam{background:var(--gold-soft); color:var(--gold);}
+.tag.pearl{background:var(--teal-soft); color:var(--teal);}
+.tag-row{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;}
+
+/* OVERVIEW timeline */
+.timeline{display:flex; gap:0; overflow-x:auto; padding:24px 4px 8px; margin-bottom:8px;}
+.tl-node{flex:0 0 200px; position:relative; padding:0 14px; text-align:center;}
+.tl-node:not(:last-child)::after{
+  content:""; position:absolute; top:20px; right:-10px; width:40px; height:2px;
+  background:linear-gradient(90deg, var(--gold), transparent); 
+}
+.tl-dot{
+  width:40px; height:40px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center;
+  justify-content:center; font-size:18px; background:var(--gold-soft); border:1px solid var(--gold);
+}
+.tl-node h4{font-size:13px; margin:0 0 4px; font-family:var(--font-body); font-weight:600;}
+.tl-node p{font-size:11.5px; color:var(--text-faint); margin:0; line-height:1.4;}
+
+/* QUIZ */
+.quiz-shell{max-width:720px; margin:0 auto;}
+.quiz-progress-bar{height:8px; background:var(--card); border-radius:6px; overflow:hidden; margin-bottom:18px; border:1px solid var(--border-soft);}
+.quiz-progress-fill{height:100%; background:linear-gradient(90deg, var(--violet), var(--gold)); width:0%; transition:width .4s ease;}
+.quiz-meta{display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-bottom:14px; font-family:var(--font-mono);}
+.quiz-card{background:var(--card); border:1px solid var(--border-soft); border-radius:var(--radius); padding:22px;}
+.qtag{font-family:var(--font-mono); font-size:10.5px; color:var(--violet); text-transform:uppercase; letter-spacing:.07em;}
+.q-text{font-family:var(--font-display); font-size:18px; font-weight:500; margin:10px 0 18px; line-height:1.4;}
+.opt{
+  display:flex; gap:10px; align-items:flex-start; padding:12px 14px; border:1px solid var(--border-soft);
+  border-radius:10px; margin-bottom:9px; cursor:pointer; transition:.15s ease; font-size:13.5px; line-height:1.5;
+}
+.opt:hover{border-color:var(--border); background:var(--card-hover);}
+.opt .opt-letter{
+  font-family:var(--font-mono); font-weight:600; color:var(--text-faint); flex:0 0 18px;
+}
+.opt.correct{border-color:var(--success); background:var(--success-soft); animation:pulse-correct .5s ease;}
+.opt.correct .opt-letter{color:var(--success);}
+.opt.wrong{border-color:var(--danger); background:var(--danger-soft); animation:shake .4s ease;}
+.opt.wrong .opt-letter{color:var(--danger);}
+.opt.disabled{cursor:default; opacity:.65;}
+@keyframes pulse-correct{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.explain-box{
+  margin-top:14px; padding:14px 16px; border-radius:10px; background:var(--bg-2); border:1px solid var(--border-soft);
+  font-size:13px; line-height:1.6; color:var(--text-dim); display:none;
+}
+.explain-box.show{display:block; animation:fadein .3s ease;}
+.explain-box b{color:var(--text);}
+.quiz-nav{display:flex; justify-content:space-between; margin-top:18px;}
+.btn{
+  font-family:var(--font-body); font-weight:600; font-size:13.5px; padding:10px 20px; border-radius:9px;
+  border:1px solid var(--gold); background:var(--gold-soft); color:var(--gold); cursor:pointer; transition:.2s ease;
+}
+.btn:hover{background:var(--gold); color:#1b1306;}
+.btn.ghost{border-color:var(--border-soft); background:transparent; color:var(--text-dim);}
+.btn.ghost:hover{border-color:var(--border); color:var(--text); background:var(--card);}
+.btn:disabled{opacity:.4; cursor:not-allowed;}
+.streak-banner{
+  display:none; text-align:center; font-family:var(--font-mono); font-size:12px; color:var(--gold);
+  margin-bottom:10px; letter-spacing:.04em;
+}
+.streak-banner.show{display:block; animation:fadein .3s ease;}
+.quiz-result{text-align:center; padding:40px 20px;}
+.quiz-result .big-score{font-family:var(--font-display); font-size:56px; color:var(--gold); font-weight:600;}
+.quiz-result p{color:var(--text-dim); font-size:14px;}
+
+/* FLASHCARDS */
+.flash-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+@media(max-width:900px){.flash-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.flash-grid{grid-template-columns:1fr;}}
+.flash-card{perspective:1200px; height:180px; cursor:pointer;}
+.flash-inner{position:relative; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d;}
+.flash-card.flipped .flash-inner{transform:rotateY(180deg);}
+.flash-face{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius); padding:16px;
+  display:flex; flex-direction:column; justify-content:center; border:1px solid var(--border-soft);
+}
+.flash-front{background:linear-gradient(160deg, var(--card), var(--card-2));}
+.flash-back{background:linear-gradient(160deg, var(--violet-soft), var(--card-2)); transform:rotateY(180deg); border-color:var(--violet);}
+.flash-face .flash-label{font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin-bottom:8px;}
+.flash-face .flash-text{font-size:14px; line-height:1.45; font-weight:500;}
+.flash-back .flash-text{font-size:12.8px; font-weight:400; color:var(--text);}
+.flash-hint{position:absolute; bottom:8px; right:12px; font-size:10px; color:var(--text-faint); font-family:var(--font-mono);}
+
+/* CASES */
+.case-card{background:var(--card); border:1px solid var(--border-soft); border-radius:var(--radius); padding:20px; margin-bottom:16px;}
+.case-card h3{font-family:var(--font-display); font-size:17px; margin:0 0 8px;}
+.case-stem{font-size:14px; line-height:1.6; color:var(--text); padding:12px 14px; background:var(--bg-2); border-radius:9px; border-left:3px solid var(--violet); margin-bottom:12px;}
+.case-q{font-size:13px; color:var(--text-dim); margin:6px 0 6px 4px;}
+.reveal-btn{margin-top:8px;}
+.case-answer{display:none; margin-top:12px; padding:14px; background:var(--success-soft); border:1px solid var(--success); border-radius:9px; font-size:13.5px; line-height:1.6;}
+.case-answer.show{display:block; animation:fadein .3s ease;}
+
+/* MECHANISM / PATHWAY */
+.pathway{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:30px 6px; margin-bottom:10px;}
+.pw-node{
+  flex:0 0 150px; background:var(--card); border:1px solid var(--border-soft); border-radius:11px; padding:14px;
+  text-align:center; cursor:pointer; position:relative; transition:.2s ease;
+}
+.pw-node:hover{border-color:var(--gold); transform:translateY(-3px);}
+.pw-node.active{border-color:var(--violet); background:var(--violet-soft);}
+.pw-node h4{font-size:12.5px; margin:0 0 4px; font-weight:600;}
+.pw-node .pw-icon{font-size:22px; margin-bottom:6px;}
+.pw-block{
+  position:absolute; top:-10px; right:-6px; background:var(--danger); color:#fff; font-size:9px; font-family:var(--font-mono);
+  padding:2px 6px; border-radius:20px; font-weight:700;
+}
+.pw-arrow{flex:0 0 24px; color:var(--text-faint); font-size:18px;}
+.pw-detail{
+  background:var(--bg-2); border:1px solid var(--border-soft); border-radius:10px; padding:16px; font-size:13.5px;
+  line-height:1.6; color:var(--text-dim); min-height:70px;
+}
+.pw-detail b{color:var(--gold);}
+
+/* TABLES */
+table.cmp{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:18px;}
+table.cmp th, table.cmp td{padding:10px 12px; border-bottom:1px solid var(--border-soft); text-align:left; vertical-align:top;}
+table.cmp th{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--gold); background:var(--bg-2);}
+table.cmp tr:hover td{background:rgba(255,255,255,0.02);}
+.table-wrap{overflow-x:auto; border-radius:11px; border:1px solid var(--border-soft);}
+table.cmp th:first-child, table.cmp td:first-child{font-weight:600; color:var(--text);}
+
+/* badges for diagnosis */
+.badge-row{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 16px;}
+.badge{
+  font-family:var(--font-mono); font-size:11.5px; padding:6px 12px; border-radius:20px; border:1px solid var(--border-soft);
+  background:var(--card);
+}
+.badge.high{border-color:var(--danger); color:var(--danger);}
+.badge.low{border-color:var(--teal); color:var(--teal);}
+
+/* algo */
+.algo-step{
+  display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px dashed var(--border-soft);
+}
+.algo-step:last-child{border-bottom:none;}
+.algo-num{
+  flex:0 0 30px; height:30px; border-radius:50%; background:var(--gold-soft); border:1px solid var(--gold);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12px; color:var(--gold); font-weight:700;
+}
+.algo-step h4{margin:0 0 4px; font-size:14px;}
+.algo-step p{margin:0; font-size:13px; color:var(--text-dim); line-height:1.5;}
+
+/* treatment urgency */
+.urgency-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:20px;}
+@media(max-width:760px){.urgency-grid{grid-template-columns:1fr;}}
+.urgency-card{border-radius:var(--radius); padding:18px; border:1px solid var(--border-soft);}
+.urgency-card.emergency{background:var(--danger-soft); border-color:var(--danger);}
+.urgency-card.maintenance{background:var(--success-soft); border-color:var(--success);}
+.urgency-card h3{margin:0 0 10px; font-family:var(--font-display); font-size:16px;}
+.urgency-card ul{margin:0; padding-left:18px; font-size:13px; color:var(--text-dim); line-height:1.7;}
+
+/* mnemonics */
+.mnem-card{background:var(--card); border:1px solid var(--border-soft); border-radius:var(--radius); padding:18px; margin-bottom:14px; cursor:pointer;}
+.mnem-head{display:flex; justify-content:space-between; align-items:center;}
+.mnem-phrase{font-family:var(--font-display); font-size:19px; color:var(--gold); font-weight:600;}
+.mnem-list{display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-soft);}
+.mnem-card.open .mnem-list{display:block;}
+.mnem-item{display:flex; gap:10px; padding:6px 0; font-size:13px; color:var(--text-dim);}
+.mnem-item .letter{font-family:var(--font-mono); color:var(--violet); font-weight:700; flex:0 0 22px;}
+.chev{color:var(--text-faint); transition:.2s ease;}
+.mnem-card.open .chev{transform:rotate(180deg);}
+
+footer.foot{text-align:center; color:var(--text-faint); font-size:11.5px; margin-top:50px; font-family:var(--font-mono);}
+.exam-tip{
+  font-style:italic; font-size:12px; color:var(--text-faint); margin-top:6px; padding-top:6px;
+  border-top:1px dashed var(--border-soft); direction:rtl; text-align:right;
+}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+<div class="shell">
+
+  <header class="top">
+    <div>
+      <div class="brand-eyebrow"><span class="dot"></span> Pharmacology · Endocrine System</div>
+      <h1 class="brand-title">Thyroid <em>Pharmacology</em><br>Study Console</h1>
+      <p class="brand-sub">Antithyroid drugs, hormone replacement, and the thyroid storm protocol — built into one offline study tool with quizzes, flashcards, and clinical cases.</p>
+    </div>
+    <div class="stat-rail">
+      <div class="stat-pill"><div class="num" id="statProgress">0%</div><div class="lbl">Studied</div></div>
+      <div class="stat-pill"><div class="num" id="statScore">0%</div><div class="lbl">Quiz score</div></div>
+      <div class="stat-pill"><div class="num" id="statStreak">0</div><div class="lbl">Best streak</div></div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabNav">
+    <button class="tab-btn" data-tab="overview">🧭 Overview</button>
+    <button class="tab-btn" data-tab="quiz">📋 Quiz Mode</button>
+    <button class="tab-btn" data-tab="flash">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="cases">🩺 Clinical Cases</button>
+    <button class="tab-btn" data-tab="mech">🔬 Mechanism</button>
+    <button class="tab-btn" data-tab="dx">🧪 Diagnosis</button>
+    <button class="tab-btn" data-tab="tx">💊 Treatment</button>
+    <button class="tab-btn" data-tab="mnem">🧠 Mnemonics</button>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <section class="panel" id="panel-overview">
+    <h2 class="section-title">🧭 Overview</h2>
+    <p class="section-desc">A bird's-eye view of every drug class covered in this guide. Search to jump straight to a concept.</p>
+    <div class="search-wrap"><input type="text" id="overviewSearch" placeholder="Search drugs, mechanisms, or exam pearls…"></div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:24px 0 4px;">Disease → Crisis → Resolution</h3>
+    <div class="timeline">
+      <div class="tl-node"><div class="tl-dot">⚡</div><h4>Untreated Graves'</h4><p>Autoimmune TSH-receptor stimulation, chronic excess T3/T4</p></div>
+      <div class="tl-node"><div class="tl-dot">🌡️</div><h4>Trigger event</h4><p>Infection / surgery precipitates massive hormone release</p></div>
+      <div class="tl-node"><div class="tl-dot">🚨</div><h4>Thyroid Storm</h4><p>Fever, severe tachycardia, confusion — life-threatening</p></div>
+      <div class="tl-node"><div class="tl-dot">💊</div><h4>4-Drug Protocol</h4><p>Propranolol → Thioamide → Iodide → Corticosteroid</p></div>
+      <div class="tl-node"><div class="tl-dot">✅</div><h4>Stabilization</h4><p>Definitive therapy planned: RAI or surgery</p></div>
+    </div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:28px 0 4px;">Drug class cards</h3>
+    <div class="grid cols-3" id="overviewGrid"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="panel-quiz">
+    <h2 class="section-title">📋 Quiz Mode</h2>
+    <p class="section-desc">25 exam-style MCQs — mechanism-heavy, just like the real paper. Your streak and score are saved automatically.</p>
+    <div class="quiz-shell">
+      <div class="streak-banner" id="streakBanner">🔥 streak</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+      <div class="quiz-meta"><span id="quizCounter">Question 1 / 25</span><span id="quizScoreLive">Score: 0/0</span></div>
+      <div id="quizArea"></div>
+      <div class="quiz-nav">
+        <button class="btn ghost" id="quizRestart">↺ Restart</button>
+        <button class="btn" id="quizNext" disabled>Next question →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="panel-flash">
+    <h2 class="section-title">🗂️ Flashcards</h2>
+    <p class="section-desc">Click any card to flip it. Covers every high-yield mechanism and exam pearl in the guide.</p>
+    <div class="search-wrap"><input type="text" id="flashSearch" placeholder="Filter flashcards…"></div>
+    <div class="flash-grid" id="flashGrid"></div>
+  </section>
+
+  <!-- CASES -->
+  <section class="panel" id="panel-cases">
+    <h2 class="section-title">🩺 Clinical Cases</h2>
+    <p class="section-desc">Six exam-style vignettes, from a single sore throat to a full thyroid storm. Reason through each, then reveal.</p>
+    <div id="caseList"></div>
+  </section>
+
+  <!-- MECHANISM -->
+  <section class="panel" id="panel-mech">
+    <h2 class="section-title">🔬 Mechanism Pathway</h2>
+    <p class="section-desc">Click any step of hormone synthesis to see exactly which drug blocks it, and how.</p>
+    <div class="pathway" id="pathwayRow"></div>
+    <div class="pw-detail" id="pathwayDetail">Click a step above to see the mechanism in detail.</div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:28px 0 10px;">🔄 Levothyroxine therapy cycle</h3>
+    <div class="pathway" id="levoRow"></div>
+  </section>
+
+  <!-- DIAGNOSIS -->
+  <section class="panel" id="panel-dx">
+    <h2 class="section-title">🧪 Diagnosis &amp; Monitoring</h2>
+    <p class="section-desc">TSH is the compass for every decision here — interpret it correctly before you touch a dose.</p>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:8px 0 6px;">TSH interpretation</h3>
+    <div class="badge-row">
+      <span class="badge high">↑ High TSH → Hypothyroidism (pituitary straining to drive a failing gland)</span>
+      <span class="badge low">↓ Low TSH → Hyperthyroidism (excess hormone suppresses pituitary)</span>
+    </div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:18px 0 6px;">Monitoring comparison</h3>
+    <div class="table-wrap">
+      <table class="cmp">
+        <tr><th>Drug class</th><th>What to monitor</th><th>Why</th></tr>
+        <tr><td>Thioamides (Methimazole / PTU)</td><td>CBC + LFTs</td><td>Risk of agranulocytosis and hepatotoxicity</td></tr>
+        <tr><td>Levothyroxine</td><td>TSH every 6–8 weeks</td><td>~7-day half-life means steady state takes 6–8 weeks to reach</td></tr>
+        <tr><td>Iodides</td><td>Clinical response over ~10 days</td><td>Effect wanes via "thyroid escape" phenomenon</td></tr>
+        <tr><td>Radioactive Iodine (131-I)</td><td>TSH long-term, lifelong</td><td>Virtually all patients become hypothyroid eventually</td></tr>
+      </table>
+    </div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:22px 0 6px;">Diagnostic / decision algorithm — suspected thyroid storm</h3>
+    <div class="card">
+      <div class="algo-step"><div class="algo-num">1</div><div><h4>Recognize the picture clinically</h4><p>Fever ≥ 40°C, severe tachycardia, confusion in a patient with known/untreated Graves' disease — diagnosis is clinical, don't wait for labs to start treating.</p></div></div>
+      <div class="algo-step"><div class="algo-num">2</div><div><h4>Confirm with labs (don't delay treatment)</h4><p>TSH will be severely suppressed; free T3/T4 exceptionally high.</p></div></div>
+      <div class="algo-step"><div class="algo-num">3</div><div><h4>Start the 4-drug protocol immediately</h4><p>Propranolol → Thioamide → Iodide → Corticosteroid (see Treatment tab).</p></div></div>
+      <div class="algo-step"><div class="algo-num">4</div><div><h4>Reassess and plan definitive therapy</h4><p>Once stabilized, plan RAI ablation or surgery for definitive long-term control.</p></div></div>
+    </div>
+  </section>
+
+  <!-- TREATMENT -->
+  <section class="panel" id="panel-tx">
+    <h2 class="section-title">💊 Treatment</h2>
+    <p class="section-desc">Color-coded by urgency: red for the emergency room, green for lifelong maintenance.</p>
+
+    <div class="urgency-grid">
+      <div class="urgency-card emergency">
+        <h3>🚨 Acute / Emergency — Thyroid Storm</h3>
+        <ul>
+          <li><b>Propranolol</b> — beta-blockade + ↓ peripheral T4→T3 conversion</li>
+          <li><b>PTU / Methimazole</b> — halts new hormone synthesis (TPO inhibition)</li>
+          <li><b>Iodides (Lugol's)</b> — rapidly blocks hormone release</li>
+          <li><b>Corticosteroids</b> — ↓ T4→T3 conversion + anti-inflammatory</li>
+        </ul>
+      </div>
+      <div class="urgency-card maintenance">
+        <h3>🟢 Chronic / Maintenance</h3>
+        <ul>
+          <li><b>Methimazole</b> — first-line for mild Graves', young patients</li>
+          <li><b>Levothyroxine</b> — lifelong replacement, daily, empty stomach</li>
+          <li><b>Radioactive Iodine</b> — definitive cure, age &gt;35, not pregnant</li>
+          <li><b>Diltiazem</b> — heart-rate control when beta-blockers contraindicated</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:8px 0 10px;">Antithyroid drug comparison</h3>
+    <div class="table-wrap">
+      <table class="cmp">
+        <tr><th>Feature</th><th>Thioamides</th><th>Iodides</th><th>Radioactive Iodine</th></tr>
+        <tr><td>Mechanism</td><td>Inhibit TPO; block iodide oxidation</td><td>Inhibit thyroglobulin proteolysis</td><td>Beta-radiation destroys follicular cells</td></tr>
+        <tr><td>Onset</td><td>3–4 weeks</td><td>Hours; escapes after ~10 days</td><td>Weeks to months</td></tr>
+        <tr><td>Best for</td><td>Mild disease, young patients</td><td>Emergency prep, thyroid storm</td><td>Age &gt;35, definitive cure</td></tr>
+        <tr><td>Key risk</td><td>Agranulocytosis, hepatotoxicity</td><td>Temporary effect only</td><td>Permanent hypothyroidism</td></tr>
+      </table>
+    </div>
+
+    <h3 style="font-family:var(--font-display); font-size:16px; margin:18px 0 10px;">Hormone replacement comparison</h3>
+    <div class="table-wrap">
+      <table class="cmp">
+        <tr><th>Feature</th><th>Levothyroxine (T4)</th><th>Liothyronine (T3)</th></tr>
+        <tr><td>Role</td><td>Standard of care, lifelong</td><td>Alternative / add-on</td></tr>
+        <tr><td>Onset</td><td>Slow — steady state in 6–8 weeks</td><td>Faster, shorter half-life</td></tr>
+        <tr><td>Risk profile</td><td>Lower, well-tolerated</td><td>Higher arrhythmia risk</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- MNEMONICS -->
+  <section class="panel" id="panel-mnem">
+    <h2 class="section-title">🧠 Mnemonics</h2>
+    <p class="section-desc">Tap a card to expand. Built straight from the lecture content above.</p>
+    <div id="mnemList"></div>
+  </section>
+
+  <footer class="foot">Built offline · all data embedded · no external calls · progress saved locally on this device</footer>
+</div>
+
+<script>
+/* ============== DATA ============== */
+
+const overviewCards = [
+  {name:"Thioamides", icon:"🧬", def:"Methimazole & PTU — first-line antithyroid drugs.", mech:"Inhibit thyroid peroxidase (TPO), blocking iodide oxidation and T3/T4 coupling. PTU also blocks peripheral 5'-deiodinase.", tags:["hy","exam"]},
+  {name:"Iodides (Lugol's)", icon:"💧", def:"Fast-acting 'thyroid constipating' agents.", mech:"Rapidly inhibit thyroglobulin proteolysis, blocking hormone release. Effect wanes after ~10 days (thyroid escape).", tags:["exam","pearl"]},
+  {name:"Radioactive Iodine (131-I)", icon:"☢️", def:"Non-surgical ablation therapy.", mech:"Concentrates in the thyroid; beta radiation destroys hyperactive tissue, leaving permanent hypothyroidism.", tags:["hy"]},
+  {name:"Propranolol", icon:"❤️", def:"Adjuvant symptom controller, life-saving in storm.", mech:"Blocks beta-adrenergic receptors AND inhibits peripheral 5'-deiodinase (↓T4→T3).", tags:["hy","exam"]},
+  {name:"Corticosteroids", icon:"🛡️", def:"Adjuvant for Graves' ophthalmopathy & storm.", mech:"Reduce T4-to-T3 conversion and calm inflammation behind the eyes.", tags:["pearl"]},
+  {name:"Levothyroxine (T4)", icon:"⚖️", def:"Standard replacement for hypothyroidism.", mech:"Synthetic T4 converted peripherally to active T3; long half-life (~7 days), steady state in 6–8 weeks.", tags:["hy","exam"]},
+  {name:"Liothyronine (T3)", icon:"⚡", def:"Faster-acting alternative / add-on.", mech:"Direct active T3 supply; quicker onset but higher arrhythmia risk.", tags:["pearl"]},
+  {name:"Diltiazem", icon:"💉", def:"Calcium-channel blocker alternative.", mech:"Blocks calcium influx to control heart rate when beta-blockers are contraindicated.", tags:["pearl"]},
+  {name:"Thyroid Storm", icon:"🚨", def:"Life-threatening hyperthyroid crisis.", mech:"Massive T3/T4 release → hypermetabolism, fever, tachycardia, confusion. Treated with a 4-drug protocol.", tags:["hy","exam"]},
+];
+
+const flashcards = [
+  {q:"Why do thioamides take 3–4 weeks to work?", a:"They only block NEW hormone synthesis (TPO inhibition) — pre-formed thyroglobulin stores must be depleted first."},
+  {q:"What does PTU inhibit that Methimazole does NOT?", a:"Peripheral 5'-deiodinase — the enzyme converting T4 to the more potent T3."},
+  {q:"Which thioamide is preferred overall, and why?", a:"Methimazole — longer half-life allows once-daily dosing and better compliance."},
+  {q:"Which thioamide is preferred in the 1st trimester of pregnancy?", a:"PTU — crosses the placenta less readily and carries lower teratogenic risk than Methimazole."},
+  {q:"A patient on Methimazole gets a sore throat + fever. Immediate concern?", a:"Agranulocytosis — get a CBC immediately and stop the drug if confirmed."},
+  {q:"What lab monitoring do thioamides specifically require?", a:"CBC (for agranulocytosis) and LFTs (for hepatotoxicity)."},
+  {q:"How do iodides (Lugol's solution) lower hormone levels so fast?", a:"They inhibit thyroglobulin proteolysis, blocking the release of pre-formed T3/T4 within hours."},
+  {q:"What is the 'thyroid escape' phenomenon?", a:"The gland adapts to high iodide and resumes hormone release — iodide's effect wanes after ~10 days."},
+  {q:"Why are iodides given before thyroid surgery?", a:"They rapidly shrink the gland and reduce its vascularity, making surgery safer."},
+  {q:"What kind of radiation does 131-I emit, and why does that matter?", a:"Beta radiation — short-range, so it destroys thyroid tissue selectively from within."},
+  {q:"Who is 131-I ideal for, and who should avoid it?", a:"Ideal for patients >35 unfit for surgery; contraindicated in pregnancy due to radiation risk to the fetus."},
+  {q:"What is the inevitable long-term consequence of 131-I therapy?", a:"Permanent hypothyroidism, requiring lifelong levothyroxine replacement."},
+  {q:"What is Propranolol's DUAL mechanism in thyroid storm?", a:"Beta-adrenergic blockade (controls HR/tremor) PLUS inhibition of peripheral 5'-deiodinase (↓T4→T3)."},
+  {q:"How do corticosteroids help in hyperthyroidism?", a:"They mitigate Graves' ophthalmopathy and also reduce peripheral T4-to-T3 conversion."},
+  {q:"When is Diltiazem used instead of a beta-blocker?", a:"When beta-blockers are contraindicated — it controls heart rate via calcium-channel blockade."},
+  {q:"List the 4 drug classes used in thyroid storm, in logical order.", a:"1) Propranolol (symptoms) 2) PTU/Methimazole (synthesis) 3) Iodides (release) 4) Corticosteroids (conversion + inflammation)."},
+  {q:"Why must Levothyroxine be taken 30 minutes before breakfast?", a:"Food, milk, and other drugs significantly impair its GI absorption."},
+  {q:"Why is TSH checked only 6–8 weeks after starting Levothyroxine?", a:"Its ~7-day half-life means steady-state plasma levels take 6–8 weeks to be reached; checking earlier gives misleading results."},
+  {q:"What does excess Levothyroxine do to the cardiovascular system?", a:"Mimics hyperthyroidism — increases beta-adrenergic sensitivity, risking atrial fibrillation and angina, especially in the elderly."},
+  {q:"What starting dose strategy is used for elderly/cardiac patients on Levothyroxine?", a:"Conservative low starting dose (e.g. 25 mcg), titrated up slowly."},
+  {q:"What is Liothyronine, and when is it used?", a:"Synthetic T3 — faster onset than levothyroxine, but reserved for select cases due to higher arrhythmia risk."},
+  {q:"How do you interpret a HIGH TSH?", a:"Hypothyroidism — the pituitary is straining to stimulate an underperforming gland."},
+  {q:"How do you interpret a LOW TSH?", a:"Hyperthyroidism — excess circulating hormone is suppressing the pituitary."},
+  {q:"What classic eye sign is associated with Graves' disease?", a:"Exophthalmos — bulging eyes from lymphocytic infiltration behind the orbit."},
+];
+
+const mcqs = [
+{tag:"Mechanism", q:"A patient on methimazole asks why their symptoms haven't improved after 3 days. What is the mechanistic reason?",
+ opts:["The drug has poor oral bioavailability.","It requires peripheral conversion to an active metabolite.","It only inhibits new synthesis, leaving pre-formed stores unaffected.","The kidneys rapidly excrete the initial doses.","It is highly protein-bound in the first week."],
+ correct:2, why:"Thioamides block TPO (new synthesis) but it takes 3–4 weeks to deplete stored colloid.",
+ wrong:"A is false — absorption is fine. B is false. D & E describe pharmacokinetics that don't apply here."},
+{tag:"Mechanism", q:"How do high doses of Iodides (Lugol's solution) achieve rapid symptom control in hyperthyroidism?",
+ opts:["By destroying follicular cells via radiation.","By inhibiting thyroglobulin proteolysis.","By blocking peripheral 5'-deiodinase.","By downregulating cardiac beta-receptors.","By preventing iodide uptake from the GI tract."],
+ correct:1, why:"Iodides act as 'thyroid constipating agents,' blocking hormone release via inhibiting proteolysis within hours.",
+ wrong:"A is 131-I. C is Propranolol/PTU. D is beta-blockers. E is incorrect."},
+{tag:"Mechanism", q:"Propranolol is life-saving in a thyroid storm due to a dual mechanism of action. What are these two mechanisms?",
+ opts:["Alpha-blockade and TPO inhibition.","Beta-blockade and TPO inhibition.","Beta-blockade and inhibition of peripheral T4 to T3 conversion.","Calcium channel blockade and inhibition of thyroglobulin proteolysis.","Beta-blockade and immune system suppression."],
+ correct:2, why:"It controls sympathetic overactivity and directly reduces potent T3 levels by blocking 5'-deiodinase.",
+ wrong:"It does not block alpha receptors, TPO, calcium channels, or the immune system."},
+{tag:"Mechanism", q:"Which enzyme is explicitly inhibited by Propylthiouracil (PTU) but NOT by Methimazole?",
+ opts:["Thyroid Peroxidase (TPO)","5'-deiodinase","Cytochrome P450","Thyroglobulin protease","Sodium-iodide symporter"],
+ correct:1, why:"PTU has the added benefit of inhibiting peripheral conversion of T4 to T3 (5'-deiodinase), while Methimazole only inhibits TPO.",
+ wrong:"Both inhibit TPO. The other enzymes are not targeted by PTU."},
+{tag:"Mechanism", q:"A patient on Levothyroxine complains of palpitations and anxiety. What is the most likely cellular mechanism responsible?",
+ opts:["Direct stimulation of alpha-1 receptors.","Excess T3 increasing the sensitivity of cardiac beta-adrenergic receptors.","Inhibition of vagal tone by T4.","Accumulation of toxic iodine metabolites.","Drug-induced acute hepatitis."],
+ correct:1, why:"Excessive levothyroxine mimics hyperthyroidism, where T3 upregulates and sensitizes the heart to catecholamines.",
+ wrong:"T3 doesn't directly stimulate alpha receptors or inhibit vagal tone. Hepatitis is a thioamide risk, not T4."},
+{tag:"Mechanism", q:"Why must Levothyroxine be taken 30 minutes before breakfast?",
+ opts:["Food accelerates its hepatic metabolism.","Food, drugs, and GI conditions impair its intestinal absorption.","It causes severe gastric irritation if taken with food.","Insulin release neutralizes the hormone.","It requires an alkaline environment to be absorbed."],
+ correct:1, why:"Absorption is easily impaired by food, milk, or other medications, leading to subtherapeutic levels.",
+ wrong:"It doesn't cause gastric irritation, insulin doesn't neutralize it, and it doesn't require an alkaline environment."},
+{tag:"Mechanism", q:"What is the primary mechanism of tissue destruction by Radioactive Iodine (131-I)?",
+ opts:["Alpha radiation emission.","Gamma radiation emission.","Beta radiation emission.","Direct cellular toxicity from heavy metal poisoning.","Induction of autoimmune T-cell attack."],
+ correct:2, why:"The thyroid concentrates 131-I, which emits beta (β-) rays to selectively destroy cells from within.",
+ wrong:"Beta radiation is used for localized destruction; gamma is for imaging."},
+{tag:"Mechanism", q:"In a patient experiencing thioamide-induced agranulocytosis, which mechanism is compromised?",
+ opts:["Red blood cell oxygen carrying capacity.","Platelet aggregation.","Bone marrow production of white blood cells.","Hepatic synthesis of clotting factors.","Renal excretion of uric acid."],
+ correct:2, why:"Agranulocytosis is a severe drop in white blood cells due to bone marrow suppression, leading to massive infection risk.",
+ wrong:"RBCs, platelets, and clotting factors are not the primary target of this idiosyncratic toxicity."},
+{tag:"Mechanism", q:"How do corticosteroids assist in the management of hyperthyroidism?",
+ opts:["By selectively destroying thyroid tissue.","By acting as beta-adrenergic antagonists.","By mitigating Graves' ophthalmopathy and reducing T4-to-T3 conversion.","By increasing the renal clearance of iodide.","By stimulating TSH secretion."],
+ correct:2, why:"They have anti-inflammatory action for eye symptoms and inhibit peripheral 5'-deiodinase.",
+ wrong:"They don't destroy tissue, aren't beta-blockers, don't clear iodide, and suppress rather than stimulate TSH."},
+{tag:"Mechanism", q:"Why is Sodium Iodide NOT suitable for long-term management of hyperthyroidism?",
+ opts:["It causes permanent bone marrow failure.","The effectiveness wanes after about 10 days due to the 'thyroid escape' phenomenon.","It has an extremely long half-life causing toxicity.","It inevitably leads to liver necrosis.","It irreversibly destroys the thyroid gland."],
+ correct:1, why:"The gland adapts to high iodide levels and resumes hormone synthesis and release (escape phenomenon).",
+ wrong:"A and D are thioamide risks. E is 131-I. It is rapidly cleared, not long half-life."},
+{tag:"Mechanism", q:"A physician decides to check a patient's TSH 2 weeks after initiating Levothyroxine. Why is this clinically inappropriate?",
+ opts:["TSH only responds to T3, not T4.","Levothyroxine has a short half-life of 1 day.","It takes 6–8 weeks for Levothyroxine to reach a steady state due to its ~7-day half-life.","TSH levels permanently drop to zero once therapy starts.","The patient must fast for 24 hours before a TSH test."],
+ correct:2, why:"Premature dose adjustments will be inaccurate because steady-state hormone levels aren't reached until 6–8 weeks.",
+ wrong:"T4 is converted to T3. Half-life is long (~7 days). TSH does not drop to zero unless overdosed."},
+{tag:"Mechanism", q:"What is the mechanistic consequence if a patient taking Methimazole develops hepatotoxicity?",
+ opts:["Accumulation of unconjugated bilirubin only.","Fatal liver damage requiring urgent drug discontinuation.","Enhanced clearance of the drug.","Autoimmune destruction of the pancreas.","Increased synthesis of albumin."],
+ correct:1, why:"Hepatotoxicity is a severe, potentially fatal adverse effect of thioamides requiring immediate clinical attention.",
+ wrong:"It causes cellular damage, not just altered bilirubin. It reduces clearance and doesn't affect the pancreas."},
+{tag:"Mechanism", q:"Diltiazem is mentioned as an adjuvant therapy. What is its mechanism of action in this context?",
+ opts:["Beta-adrenergic blockade.","Blocks calcium influx, relaxing heart muscle and blood vessels.","Inhibits TPO.","Destroys the SA node.","Activates peripheral 5'-deiodinase."],
+ correct:1, why:"It is a Calcium Channel Blocker used as an alternative to beta-blockers to control heart rate when beta-blockers are contraindicated.",
+ wrong:"It is a CCB, not a beta-blocker. It does not inhibit TPO or destroy the SA node."},
+{tag:"Mechanism", q:"What occurs chemically when TPO is inhibited by thioamides?",
+ opts:["Iodide (I-) cannot be oxidized to Iodine (I2), and coupling of mono/di-iodotyrosines cannot occur.","Thyroglobulin is immediately cleaved into free T3 and T4.","Pre-formed T4 is converted to reverse T3.","The sodium-iodide symporter is permanently deactivated.","TRH receptors on the pituitary are blocked."],
+ correct:0, why:"TPO handles both the oxidation of iodide and the coupling of iodotyrosines to form T3/T4.",
+ wrong:"B is blocked by Iodides. C, D, and E are unrelated mechanisms."},
+{tag:"Mechanism", q:"Why is Radioactive Iodine (131-I) ideal for older patients but avoided in younger or pregnant patients?",
+ opts:["It requires a strong immune system to work.","The risk of long-term mutation/teratogenicity from beta radiation.","Older patients have thicker thyroid capsules.","It acts too rapidly for young patients' hearts.","Young patients lack the sodium-iodide symporter."],
+ correct:1, why:"It destroys tissue via radiation, posing severe risks to fetal development and theoretical lifetime mutation risk in the young.",
+ wrong:"Doesn't depend on immunity, capsule thickness, or acting 'too rapidly'. Everyone has the symporter."},
+{tag:"Structure/Definition", q:"What is the definition of a 'Thyroid Storm'?",
+ opts:["A localized infection of the thyroid gland.","A life-threatening emergency crisis of severe hyperthyroidism.","An autoimmune attack destroying the gland causing hypothyroidism.","A benign nodule producing excess thyroglobulin.","A transient increase in TSH during sleep."],
+ correct:1, why:"It is a multi-pronged emergency featuring fever, severe tachycardia, and confusion.",
+ wrong:"It's an acute systemic crisis, not a localized infection, hypo-state, or benign nodule."},
+{tag:"Structure/Definition", q:"Which of the following is defined as a Calcium-Channel Blocker used as an alternative to beta-blockers?",
+ opts:["Propranolol","Diltiazem","Methimazole","Methylprednisolone","Lugol's Solution"],
+ correct:1, why:"Diltiazem is the listed CCB substitute for controlling heart rate.",
+ wrong:"Propranolol is a beta-blocker. Methimazole is an ATD. Methylprednisolone is a steroid."},
+{tag:"Structure/Definition", q:"What defines the condition of 'Agranulocytosis'?",
+ opts:["Inflammation of the blood vessels.","Muscle weakness and inflammation.","Sudden, severe infection risk due to low white blood cells.","Liver failure characterized by elevated enzymes.","Redness and swelling behind the eyes."],
+ correct:2, why:"It is the sudden drop in WBCs causing severe infection risk, a critical toxicity of thioamides.",
+ wrong:"A is vasculitis. B is myopathy. D is hepatotoxicity. E is exophthalmos."},
+{tag:"Structure/Definition", q:"Which molecule is considered the 'Standard of Care' replacement therapy for hypothyroidism?",
+ opts:["Liothyronine","L-thyroxine (Levothyroxine)","Carbimazole","Propylthiouracil","Propranolol"],
+ correct:1, why:"Levothyroxine (synthetic T4) is the standard replacement providing steady hormone levels.",
+ wrong:"Liothyronine (T3) is alternative/add-on. Carbimazole and PTU treat hyperthyroidism."},
+{tag:"Structure/Definition", q:"What is the specific role of Liothyronine?",
+ opts:["Standard lifelong replacement for hypothyroidism.","Alternative/add-on T3 replacement with faster onset but higher risks (palpitations).","A beta-blocker for thyroid storm.","An iodide preparation for pre-op.","A thioamide prodrug."],
+ correct:1, why:"It is synthetic T3, faster acting but less commonly used due to cost and arrhythmia risks.",
+ wrong:"T4 is the standard. It is not a beta-blocker, iodide, or ATD."},
+{tag:"Structure/Definition", q:"Exophthalmos is a classic clinical sign of which condition mentioned in the sources?",
+ opts:["Iodine deficiency goiter.","Thioamide toxicity.","Graves' disease / Hyperthyroidism.","Hashimoto's thyroiditis.","Myxedema coma."],
+ correct:2, why:"Exophthalmos (bulging eyes due to lymphocytic infiltration) is a classic sign of hyperthyroidism (Graves' disease).",
+ wrong:"Not associated with iodine deficiency, drug toxicity, or primary hypothyroidism."},
+{tag:"Regulatory/Comparative", q:"When choosing between Methimazole and PTU, which of the following is true regarding clinical preference?",
+ opts:["PTU is preferred generally because of its longer half-life.","Methimazole is preferred generally, but PTU is chosen during the 1st trimester of pregnancy.","PTU is preferred because it lacks liver toxicity.","Methimazole is preferred in thyroid storm because it blocks 5'-deiodinase.","Both are contraindicated in children."],
+ correct:1, why:"Methimazole is preferred for longer half-life and fewer side effects, but PTU is safer in early pregnancy.",
+ wrong:"Methimazole has the longer half-life. PTU has WORSE liver toxicity. PTU (not methimazole) blocks 5'-deiodinase."},
+{tag:"Regulatory/Comparative", q:"Compare the monitoring requirements for patients on Thioamides versus Levothyroxine.",
+ opts:["Thioamides require regular CBC/LFTs; Levothyroxine requires TSH every 6–8 weeks.","Thioamides require TSH every week; Levothyroxine requires CBCs.","Thioamides require no monitoring; Levothyroxine requires daily LFTs.","Both require strict monitoring of serum calcium.","Both require weekly ECGs."],
+ correct:0, why:"Thioamide toxicity includes agranulocytosis (CBC) and hepatotoxicity (LFTs). T4 is titrated to TSH levels.",
+ wrong:"Only A matches the specific mandatory clinical oversight for these drug classes."},
+{tag:"Regulatory/Comparative", q:"In the comparative management of hyperthyroidism, which therapy provides an IMMEDIATE onset of action for symptom control?",
+ opts:["Methimazole","Radioactive Iodine","Propranolol","Surgery","PTU"],
+ correct:2, why:"Beta-blockers provide immediate symptom control of tachycardia/tremors. ATDs and RAI take weeks/months.",
+ wrong:"ATDs take 3–4 weeks. RAI takes months. Surgery takes time to arrange and recover from."},
+{tag:"Regulatory/Comparative", q:"Which of the following drugs is STRICTLY CONTRAINDICATED in a patient diagnosed with hypothyroidism?",
+ opts:["Levothyroxine","Liothyronine","Propranolol","Carbimazole","Vitamin D"],
+ correct:3, why:"Carbimazole is an antithyroid agent that inhibits hormone synthesis, which would acutely worsen hypothyroidism.",
+ wrong:"T4 and T3 are treatments. Propranolol and vitamins aren't strictly contraindicated based on the hypo diagnosis alone."},
+];
+
+const cases = [
+ {title:"Case 1 — The sore throat on Methimazole", stem:"A 28-year-old female taking Methimazole for Graves' disease presents to the ER with a sudden high fever and a severe sore throat.",
+  questions:["What mechanism is involved?","What structure is implicated?","What happens if untreated?"],
+  answer:"The patient has thioamide-induced agranulocytosis — severe depletion of white blood cells from bone marrow suppression. A CBC must be drawn immediately to confirm, and the drug must be stopped; untreated, loss of immune defense can lead to fatal sepsis."},
+ {title:"Case 2 — Pre-op Lugol's", stem:"A patient is scheduled for a thyroidectomy in two weeks. The surgeon prescribes Lugol's solution (Iodides).",
+  questions:["What mechanism is involved?","What molecule is implicated?","What happens if disrupted?"],
+  answer:"Iodides inhibit thyroglobulin proteolysis (the Wolff–Chaikoff effect), rapidly blocking release of pre-formed T3/T4 and reducing gland vascularity — making surgery safer. The effect only lasts ~10 days before 'thyroid escape' occurs."},
+ {title:"Case 3 — Hyperthyroidism in early pregnancy", stem:"A pregnant patient in her first trimester is diagnosed with hyperthyroidism.",
+  questions:["What mechanism is involved?","Which drug is preferred?","Why not the alternative?"],
+  answer:"PTU is the drug of choice in the 1st trimester — it inhibits TPO and peripheral 5'-deiodinase with a better fetal safety profile, since Methimazole crosses the placenta more readily and carries a higher risk of fetal defects."},
+ {title:"Case 4 — High-dose Levothyroxine in an elderly cardiac patient", stem:"A 70-year-old patient with a history of ischemic heart disease begins Levothyroxine therapy at a high dose and presents with chest pain and palpitations.",
+  questions:["What mechanism is involved?","What molecule is implicated?","What's the management lesson?"],
+  answer:"Iatrogenic hyperthyroidism — exogenous T4 converts to T3, increasing cardiac beta-adrenergic sensitivity, which can precipitate angina or atrial fibrillation. Elderly/cardiac patients must start on a conservative dose (e.g., 25 mcg) and titrate slowly."},
+ {title:"Case 5 — Six months after Radioactive Iodine", stem:"A patient given Radioactive Iodine (131-I) therapy 6 months ago now complains of severe fatigue, constipation, and cold intolerance.",
+  questions:["What mechanism is involved?","What structure is implicated?","What is the consequence?"],
+  answer:"Beta radiation destroyed the hyperactive follicular cells, leaving the gland unable to synthesize endogenous hormone. The primary consequence of 131-I therapy is permanent hypothyroidism, requiring lifelong Levothyroxine replacement."},
+ {title:"Case 6 (Integrative) — Thyroid storm after infection", stem:"A 45-year-old female with untreated Graves' disease develops a high fever (40°C), severe tachycardia, and confusion after a severe respiratory infection.",
+  questions:["Identify the process.","Walk through the mechanism.","What's the treatment, step by step?"],
+  answer:"This is a Thyroid Storm: massive release of stored T3/T4 causes severe hypermetabolism and upregulated cardiac beta-receptors. TSH will be severely suppressed with very high free T3/T4. If untreated, cardiovascular collapse and death can follow. Treatment is multi-pronged: 1) Propranolol (beta-blockade + ↓T4→T3) 2) PTU/Methimazole (halts new synthesis) 3) Iodides (blocks release) 4) Corticosteroids (↓conversion + anti-inflammatory) — targeting synthesis, release, peripheral conversion, and sympathetic overactivity all at once."},
+];
+
+const pathwaySteps = [
+ {icon:"🧂", label:"Iodide trapped", blocked:null, detail:"Blood iodide (I⁻) is trapped inside the follicular cell via the sodium-iodide symporter. No drug discussed here blocks this step."},
+ {icon:"🔥", label:"TPO oxidation", blocked:"Methimazole / PTU", detail:"<b>Blocked by Methimazole and PTU.</b> Thyroid peroxidase (TPO) normally oxidizes I⁻ to I₂ — thioamides inhibit this enzyme directly."},
+ {icon:"🔗", label:"Iodotyrosine coupling", blocked:"Methimazole / PTU", detail:"<b>Blocked by Methimazole and PTU.</b> TPO also couples mono- and di-iodotyrosines to form T3/T4 — also halted by thioamides."},
+ {icon:"🧪", label:"Thyroglobulin proteolysis", blocked:"Iodides", detail:"<b>Blocked by Iodides (Lugol's solution).</b> This step releases pre-formed hormone from thyroglobulin — iodides inhibit it for about 10 days."},
+ {icon:"🩸", label:"T3/T4 released to blood", blocked:null, detail:"Once released, hormone circulates and acts on peripheral tissues. This is also the step destroyed wholesale by 131-I radiation at the cellular level upstream."},
+ {icon:"♻️", label:"Peripheral T4 → T3", blocked:"PTU / Propranolol / Steroids", detail:"<b>Blocked by PTU, Propranolol, and Corticosteroids.</b> The 5'-deiodinase enzyme converts T4 to the more potent T3 — all three drugs reduce this conversion."},
+];
+
+const levoSteps = [
+ {icon:"🕐", label:"Empty stomach, 30 min pre-breakfast", detail:"Dose initiation — must avoid food/milk/other drugs that impair absorption."},
+ {icon:"📈", label:"Week 1–6: accumulation", detail:"Long ~7-day half-life means the drug slowly builds up in plasma."},
+ {icon:"⚖️", label:"Week 6–8: steady state", detail:"Plasma levels finally plateau — only now is dose response meaningful."},
+ {icon:"🧪", label:"Check TSH", detail:"TSH measured to judge whether dose is correct."},
+ {icon:"🔧", label:"Titrate dose", detail:"Adjust based on TSH — too high TSH = increase dose; too low = decrease."},
+ {icon:"✅", label:"Lifelong maintenance", detail:"Stable dose continued indefinitely, rechecked periodically."},
+];
+
+const mnemonics = [
+ {phrase:"PTU stands for 'Pregnancy's Top Use'", items:[["P","Pregnancy — PTU is preferred in the 1st trimester"],["T","TPO inhibited, same as Methimazole"],["U","Unique extra: also blocks 5'-deiodinase (↓T4→T3)"]]},
+ {phrase:"Storm Protocol = \"B-S-R-I\" (Beta, Synthesis, Release, Inflammation)", items:[["B","Beta-blockade — Propranolol controls HR + ↓T4→T3"],["S","Synthesis halted — PTU/Methimazole block TPO"],["R","Release blocked — Iodides stop proteolysis"],["I","Inflammation/conversion — Corticosteroids finish the job"]]},
+ {phrase:"\"Sore Throat? STAT CBC!\"", items:[["S","Sore throat on a thioamide is never just a cold"],["T","Think agranulocytosis first"],["A","Act fast — stop the drug"],["T","Test with an urgent CBC"]]},
+ {phrase:"Iodide is a '10-Day Tenant'", items:[["10","Effective for about 10 days only"],["Day","Then 'thyroid escape' — the gland adapts"],["Tenant","It moves out — effect disappears, can't be used long-term"]]},
+ {phrase:"Levothyroxine's \"7-7-30\" rule", items:[["7","~7-day half-life"],["7","~7 weeks (6–8) to reach steady state"],["30","Take 30 minutes before breakfast, empty stomach"]]},
+ {phrase:"131-I: \"Beta Burns, Hypo Stays\"", items:[["Beta","Beta radiation does the destroying"],["Burns","Selectively destroys hyperactive follicular cells"],["Hypo Stays","Permanent hypothyroidism is the lasting trade-off"]]},
+];
+
+/* ============== AMBIENT BG ============== */
+(function(){
+  const wrap = document.getElementById('ambient');
+  const n = window.innerWidth < 700 ? 8 : 14;
+  for(let i=0;i<n;i++){
+    const d = document.createElement('div');
+    d.className='drop';
+    const size = 20 + Math.random()*60;
+    d.style.width=size+'px'; d.style.height=size+'px';
+    d.style.left = (Math.random()*100)+'%';
+    d.style.animationDuration = (18+Math.random()*22)+'s';
+    d.style.animationDelay = (Math.random()*-30)+'s';
+    wrap.appendChild(d);
+  }
+})();
+
+/* ============== TAB LOGIC ============== */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+function activateTab(tab){
+  tabBtns.forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  panels.forEach(p=>p.classList.toggle('active', p.id==='panel-'+tab));
+  localStorage.setItem('thyroid_lastTab', tab);
+  markVisited(tab);
+}
+tabBtns.forEach(b=>b.addEventListener('click',()=>activateTab(b.dataset.tab)));
+
+/* progress tracking across 8 tabs */
+function getVisited(){ return JSON.parse(localStorage.getItem('thyroid_visited')||'{}'); }
+function markVisited(tab){
+  const v = getVisited(); v[tab]=true; localStorage.setItem('thyroid_visited', JSON.stringify(v));
+  updateStatBar();
+}
+function updateStatBar(){
+  const v = getVisited();
+  const total = 8;
+  const done = Object.keys(v).length;
+  document.getElementById('statProgress').textContent = Math.round(done/total*100)+'%';
+  const qp = JSON.parse(localStorage.getItem('thyroid_quiz')||'{"correct":0,"answered":0,"bestStreak":0}');
+  document.getElementById('statScore').textContent = qp.answered? Math.round(qp.correct/qp.answered*100)+'%' : '0%';
+  document.getElementById('statStreak').textContent = qp.bestStreak||0;
+}
+
+/* init last tab */
+const lastTab = localStorage.getItem('thyroid_lastTab') || 'overview';
+activateTab(lastTab);
+
+/* ============== OVERVIEW ============== */
+function tagHtml(t){
+  const map={hy:['HIGH-YIELD','hy'],exam:['EXAM FAVORITE','exam'],pearl:['CLINICAL PEARL','pearl']};
+  const [label,cls]=map[t];
+  return `<span class="tag ${cls}">${label}</span>`;
+}
+function renderOverview(filter=''){
+  const grid = document.getElementById('overviewGrid');
+  grid.innerHTML='';
+  overviewCards.filter(c=>{
+    const hay=(c.name+c.def+c.mech).toLowerCase();
+    return hay.includes(filter.toLowerCase());
+  }).forEach(c=>{
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML=`<div class="card-head"><h3>${c.icon} ${c.name}</h3></div>
+      <p>${c.def}</p><p>${c.mech}</p>
+      <div class="tag-row">${c.tags.map(tagHtml).join('')}</div>`;
+    grid.appendChild(el);
+  });
+}
+renderOverview();
+document.getElementById('overviewSearch').addEventListener('input', e=>renderOverview(e.target.value));
+
+/* ============== QUIZ ============== */
+let quizState = JSON.parse(localStorage.getItem('thyroid_quizState')||'null') || {idx:0, correct:0, answered:0, streak:0, bestStreak:0, log:{}};
+function saveQuizGlobal(){
+  localStorage.setItem('thyroid_quiz', JSON.stringify({correct:quizState.correct, answered:quizState.answered, bestStreak:quizState.bestStreak}));
+  updateStatBar();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  document.getElementById('quizProgressFill').style.width = (quizState.idx/mcqs.length*100)+'%';
+  document.getElementById('quizCounter').textContent = `Question ${Math.min(quizState.idx+1, mcqs.length)} / ${mcqs.length}`;
+  document.getElementById('quizScoreLive').textContent = `Score: ${quizState.correct}/${quizState.answered}`;
+  document.getElementById('quizNext').disabled = true;
+
+  if(quizState.idx >= mcqs.length){
+    area.innerHTML = `<div class="quiz-result">
+      <div class="big-score">${Math.round(quizState.correct/mcqs.length*100)}%</div>
+      <p>You answered ${quizState.correct} out of ${mcqs.length} correctly. Best streak: ${quizState.bestStreak} 🔥</p>
+    </div>`;
+    document.getElementById('quizNext').style.display='none';
+    return;
+  }
+  document.getElementById('quizNext').style.display='inline-block';
+  const m = mcqs[quizState.idx];
+  area.innerHTML = `<div class="quiz-card">
+    <div class="qtag">${m.tag}</div>
+    <div class="q-text">${m.q}</div>
+    <div id="optsWrap">${m.opts.map((o,i)=>`<div class="opt" data-i="${i}"><span class="opt-letter">${String.fromCharCode(65+i)}</span><span>${o}</span></div>`).join('')}</div>
+    <div class="explain-box" id="explainBox"></div>
+  </div>`;
+  document.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click', ()=>handleAnswer(parseInt(opt.dataset.i)));
+  });
+}
+function handleAnswer(i){
+  const m = mcqs[quizState.idx];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const chosen = opts[i];
+  const correctEl = opts[m.correct];
+  if(i===m.correct){
+    chosen.classList.add('correct');
+    quizState.correct++; quizState.streak++;
+    if(quizState.streak>quizState.bestStreak) quizState.bestStreak=quizState.streak;
+    showStreak();
+  } else {
+    chosen.classList.add('wrong');
+    correctEl.classList.add('correct');
+    quizState.streak=0;
+  }
+  quizState.answered++;
+  const box = document.getElementById('explainBox');
+  box.innerHTML = `<b>Why ${String.fromCharCode(65+m.correct)} is correct:</b> ${m.why}<br><br><b>Why the others are wrong:</b> ${m.wrong}`;
+  box.classList.add('show');
+  document.getElementById('quizNext').disabled=false;
+  saveQuizState(); saveQuizGlobal();
+  document.getElementById('quizScoreLive').textContent = `Score: ${quizState.correct}/${quizState.answered}`;
+}
+function showStreak(){
+  if(quizState.streak<2) return;
+  const b=document.getElementById('streakBanner');
+  b.textContent = `🔥 ${quizState.streak} in a row!`;
+  b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'), 1800);
+}
+function saveQuizState(){ localStorage.setItem('thyroid_quizState', JSON.stringify(quizState)); }
+document.getElementById('quizNext').addEventListener('click', ()=>{ quizState.idx++; saveQuizState(); renderQuiz(); });
+document.getElementById('quizRestart').addEventListener('click', ()=>{
+  quizState = {idx:0, correct:0, answered:0, streak:0, bestStreak:quizState.bestStreak, log:{}};
+  saveQuizState(); renderQuiz();
+});
+renderQuiz();
+
+/* ============== FLASHCARDS ============== */
+function renderFlash(filter=''){
+  const grid = document.getElementById('flashGrid');
+  grid.innerHTML='';
+  flashcards.filter(f=> (f.q+f.a).toLowerCase().includes(filter.toLowerCase()) ).forEach(f=>{
+    const card=document.createElement('div'); card.className='flash-card';
+    card.innerHTML=`<div class="flash-inner">
+      <div class="flash-face flash-front"><div class="flash-label">Question</div><div class="flash-text">${f.q}</div><div class="flash-hint">tap to flip</div></div>
+      <div class="flash-face flash-back"><div class="flash-label">Answer</div><div class="flash-text">${f.a}</div></div>
+    </div>`;
+    card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+    grid.appendChild(card);
+  });
+}
+renderFlash();
+document.getElementById('flashSearch').addEventListener('input', e=>renderFlash(e.target.value));
+
+/* ============== CASES ============== */
+function renderCases(){
+  const list = document.getElementById('caseList');
+  cases.forEach((c,idx)=>{
+    const el = document.createElement('div'); el.className='case-card';
+    el.innerHTML = `<h3>${c.title}</h3>
+      <div class="case-stem">${c.stem}</div>
+      ${c.questions.map(q=>`<div class="case-q">• ${q}</div>`).join('')}
+      <button class="btn reveal-btn" data-idx="${idx}">Reveal answer</button>
+      <div class="case-answer" id="caseAns${idx}">${c.answer}</div>`;
+    list.appendChild(el);
+  });
+  document.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = btn.dataset.idx;
+      document.getElementById('caseAns'+idx).classList.toggle('show');
+    });
+  });
+}
+renderCases();
+
+/* ============== MECHANISM PATHWAY ============== */
+function renderPathway(){
+  const row = document.getElementById('pathwayRow');
+  row.innerHTML='';
+  pathwaySteps.forEach((s,i)=>{
+    const node = document.createElement('div'); node.className='pw-node'; node.dataset.idx=i;
+    node.innerHTML = `${s.blocked?`<div class="pw-block">BLOCKED</div>`:''}<div class="pw-icon">${s.icon}</div><h4>${s.label}</h4>`;
+    node.addEventListener('click', ()=>{
+      document.querySelectorAll('#pathwayRow .pw-node').forEach(n=>n.classList.remove('active'));
+      node.classList.add('active');
+      document.getElementById('pathwayDetail').innerHTML = s.detail;
+    });
+    row.appendChild(node);
+    if(i<pathwaySteps.length-1){
+      const arrow=document.createElement('div'); arrow.className='pw-arrow'; arrow.textContent='→';
+      row.appendChild(arrow);
+    }
+  });
+  const levo = document.getElementById('levoRow');
+  levo.innerHTML='';
+  levoSteps.forEach((s,i)=>{
+    const node = document.createElement('div'); node.className='pw-node'; node.dataset.idx=i;
+    node.innerHTML = `<div class="pw-icon">${s.icon}</div><h4>${s.label}</h4>`;
+    node.addEventListener('click', ()=>{
+      document.querySelectorAll('#levoRow .pw-node').forEach(n=>n.classList.remove('active'));
+      node.classList.add('active');
+      document.getElementById('pathwayDetail').innerHTML = s.detail;
+    });
+    levo.appendChild(node);
+    if(i<levoSteps.length-1){
+      const arrow=document.createElement('div'); arrow.className='pw-arrow'; arrow.textContent='→';
+      levo.appendChild(arrow);
+    }
+  });
+}
+renderPathway();
+
+/* ============== MNEMONICS ============== */
+function renderMnemonics(){
+  const list = document.getElementById('mnemList');
+  mnemonics.forEach(m=>{
+    const el = document.createElement('div'); el.className='mnem-card';
+    el.innerHTML = `<div class="mnem-head"><div class="mnem-phrase">${m.phrase}</div><div class="chev">▾</div></div>
+      <div class="mnem-list">${m.items.map(it=>`<div class="mnem-item"><span class="letter">${it[0]}</span><span>${it[1]}</span></div>`).join('')}</div>`;
+    el.addEventListener('click', ()=>el.classList.toggle('open'));
+    list.appendChild(el);
+  });
+}
+renderMnemonics();
+
+updateStatBar();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

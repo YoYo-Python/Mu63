@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="application-name" content="MU 63">
+  <meta name="apple-mobile-web-app-title" content="MU 63">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="../../../manifest.json">
+  <link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+  <link rel="icon" href="../../apple-touch-icon.png" sizes="192x192">
+  <title>Gland Anatomy · Endocrine Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e0608;
+      --surface: rgba(22, 12, 16, 0.92);
+      --surface-strong: rgba(30, 18, 22, 0.98);
+      --surface-soft: rgba(12, 8, 10, 0.8);
+      --border: rgba(201, 123, 93, 0.10);
+      --border-hover: rgba(232, 168, 124, 0.28);
+      --accent: #c97b5d;
+      --accent-2: #e8a87c;
+      --accent-3: #b86548;
+      --text-primary: #f0ece4;
+      --text-secondary: #a09088;
+      --text-muted: #786a62;
+      --radius: 24px;
+      --radius-sm: 16px;
+      --radius-pill: 999px;
+      --shadow: 0 30px 80px rgba(0,0,0,0.35);
+      --shadow-lg: 0 50px 120px rgba(0,0,0,0.4);
+      --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      --transition-fast: 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      --card-glow: radial-gradient(circle at top left, rgba(201, 123, 93, 0.14), transparent 42%);
+      --card-glow-2: radial-gradient(circle at bottom right, rgba(232, 168, 124, 0.10), transparent 45%);
+      --header-glow-1: rgba(201, 123, 93, 0.15);
+      --header-glow-2: rgba(232, 168, 124, 0.10);
+    }
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #faf0ea;
+      --surface: rgba(255, 253, 250, 0.95);
+      --surface-strong: rgba(255, 255, 255, 1);
+      --surface-soft: rgba(250, 240, 234, 0.95);
+      --border: rgba(139, 58, 58, 0.08);
+      --border-hover: rgba(193, 112, 64, 0.22);
+      --accent: #8b3a3a;
+      --accent-2: #c17040;
+      --accent-3: #a0522d;
+      --text-primary: #1e1412;
+      --text-secondary: #5c4a44;
+      --text-muted: #8a7670;
+      --shadow: 0 24px 60px rgba(60, 30, 20, 0.07);
+      --shadow-lg: 0 40px 100px rgba(60, 30, 20, 0.1);
+      --card-glow: radial-gradient(circle at top left, rgba(139, 58, 58, 0.07), transparent 42%);
+      --card-glow-2: radial-gradient(circle at bottom right, rgba(193, 112, 64, 0.07), transparent 45%);
+      --header-glow-1: rgba(139, 58, 58, 0.10);
+      --header-glow-2: rgba(193, 112, 64, 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh; min-height: 100dvh;
+      font-family: 'Outfit', sans-serif; font-weight: 400;
+      background: var(--bg); color: var(--text-primary);
+      padding: 24px; overflow-x: hidden;
+      transition: background var(--transition), color var(--transition-fast);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(circle at 20% 20%, var(--header-glow-1), transparent 40%),
+                  radial-gradient(circle at 80% 80%, var(--header-glow-2), transparent 40%);
+      transition: background var(--transition);
+    }
+    .page-shell { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; display: grid; gap: 28px; }
+    .topbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; align-items: center; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: var(--radius-pill); padding: 10px 18px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+      background: var(--surface); color: var(--text-secondary);
+      border: 1px solid var(--border); text-decoration: none;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: transform var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+    }
+    .back-link:hover { transform: translateY(-2px); border-color: var(--border-hover); color: var(--accent); }
+    .back-link .arrow { display: inline-block; transition: transform var(--transition-fast); }
+    .back-link:hover .arrow { transform: translateX(-3px); }
+    .brand-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      border-radius: var(--radius-pill); padding: 10px 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+      background: var(--surface); color: var(--accent);
+      border: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .brand-badge::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent); opacity: 0.7;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    .theme-switcher {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 20px; border-radius: var(--radius-pill);
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-secondary); cursor: pointer;
+      transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+      -webkit-tap-highlight-color: transparent; user-select: none;
+    }
+    .theme-switcher:hover { transform: translateY(-2px); border-color: var(--border-hover); }
+    .theme-switcher:active { transform: translateY(0) scale(0.97); }
+    .theme-switcher span { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+    .theme-icon { font-size: 16px; line-height: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .theme-switcher:hover .theme-icon { transform: rotate(15deg) scale(1.1); }
+    header {
+      text-align: center; padding: 36px 28px 34px;
+      border-radius: var(--radius); background: var(--surface);
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    header::before, header::after {
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(60px); transition: opacity var(--transition), background var(--transition);
+    }
+    header::before {
+      width: 240px; height: 240px; background: var(--header-glow-1);
+      top: -70px; right: -50px; animation: orbFloat 8s ease-in-out infinite;
+    }
+    header::after {
+      width: 200px; height: 200px; background: var(--header-glow-2);
+      bottom: -60px; left: -40px; animation: orbFloat 10s ease-in-out infinite reverse;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(15px, -15px) scale(1.08); }
+    }
+    .header-shine {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 45%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.04) 55%, transparent 60%);
+      background-size: 250% 100%; animation: shimmer 6s ease-in-out infinite;
+    }
+    [data-theme="light"] .header-shine {
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.25) 55%, transparent 60%);
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    h1 {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: clamp(34px, 5.5vw, 56px); line-height: 1.08;
+      letter-spacing: -0.03em; margin-bottom: 16px; position: relative;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    header p {
+      max-width: 720px; margin: 0 auto; color: var(--text-secondary);
+      font-size: 15px; font-weight: 300; line-height: 1.8; position: relative; letter-spacing: 0.01em;
+    }
+    .search-wrapper { position: relative; width: 100%; }
+    .search-wrapper svg.search-icon {
+      position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; color: var(--text-muted); pointer-events: none;
+    }
+    .search-field {
+      width: 100%; border-radius: var(--radius-pill);
+      border: 1px solid var(--border); background: var(--surface); color: var(--text-primary);
+      padding: 16px 22px 16px 54px; font-size: 15px;
+      font-family: 'Outfit', sans-serif; font-weight: 400; outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+      -webkit-appearance: none; appearance: none;
+    }
+    .search-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(201, 123, 93, 0.15), 0 0 30px rgba(201, 123, 93, 0.05);
+    }
+    .search-field::placeholder { color: var(--text-muted); font-weight: 300; }
+    .directory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; perspective: 1200px; }
+    .card {
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 240px; padding: 28px 26px;
+      border-radius: var(--radius); background: var(--surface);
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      text-decoration: none; color: inherit; cursor: pointer;
+      opacity: 0; transform: translateY(24px);
+      animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition-fast);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+    .card:nth-child(5) { animation-delay: 0.33s; }
+    .card:nth-child(6) { animation-delay: 0.40s; }
+    .card:nth-child(7) { animation-delay: 0.47s; }
+    .card:nth-child(8) { animation-delay: 0.54s; }
+    @keyframes cardEntrance { to { opacity: 1; transform: translateY(0); } }
+    .card::before, .card::after {
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(50px); opacity: 0.5;
+      transition: opacity var(--transition), transform var(--transition); pointer-events: none;
+    }
+    .card::before { inset: -16px auto auto -28px; width: 180px; height: 180px; background: var(--card-glow); }
+    .card::after { inset: auto -20px -24px auto; width: 160px; height: 160px; background: var(--card-glow-2); }
+    .card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
+    .card:hover::before { opacity: 0.8; transform: scale(1.1); }
+    .card:hover::after { opacity: 0.7; transform: scale(1.08); }
+    .card-shine {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.03) 38%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.03) 52%, transparent 60%);
+      background-size: 300% 100%; opacity: 0; transition: opacity var(--transition);
+    }
+    .card:hover .card-shine { opacity: 1; animation: cardShimmer 2s ease-in-out infinite; }
+    @keyframes cardShimmer { 0% { background-position: 300% 0; } 100% { background-position: -300% 0; } }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .lecture-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(201, 123, 93, 0.12); color: var(--accent);
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+      border: 1px solid rgba(201, 123, 93, 0.08);
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .card:hover .lecture-number { background: rgba(201, 123, 93, 0.18); transform: scale(1.05); }
+    .folder-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); letter-spacing: 0.02em; }
+    .card-title {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.35rem; margin-bottom: 10px; line-height: 1.25;
+      letter-spacing: -0.01em; transition: color var(--transition-fast);
+    }
+    .card:hover .card-title { color: var(--accent); }
+    .card-description {
+      color: var(--text-secondary); font-weight: 300;
+      font-size: 14px; line-height: 1.8; flex: 1; margin-bottom: 20px;
+    }
+    .card-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; padding-top: 16px; border-top: 1px solid var(--border);
+      transition: border-color var(--transition-fast);
+    }
+    .card:hover .card-foot { border-color: rgba(201, 123, 93, 0.12); }
+    .card-foot .label { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.03em; }
+    .action-link {
+      color: var(--accent-2); font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: color var(--transition-fast), transform var(--transition-fast);
+    }
+    .action-link .arr { display: inline-block; transition: transform var(--transition-fast); }
+    .card:hover .action-link { color: var(--accent-3); }
+    .card:hover .action-link .arr { transform: translateX(4px) scale(1.1); }
+    @keyframes dotPulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+    .card-hidden { display: none; }
+    @media (max-width: 900px) {
+      body { padding: 18px; } .page-shell { gap: 22px; }
+      header { padding: 32px 24px 28px; }
+      h1 { font-size: clamp(28px, 5vw, 40px); } header p { font-size: 14px; }
+      .directory-grid { gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      body { padding: 14px 12px 28px; } .page-shell { gap: 18px; }
+      .topbar { flex-direction: column; align-items: stretch; }
+      .back-link { justify-content: center; }
+      .brand-badge { justify-content: center; } .theme-switcher { justify-content: center; }
+      header { padding: 28px 18px 24px; border-radius: 20px; }
+      header::before { width: 160px; height: 160px; top: -50px; right: -40px; }
+      header::after { width: 140px; height: 140px; bottom: -40px; left: -30px; }
+      h1 { font-size: clamp(24px, 7vw, 32px); margin-bottom: 12px; }
+      header p { font-size: 13px; line-height: 1.7; }
+      .directory-grid { grid-template-columns: 1fr; gap: 16px; }
+      .card { min-height: auto; padding: 22px 20px; border-radius: 20px; }
+      .card-title { font-size: 1.2rem; } .card-description { font-size: 13px; }
+      .search-field { padding: 14px 18px 14px 48px; font-size: 14px; }
+      .search-wrapper svg.search-icon { left: 18px; width: 16px; height: 16px; }
+    }
+    @media (max-width: 400px) {
+      body { padding: 10px 8px 24px; } .card { padding: 18px 16px; }
+      .brand-badge { font-size: 10px; padding: 8px 14px; }
+      .theme-switcher { padding: 10px 16px; } .theme-switcher span { font-size: 12px; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .card { -webkit-tap-highlight-color: transparent; }
+      .card:active { transform: scale(0.98); border-color: var(--border-hover); }
+      .theme-switcher:active { transform: scale(0.97); }
+      .back-link:active { transform: scale(0.97); }
+    }
+  </style>
+<meta name="theme-color" content="#080b14">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <a href="../repro-dashboard.html" class="back-link"><span class="arrow">←</span> Reproductive Hub</a>
+      <span class="brand-badge">Reproductive Anatomy</span>
+      <button class="theme-switcher" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+    </div>
+
+    <header>
+      <div class="header-shine"></div>
+      <h1>Reproductive Anatomy</h1>
+      <p>Explore the spatial architecture of reproductive organs — from gonadal topography to accessory gland relationships. Each lecture builds a complete anatomical framework for clinical mastery.</p>
+    </header>
+
+    <div class="search-wrapper">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="pageSearch" class="search-field" type="search" placeholder="Search anatomy lectures&hellip;" autocomplete="off">
+    </div>
+
+    <section class="directory-grid" id="dashboardGrid">
+      <a href="Anatomy-L3.html" class="card" data-title="Female Repro" data-tags="basics foundations">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="lecture-number">L3</span>
+          <span class="folder-label">/Anatomy</span>
+        </div>
+        <h2 class="card-title">Gross Female Reproductive Anatomy</h2>
+        <p class="card-description">Study the macroscopic structure and spatial relationships of female reproductive organs.</p>
+        <div class="card-foot">
+          <span class="label">Fundamentals</span>
+          <span class="action-link">Begin <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a href="Anatomy-L5.html" class="card" data-title="Development of Gonads" data-tags="head neck thyroid pituitary">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="lecture-number">L5</span>
+          <span class="folder-label">/Anatomy</span>
+        </div>
+        <h2 class="card-title">Development of Gonads</h2>
+        <p class="card-description">The embryological development and anatomical structure of the gonads.</p>
+        <div class="card-foot">
+          <span class="label">Developmental</span>
+          <span class="action-link">Begin <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a href="Anatomy-L6.html" class="card" data-title="Anatomy and Development of Breast and Axillary Nodes" data-tags="thorax abdomen adrenal pancreas">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="lecture-number">L6</span>
+          <span class="folder-label">/Anatomy</span>
+        </div>
+        <h2 class="card-title">Anatomy and Development of Breast and Axillary Nodes</h2>
+        <p class="card-description">The anatomical structure and embryological development of breast tissue and axillary lymph nodes.</p>
+        <div class="card-foot">
+          <span class="label">Regional</span>
+          <span class="action-link">Begin <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a href="Anatomy-L7.html" class="card" data-title="Perineum" data-tags="advanced cross-sectional surgical">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="lecture-number">L7</span>
+          <span class="folder-label">/Anatomy</span>
+        </div>
+        <h2 class="card-title">Perineum</h2>
+        <p class="card-description">Anatomical structures and relationships of the perineum, including the pelvic floor and associated muscles.</p>
+        <div class="card-foot">
+          <span class="label">Advanced</span>
+          <span class="action-link">Begin <span class="arr">→</span></span>
+        </div>
+      </a>
+    </section>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    const themeIcon = document.getElementById('themeIcon');
+    const storedTheme = localStorage.getItem('endocrineTheme');
+    const applyTheme = (theme) => {
+      root.setAttribute('data-theme', theme);
+      const light = theme === 'light';
+      themeLabel.textContent = light ? 'Light Mode' : 'Dark Mode';
+      themeIcon.textContent = light ? '☀️' : '🌙';
+      document.querySelector('meta[name="theme-color"]')?.remove();
+      const meta = document.createElement('meta'); meta.name = 'theme-color';
+      meta.content = light ? '#faf0ea' : '#0e0608';
+      document.head.appendChild(meta);
+    };
+    applyTheme(storedTheme === 'light' ? 'light' : 'dark');
+    themeToggle.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      localStorage.setItem('endocrineTheme', next); applyTheme(next);
+    });
+    const cards = Array.from(document.querySelectorAll('#dashboardGrid .card'));
+    const searchInput = document.getElementById('pageSearch');
+    const filterCards = (q) => {
+      const text = q.trim().toLowerCase();
+      cards.forEach(c => {
+        const title = c.dataset.title.toLowerCase();
+        const tags = c.dataset.tags.toLowerCase();
+        const visible = !text || title.includes(text) || tags.includes(text);
+        c.classList.toggle('card-hidden', !visible);
+        c.style.display = visible ? '' : 'none';
+      });
+    };
+    searchInput.addEventListener('input', e => filterCards(e.target.value));
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => { navigator.serviceWorker.register('../../../service-worker.js').catch(() => {}); });
+    }
+  </script>
+</body>
+</html>

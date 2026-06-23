@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🧬 Gonads Development & Anomalies — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080e1a;
+  --surface: #0d1627;
+  --surface2: #131f35;
+  --border: rgba(96,165,250,0.12);
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --gold: #f59e0b;
+  --rose: #f43f5e;
+  --green: #10b981;
+  --purple: #8b5cf6;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --card: #0f1c30;
+  --glow: rgba(59,130,246,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* ANIMATED BG */
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:drift 18s ease-in-out infinite alternate}
+.orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.08),transparent);top:-100px;left:-100px;animation-delay:0s}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,0.07),transparent);bottom:-80px;right:-80px;animation-delay:-6s}
+.orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent);top:40%;left:50%;animation-delay:-12s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+
+/* GRID LINES BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+header{
+  position:relative;z-index:10;
+  padding:2rem 2rem 0;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(13,22,39,0.95),transparent);
+}
+.header-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(6,182,212,0.1));
+  border:1px solid rgba(59,130,246,0.3);
+  border-radius:50px;padding:.3rem .9rem;
+  font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:.8rem;
+}
+h1.main-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:900;
+  background:linear-gradient(135deg,#e2e8f0 30%,#60a5fa 65%,#06b6d4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.1;margin-bottom:.5rem;
+}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:1.2rem}
+/* STATS BAR */
+.stats-bar{
+  display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;
+  padding:.8rem;
+  background:rgba(13,22,39,0.6);
+  border-radius:12px 12px 0 0;
+}
+.stat-item{display:flex;align-items:center;gap:.4rem;font-size:.8rem}
+.stat-val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent);font-size:.95rem}
+
+/* TABS NAV */
+nav.tabs{
+  position:sticky;top:0;z-index:20;
+  background:rgba(8,14,26,0.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;overflow-x:auto;
+  scrollbar-width:none;padding:0 1rem;
+}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex-shrink:0;
+  padding:.8rem 1.2rem;
+  background:none;border:none;border-bottom:3px solid transparent;
+  color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:.82rem;font-weight:500;transition:all .25s;white-space:nowrap;
+  display:flex;align-items:center;gap:.4rem;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* CONTENT */
+main{position:relative;z-index:5;padding:1.5rem;max-width:1400px;margin:0 auto}
+.tab-panel{display:none;animation:fadeUp .35s ease}
+.tab-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION TITLE */
+.sec-title{
+  font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;
+  margin-bottom:.3rem;
+  background:linear-gradient(135deg,var(--text),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sec-sub{color:var(--muted);font-size:.85rem;margin-bottom:1.5rem}
+
+/* CARDS */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-2px);box-shadow:0 8px 30px var(--glow)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.card-icon{font-size:1.8rem;margin-bottom:.6rem}
+.card-label{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card-title{font-weight:600;font-size:1rem;margin-bottom:.4rem}
+.card-body{font-size:.85rem;color:#94a3b8;line-height:1.6}
+
+/* TAGS */
+.tag{
+  display:inline-block;padding:.2rem .6rem;border-radius:50px;
+  font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  margin:.2rem .2rem .2rem 0;
+}
+.tag-exam{background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.3)}
+.tag-high{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
+.tag-pearl{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
+.tag-mechanism{background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2),var(--purple))}
+.tl-item{position:relative;margin-bottom:1.2rem}
+.tl-dot{
+  position:absolute;left:-1.9rem;top:.3rem;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);
+  box-shadow:0 0 10px var(--accent);
+}
+.tl-content{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem}
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent2);font-weight:600;margin-bottom:.2rem}
+.tl-text{font-size:.85rem;color:var(--text)}
+.tl-note{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+
+/* QUIZ */
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;
+}
+.progress-bar-wrap{
+  background:var(--surface2);border-radius:50px;height:6px;overflow:hidden;flex:1;max-width:300px;
+}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:50px;transition:width .4s ease}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.2rem}
+.q-number{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.5rem}
+.q-text{font-size:.95rem;font-weight:500;line-height:1.6;margin-bottom:1rem}
+.q-options{display:flex;flex-direction:column;gap:.5rem}
+.q-opt{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:.7rem 1rem;cursor:pointer;
+  font-size:.85rem;transition:all .2s;text-align:left;
+  color:var(--text);display:flex;align-items:center;gap:.7rem;
+}
+.q-opt:hover:not(:disabled){border-color:var(--accent);background:rgba(59,130,246,0.08)}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,0.12);animation:pulse-green .4s ease}
+.q-opt.wrong{border-color:var(--rose);background:rgba(244,63,94,0.1);animation:shake .3s ease}
+.q-opt:disabled{cursor:default}
+@keyframes pulse-green{0%,100%{transform:scale(1)}50%{transform:scale(1.01)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.q-explanation{
+  margin-top:.8rem;padding:.8rem 1rem;
+  background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);
+  border-radius:8px;font-size:.82rem;line-height:1.6;color:#93c5fd;
+  display:none;
+}
+.q-explanation.show{display:block;animation:fadeUp .3s ease}
+.opt-letter{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+}
+.score-box{
+  background:linear-gradient(135deg,var(--card),rgba(59,130,246,0.05));
+  border:1px solid var(--border);border-radius:14px;padding:1.2rem;
+  display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;
+}
+.score-num{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:600;color:var(--accent)}
+.streak-badge{
+  background:linear-gradient(135deg,var(--gold),#d97706);
+  color:#1c1003;font-size:.75rem;font-weight:700;
+  padding:.3rem .7rem;border-radius:50px;
+}
+
+/* FLASHCARDS */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.fc-card{height:180px;perspective:1000px;cursor:pointer}
+.fc-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1);
+}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{
+  position:absolute;inset:0;border-radius:14px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:1.2rem;text-align:center;
+}
+.fc-front{
+  background:linear-gradient(135deg,var(--card),rgba(59,130,246,0.08));
+  border:1px solid var(--border);
+}
+.fc-back{
+  background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(6,182,212,0.08));
+  border:1px solid rgba(59,130,246,0.3);
+  transform:rotateY(180deg);
+}
+.fc-q{font-size:.88rem;font-weight:600;line-height:1.5;color:var(--text)}
+.fc-a{font-size:.82rem;line-height:1.6;color:#bae6fd}
+.fc-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.fc-front .fc-label{color:var(--muted)}
+.fc-back .fc-label{color:var(--accent2)}
+.fc-hint{font-size:.65rem;color:var(--muted);margin-top:.4rem}
+
+/* CASES */
+.case-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  margin-bottom:1.5rem;overflow:hidden;
+}
+.case-header{
+  background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(6,182,212,0.07));
+  padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:.8rem;
+}
+.case-num{
+  background:var(--accent);color:white;border-radius:8px;
+  padding:.3rem .6rem;font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.1rem;
+}
+.case-vignette{font-size:.9rem;line-height:1.7;font-weight:500}
+.case-body{padding:1.2rem 1.5rem}
+.case-q{
+  font-size:.85rem;font-weight:600;color:#93c5fd;
+  margin:.6rem 0 .4rem;
+}
+.reveal-btn{
+  background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(6,182,212,0.15));
+  border:1px solid rgba(59,130,246,0.35);
+  color:var(--accent);padding:.5rem 1rem;border-radius:8px;
+  cursor:pointer;font-size:.8rem;font-weight:600;
+  transition:all .2s;margin-top:.6rem;
+}
+.reveal-btn:hover{background:rgba(59,130,246,0.25);transform:translateY(-1px)}
+.case-answer{
+  margin-top:.8rem;padding:.9rem 1rem;
+  background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);
+  border-radius:8px;font-size:.83rem;line-height:1.7;color:#a7f3d0;
+  display:none;
+}
+.case-answer.show{display:block;animation:fadeUp .3s ease}
+
+/* ANATOMY / PATHOPHYS */
+.path-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.path-item{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+}
+.path-item::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(59,130,246,0.05));
+  opacity:0;transition:opacity .2s;
+}
+.path-item:hover::before{opacity:1}
+.path-item:hover{border-color:rgba(59,130,246,0.4);transform:translateY(-2px)}
+.path-item.open .path-detail{display:block}
+.path-emoji{font-size:1.5rem;margin-bottom:.4rem}
+.path-name{font-weight:600;font-size:.9rem;margin-bottom:.2rem}
+.path-origin{font-size:.72rem;color:var(--muted);margin-bottom:.4rem}
+.path-detail{
+  display:none;margin-top:.6rem;padding-top:.6rem;
+  border-top:1px solid var(--border);
+  font-size:.8rem;color:#93c5fd;line-height:1.6;
+  animation:fadeUp .25s ease;
+}
+
+/* FLOWCHART */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;max-width:550px;margin:0 auto}
+.flow-step{
+  background:linear-gradient(135deg,var(--card),rgba(59,130,246,0.06));
+  border:1px solid rgba(59,130,246,0.25);border-radius:12px;
+  padding:.8rem 1.5rem;text-align:center;
+  font-size:.85rem;font-weight:500;width:100%;
+  position:relative;
+}
+.flow-arrow{
+  width:2px;height:28px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  position:relative;
+}
+.flow-arrow::after{
+  content:'▼';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  color:var(--accent2);font-size:.6rem;
+}
+.flow-branch{
+  display:grid;grid-template-columns:1fr 1fr;gap:.8rem;width:100%;
+}
+.flow-branch-step{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:.7rem;text-align:center;font-size:.8rem;
+}
+.flow-label{font-size:.65rem;color:var(--muted);margin:.2rem 0}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden}
+.comp-table th{
+  background:rgba(59,130,246,0.15);padding:.8rem 1rem;
+  font-size:.78rem;font-weight:600;text-align:left;
+  border-bottom:1px solid var(--border);color:var(--accent);
+}
+.comp-table td{
+  padding:.75rem 1rem;font-size:.82rem;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  vertical-align:top;line-height:1.5;
+}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(59,130,246,0.04)}
+.comp-table td:first-child{font-weight:600;color:#93c5fd}
+
+/* MNEMONICS */
+.mnem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.mnem-card{
+  background:linear-gradient(135deg,var(--card),rgba(245,158,11,0.04));
+  border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:1.3rem;
+}
+.mnem-title{
+  font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--gold),#fbbf24);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.3rem;
+}
+.mnem-full{font-size:.82rem;color:var(--muted);margin-bottom:.8rem}
+.mnem-list{list-style:none}
+.mnem-list li{
+  display:flex;align-items:flex-start;gap:.6rem;
+  padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:.83rem;
+}
+.mnem-list li:last-child{border-bottom:none}
+.mnem-letter{
+  font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;
+  color:var(--gold);min-width:20px;line-height:1;
+}
+.mnem-meaning{color:var(--text);flex:1}
+.mnem-sub{font-size:.73rem;color:var(--muted);display:block}
+
+/* DIAGNOSIS - ANOMALIES */
+.anom-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.anom-card{
+  background:var(--card);border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.anom-head{padding:.9rem 1.2rem;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.5rem}
+.anom-body{padding:1rem 1.2rem}
+.anom-row{display:flex;gap:.5rem;font-size:.82rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.anom-row:last-child{border-bottom:none}
+.anom-row-label{font-weight:600;color:var(--muted);min-width:90px;font-size:.75rem}
+.anom-row-val{color:var(--text);flex:1;line-height:1.5}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:1.2rem;max-width:400px}
+.search-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:.6rem 1rem .6rem 2.3rem;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;
+  outline:none;transition:border-color .2s;
+}
+.search-input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
+
+/* BUTTONS */
+.btn{
+  background:linear-gradient(135deg,var(--accent),#2563eb);
+  color:white;border:none;border-radius:10px;padding:.6rem 1.3rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;
+  font-size:.85rem;transition:all .2s;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,0.35)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+
+/* ALERT */
+.alert{
+  padding:.8rem 1.1rem;border-radius:10px;font-size:.83rem;
+  display:flex;gap:.6rem;align-items:flex-start;margin:.5rem 0;
+  line-height:1.5;
+}
+.alert-exam{background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.25);color:#fda4af}
+.alert-tip{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fcd34d}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+
+/* COMPLETION */
+.completion-ring{
+  width:80px;height:80px;position:relative;display:inline-block;
+}
+.ring-svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--surface2);stroke-width:6}
+.ring-fg{fill:none;stroke:url(#ringGrad);stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1s ease}
+.ring-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;
+  color:var(--accent);
+}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+
+/* HIGHLIGHT BOX */
+.hi-box{
+  background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(6,182,212,0.05));
+  border:1px solid rgba(59,130,246,0.2);border-radius:12px;
+  padding:1rem 1.3rem;margin:.8rem 0;font-size:.85rem;line-height:1.7;
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .fc-grid{grid-template-columns:1fr}
+  .flow-branch{grid-template-columns:1fr}
+  h1.main-title{font-size:1.6rem}
+}
+.hidden{display:none!important}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<header>
+  <div class="header-badge">🧬 Embryology & Anatomy · Gonads Module</div>
+  <h1 class="main-title">Gonads Development<br>&amp; Anomalies</h1>
+  <p class="subtitle">Complete interactive study platform · MCQs · Flashcards · Clinical Cases · Mnemonics</p>
+  <div class="stats-bar">
+    <div class="stat-item">📊 Progress: <span class="stat-val" id="statProg">0%</span></div>
+    <div class="stat-item">✅ Quiz Score: <span class="stat-val" id="statScore">0/25</span></div>
+    <div class="stat-item">🔥 Streak: <span class="stat-val" id="statStreak">0</span></div>
+    <div class="stat-item">🃏 Cards Done: <span class="stat-val" id="statCards">0/22</span></div>
+  </div>
+</header>
+
+<nav class="tabs" id="mainTabs">
+  <button class="tab-btn active" data-tab="overview">🏠 Overview</button>
+  <button class="tab-btn" data-tab="quiz">❓ Quiz (25)</button>
+  <button class="tab-btn" data-tab="flashcards">🃏 Flashcards (22)</button>
+  <button class="tab-btn" data-tab="cases">🏥 Clinical Cases</button>
+  <button class="tab-btn" data-tab="anatomy">🔬 Anatomy & Pathophys</button>
+  <button class="tab-btn" data-tab="anomalies">⚠️ Anomalies</button>
+  <button class="tab-btn" data-tab="mnemonics">🧠 Mnemonics</button>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════ OVERVIEW ══════════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-panel active">
+  <div class="sec-title">Overview</div>
+  <p class="sec-sub">High-yield summary of Gonadal Development &amp; Anomalies</p>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search concepts...">
+  </div>
+
+  <div class="alert alert-exam">⚠️ <span><strong>Exam Pearl:</strong> SRY → TDF → Testis development. Absence of SRY → ovary by default. This is the single most tested concept in this module!</span></div>
+
+  <div class="card-grid" id="conceptCards">
+    <div class="card" data-search="sex determination sry tdf fertilization">
+      <div class="card-icon">🧬</div>
+      <div class="card-label">Core Concept</div>
+      <div class="card-title">Sex Determination</div>
+      <div class="card-body">Genetic sex (XY or XX) is set at fertilization. The SRY gene on the Y chromosome encodes <strong>Testis Determining Factor (TDF)</strong>. Development begins at week 4 and phenotypical differentiation is complete by week 20.</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+        <span class="tag tag-high">High-Yield</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="genital ridge intermediate mesoderm primordial germ cells pgc yolk sac">
+      <div class="card-icon">📍</div>
+      <div class="card-label">Week 4-6</div>
+      <div class="card-title">Genital Ridge Formation</div>
+      <div class="card-body">Condensation of <strong>intermediate mesoderm</strong> + celomic epithelium. PGCs migrate from yolk sac endoderm → along dorsal mesentery of hindgut → invade genital ridges. PGCs provide the inductive stimulus.</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-high">High-Yield</span>
+        <span class="tag tag-mechanism">Mechanism</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="sertoli leydig spermatogonia cellular origin celomic epithelium mesoderm pgc">
+      <div class="card-icon">🔬</div>
+      <div class="card-label">Cellular Origins — Testis</div>
+      <div class="card-title">Who Makes What?</div>
+      <div class="card-body">
+        🟦 PGCs → <strong>Spermatogonia</strong><br>
+        🟨 Celomic epithelium → <strong>Sertoli cells</strong> (+ MIF)<br>
+        🟥 Intermediate mesoderm → <strong>Leydig cells</strong> (+ testosterone) &amp; tunica albuginea
+      </div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+        <span class="tag tag-pearl">Clinical Pearl</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="ovarian cortical cords primordial follicles oogonia follicular cells">
+      <div class="card-icon">🥚</div>
+      <div class="card-label">Ovary Development</div>
+      <div class="card-title">Cortical Cords → Follicles</div>
+      <div class="card-body">No SRY = no TDF. Primitive sex cords <strong>degenerate</strong> → vascular stroma (medulla). 2nd-gen <strong>cortical cords</strong> form → fragment into isolated clusters → <strong>Primordial follicles</strong> (PGC = oogonium; celomic cell = follicular cell).</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="testis descent gubernaculum processus vaginalis scrotum months timeline">
+      <div class="card-icon">📅</div>
+      <div class="card-label">Descent Timeline</div>
+      <div class="card-title">Testis Migration</div>
+      <div class="card-body">
+        3rd mo → iliac fossa<br>
+        6th mo → deep inguinal ring<br>
+        7th mo → inguinal canal<br>
+        8th mo → superficial inguinal ring<br>
+        9th mo → <strong>scrotum</strong>
+      </div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-high">High-Yield</span>
+        <span class="tag tag-exam">Exam Favourite</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="cryptorchidism undescended testis sterility malignancy atrophy">
+      <div class="card-icon">⚠️</div>
+      <div class="card-label">Congenital Anomaly</div>
+      <div class="card-title">Cryptorchidism</div>
+      <div class="card-body">Arrested descent along <em>normal</em> path. Causes: hormonal failure, gubernacular failure, ↓ intra-abdominal pressure. Risks: <strong>sterility</strong>, <strong>malignancy</strong>, atrophy. Very, very, very common!</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+        <span class="tag tag-pearl">Clinical Pearl</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="ectopic testis abnormal gubernaculum superficial fascia anterior abdominal wall">
+      <div class="card-icon">🔀</div>
+      <div class="card-label">Congenital Anomaly</div>
+      <div class="card-title">Ectopic Testis</div>
+      <div class="card-body">Deviates from normal path due to <strong>abnormally strong band of gubernaculum</strong>. Most common site: superficial fascia of anterior abdominal wall. Distinguish from cryptorchidism by location!</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-high">High-Yield</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="hermaphroditism androgen insensitivity AIS congenital adrenal hyperplasia CAH pseudo">
+      <div class="card-icon">🔄</div>
+      <div class="card-label">Intersex Conditions</div>
+      <div class="card-title">Hermaphroditism</div>
+      <div class="card-body">
+        <strong>True:</strong> Both ovarian + testicular tissue<br>
+        <strong>Male Pseudo (AIS):</strong> XY but receptor insensitivity → female phenotype<br>
+        <strong>Female Pseudo (CAH):</strong> XX but adrenal androgen excess → male phenotype
+      </div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+        <span class="tag tag-high">High-Yield</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="processus vaginalis hydrocele hernia tunica vaginalis">
+      <div class="card-icon">💧</div>
+      <div class="card-label">Processus Vaginalis</div>
+      <div class="card-title">Patent PV Complications</div>
+      <div class="card-body">Normally obliterates after descent. If patent: peritoneal fluid → <strong>congenital hydrocele</strong>; intestinal loop → <strong>congenital inguinal hernia</strong>. Distal remnant = tunica vaginalis (normal).</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-pearl">Clinical Pearl</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="gubernaculum ovarian ligament round ligament uterus female">
+      <div class="card-icon">🔗</div>
+      <div class="card-label">Female Anatomy</div>
+      <div class="card-title">Gubernaculum in Females</div>
+      <div class="card-body">Attaches to the side of the uterus → halts ovarian descent in the pelvis. Becomes: <strong>ovarian ligament</strong> (upper) + <strong>round ligament of uterus</strong> (lower). Ovary stays in pelvis, not labia.</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-high">High-Yield</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="fascia coverings internal spermatic cremasteric external spermatic transversalis internal oblique external oblique">
+      <div class="card-icon">🧅</div>
+      <div class="card-label">Layers of Spermatic Cord</div>
+      <div class="card-title">Fascial Coverings</div>
+      <div class="card-body">
+        🔵 Internal spermatic fascia ← <strong>fascia transversalis</strong><br>
+        🟡 Cremasteric muscle ← <strong>internal oblique</strong><br>
+        🔴 External spermatic fascia ← <strong>external oblique</strong>
+      </div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-exam">Exam Favourite</span>
+      </div>
+    </div>
+
+    <div class="card" data-search="spermatogenesis temperature 33 scrotum lower than body temperature">
+      <div class="card-icon">🌡️</div>
+      <div class="card-label">Physiology</div>
+      <div class="card-title">Why the Scrotum?</div>
+      <div class="card-body">Spermatogenesis requires <strong>~33°C</strong> (vs body's 37°C). This is the primary reason the testes MUST descend to the scrotum. Retained testes → infertility due to elevated temperature.</div>
+      <div style="margin-top:.6rem">
+        <span class="tag tag-pearl">Clinical Pearl</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="sec-title" style="font-size:1.2rem">🕐 Testis Descent Timeline</div>
+  <p class="sec-sub" style="margin-top:.2rem;margin-bottom:1rem">Step-by-step migration from lumbar region to scrotum</p>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot" style="background:var(--purple)"></div>
+      <div class="tl-content"><div class="tl-time">Week 1–6</div><div class="tl-text">🧬 Indifferent stage — gonad forms in <strong>upper lumbar region</strong></div><div class="tl-note">Genital ridge, PGC migration, sex cord formation</div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:#8b5cf6"></div>
+      <div class="tl-content"><div class="tl-time">3rd Month</div><div class="tl-text">📍 Testis reaches the <strong>Iliac Fossa</strong></div><div class="tl-note">Guided by gubernaculum + intra-abdominal pressure</div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--accent)"></div>
+      <div class="tl-content"><div class="tl-time">6th Month</div><div class="tl-text">📍 Reaches <strong>Deep Inguinal Ring</strong></div><div class="tl-note">Processus vaginalis formed ahead of it</div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--accent2)"></div>
+      <div class="tl-content"><div class="tl-time">7th Month</div><div class="tl-text">📍 Travels through the <strong>Inguinal Canal</strong></div><div class="tl-note">Takes ~1 month to traverse</div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div>
+      <div class="tl-content"><div class="tl-time">8th Month</div><div class="tl-text">📍 Exits at <strong>Superficial Inguinal Ring</strong></div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:#f59e0b"></div>
+      <div class="tl-content"><div class="tl-time">9th Month</div><div class="tl-text">✅ Arrives in <strong>Scrotum</strong> — descent complete!</div><div class="tl-note">Processus vaginalis obliterates; distal part = tunica vaginalis</div></div>
+    </div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--rose)"></div>
+      <div class="tl-content"><div class="tl-time">Week 20</div><div class="tl-text">👁️ Phenotypical differentiation <strong>visible on ultrasound</strong></div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="hi-box">
+    <strong>🎯 High-Yield Summary:</strong> The SRY gene → TDF → male gonadal development. PGCs from yolk sac endoderm form the inductive trigger. Sertoli cells (celomic epi) secrete MIF. Leydig cells (mesoderm) secrete testosterone. In females, no TDF → cortical cords → primordial follicles. Gubernaculum guides descent (testis to scrotum) or becomes ovarian/round ligaments (female).
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ QUIZ ══════════════════════════════════════════════ -->
+<div id="tab-quiz" class="tab-panel">
+  <div class="sec-title">Quiz Mode</div>
+  <p class="sec-sub">25 multiple-choice questions — immediate feedback with explanations</p>
+
+  <div class="quiz-header">
+    <div class="score-box">
+      <span>Score: </span><span class="score-num" id="quizScore">0</span><span style="color:var(--muted)">/25</span>
+      <span class="streak-badge" id="streakBadge">🔥 0 streak</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:.8rem;flex:1;justify-content:flex-end;flex-wrap:wrap">
+      <span style="font-size:.8rem;color:var(--muted)" id="quizProgress">0 / 25 answered</span>
+      <div class="progress-bar-wrap" style="min-width:120px">
+        <div class="progress-bar" id="quizProgressBar" style="width:0%"></div>
+      </div>
+      <button class="btn btn-ghost" onclick="resetQuiz()">↺ Reset</button>
+    </div>
+  </div>
+
+  <div id="quizContainer"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ FLASHCARDS ══════════════════════════════════════════════ -->
+<div id="tab-flashcards" class="tab-panel">
+  <div class="sec-title">Flashcards</div>
+  <p class="sec-sub">Click any card to flip — 22 key concepts to master</p>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="resetFlashcards()">↺ Reset All</button>
+    <span style="font-size:.82rem;color:var(--muted)">Flipped: <strong id="fcFlippedCount" style="color:var(--accent)">0</strong> / 22</span>
+  </div>
+
+  <div class="fc-grid" id="fcGrid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ CLINICAL CASES ══════════════════════════════════════════════ -->
+<div id="tab-cases" class="tab-panel">
+  <div class="sec-title">Clinical Cases</div>
+  <p class="sec-sub">5 exam-style vignettes with structured answers</p>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ ANATOMY & PATHOPHYS ══════════════════════════════════════════════ -->
+<div id="tab-anatomy" class="tab-panel">
+  <div class="sec-title">Anatomy &amp; Pathophysiology</div>
+  <p class="sec-sub">Interactive cell origins + Male sex determination flowchart</p>
+
+  <div class="sec-title" style="font-size:1.1rem;margin-bottom:.6rem">🔬 Cellular Origins — Click to Expand</div>
+  <div class="path-grid" id="pathGrid"></div>
+
+  <hr class="divider">
+
+  <div class="sec-title" style="font-size:1.1rem;margin-bottom:.3rem">⚡ Male Sex Determination Pathway</div>
+  <p class="sec-sub" style="margin-top:.2rem;margin-bottom:1rem">Step-by-step flowchart from fertilization to functional testis</p>
+  <div class="flow" id="maleFlow"></div>
+
+  <hr class="divider">
+
+  <div class="sec-title" style="font-size:1.1rem;margin-bottom:.3rem">🥚 Female vs. Male — Sex Cords Fate</div>
+  <table class="comp-table" style="margin-top:.8rem">
+    <thead><tr>
+      <th>Feature</th>
+      <th>🔵 Testis (XY)</th>
+      <th>🔴 Ovary (XX)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Trigger</td><td>SRY → TDF present</td><td>No SRY / No TDF</td></tr>
+      <tr><td>Primitive sex cords</td><td>Extend into medulla → <em>testis (medullary) cords</em></td><td>Degenerate → vascular stroma (medulla)</td></tr>
+      <tr><td>Become</td><td>Seminiferous tubules + Rete testis</td><td>Replaced by 2nd-gen cortical cords</td></tr>
+      <tr><td>Cortical cords</td><td>Not significant</td><td>Fragment → primordial follicles</td></tr>
+      <tr><td>PGC fate</td><td>Spermatogonia</td><td>Oogonia</td></tr>
+      <tr><td>Celomic epi fate</td><td>Sertoli cells (→ MIF)</td><td>Follicular cells</td></tr>
+      <tr><td>Mesoderm fate</td><td>Leydig cells (→ testosterone) + tunica albuginea</td><td>CT stroma of ovary</td></tr>
+      <tr><td>Key hormone output</td><td>Testosterone + MIF</td><td>Estrogens (post-puberty)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════ ANOMALIES ══════════════════════════════════════════════ -->
+<div id="tab-anomalies" class="tab-panel">
+  <div class="sec-title">Congenital Anomalies</div>
+  <p class="sec-sub">Cryptorchidism, Ectopic Testis, Hermaphroditism, Hydrocele &amp; Hernia</p>
+
+  <div class="anom-cards" id="anomContainer"></div>
+
+  <hr class="divider">
+
+  <div class="sec-title" style="font-size:1.1rem;margin-bottom:.8rem">📊 Hermaphroditism Comparison</div>
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead><tr>
+      <th>Feature</th>
+      <th>True Hermaphrodite</th>
+      <th>Male Pseudo (AIS)</th>
+      <th>Female Pseudo (CAH)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Chromosomes</td><td>46,XX/XY (mosaic)</td><td>46,XY</td><td>46,XX</td></tr>
+      <tr><td>Gonads</td><td>Both ovarian + testicular</td><td>Testes present</td><td>Ovaries present</td></tr>
+      <tr><td>External genitalia</td><td>Usually female/ambiguous</td><td>Female (despite XY)</td><td>Masculinized / ambiguous</td></tr>
+      <tr><td>Mechanism</td><td>Dual gonadal tissue</td><td>No testosterone receptors</td><td>Enzymatic block → excess adrenal androgens</td></tr>
+      <tr><td>Cause</td><td>Genetic/embryological anomaly</td><td>Androgen Insensitivity Syndrome</td><td>Congenital Adrenal Hyperplasia</td></tr>
+      <tr><td>Key molecule</td><td>—</td><td>Testosterone receptor (absent)</td><td>ACTH ↑ → adrenal androgens ↑</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="divider">
+  <div class="sec-title" style="font-size:1.1rem;margin-bottom:.8rem">📍 Cryptorchidism vs. Ectopic Testis</div>
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead><tr>
+      <th>Feature</th>
+      <th>Cryptorchidism</th>
+      <th>Ectopic Testis</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Definition</td><td>Arrested along NORMAL descent path</td><td>Deviated AWAY from normal path</td></tr>
+      <tr><td>Cause</td><td>Hormonal / gubernacular failure</td><td>Abnormally strong band of gubernaculum</td></tr>
+      <tr><td>Possible locations</td><td>Lumbar, iliac fossa, inguinal canal, superficial ring</td><td>Anterior abdominal wall (most common), perineum, thigh, contralateral scrotum</td></tr>
+      <tr><td>Most common site</td><td>Inguinal canal</td><td>Superficial fascia of anterior abdominal wall</td></tr>
+      <tr><td>Empty scrotum?</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Risks</td><td>Sterility, malignancy, atrophy, injury</td><td>Similar risks if uncorrected</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ MNEMONICS ══════════════════════════════════════════════ -->
+<div id="tab-mnemonics" class="tab-panel">
+  <div class="sec-title">Mnemonics</div>
+  <p class="sec-sub">6 custom memory tools to ace your exam</p>
+  <div class="mnem-grid" id="mnemGrid"></div>
+</div>
+
+</main>
+
+<script>
+// ========================== DATA ==========================
+
+const quizData = [
+  {q:"During the indifferent stage, what provides the inductive influence necessary for the gonad to develop?",
+   opts:["Celomic epithelium","Intermediate mesoderm","Primordial germ cells","Mesonephric duct","Gubernaculum"],
+   ans:2,exp:"PGCs migrate from the yolk sac and their arrival in the genital ridge induces gonadal development. Celomic epithelium and mesoderm form structural parts but do NOT provide the primary inductive trigger."},
+  {q:"What prevents development of female external genitalia in a normal 46,XY embryo?",
+   opts:["Maternal estrogens","Production of MIF and testosterone","Migration of primordial germ cells","Formation of cortical cords","Absence of the SRY gene"],
+   ans:1,exp:"TDF → testis. Sertoli cells produce MIF (inhibits Müllerian/female ducts) and Leydig cells produce testosterone (masculinises external genitalia). Both are required."},
+  {q:"A male infant develops a congenital inguinal hernia. What embryological failure occurred?",
+   opts:["Failure of gubernaculum to contract","Failure of obliteration of the processus vaginalis","Incomplete formation of tunica albuginea","Rupture of internal spermatic fascia","Arrested descent of the testis"],
+   ans:1,exp:"Persistent processus vaginalis maintains a patent communication with the peritoneal cavity, allowing intestinal loops to descend into the scrotum as a hernia."},
+  {q:"In ovarian development, what is the fate of the primitive sex cords?",
+   opts:["They become the seminiferous tubules","They form the primordial follicles","They degenerate and form vascular stroma in the medulla","They become the tunica albuginea","They form the rete ovarii"],
+   ans:2,exp:"In females, primitive (medullary) cords do NOT persist. They degenerate and their remnant forms the vascular stroma of the ovarian medulla. A 2nd generation cortical cords form the primordial follicles."},
+  {q:"How does Congenital Adrenal Hyperplasia lead to female pseudo-hermaphroditism?",
+   opts:["By causing absence of testosterone receptors","By producing excess MIF","By enzymatic defect causing massive androgen release from adrenal cortex","By spontaneous SRY gene mutation","By preventing descent of the ovaries"],
+   ans:2,exp:"Enzymatic block fails to produce cortisol → ACTH rises → adrenal cortex pumps out androgens → masculinises the external genitalia of a 46,XX female."},
+  {q:"What drives transformation of the indifferent gonad into a testis?",
+   opts:["Cortical cord proliferation","Degeneration of the mesonephros","SRY gene encoding Testis Determining Factor (TDF)","High intra-abdominal pressure","Maternal testosterone"],
+   ans:2,exp:"The SRY gene on the Y chromosome encodes TDF, which directly drives male gonadal differentiation from the indifferent gonad."},
+  {q:"How is the rete testis formed embryologically?",
+   opts:["From the paramesonephric duct","From tunica albuginea invaginating","Medullary cords near hilum break into anastomosing cell strands","Direct differentiation of PGCs","Proliferation of surface celomic epithelium"],
+   ans:2,exp:"Medullary sex cords extend into the medulla. Toward the hilum, they regress into tiny anastomosing cell strands that form the rete testis network."},
+  {q:"What is the exact position of the testis at the 3rd month of intrauterine life?",
+   opts:["Moving through the inguinal canal","Resting in the scrotum","Descending to the iliac fossa","Reaching the deep inguinal ring","Exiting the superficial inguinal ring"],
+   ans:2,exp:"The descent timeline: 3rd mo = iliac fossa, 6th mo = deep inguinal ring, 7th mo = inguinal canal, 8th mo = superficial inguinal ring, 9th mo = scrotum."},
+  {q:"In Androgen Insensitivity Syndrome, why are the external genitalia female?",
+   opts:["The gonads are ovaries","The testis does not produce testosterone","Tissues lack receptors for testosterone so maternal estrogens dictate phenotype","The SRY gene is absent","CAH provides excess estrogens"],
+   ans:2,exp:"Despite producing testosterone, tissues are completely insensitive (missing/abnormal receptors). Maternal estrogens then drive external genitalia to develop female. Gonads are testes (XY) and testosterone IS produced."},
+  {q:"What causes an ectopic testis?",
+   opts:["Lack of intra-abdominal pressure","Deficiency of fetal testosterone","Abnormally strong band of the gubernaculum","Premature obliteration of processus vaginalis","Failure of PGC migration"],
+   ans:2,exp:"An ectopic testis is caused by an abnormally strong band of the gubernaculum pulling it away from the normal descent path (vs. cryptorchidism where it simply arrests on the normal path)."},
+  {q:"Why is early surgical correction mandatory for bilateral cryptorchidism?",
+   opts:["To prevent congenital inguinal hernia","To lower testicular temperature to allow mature spermatozoa production","To stimulate maternal estrogens","To convert medullary cords into cortical cords","To prevent Androgen Insensitivity Syndrome"],
+   ans:1,exp:"Spermatogenesis requires ~33°C (lower than core body temp 37°C). Retained testes are exposed to abdominal temperature → failure to produce mature sperm → sterility if bilateral. Surgery must be done early."},
+  {q:"What stimulates the second generation of sex cords (cortical cords) in females?",
+   opts:["SRY gene activation","Proliferation of celomic epithelium aided by PGC migration","Invagination of the mesonephric duct","Contraction of the gubernaculum","Degeneration of tunica albuginea"],
+   ans:1,exp:"Around the 7th week, celomic epithelium proliferates again (2nd wave), aided by migrating PGCs, to form the cortical cords that eventually fragment into primordial follicles."},
+  {q:"How do primordial follicles form?",
+   opts:["Medullary cords anastomose","Cortical cords fragment into isolated clusters surrounding an oogonium","Surface epithelium secretes follicular fluid","Gubernaculum cells surround PGCs","Tunica albuginea encapsulates the ovary"],
+   ans:1,exp:"In the 3rd month, cortical cords fragment into isolated cell clusters. Each cluster contains one PGC (now called oogonium) surrounded by celomic epithelial cells (now called follicular cells)."},
+  {q:"What prevents the ovary from descending into the labia majora?",
+   opts:["Lack of a processus vaginalis","The gubernaculum gains attachment to the side of the uterus","Insufficient intra-abdominal pressure","Absence of testosterone","The broad ligament blocks it"],
+   ans:1,exp:"The gubernaculum attaches to the uterus (unlike in males where it attaches to the labioscrotal fold). This stops the ovary's descent in the pelvis, and the gubernaculum becomes the ovarian + round ligaments."},
+  {q:"What is the origin of the tunica vaginalis?",
+   opts:["Invagination of the transversalis fascia","A detached portion of the processus vaginalis that covers the testis","Condensation of the intermediate mesoderm","Proliferation of the celomic epithelium","Expansion of the deep inguinal ring"],
+   ans:1,exp:"As the testis descends, it invaginates the processus vaginalis. After descent, the proximal part obliterates. The distal part remains as the tunica vaginalis (a peritoneal-derived serous covering for the testis)."},
+  {q:"Which cells derive from the endodermal wall of the yolk sac?",
+   opts:["Leydig cells","Sertoli cells","Primordial germ cells","Follicular cells","Fibroblasts of tunica albuginea"],
+   ans:2,exp:"PGCs arise specifically in the wall of the yolk sac (endodermal origin). They migrate to the genital ridges. Leydig cells = mesoderm; Sertoli/Follicular = celomic epithelium."},
+  {q:"The internal spermatic fascia is derived from which layer?",
+   opts:["External oblique muscle","Internal oblique muscle","Fascia transversalis","Peritoneum","Intermediate mesoderm"],
+   ans:2,exp:"Internal spermatic fascia = fascia transversalis. Cremasteric muscle = internal oblique. External spermatic fascia = external oblique. Peritoneum = processus vaginalis. Easy layered mnemonic: I-C-E from inside out."},
+  {q:"What is the most common site for an ectopic testis?",
+   opts:["Contralateral scrotum","Perineum","Anteromedial aspect of the thigh","Superficial fascia of the anterior abdominal wall","Iliac fossa"],
+   ans:3,exp:"The most common ectopic site is the superficial fascia of the anterior abdominal wall (also called interstitial ectopia). The iliac fossa is where a cryptorchid testis arrests (NOT ectopic)."},
+  {q:"True hermaphrodites are defined by the presence of:",
+   opts:["Ambiguous genitalia only","Both ovarian and testicular tissue","Testes with female external genitalia","Ovaries with male external genitalia","Complete absence of gonads"],
+   ans:1,exp:"True hermaphroditism = both ovarian AND testicular tissue present in the same individual. This is distinct from pseudo-hermaphroditism where only one type of gonad is present but external genitalia don't match."},
+  {q:"The cremasteric muscle and fascia are derived from which abdominal layer?",
+   opts:["External oblique muscle","Internal oblique muscle","Transversus abdominis","Fascia transversalis","Parietal peritoneum"],
+   ans:1,exp:"The cremasteric muscle is derived from the internal oblique muscle during testicular descent. The external oblique becomes the external spermatic fascia; the fascia transversalis becomes the internal spermatic fascia."},
+  {q:"In the mature female, the embryonic gubernaculum becomes:",
+   opts:["Suspensory ligament of the ovary","Broad ligament","Ovarian ligament and round ligament of the uterus","Uterosacral ligament","Labia majora"],
+   ans:2,exp:"The gubernaculum's uterine attachment splits its fate: the part above the uterus becomes the ovarian ligament, the part below (continuing to labium majus) becomes the round ligament of the uterus."},
+  {q:"During which timeframe does the 'indifferent stage' of gonadal development occur?",
+   opts:["1st–6th week","7th–12th week","12th–20th week","20th–24th week","3rd trimester"],
+   ans:0,exp:"The indifferent stage occurs from weeks 1–6. Morphological differentiation begins at week 7. Phenotypical differentiation is complete and detectable by ultrasound around week 20."},
+  {q:"Failure of primordial germ cells to migrate to the genital ridge results in:",
+   opts:["Ectopic testis","Gonadal dysgenesis","True hermaphroditism","Congenital hydrocele","Androgen Insensitivity Syndrome"],
+   ans:1,exp:"If PGCs fail to migrate and colonise the genital ridge, they cannot provide the inductive stimulus. This results in gonadal dysgenesis (streak gonads / absent functional gonads)."},
+  {q:"Comparing gonad development: which statement is TRUE?",
+   opts:["Medullary cords persist in the ovary","Cortical cords form seminiferous tubules in the testis","Mesoderm forms Leydig cells in testis AND CT stroma in ovary","Celomic epithelium forms spermatogonia","The yolk sac forms the Sertoli cells"],
+   ans:2,exp:"Intermediate mesoderm gives rise to Leydig cells (male) and CT stroma (female). Medullary cords persist in testis (not ovary). Cortical cords are ovary only. Celomic epi = Sertoli/Follicular cells. Yolk sac = PGCs."},
+  {q:"When is phenotypical differentiation completely visible on ultrasound?",
+   opts:["4th week","6th week","7th week","12th week","By the end of the 20th week"],
+   ans:4,exp:"Phenotypical differentiation is complete and visible by ultrasound around week 20. Week 4 = development starts; week 6 = end of indifferent stage; week 7 = morphological differentiation begins."}
+];
+
+const flashcardData = [
+  {q:"What gene determines male sex development?",a:"SRY gene on the Y chromosome → encodes Testis Determining Factor (TDF)"},
+  {q:"Where do Primordial Germ Cells (PGCs) originate?",a:"Endodermal wall of the yolk sac → migrate via dorsal mesentery of hindgut to genital ridge"},
+  {q:"What is the embryological origin of Sertoli cells?",a:"Surface celomic epithelium that proliferates into the genital ridge"},
+  {q:"What is the embryological origin of Leydig cells?",a:"Intermediate mesoderm (surrounding the seminiferous tubules)"},
+  {q:"What do Sertoli cells secrete and why is it important?",a:"Müllerian Inhibiting Factor (MIF) → causes regression of paramesonephric ducts → prevents female duct development"},
+  {q:"What do Leydig cells secrete?",a:"Testosterone → drives masculinisation of external genitalia and male duct system"},
+  {q:"What are the 3 sources of the indifferent gonad?",a:"1) Intermediate mesoderm (genital ridge), 2) Celomic epithelium, 3) PGCs from yolk sac"},
+  {q:"What happens to primitive sex cords in males?",a:"Extend into medulla → become medullary (testis) cords → form seminiferous tubules + rete testis"},
+  {q:"What happens to primitive sex cords in females?",a:"Degenerate → vascular stroma of ovarian medulla. 2nd-generation cortical cords form instead"},
+  {q:"How are primordial follicles formed?",a:"Cortical cords fragment into isolated clusters → each cluster = 1 oogonium (PGC) + surrounding follicular cells (celomic epi)"},
+  {q:"At which month does the testis reach the iliac fossa?",a:"3rd month"},
+  {q:"At which month does the testis pass through the inguinal canal?",a:"7th month (reaches deep ring at 6th, exits superficial ring at 8th)"},
+  {q:"At which month does the testis reach the scrotum?",a:"9th month (birth)"},
+  {q:"What is the difference between cryptorchidism and ectopic testis?",a:"Cryptorchidism = arrested on NORMAL descent path. Ectopic = deviated OFF normal path due to abnormal gubernaculum"},
+  {q:"What is the most common site for ectopic testis?",a:"Superficial fascia of the anterior abdominal wall"},
+  {q:"What are the 3 risks of cryptorchidism?",a:"1) Sterility (if bilateral), 2) Malignancy (↑ cancer risk), 3) Atrophy + susceptibility to injury"},
+  {q:"What causes female pseudo-hermaphroditism?",a:"Congenital Adrenal Hyperplasia (CAH) → enzymatic block → ↑ACTH → ↑adrenal androgens → masculinised XX female"},
+  {q:"What causes male pseudo-hermaphroditism?",a:"Androgen Insensitivity Syndrome (AIS) → XY male with testes but NO testosterone receptors → female phenotype"},
+  {q:"What does the gubernaculum become in females?",a:"Ovarian ligament (upper portion) + Round ligament of the uterus (lower portion)"},
+  {q:"What happens if the processus vaginalis fails to obliterate?",a:"Patent communication with peritoneal cavity → congenital hydrocele (fluid) OR congenital inguinal hernia (bowel)"},
+  {q:"What are the fascial coverings of the spermatic cord (inside→out)?",a:"1) Internal spermatic fascia (transversalis fascia), 2) Cremasteric muscle (internal oblique), 3) External spermatic fascia (external oblique)"},
+  {q:"Why must testes descend to the scrotum for fertility?",a:"Spermatogenesis requires ~33°C — lower than body temperature (37°C). Retained testes are too warm → no mature spermatozoa"}
+];
+
+const casesData = [
+  {
+    num:"01",title:"Empty Scrotum at Birth",
+    vignette:"A male neonate is born at term. On examination, the right scrotum is empty and no testis is palpable along the inguinal canal. Ultrasound locates a testis in the right iliac fossa.",
+    questions:[
+      {q:"What is the diagnosis?",a:"Cryptorchidism (undescended testis) — arrested at the 3rd-month position in the iliac fossa."},
+      {q:"What mechanism failed?",a:"Failure of gubernacular contraction / hormonal drive (testosterone + intra-abdominal pressure) to continue the testis along its normal descent path past the iliac fossa."},
+      {q:"What are the long-term risks if left untreated?",a:"1) Sterility (elevated abdominal temperature destroys spermatogenesis), 2) Malignant transformation (↑ testicular cancer risk), 3) Testicular atrophy, 4) Susceptibility to injury (no scrotal cushioning)."},
+      {q:"How do you distinguish this from an ectopic testis?",a:"Cryptorchidism = testis ARRESTED on the normal descent path (iliac fossa is a normal waypoint). Ectopic testis DEVIATES off the path (e.g., to superficial abdominal wall). Ultrasound location is key."}
+    ]
+  },
+  {
+    num:"02",title:"Masculinised Female Infant",
+    vignette:"A 46,XX infant presents with ambiguous, masculinised external genitalia. Ultrasound reveals normal bilateral ovaries and uterus. Serum 17-hydroxyprogesterone is markedly elevated.",
+    questions:[
+      {q:"What is the diagnosis?",a:"Female pseudo-hermaphroditism due to Congenital Adrenal Hyperplasia (CAH)."},
+      {q:"Explain the embryological mechanism.",a:"Enzymatic defect (typically 21-hydroxylase deficiency) blocks cortisol synthesis. ↑ACTH released → adrenal cortex hypertrophies → massive androgen overproduction → androgens masculinise the female (XX) external genitalia during development."},
+      {q:"Why is the SRY gene NOT implicated here?",a:"The infant is 46,XX with no Y chromosome and no SRY gene. Ovaries develop normally. The problem is purely hormonal (adrenal androgen excess), not gonadal."}
+    ]
+  },
+  {
+    num:"03",title:"Phenotypically Female with XY Karyotype",
+    vignette:"A teenager presents with primary amenorrhoea. She has a female phenotype, normal breast development, and sparse pubic/axillary hair. Karyotype returns 46,XY. Serum testosterone is in the normal male range. Gonads are found in the inguinal canals.",
+    questions:[
+      {q:"What is the diagnosis?",a:"Male pseudo-hermaphroditism — Androgen Insensitivity Syndrome (AIS), complete form."},
+      {q:"Why does this individual appear phenotypically female despite being 46,XY?",a:"Tissues lack functional androgen receptors. Despite the testes producing normal levels of testosterone, the body cannot respond to it. Maternal estrogens (and the absence of androgenic effect) drive external genitalia to the female default."},
+      {q:"What happened to the Müllerian ducts?",a:"Sertoli cells produced MIF → Müllerian ducts regressed normally. Therefore, the patient has NO uterus or fallopian tubes (a key diagnostic clue for AIS vs. other causes of amenorrhoea)."}
+    ]
+  },
+  {
+    num:"04",title:"Swelling in the Anteromedial Thigh",
+    vignette:"A newborn male has an absent right testis from the scrotum. A firm swelling is found in the right anteromedial thigh region. Ultrasound confirms testicular tissue at this site.",
+    questions:[
+      {q:"What is the diagnosis?",a:"Ectopic testis — located in the anteromedial thigh (femoral triangle region)."},
+      {q:"What is the embryological mechanism?",a:"An abnormally strong and misdirected band of the gubernaculum pulled the testis off its normal descent path into the anteromedial thigh rather than guiding it into the scrotum."},
+      {q:"What is the most common site for ectopic testis?",a:"The superficial fascia of the anterior abdominal wall (interstitial position). The anteromedial thigh is the second most common."}
+    ]
+  },
+  {
+    num:"05",title:"Transilluminable Scrotal Swelling",
+    vignette:"A 3-month-old male infant is brought in with a painless, fluctuant swelling of the left scrotum since birth. The swelling transilluminates brilliantly. There is no reducibility.",
+    questions:[
+      {q:"What is the diagnosis?",a:"Congenital hydrocele — due to patent (non-obliterated) processus vaginalis allowing peritoneal fluid to accumulate around the testis."},
+      {q:"What embryological failure occurred?",a:"The processus vaginalis (a peritoneal fold that precedes the testis during descent) failed to obliterate after descent was complete. The distal part that normally stays as the tunica vaginalis remained connected to the peritoneal cavity."},
+      {q:"How does congenital hydrocele differ from congenital inguinal hernia (same embryological defect)?",a:"Same defect (patent processus vaginalis), but: Hydrocele = peritoneal FLUID passes through the patent PV. Hernia = intestinal LOOP passes through the patent PV. Hydrocele transilluminates; hernia is reducible and does not transilluminate."}
+    ]
+  }
+];
+
+const pathItems = [
+  {emoji:"🟡",name:"Primordial Germ Cells (PGCs)",origin:"Yolk sac endoderm",
+   detail:"Migrate from yolk sac → dorsal mesentery of hindgut → genital ridges (weeks 4–6). Provide the essential inductive stimulus for gonad development. In males → spermatogonia. In females → oogonia."},
+  {emoji:"🔵",name:"Sertoli Cells",origin:"Celomic epithelium (sex cord cells)",
+   detail:"Surface celomic epithelium proliferates and invades the genital ridge forming sex cords. In males → Sertoli cells (support spermatogenesis, produce MIF). In females → follicular cells surrounding each oogonium."},
+  {emoji:"🔴",name:"Leydig Cells (Interstitial)",origin:"Intermediate mesoderm",
+   detail:"The mesoderm surrounding the seminiferous tubules differentiates into Leydig cells. They produce TESTOSTERONE under LH stimulation, driving masculinisation. Also form the tunica albuginea and fibrous septa of testis."},
+  {emoji:"🟢",name:"Gubernaculum",origin:"Mesoderm condensation",
+   detail:"A fibromuscular band extending from the gonad to the labioscrotal fold. In males: guides testicular descent to scrotum. In females: attaches to uterus, halts descent → becomes ovarian ligament + round ligament."},
+  {emoji:"🟣",name:"Processus Vaginalis",origin:"Peritoneal outpouching",
+   detail:"A finger-like peritoneal projection that precedes the testis through the inguinal canal. After descent, the proximal part obliterates. The distal part persists as the tunica vaginalis. Patent PV → hydrocele or hernia."},
+  {emoji:"⚪",name:"Tunica Albuginea",origin:"Intermediate mesoderm",
+   detail:"The dense fibrous capsule of the testis. Derived from mesoderm. Sends septa inward to divide the testis into lobules. Not present in ovary (replaced by CT stroma)."},
+  {emoji:"🧡",name:"Rete Testis",origin:"Medullary sex cords (hilum)",
+   detail:"At the hilum of the testis, medullary cords regress into anastomosing cell strands forming the rete testis — the collecting network connecting seminiferous tubules to the efferent ductules."},
+  {emoji:"🔶",name:"Primordial Follicles",origin:"Cortical cords (female only)",
+   detail:"In the 3rd month, 2nd-generation cortical cords fragment into isolated cell clusters. Each = 1 PGC (oogonium) + surrounding follicular cells. This forms the reservoir of primordial follicles that will last a lifetime."}
+];
+
+const maleFlowSteps = [
+  {text:"🧬 Fertilization — Genetic Sex XY established"},
+  {text:"📡 SRY gene on Y chromosome ACTIVATED"},
+  {text:"⚙️ SRY encodes → Testis Determining Factor (TDF)"},
+  {text:"🔄 TDF drives primitive sex cords → extend into medulla"},
+  {text:"📊 Medullary (testis) cords form → will become Seminiferous Tubules"},
+  {text:"🏛️ Sertoli cells (celomic epi) + Leydig cells (mesoderm) differentiate"},
+  {text:"💊 Sertoli → MIF secreted | Leydig → Testosterone secreted"},
+  {text:"✅ Male reproductive architecture established by week 7–8"}
+];
+
+const anomData = [
+  {color:"#3b82f6",emoji:"🔒",title:"Cryptorchidism (Undescended Testis)",
+   rows:[
+     {l:"Definition",v:"Testis arrested along the normal path of descent"},
+     {l:"Cause",v:"Hormonal failure (↓ testosterone), gubernacular failure, ↓ intra-abdominal pressure"},
+     {l:"Locations",v:"Lumbar region, iliac fossa (3rd mo), inguinal canal (7th mo), superficial ring (8th mo)"},
+     {l:"Diagnosis",v:"Empty scrotum + testis found ON normal descent path on ultrasound"},
+     {l:"Risks",v:"Sterility (bilateral), malignancy (↑ cancer), atrophy, injury"},
+     {l:"Treatment",v:"Orchidopexy (surgical fixation to scrotum) — must be done early (before 2 yrs)"}
+   ]},
+  {color:"#8b5cf6",emoji:"🔀",title:"Ectopic Testis",
+   rows:[
+     {l:"Definition",v:"Testis deviated OFF normal descent path"},
+     {l:"Cause",v:"Abnormally strong/misdirected band of gubernaculum"},
+     {l:"Common sites",v:"#1: Superficial fascia anterior abdominal wall; #2: Anteromedial thigh; Perineum; Contralateral scrotum"},
+     {l:"Vs. Crypto",v:"Ectopic = off-path. Crypto = on-path but arrested"},
+     {l:"Risks",v:"Similar to cryptorchidism if uncorrected"},
+     {l:"Treatment",v:"Surgical relocation to scrotum"}
+   ]},
+  {color:"#10b981",emoji:"💧",title:"Congenital Hydrocele",
+   rows:[
+     {l:"Definition",v:"Accumulation of peritoneal fluid in the tunica vaginalis"},
+     {l:"Cause",v:"Patent (non-obliterated) processus vaginalis — allows peritoneal fluid to enter"},
+     {l:"Signs",v:"Painless, fluctuant scrotal swelling — TRANSILLUMINATES brilliantly"},
+     {l:"Embryology",v:"PV normally obliterates after descent. If it doesn't: fluid pools distally"},
+     {l:"Treatment",v:"Many resolve spontaneously by 12–18 months. Surgery if persistent"}
+   ]},
+  {color:"#f43f5e",emoji:"🫁",title:"Congenital Inguinal Hernia",
+   rows:[
+     {l:"Definition",v:"Intestinal loop descends through patent processus vaginalis into scrotum"},
+     {l:"Cause",v:"Same as hydrocele — patent processus vaginalis, but loop (not just fluid) enters"},
+     {l:"Signs",v:"Reducible scrotal swelling, does NOT transilluminate well"},
+     {l:"Embryology",v:"Failure of obliteration of processus vaginalis"},
+     {l:"Treatment",v:"Surgical repair (herniotomy) — does NOT resolve spontaneously"}
+   ]},
+  {color:"#f59e0b",emoji:"🔄",title:"True Hermaphroditism",
+   rows:[
+     {l:"Definition",v:"Both ovarian AND testicular tissue present in same individual"},
+     {l:"Karyotype",v:"Usually 46,XX or mosaic"},
+     {l:"External genitalia",v:"Usually female or ambiguous"},
+     {l:"Cause",v:"Genetic/embryological anomaly — dual gonadal tissue development"},
+     {l:"Note",v:"Rare condition — distinct from pseudo-hermaphroditism"}
+   ]},
+  {color:"#06b6d4",emoji:"⚡",title:"Gonadal Dysgenesis",
+   rows:[
+     {l:"Definition",v:"Failure of gonad to develop (streak gonads)"},
+     {l:"Cause",v:"Failure of PGCs to migrate to the genital ridge — no inductive stimulus"},
+     {l:"Consequence",v:"Genital ridge remains undeveloped (streak ovary/testis)"},
+     {l:"Example",v:"Turner syndrome (45,X0) — streak ovaries, no functional follicles"},
+     {l:"Note",v:"PGC migration is ESSENTIAL for gonadal development"}
+   ]}
+];
+
+const mnemData = [
+  {
+    title:"S.C.M.",full:"Seminiferous Cord Origins: S.C.M.",
+    items:[
+      {l:"S",m:"Spermatogonia",s:"← from PGCs (Yolk Sac)"},
+      {l:"C",m:"Celomic epi → Sertoli cells",s:"← Celomic epithelium"},
+      {l:"M",m:"Mesoderm → Leydig cells",s:"← Intermediate mesoderm (+ tunica)"}
+    ]
+  },
+  {
+    title:"I-C-E",full:"Spermatic Cord Layers (Inside → Out)",
+    items:[
+      {l:"I",m:"Internal spermatic fascia",s:"← Fascia Transversalis"},
+      {l:"C",m:"Cremasteric muscle & fascia",s:"← Internal Oblique"},
+      {l:"E",m:"External spermatic fascia",s:"← External Oblique"}
+    ]
+  },
+  {
+    title:"3-6-7-8-9",full:"Testis Descent Timeline",
+    items:[
+      {l:"3",m:"3rd month → Iliac Fossa",s:""},
+      {l:"6",m:"6th month → Deep Inguinal Ring",s:""},
+      {l:"7",m:"7th month → Inguinal Canal",s:""},
+      {l:"8",m:"8th month → Superficial Ring",s:""},
+      {l:"9",m:"9th month → Scrotum 🎉",s:""}
+    ]
+  },
+  {
+    title:"CREAM",full:"Cryptorchidism Risks: C.R.E.A.M.",
+    items:[
+      {l:"C",m:"Cancer (malignancy) risk ↑↑",s:"Most feared complication"},
+      {l:"R",m:"Right side more common",s:"Most frequently unilateral right"},
+      {l:"E",m:"Empty scrotum on exam",s:"Classic presentation"},
+      {l:"A",m:"Atrophy of testis",s:"If not corrected early"},
+      {l:"M",m:"Must treat early (Orchidopexy)",s:"Before age 2 for best outcome"}
+    ]
+  },
+  {
+    title:"AIS vs CAH",full:"Pseudo-Hermaphroditism Quick Recall",
+    items:[
+      {l:"A",m:"AIS = XY male → Female phenotype",s:"Receptor problem (no response to T)"},
+      {l:"I",m:"Internal gonads are TESTES (in AIS)",s:"No uterus (MIF still works)"},
+      {l:"S",m:"Same testosterone level (normal)",s:"Just can't use it"},
+      {l:"C",m:"CAH = XX female → Masculinised",s:"Enzyme problem → androgen excess"},
+      {l:"A",m:"Adrenal cortex → excess androgens",s:"↑ACTH → ↑adrenal androgens"},
+      {l:"H",m:"Has normal ovaries + uterus",s:"Purely external genitalia problem"}
+    ]
+  },
+  {
+    title:"STOP-PV",full:"Patent Processus Vaginalis Outcomes",
+    items:[
+      {l:"S",m:"Scrotal swelling (in both)",s:"Hydrocele or Hernia"},
+      {l:"T",m:"Transilluminates = Hydrocele",s:"Fluid in tunica vaginalis"},
+      {l:"O",m:"Opaque / won't transilluminate = Hernia",s:"Bowel in processus vaginalis"},
+      {l:"P",m:"Processus Vaginalis = root cause (both)",s:"Failure to obliterate"},
+      {l:"V",m:"Vaginalis (tunica) = normal distal remnant",s:"Only the proximal PV should obliterate"}
+    ]
+  }
+];
+
+// ========================== STATE ==========================
+let quizAnswers = {};
+let quizScore = 0;
+let quizStreak = 0;
+let fcFlipped = new Set();
+
+function saveState(){
+  try{
+    localStorage.setItem('gonads_quiz',JSON.stringify(quizAnswers));
+    localStorage.setItem('gonads_score',quizScore);
+    localStorage.setItem('gonads_streak',quizStreak);
+    localStorage.setItem('gonads_fc',JSON.stringify([...fcFlipped]));
+    localStorage.setItem('gonads_tab', document.querySelector('.tab-btn.active')?.dataset.tab||'overview');
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const q=localStorage.getItem('gonads_quiz');
+    if(q){quizAnswers=JSON.parse(q);}
+    quizScore=parseInt(localStorage.getItem('gonads_score')||0);
+    quizStreak=parseInt(localStorage.getItem('gonads_streak')||0);
+    const f=localStorage.getItem('gonads_fc');
+    if(f){fcFlipped=new Set(JSON.parse(f));}
+  }catch(e){}
+}
+
+// ========================== TABS ==========================
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    saveState();
+  });
+});
+
+// ========================== SEARCH ==========================
+document.getElementById('searchInput').addEventListener('input',function(){
+  const v=this.value.toLowerCase();
+  document.querySelectorAll('#conceptCards .card').forEach(c=>{
+    const t=(c.dataset.search+' '+c.innerText).toLowerCase();
+    c.style.display=v&&!t.includes(v)?'none':'';
+  });
+});
+
+// ========================== QUIZ ==========================
+function buildQuiz(){
+  const container=document.getElementById('quizContainer');
+  container.innerHTML='';
+  quizData.forEach((q,i)=>{
+    const answered=quizAnswers[i]!==undefined;
+    const card=document.createElement('div');
+    card.className='q-card';
+    card.id='qcard-'+i;
+    const letters=['A','B','C','D','E'];
+    let optsHtml=q.opts.map((o,j)=>{
+      let cls='q-opt';
+      if(answered){
+        cls+=' '+(j===q.ans?'correct':(j===quizAnswers[i]?'wrong':''));
+      }
+      return `<button class="${cls}" onclick="answerQ(${i},${j})" ${answered?'disabled':''}>
+        <span class="opt-letter">${letters[j]}</span>${o}</button>`;
+    }).join('');
+    card.innerHTML=`
+      <div class="q-number">Question ${i+1} of ${quizData.length} · <span class="tag tag-mechanism" style="padding:.1rem .4rem;font-size:.6rem">${answered?(quizAnswers[i]===q.ans?'✅ Correct':'❌ Wrong'):'Unanswered'}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">${optsHtml}</div>
+      <div class="q-explanation ${answered?'show':''}" id="exp-${i}">💡 ${q.exp}</div>
+    `;
+    container.appendChild(card);
+  });
+  updateQuizStats();
+}
+
+function answerQ(qi,chosen){
+  if(quizAnswers[qi]!==undefined)return;
+  const correct=quizData[qi].ans===chosen;
+  quizAnswers[qi]=chosen;
+  if(correct){quizScore++;quizStreak++;}else{quizStreak=0;}
+  updateQuizStats();
+  saveState();
+  // Rebuild just this card's buttons
+  const card=document.getElementById('qcard-'+qi);
+  const q=quizData[qi];
+  const letters=['A','B','C','D','E'];
+  const btns=card.querySelectorAll('.q-opt');
+  btns.forEach((btn,j)=>{
+    btn.disabled=true;
+    if(j===q.ans)btn.classList.add('correct');
+    else if(j===chosen)btn.classList.add('wrong');
+  });
+  card.querySelector('.q-explanation').classList.add('show');
+  card.querySelector('.q-number').innerHTML=`Question ${qi+1} of ${quizData.length} · <span class="tag ${correct?'tag-pearl':'tag-exam'}" style="padding:.1rem .4rem;font-size:.6rem">${correct?'✅ Correct':'❌ Wrong'}</span>`;
+}
+
+function updateQuizStats(){
+  const answered=Object.keys(quizAnswers).length;
+  document.getElementById('quizScore').textContent=quizScore;
+  document.getElementById('streakBadge').textContent='🔥 '+quizStreak+' streak';
+  document.getElementById('quizProgress').textContent=answered+' / '+quizData.length+' answered';
+  document.getElementById('quizProgressBar').style.width=(answered/quizData.length*100)+'%';
+  document.getElementById('statScore').textContent=quizScore+'/'+quizData.length;
+  document.getElementById('statStreak').textContent=quizStreak;
+  const prog=Math.round(((answered/quizData.length)*0.4+(fcFlipped.size/flashcardData.length)*0.6)*100);
+  document.getElementById('statProg').textContent=prog+'%';
+}
+
+function resetQuiz(){
+  if(!confirm('Reset all quiz progress?'))return;
+  quizAnswers={};quizScore=0;quizStreak=0;
+  buildQuiz();updateQuizStats();saveState();
+}
+
+// ========================== FLASHCARDS ==========================
+function buildFlashcards(){
+  const grid=document.getElementById('fcGrid');
+  grid.innerHTML='';
+  flashcardData.forEach((fc,i)=>{
+    const card=document.createElement('div');
+    card.className='fc-card'+(fcFlipped.has(i)?' flipped':'');
+    card.onclick=()=>toggleFC(i,card);
+    card.innerHTML=`
+      <div class="fc-inner">
+        <div class="fc-front">
+          <div class="fc-label">❓ Question</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-label">✅ Answer</div>
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  updateFCCount();
+}
+
+function toggleFC(i,card){
+  if(fcFlipped.has(i)){fcFlipped.delete(i);card.classList.remove('flipped');}
+  else{fcFlipped.add(i);card.classList.add('flipped');}
+  updateFCCount();saveState();
+}
+
+function updateFCCount(){
+  document.getElementById('fcFlippedCount').textContent=fcFlipped.size;
+  document.getElementById('statCards').textContent=fcFlipped.size+'/'+flashcardData.length;
+}
+
+function resetFlashcards(){
+  fcFlipped.clear();
+  buildFlashcards();saveState();
+}
+
+// ========================== CASES ==========================
+function buildCases(){
+  const container=document.getElementById('casesContainer');
+  container.innerHTML='';
+  casesData.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='case-card';
+    const qs=c.questions.map((cq,i)=>`
+      <div class="case-q">Q${i+1}: ${cq.q}</div>
+      <button class="reveal-btn" onclick="revealAns(this)">🔍 Reveal Answer</button>
+      <div class="case-answer">${cq.a}</div>
+    `).join('');
+    div.innerHTML=`
+      <div class="case-header">
+        <span class="case-num">CASE ${c.num}</span>
+        <div><div style="font-size:.75rem;color:var(--muted);margin-bottom:.3rem">${c.title}</div>
+        <div class="case-vignette">${c.vignette}</div></div>
+      </div>
+      <div class="case-body">${qs}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function revealAns(btn){
+  const ans=btn.nextElementSibling;
+  if(ans.classList.contains('show')){
+    ans.classList.remove('show');btn.textContent='🔍 Reveal Answer';
+  }else{
+    ans.classList.add('show');btn.textContent='🙈 Hide Answer';
+  }
+}
+
+// ========================== ANATOMY ==========================
+function buildAnatomy(){
+  const grid=document.getElementById('pathGrid');
+  grid.innerHTML='';
+  pathItems.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='path-item';
+    div.onclick=()=>{div.classList.toggle('open');};
+    div.innerHTML=`
+      <div class="path-emoji">${item.emoji}</div>
+      <div class="path-name">${item.name}</div>
+      <div class="path-origin">Origin: ${item.origin}</div>
+      <div class="tag tag-pearl" style="font-size:.6rem">click to expand</div>
+      <div class="path-detail">${item.detail}</div>`;
+    grid.appendChild(div);
+  });
+
+  const flow=document.getElementById('maleFlow');
+  flow.innerHTML='';
+  maleFlowSteps.forEach((s,i)=>{
+    const step=document.createElement('div');
+    step.className='flow-step';
+    step.textContent=s.text;
+    flow.appendChild(step);
+    if(i<maleFlowSteps.length-1){
+      const arr=document.createElement('div');
+      arr.className='flow-arrow';
+      flow.appendChild(arr);
+    }
+  });
+}
+
+// ========================== ANOMALIES ==========================
+function buildAnomalies(){
+  const container=document.getElementById('anomContainer');
+  container.innerHTML='';
+  anomData.forEach(a=>{
+    const div=document.createElement('div');
+    div.className='anom-card';
+    const rows=a.rows.map(r=>`<div class="anom-row"><div class="anom-row-label">${r.l}</div><div class="anom-row-val">${r.v}</div></div>`).join('');
+    div.innerHTML=`
+      <div class="anom-head" style="background:linear-gradient(135deg,${a.color}22,transparent);border-bottom:1px solid ${a.color}33">
+        <span>${a.emoji}</span><span style="color:${a.color}">${a.title}</span>
+      </div>
+      <div class="anom-body">${rows}</div>`;
+    container.appendChild(div);
+  });
+}
+
+// ========================== MNEMONICS ==========================
+function buildMnemonics(){
+  const grid=document.getElementById('mnemGrid');
+  grid.innerHTML='';
+  mnemData.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='mnem-card';
+    const items=m.items.map(item=>`
+      <li>
+        <span class="mnem-letter">${item.l}</span>
+        <span class="mnem-meaning">${item.m}<span class="mnem-sub">${item.s}</span></span>
+      </li>`).join('');
+    div.innerHTML=`
+      <div class="mnem-title">${m.title}</div>
+      <div class="mnem-full">${m.full}</div>
+      <ul class="mnem-list">${items}</ul>`;
+    grid.appendChild(div);
+  });
+}
+
+// ========================== INIT ==========================
+loadState();
+buildQuiz();
+buildFlashcards();
+buildCases();
+buildAnatomy();
+buildAnomalies();
+buildMnemonics();
+updateQuizStats();
+
+// Restore last tab
+try{
+  const lastTab=localStorage.getItem('gonads_tab');
+  if(lastTab){
+    const btn=document.querySelector(`[data-tab="${lastTab}"]`);
+    if(btn)btn.click();
+  }
+}catch(e){}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

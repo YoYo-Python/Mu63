@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚡ Adrenal Medulla — Team 63rd Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0d14;
+  --surface: #111520;
+  --surface2: #161c2d;
+  --border: #1e2840;
+  --accent: #f97316;
+  --accent2: #fb923c;
+  --accent-glow: rgba(249,115,22,0.18);
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --purple: #a855f7;
+  --teal: #14b8a6;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Space Grotesk', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+
+/* AMBIENT */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15}
+.orb1{width:500px;height:500px;background:var(--accent);top:-100px;right:-100px;animation:drift1 12s ease-in-out infinite}
+.orb2{width:400px;height:400px;background:var(--blue);bottom:-80px;left:-80px;animation:drift2 15s ease-in-out infinite}
+.orb3{width:300px;height:300px;background:var(--purple);top:50%;left:50%;transform:translate(-50%,-50%);animation:drift3 10s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+@keyframes drift3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-55%,-45%)}}
+
+/* HEADER */
+header{position:relative;z-index:10;padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;backdrop-filter:blur(12px);background:rgba(10,13,20,0.7)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 20px var(--accent-glow)}
+.logo-text{display:flex;flex-direction:column}
+.logo-title{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.logo-sub{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.stats-bar{display:flex;gap:16px;align-items:center}
+.stat-chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-family:var(--mono)}
+.stat-chip span{color:var(--accent);font-weight:600}
+
+/* TABS */
+nav{position:relative;z-index:10;padding:0 24px;border-bottom:1px solid var(--border);background:rgba(10,13,20,0.7);backdrop-filter:blur(12px);overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:2px;min-width:max-content}
+.tab-btn{padding:14px 18px;background:none;border:none;color:var(--text3);cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s;display:flex;align-items:center;gap:6px}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* MAIN */
+main{position:relative;z-index:5;padding:24px;max-width:1200px;margin:0 auto}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;transition:.2s}
+.card:hover{border-color:var(--border);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.section-title{font-size:22px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.tag-orange{background:rgba(249,115,22,.15);color:var(--accent);border:1px solid rgba(249,115,22,.3)}
+.tag-blue{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.3)}
+.tag-green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.tag-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.tag-purple{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+.tag-yellow{background:rgba(234,179,8,.15);color:var(--yellow);border:1px solid rgba(234,179,8,.3)}
+
+/* OVERVIEW TAB */
+.hero-fact{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(251,146,60,.05));border:1px solid rgba(249,115,22,.3);border-radius:16px;padding:24px;margin-bottom:24px}
+.hero-fact h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.hero-fact p{color:var(--text2);line-height:1.6;font-size:14px}
+.key-num{display:inline-block;font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent)}
+.fact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.fact-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.fact-item .num{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--accent);display:block}
+.fact-item .label{font-size:11px;color:var(--text3);margin-top:4px}
+.exam-alert{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3);border-left:4px solid var(--yellow);border-radius:8px;padding:12px 16px;margin:8px 0;font-size:13px}
+.exam-alert strong{color:var(--yellow)}
+.pearl-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.pearl-list li{padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:13px;line-height:1.5;border-left:3px solid var(--accent);color:var(--text2)}
+
+/* FLOWCHART */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:16px 0}
+.flow-node{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center;font-size:13px;font-weight:500;width:100%;max-width:440px;transition:.2s;cursor:default}
+.flow-node:hover{border-color:var(--accent);background:rgba(249,115,22,.05)}
+.flow-node.highlight{border-color:var(--accent);background:rgba(249,115,22,.08);color:var(--accent)}
+.flow-arrow{color:var(--text3);font-size:20px;line-height:1;padding:4px}
+.flow-label{font-size:11px;color:var(--text3);font-family:var(--mono);padding:2px 6px}
+
+/* QUIZ TAB */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.progress-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;flex:1;min-width:100px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:.4s}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.q-num{font-family:var(--mono);font-size:12px;color:var(--text3);margin-bottom:8px}
+.q-text{font-size:16px;font-weight:500;line-height:1.5;margin-bottom:20px}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:12px 16px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-size:14px;transition:.15s;background:var(--surface2);display:flex;align-items:center;gap:10px}
+.option:hover:not(.selected):not(.disabled){border-color:var(--accent);background:rgba(249,115,22,.06)}
+.option.correct{border-color:var(--green);background:rgba(34,197,94,.1);animation:pulse .4s ease}
+.option.wrong{border-color:var(--red);background:rgba(239,68,68,.1);animation:shake .4s ease}
+.option.disabled{cursor:default;pointer-events:none}
+.option-key{width:26px;height:26px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:var(--mono);flex-shrink:0}
+.explanation{margin-top:16px;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;line-height:1.6;color:var(--text2);border-left:3px solid var(--blue);display:none}
+.explanation.show{display:block;animation:fadeIn .3s ease}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--yellow)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.quiz-nav{display:flex;gap:10px;margin-top:20px}
+.btn{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:600;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.score-display{font-family:var(--mono);font-size:14px;color:var(--text2)}
+
+/* FLASHCARDS */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.fc{perspective:800px;cursor:pointer;height:200px}
+.fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:.5s}
+.fc:hover .fc-inner,.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;border:1px solid var(--border)}
+.fc-front{background:var(--surface);align-items:center;text-align:center}
+.fc-back{background:var(--surface2);transform:rotateY(180deg);border-color:var(--accent);align-items:flex-start}
+.fc-q{font-size:14px;font-weight:500;line-height:1.4;color:var(--text)}
+.fc-tag{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px}
+.fc-a{font-size:13px;line-height:1.5;color:var(--text2)}
+.fc-hint{font-size:11px;color:var(--text3);margin-top:12px}
+
+/* CLINICAL CASES */
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.case-header{padding:20px 24px;background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(59,130,246,.05));border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.case-title{font-size:15px;font-weight:700}
+.case-body{padding:24px}
+.case-vignette{background:var(--surface2);border-radius:10px;padding:16px;font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:20px;border-left:3px solid var(--purple)}
+.case-q{font-size:14px;font-weight:600;margin-bottom:10px}
+.reveal-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-size:13px;font-family:var(--sans);font-weight:600;transition:.2s}
+.reveal-btn:hover{background:var(--accent);color:#fff}
+.case-answer{margin-top:12px;padding:14px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-radius:10px;font-size:13px;line-height:1.6;color:var(--text2);display:none}
+.case-answer.show{display:block;animation:fadeIn .3s ease}
+.case-qs{display:flex;flex-direction:column;gap:16px}
+
+/* PATHOPHYSIOLOGY TAB */
+.path-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:24px}
+.path-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:.2s}
+.path-item:hover,.path-item.active{border-color:var(--accent);background:rgba(249,115,22,.04)}
+.path-item h4{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.path-item p{font-size:12px;color:var(--text3);line-height:1.5}
+.path-detail{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px;display:none}
+.path-detail.show{display:block;animation:fadeIn .3s ease}
+.path-detail h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.path-detail p{font-size:14px;line-height:1.7;color:var(--text2)}
+
+/* COMPARISON TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:12px 16px;text-align:left;background:var(--surface2);color:var(--text2);font-weight:600;border-bottom:2px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text2);line-height:1.5;vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+.table-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+
+/* TREATMENT */
+.rx-section{margin-bottom:24px}
+.rx-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.rx-card{background:var(--surface);border-radius:12px;padding:16px;border-left:4px solid}
+.rx-emergency{border-color:var(--red)}
+.rx-drug{border-color:var(--blue)}
+.rx-supportive{border-color:var(--green)}
+.rx-card h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.rx-card p{font-size:12px;color:var(--text3);line-height:1.5}
+
+/* MNEMONICS */
+.mnem-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.mnem-word{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);letter-spacing:2px;margin-bottom:16px}
+.mnem-items{display:flex;flex-direction:column;gap:8px}
+.mnem-item{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.mnem-item:last-child{border-bottom:none}
+.mnem-letter{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);width:24px;flex-shrink:0}
+.mnem-desc{color:var(--text2);line-height:1.5}
+.mnem-desc strong{color:var(--text)}
+
+/* VIVA */
+.viva-list{display:flex;flex-direction:column;gap:12px}
+.viva-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.viva-q{padding:16px 20px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;font-size:14px;font-weight:500;line-height:1.4;transition:.2s}
+.viva-q:hover{background:var(--surface2)}
+.viva-num{font-family:var(--mono);font-size:11px;color:var(--text3);padding:3px 7px;background:var(--surface2);border-radius:5px;flex-shrink:0;margin-top:1px}
+.viva-a{padding:0 20px;font-size:13px;color:var(--text2);line-height:1.7;max-height:0;overflow:hidden;transition:.3s}
+.viva-a.open{max-height:300px;padding:16px 20px;border-top:1px solid var(--border)}
+
+/* SEARCH */
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:20px;transition:.2s}
+.search-bar:focus-within{border-color:var(--accent)}
+.search-bar input{background:none;border:none;color:var(--text);font-family:var(--sans);font-size:14px;flex:1;outline:none}
+.search-bar input::placeholder{color:var(--text3)}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;pointer-events:none;font-size:20px;animation:confettiFall 2s ease-in forwards;z-index:9999}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  header{padding:12px 16px}
+  main{padding:16px}
+  .stats-bar{display:none}
+  .section-title{font-size:18px}
+  .q-text{font-size:14px}
+}
+
+.divider{height:1px;background:var(--border);margin:24px 0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);color:var(--text2)}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="ambient">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-text">
+      <span class="logo-title">Adrenal Medulla</span>
+      <span class="logo-sub">Team 63rd · Physiology ENR</span>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-chip">🔥 Streak: <span id="streakCount">0</span></div>
+    <div class="stat-chip">✅ Quiz: <span id="scoreDisplay">0/25</span></div>
+    <div class="stat-chip">📈 Progress: <span id="progressPct">0%</span></div>
+  </div>
+</header>
+
+<nav>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">🏠 Overview</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">🧠 Quiz</button>
+    <button class="tab-btn" onclick="switchTab('flashcards')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('cases')">🩺 Clinical Cases</button>
+    <button class="tab-btn" onclick="switchTab('pathophys')">🔬 Pathophysiology</button>
+    <button class="tab-btn" onclick="switchTab('diagnosis')">🔍 Diagnosis</button>
+    <button class="tab-btn" onclick="switchTab('treatment')">💊 Treatment</button>
+    <button class="tab-btn" onclick="switchTab('mnemonics')">🧩 Mnemonics</button>
+    <button class="tab-btn" onclick="switchTab('viva')">🗣️ Viva</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- OVERVIEW -->
+<div id="tab-overview" class="tab-content active">
+  <div class="hero-fact">
+    <h2>⚡ The Emergency Hormone Factory</h2>
+    <p>The adrenal medulla is a <strong>modified sympathetic ganglion</strong> — it has no postganglionic axons. Instead, it converts neural signals into a hormonal storm of epinephrine and norepinephrine, bridging the nervous and endocrine systems in milliseconds.</p>
+  </div>
+
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="searchInput" placeholder="Search facts, concepts, keywords…" oninput="searchContent()">
+  </div>
+
+  <div class="fact-grid">
+    <div class="fact-item"><span class="num">80%</span><span class="label">Epinephrine in chromaffin granules</span></div>
+    <div class="fact-item"><span class="num">20%</span><span class="label">Norepinephrine in granules</span></div>
+    <div class="fact-item"><span class="num">2–3 min</span><span class="label">Plasma half-life of catecholamines</span></div>
+    <div class="fact-item"><span class="num">T5–T9</span><span class="label">Lateral horn cell segments</span></div>
+    <div class="fact-item"><span class="num">&gt;300 µg/day</span><span class="label">Urine output = Pheo</span></div>
+    <div class="fact-item"><span class="num">VMA</span><span class="label">Major urinary metabolite</span></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="grid2">
+    <div class="card" id="search-anatomy">
+      <div class="card-title">🏗️ Anatomy & Histology</div>
+      <ul class="pearl-list">
+        <li>Modified sympathetic ganglion — NO postganglionic axons</li>
+        <li>Innervated by long preganglionic cholinergic neurons</li>
+        <li>Fibers originate from lateral horn cells T5-T9</li>
+        <li>Travel via the <strong>greater splanchnic nerve</strong></li>
+        <li>Synapse directly with chromaffin cells (pheochromocytes)</li>
+        <li>Acts as a <strong>neuroendocrine transducer</strong></li>
+      </ul>
+    </div>
+
+    <div class="card" id="search-synthesis">
+      <div class="card-title">⚗️ Synthesis & Metabolism</div>
+      <ul class="pearl-list">
+        <li>Precursor: <strong>L-Tyrosine</strong> → enzymatic cascade → catecholamines</li>
+        <li>Stored in <strong>chromaffin granules</strong></li>
+        <li>Neuronal inactivation → <strong>MAO</strong> (mitochondrial)</li>
+        <li>Extraneuronal inactivation → <strong>COMT</strong> (liver, kidney, lung, gut)</li>
+        <li>Final urinary product: <strong>VMA</strong> (vanillyl mandelic acid)</li>
+        <li>Half-life only <strong>2–3 minutes</strong></li>
+      </ul>
+    </div>
+
+    <div class="card" id="search-secretion">
+      <div class="card-title">🎛️ Regulation of Secretion</div>
+      <ul class="pearl-list">
+        <li>Controlled by <strong>A.S.C</strong> in medulla oblongata</li>
+        <li>Normal BP → baroreceptors send <em>inhibitory</em> impulses to A.S.C</li>
+        <li>Hemorrhage → removes inhibition → A.S.C fires → catecholamine surge</li>
+        <li>Stimulated by: pain, emotions, cold, hypoglycemia, hypoxia</li>
+        <li>Secretion ↓ during sleep</li>
+        <li>Needs cortisol (HPA axis) for catecholamine synthesis</li>
+      </ul>
+      <div class="exam-alert"><strong>⚠️ EXAM TRAP:</strong> Baroreceptors during hemorrhage are NOT "inhibited" — their normal inhibitory input is REMOVED, releasing the A.S.C.</div>
+    </div>
+
+    <div class="card" id="search-cvs">
+      <div class="card-title">❤️ CVS Actions</div>
+      <ul class="pearl-list">
+        <li>↑ Heart rate, force, O₂ consumption</li>
+        <li>Vasoconstriction <em>everywhere</em> EXCEPT skeletal muscle & liver</li>
+        <li>Skeletal muscle & liver: vasodilation via <strong>β2</strong></li>
+        <li>Renal: vasoconstriction → ↓ GFR → ↑ renin (β1) → aldosterone → Na⁺ reabsorption (distal tubule)</li>
+        <li>Skin: pallor due to α vasoconstriction</li>
+      </ul>
+      <div class="exam-alert"><strong>⚠️ EXAM:</strong> Na⁺ reabsorption from aldosterone occurs at <strong>DISTAL</strong> tubules, not proximal!</div>
+    </div>
+
+    <div class="card" id="search-metabolic">
+      <div class="card-title">🔥 Metabolic Actions</div>
+      <ul class="pearl-list">
+        <li>Hyperglycemia: ↑ glycogenolysis + blocks insulin + ↑ glucagon + ↑ ACTH/cortisol</li>
+        <li>Suppresses glucose transporter proteins in skeletal muscle</li>
+        <li>Lipolysis → Free fatty acids (fuel for resting muscle)</li>
+        <li>↑ BMR, ↑ O₂ consumption</li>
+        <li>Dual pancreatic effect: β → ↑ insulin/glucagon; α → ↓ insulin/glucagon</li>
+      </ul>
+    </div>
+
+    <div class="card" id="search-pheo">
+      <div class="card-title">🎯 Pheochromocytoma</div>
+      <ul class="pearl-list">
+        <li>Tumor of chromaffin cells → hypersecretion of catecholamines</li>
+        <li>Urine catecholamines <strong>&gt;300 µg/day</strong> (normal 10–100 µg/day)</li>
+        <li>Symptoms: hypertension, tachycardia, sweating, headache, pallor, hyperglycemia, pupillary dilation</li>
+        <li>Diagnosis: urinary VMA measurement</li>
+        <li>Elevated BP can NOT suppress tumor (autonomous source)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">🔄 Hemorrhage Response Pathway</div>
+  <div class="flow">
+    <div class="flow-node highlight">🩸 Severe Hemorrhage</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">↓ Arterial BP + Hypovolemia</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">Baroreceptors (aortic arch/carotid sinus) STOP sending inhibitory impulses<br>Volume receptors (atria) STOP sending inhibitory impulses</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight">A.S.C released from inhibition → FIRES</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">Impulses descend reticulospinal tract → Lateral horn cells T5–T9</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">Greater splanchnic nerve → Chromaffin cells</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight">💥 Massive catecholamine secretion → ↑ BP + Mobilize energy</div>
+  </div>
+
+  <div id="searchResults" style="display:none;margin-top:16px"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="tab-quiz" class="tab-content">
+  <div class="quiz-header">
+    <div class="section-title" style="margin-bottom:0">🧠 MCQ Quiz</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="streak-badge">🔥 Streak: <span id="currentStreak">0</span></div>
+      <div class="score-display">Score: <span id="quizScore">0</span>/<span id="quizTotal">25</span></div>
+    </div>
+  </div>
+  <div class="progress-bar" style="margin-bottom:20px"><div class="progress-fill" id="quizProgress" style="width:0%"></div></div>
+  <div id="quizContainer"></div>
+  <div class="quiz-nav">
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none">Next Question →</button>
+    <button class="btn btn-ghost" onclick="resetQuiz()">🔄 Restart Quiz</button>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="tab-flashcards" class="tab-content">
+  <div class="section-title">🃏 Flip to Reveal</div>
+  <p style="color:var(--text3);font-size:13px;margin-bottom:20px">Hover or click any card to flip it</p>
+  <div class="fc-grid" id="flashcardsGrid"></div>
+</div>
+
+<!-- CLINICAL CASES -->
+<div id="tab-cases" class="tab-content">
+  <div class="section-title">🩺 Clinical Cases</div>
+  <div id="casesContainer"></div>
+</div>
+
+<!-- PATHOPHYSIOLOGY -->
+<div id="tab-pathophys" class="tab-content">
+  <div class="section-title">🔬 Pathophysiology Explorer</div>
+  <p style="color:var(--text3);font-size:13px;margin-bottom:20px">Click any structure to explore in detail</p>
+  <div class="path-grid" id="pathGrid"></div>
+  <div class="path-detail" id="pathDetail"></div>
+
+  <div class="divider"></div>
+  <div class="section-title" style="font-size:17px">Catecholamine Synthesis & Clearance</div>
+  <div class="flow">
+    <div class="flow-node highlight">L-Tyrosine (amino acid precursor)</div>
+    <div class="flow-arrow">↓ series of enzymatic reactions</div>
+    <div class="flow-node">Dopamine → Norepinephrine → Epinephrine</div>
+    <div class="flow-arrow">↓ stored in</div>
+    <div class="flow-node">Chromaffin Granules (80% Epi / 20% NorEpi)</div>
+    <div class="flow-arrow">↓ released into</div>
+    <div class="flow-node">Bloodstream (half-life 2–3 min)</div>
+    <div class="flow-arrow">↓ terminated by</div>
+    <div class="flow-node">
+      <strong>Pathway 1:</strong> Neuronal uptake → MAO (mitochondrial) → inactivation / re-storage<br><br>
+      <strong>Pathway 2:</strong> Extraneuronal uptake (liver/kidney/lung) → COMT → VMA excreted in urine
+    </div>
+  </div>
+</div>
+
+<!-- DIAGNOSIS -->
+<div id="tab-diagnosis" class="tab-content">
+  <div class="section-title">🔍 Diagnosis</div>
+
+  <div class="grid2" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-title">📊 Urinary Catecholamines (Key Diagnostic Test)</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--green)">
+          <span style="font-size:13px">Normal</span>
+          <span class="badge">10–100 µg/day</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(239,68,68,.08);border-radius:8px;border-left:3px solid var(--red)">
+          <span style="font-size:13px">Pheochromocytoma</span>
+          <span class="badge" style="color:var(--red);border-color:rgba(239,68,68,.4)">&gt;300 µg/day</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--blue)">
+          <span style="font-size:13px">Metabolite measured</span>
+          <span class="badge">VMA (Vanillyl Mandelic Acid)</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔴 Pheochromocytoma Symptoms Checklist</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <span class="tag tag-red">Hypertension (210/120)</span>
+        <span class="tag tag-orange">Tachycardia (130 bpm)</span>
+        <span class="tag tag-orange">Pounding headache</span>
+        <span class="tag tag-blue">Profuse sweating</span>
+        <span class="tag tag-blue">Palpitations</span>
+        <span class="tag tag-purple">Pupillary dilation</span>
+        <span class="tag tag-purple">Blurred vision</span>
+        <span class="tag tag-yellow">Hyperglycemia</span>
+        <span class="tag tag-yellow">Glucosuria</span>
+        <span class="tag tag-red">Pallor (α vasoconstriction)</span>
+        <span class="tag tag-orange">Anxiety / impending doom</span>
+        <span class="tag tag-blue">Chest pain</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:17px">Diagnostic Algorithm</div>
+  <div class="flow">
+    <div class="flow-node">Patient presents with hypertension + headache + sweating + tachycardia</div>
+    <div class="flow-arrow">↓ Suspect</div>
+    <div class="flow-node highlight">Pheochromocytoma</div>
+    <div class="flow-arrow">↓ Order</div>
+    <div class="flow-node">24-hour urine catecholamines + VMA measurement</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">&gt;300 µg/day → Confirmed ✅ &nbsp;|&nbsp; 10–100 µg/day → Rule out ❌</div>
+    <div class="flow-arrow">↓ If confirmed</div>
+    <div class="flow-node highlight">Imaging (CT/MRI adrenal glands) → Surgical resection</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title" style="font-size:17px">Epinephrine vs Norepinephrine</div>
+  <div class="table-wrap" style="margin-bottom:24px">
+    <table>
+      <tr><th>Feature</th><th>Epinephrine</th><th>Norepinephrine</th></tr>
+      <tr><td>% of chromaffin granules</td><td><span class="tag tag-orange">80%</span></td><td><span class="tag tag-blue">20%</span></td></tr>
+      <tr><td>Primary role</td><td>Systemic emergency hormone</td><td>Vascular tone (also main sympathetic neurotransmitter)</td></tr>
+      <tr><td>Receptor affinity</td><td>Both α and β (more β2 affinity)</td><td>Primarily α, less β2</td></tr>
+      <tr><td>Vasodilation in muscle</td><td>Yes (β2)</td><td>Minimal</td></tr>
+      <tr><td>Sleep effect</td><td>Drops significantly</td><td>Less dramatic drop</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size:17px">MAO vs COMT Inactivation</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Feature</th><th>MAO (Monoamine Oxidase)</th><th>COMT (Catechol-O-Methyl Transferase)</th></tr>
+      <tr><td>Location</td><td>Mitochondria of nerve terminals</td><td>Liver, kidney, lung, gut</td></tr>
+      <tr><td>Mechanism</td><td>Neuronal uptake → enzymatic destruction</td><td>Extraneuronal uptake → destruction</td></tr>
+      <tr><td>Products</td><td>Local inactivation</td><td>VMA → excreted in urine</td></tr>
+      <tr><td>Clinical significance</td><td>MAO inhibitors raise catecholamine levels</td><td>Diagnostic: VMA measurement for pheo</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- TREATMENT -->
+<div id="tab-treatment" class="tab-content">
+  <div class="section-title">💊 Management</div>
+
+  <div class="rx-section">
+    <div class="rx-title"><span style="color:var(--red)">🚨</span> Pheochromocytoma — Emergency Management</div>
+    <div class="rx-grid">
+      <div class="rx-card rx-emergency">
+        <h4>α-Blockers First</h4>
+        <p>Phenoxybenzamine (irreversible α-blocker) to control hypertension BEFORE surgery. Never give β-blocker first (risk of unopposed α = hypertensive crisis).</p>
+      </div>
+      <div class="rx-card rx-emergency">
+        <h4>Then β-Blockers</h4>
+        <p>Added after α-blockade to control tachycardia. Propranolol often used. Order matters — α then β.</p>
+      </div>
+      <div class="rx-card rx-emergency">
+        <h4>Surgical Resection</h4>
+        <p>Definitive treatment. Laparoscopic adrenalectomy. Pre-operative α/β blockade for 2 weeks mandatory.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rx-section">
+    <div class="rx-title"><span style="color:var(--blue)">💉</span> Catecholamine Pharmacology Targets</div>
+    <div class="rx-grid">
+      <div class="rx-card rx-drug">
+        <h4>MAO Inhibitors</h4>
+        <p>Block neuronal catecholamine breakdown → prolonged action. Risk: hypertensive crisis with tyramine-rich foods (cheese reaction).</p>
+      </div>
+      <div class="rx-card rx-drug">
+        <h4>COMT Inhibitors</h4>
+        <p>Used in Parkinson's disease adjunct therapy to prolong L-DOPA activity. Entacapone, Tolcapone.</p>
+      </div>
+      <div class="rx-card rx-drug">
+        <h4>Beta-2 Agonists</h4>
+        <p>Mimic vasodilation effect in skeletal muscle & bronchodilation. Salbutamol for asthma. Also used in preterm labor (tocolysis).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rx-section">
+    <div class="rx-title"><span style="color:var(--green)">✅</span> Adrenalectomy — Post-op Note</div>
+    <div class="card">
+      <p style="font-size:14px;line-height:1.7;color:var(--text2)">After bilateral adrenalectomy, <strong>NO epinephrine replacement is needed</strong> for the medullary component. The adrenal medulla is <strong>not essential for life</strong> because sympathetic nerve endings throughout the body produce sufficient catecholamines for normal biologic requirements. Adrenocortical replacement (cortisol + aldosterone) IS required.</p>
+      <div class="exam-alert" style="margin-top:12px"><strong>⚠️ EXAM POINT:</strong> Hyposecretion of adrenal medulla = asymptomatic. No replacement needed. (Unlike adrenal cortex!)</div>
+    </div>
+  </div>
+
+  <div class="rx-section">
+    <div class="rx-title"><span style="color:var(--yellow)">⚡</span> Adrenaline Apnea — Management Concept</div>
+    <div class="card">
+      <div class="flow">
+        <div class="flow-node">Sudden high-dose epinephrine injection</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node highlight">⬆️ Sudden BP spike → Baroreceptor activation → Respiratory center inhibited → APNEA (seconds)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">Epinephrine crosses BBB → Directly excites CNS respiratory center</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node highlight">Hyperventilation (↑ rate + ↑ depth)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MNEMONICS -->
+<div id="tab-mnemonics" class="tab-content">
+  <div class="section-title">🧩 Memory Hooks</div>
+
+  <div class="mnem-card">
+    <div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:6px">SYMPTOMS OF PHEOCHROMOCYTOMA</div>
+    <div class="mnem-word">PHEO SWEATS</div>
+    <div class="mnem-items">
+      <div class="mnem-item"><span class="mnem-letter">P</span><div class="mnem-desc"><strong>Palpitations</strong> — tachycardia, racing heart</div></div>
+      <div class="mnem-item"><span class="mnem-letter">H</span><div class="mnem-desc"><strong>Hypertension</strong> — severe, often 200+ systolic</div></div>
+      <div class="mnem-item"><span class="mnem-letter">E</span><div class="mnem-desc"><strong>Excessive sweating</strong> — profuse, cold sweat</div></div>
+      <div class="mnem-item"><span class="mnem-letter">O</span><div class="mnem-desc"><strong>Overwhelming anxiety</strong> — sense of impending doom</div></div>
+      <div class="mnem-item"><span class="mnem-letter">S</span><div class="mnem-desc"><strong>Sugar spike</strong> — hyperglycemia + glucosuria</div></div>
+      <div class="mnem-item"><span class="mnem-letter">W</span><div class="mnem-desc"><strong>Wide pupils</strong> — mydriasis (α effect), blurred vision</div></div>
+      <div class="mnem-item"><span class="mnem-letter">E</span><div class="mnem-desc"><strong>Error in VMA urine</strong> — &gt;300 µg/day diagnostic</div></div>
+      <div class="mnem-item"><span class="mnem-letter">A</span><div class="mnem-desc"><strong>Awful headache</strong> — throbbing, severe</div></div>
+      <div class="mnem-item"><span class="mnem-letter">T</span><div class="mnem-desc"><strong>Tachycardia + Tremor</strong> — sympathetic overdrive</div></div>
+      <div class="mnem-item"><span class="mnem-letter">S</span><div class="mnem-desc"><strong>Skin pallor</strong> — cutaneous α vasoconstriction</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:6px">CATECHOLAMINE METABOLIC EFFECTS</div>
+    <div class="mnem-word">SUGAR FAT</div>
+    <div class="mnem-items">
+      <div class="mnem-item"><span class="mnem-letter">S</span><div class="mnem-desc"><strong>Sugar ↑</strong> — glycogenolysis activated</div></div>
+      <div class="mnem-item"><span class="mnem-letter">U</span><div class="mnem-desc"><strong>Uptake of glucose ↓</strong> — suppresses GLUTs in muscle</div></div>
+      <div class="mnem-item"><span class="mnem-letter">G</span><div class="mnem-desc"><strong>Glucagon ↑</strong> — beta-mediated stimulation</div></div>
+      <div class="mnem-item"><span class="mnem-letter">A</span><div class="mnem-desc"><strong>ACTH/Cortisol ↑</strong> — adds to hyperglycemia</div></div>
+      <div class="mnem-item"><span class="mnem-letter">R</span><div class="mnem-desc"><strong>Release of fatty acids</strong> — lipolysis → free fatty acids</div></div>
+      <div class="mnem-item"><span class="mnem-letter">F</span><div class="mnem-desc"><strong>Fuel for resting muscle</strong> — FFA as main energy source</div></div>
+      <div class="mnem-item"><span class="mnem-letter">A</span><div class="mnem-desc"><strong>Abducts insulin secretion</strong> — α-mediated blockade</div></div>
+      <div class="mnem-item"><span class="mnem-letter">T</span><div class="mnem-desc"><strong>Thermogenesis ↑</strong> — raises BMR and O₂ consumption</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:6px">PATHWAY: A.S.C ACTIVATION IN HEMORRHAGE</div>
+    <div class="mnem-word">HARM → FIRE</div>
+    <div class="mnem-items">
+      <div class="mnem-item"><span class="mnem-letter">H</span><div class="mnem-desc"><strong>Hemorrhage</strong> → BP drops</div></div>
+      <div class="mnem-item"><span class="mnem-letter">A</span><div class="mnem-desc"><strong>Atrial volume receptors</strong> stop firing (no more inhibition)</div></div>
+      <div class="mnem-item"><span class="mnem-letter">R</span><div class="mnem-desc"><strong>Release</strong> of A.S.C from normal baroreceptor inhibition</div></div>
+      <div class="mnem-item"><span class="mnem-letter">M</span><div class="mnem-desc"><strong>Medulla oblongata</strong> A.S.C now fires freely</div></div>
+      <div class="mnem-item"><span class="mnem-letter">F</span><div class="mnem-desc"><strong>Fire</strong> down reticulospinal tract → T5–T9 lateral horn cells</div></div>
+      <div class="mnem-item"><span class="mnem-letter">I</span><div class="mnem-desc"><strong>Into</strong> greater splanchnic nerve</div></div>
+      <div class="mnem-item"><span class="mnem-letter">R</span><div class="mnem-desc"><strong>Reaches</strong> chromaffin cells of adrenal medulla</div></div>
+      <div class="mnem-item"><span class="mnem-letter">E</span><div class="mnem-desc"><strong>Epinephrine + NorEpi</strong> surge into blood</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:6px">EXCEPTION VASODILATION SITES (β2)</div>
+    <div class="mnem-word">SL = Skeletal + Liver</div>
+    <div class="mnem-items">
+      <div class="mnem-item"><span class="mnem-letter">S</span><div class="mnem-desc"><strong>Skeletal muscle</strong> — vasodilates (β2) to increase blood flow during exercise</div></div>
+      <div class="mnem-item"><span class="mnem-letter">L</span><div class="mnem-desc"><strong>Liver</strong> — vasodilates (β2) to increase hepatic blood flow for glucogenolysis</div></div>
+      <div class="mnem-item" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px"><span style="font-size:13px;color:var(--text3);font-style:italic">Everything else = α vasoconstriction (skin, kidneys, GIT, lungs)</span></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:6px">CATECHOLAMINE DEGRADATION ENZYMES</div>
+    <div class="mnem-word">MAO is Inside, COMT is Outside</div>
+    <div class="mnem-items">
+      <div class="mnem-item"><span class="mnem-letter">M</span><div class="mnem-desc"><strong>MAO</strong> = Mitochondrial = iNside neurons (neuronal uptake)</div></div>
+      <div class="mnem-item"><span class="mnem-letter">C</span><div class="mnem-desc"><strong>COMT</strong> = Circulating tissues = Outside (liver/kidney/lung) = extraneuronal uptake</div></div>
+      <div class="mnem-item"><span class="mnem-letter">V</span><div class="mnem-desc"><strong>VMA</strong> = final product of COMT pathway in urine</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIVA -->
+<div id="tab-viva" class="tab-content">
+  <div class="section-title">🗣️ Viva Q&A — Click to Reveal</div>
+  <div class="viva-list" id="vivaList"></div>
+</div>
+
+</main>
+
+<script>
+// ===== DATA =====
+const quizData = [
+  {q:"The adrenal medulla is best described histologically as:",opts:["A typical parasympathetic ganglion","An enlarged, specialized sympathetic ganglion lacking postganglionic axons","A collection of preganglionic sympathetic fibers","A cluster of modified neuroglial cells","Cortical tissue dependent on ACTH directly for survival"],ans:1,exp:"The adrenal medulla is innervated by preganglionic neurons but lacks its own postganglionic axons, acting as a neuroendocrine transducer. ⚠️ It is sympathetic, not parasympathetic."},
+  {q:"What percentage of chromaffin granules in the human adrenal medulla synthesize epinephrine?",opts:["20%","50%","70%","80%","95%"],ans:3,exp:"80% synthesize epinephrine, and the remaining 20% synthesize norepinephrine. 20% = norepinephrine compartment."},
+  {q:"Catecholamines are synthesized directly from which amino acid precursor?",opts:["L-Tryptophan","L-Arginine","L-Tyrosine","L-Glutamine","L-Phenylalanine"],ans:2,exp:"Catecholamines are synthesized from L-Tyrosine. Tryptophan → serotonin; Arginine → nitric oxide."},
+  {q:"In plasma, what percentage of epinephrine and norepinephrine are conjugated to sulfate?",opts:["20%","50%","70%","80%","95%"],ans:2,exp:"About 70% of norepinephrine and epinephrine are conjugated to sulfate. Note: 95% is the figure for dopamine."},
+  {q:"The plasma half-life of circulating epinephrine and norepinephrine is approximately:",opts:["30 seconds","2–3 minutes","10–15 minutes","1 hour","24 hours"],ans:1,exp:"Half-life is strictly 2–3 minutes before being terminated by MAO and COMT enzymatic mechanisms."},
+  {q:"Which spinal cord segments contain lateral horn cells that provide preganglionic fibers to the adrenal medulla?",opts:["C1–C4","T1–T4","T5–T9","T10–L2","S2–S4"],ans:2,exp:"Impulses descend reticulospinal tracts to lateral horn cells in lower thoracic segments T5–T9."},
+  {q:"Neuronal uptake of catecholamines leads to enzymatic inactivation primarily via which enzyme?",opts:["COMT","Acetylcholinesterase (AChE)","Monoamine oxidase (MAO)","Triglyceride lipase","Renin"],ans:2,exp:"Neuronal uptake → enzymatic inactivation by mitochondrial MAO. COMT handles extraneuronal uptake. AChE degrades acetylcholine."},
+  {q:"The major metabolic waste product for catecholamines found in the urine is:",opts:["Urea","Vanillyl mandelic acid (VMA)","Lactic acid","Sulfate conjugates","Ketone bodies"],ans:1,exp:"VMA (vanillyl mandelic acid) is the major metabolic waste product of catecholamines measured in urine."},
+  {q:"Under normal arterial blood pressure, what is the role of baroreceptors regarding the A.S.C?",opts:["They provide continuous stimulatory impulses","They provide continuous inhibitory impulses","They have no effect until pressure drops","They stimulate the reticulospinal tract directly","They cause release of cortisol"],ans:1,exp:"Under normal BP, continuous INHIBITORY impulses arise from baroreceptors to the A.S.C. A drop in BP REMOVES this inhibition — it doesn't add stimulation."},
+  {q:"How does epinephrine induce vasodilation in skeletal muscles and the liver?",opts:["By stimulating α1 receptors","By stimulating β1 receptors","By stimulating β2 receptors","By inhibiting α receptors","By direct relaxation independent of receptors"],ans:2,exp:"Epinephrine dilates blood vessels via β2 receptors ONLY in skeletal muscles and liver. Everywhere else = vasoconstriction via α."},
+  {q:"The phenomenon where adrenaline increases skeletal muscle strength and delays fatigue is known as:",opts:["The Starling phenomenon","The Orbelli phenomenon","Adrenaline apnea","Neuroendocrine transduction","Emergency sympathoadrenal discharge"],ans:1,exp:"The Orbelli phenomenon: adrenaline increases skeletal muscle contraction strength and delays fatigue via β2 vasodilation + metabolic stimulation."},
+  {q:"What is the mechanism behind 'adrenaline apnea'?",opts:["Direct inhibition of respiratory center by epinephrine","Bronchoconstriction blocking airflow","A sudden rise in BP stimulating baroreceptors, which reflexively inhibit the respiratory center","Hypoxia acting on peripheral chemoreceptors","Relaxation of the diaphragm via β2 receptors"],ans:2,exp:"Initial apnea = sudden BP spike → stimulates arterial baroreceptors → inhibit respiratory center. Then epinephrine directly excites CNS → hyperventilation."},
+  {q:"How do catecholamines directly affect the renal system?",opts:["Dilating renal arterioles to increase GFR","Inhibiting renin release","Constricting renal arterioles (↓ GFR) and stimulating renin secretion via β1 receptors","Inhibiting Na+ reabsorption","Stimulating ADH from the pituitary"],ans:2,exp:"They constrict renal arterioles (↓ GFR) and stimulate renin from juxtaglomerular apparatus (β1) → aldosterone → Na⁺ reabsorption at DISTAL tubules."},
+  {q:"What effect does epinephrine have on the GIT walls vs sphincters?",opts:["Contraction of walls and relaxation of sphincters","Relaxation of walls (β2) and contraction of sphincters (α)","Increased secretion of digestive enzymes","Complete paralysis of all smooth muscle","Bronchodilation"],ans:1,exp:"GIT: walls relax via β2 (holds contents), sphincters contract via α (prevents passage). This inhibits digestion during emergencies."},
+  {q:"How do catecholamines alter blood clotting?",opts:["They prolong clotting time","They have no effect","They shorten clotting time by increasing fibrinogen/prothrombin and activating factor V","They destroy platelets","They cause hemorrhage"],ans:2,exp:"Catecholamines shorten clotting time by increasing hepatic production of fibrinogen and prothrombin and activating factor V — crucial for emergency hemostasis."},
+  {q:"What is epinephrine's effect on pancreatic islets?",opts:["Only inhibits insulin and glucagon","Only stimulates insulin and glucagon","Destroys islets","↑ insulin & glucagon via β; ↓ insulin & glucagon via α","Converts insulin to glucagon"],ans:3,exp:"Dual mechanism: β-adrenergic → ↑ insulin + glucagon secretion; α-adrenergic → ↓ insulin + glucagon secretion. Net effect: hyperglycemia dominates."},
+  {q:"Which mechanism does epinephrine use to cause hyperglycemia that involves cell membranes?",opts:["Upregulating GLUT transporters","Upregulating insulin receptors","Suppressing glucose transporter proteins in skeletal muscle","Activating hexokinase","Inhibiting gluconeogenesis"],ans:2,exp:"Epinephrine directly SUPPRESSES glucose transporter (GLUT) expression in skeletal muscle and adipocytes, blocking insulin-mediated glucose uptake → hyperglycemia."},
+  {q:"In fat metabolism, resting skeletal muscles predominantly utilize which substrate mobilized by epinephrine?",opts:["Lactic acid","Ketone bodies","Glycogen","Free fatty acids","VMA"],ans:3,exp:"Epinephrine stimulates lipolysis → free fatty acids. Resting skeletal muscle uses FFA as its major energy source."},
+  {q:"The functional integrity of the adrenal medulla indirectly depends on the HPA axis because:",opts:["ACTH directly innervates the medulla","Catecholamine synthesis is dependent on cortisol","The A.S.C is located in the hypothalamus","Aldosterone regulates chromaffin cell volume","CRH is structurally similar to epinephrine"],ans:1,exp:"Catecholamine biosynthetic enzymes require cortisol for induction. Without functional HPA → ↓ cortisol → ↓ epinephrine synthesis capacity."},
+  {q:"In hypovolemic states, how is the A.S.C activated?",opts:["Volume receptors send stimulatory impulses","Volume receptors stop sending inhibitory impulses, releasing A.S.C","Chemoreceptors sense low O₂ and stimulate A.S.C","Reticulospinal tract reverses direction","Renin directly activates A.S.C"],ans:1,exp:"Normal volume → atrial volume receptors send inhibitory impulses to A.S.C. Hypovolemia removes this inhibition → A.S.C released → fires → catecholamine surge."},
+  {q:"What urinary catecholamine level confirms pheochromocytoma?",opts:["10–50 µg/day","50–100 µg/day","Exactly 150 µg/day","Over 300 µg/day","0 µg/day"],ans:3,exp:"Normal = 10–100 µg/day. Pheochromocytoma = >300 µg/day. The 10-fold+ elevation is diagnostic."},
+  {q:"Which is an expected manifestation of pheochromocytoma?",opts:["Hypotension","Hypoglycemia","Miosis (pupil constriction)","Blurred vision due to pupillary dilation","Flushed red skin"],ans:3,exp:"Alpha receptor stimulation causes mydriasis (pupillary dilation) → blurred vision. Skin is PALE (vasoconstriction), not flushed. Blood sugar is HIGH, not low."},
+  {q:"Clinical features after bilateral adrenalectomy (medullary hyposecretion)?",opts:["Severe hypotension and death","Profound hypoglycemia","Immediate epinephrine replacement required","No symptoms or clinical features","Chronic fatigue syndrome"],ans:3,exp:"The adrenal medulla is NOT essential for life. Sympathetic nerve endings produce sufficient catecholamines. No medullary replacement needed (cortical replacement IS needed)."},
+  {q:"Which cranial nerves transmit inhibitory signals from baroreceptors to the A.S.C?",opts:["CN V","CN VII","CN IX and X","CN XI","CN XII"],ans:2,exp:"Impulses from aortic arch and carotid sinus baroreceptors travel via CN IX (Glossopharyngeal) and CN X (Vagus) to inhibit the A.S.C in medulla oblongata."},
+  {q:"Epinephrine's effect on the CNS includes all of the following EXCEPT:",opts:["Increasing CNS excitability","Shortening response time","Increasing alertness and awareness","Stimulating the RAS","Increasing basal sleep state"],ans:4,exp:"Epinephrine STIMULATES the RAS → increases mental activity and wakefulness. It does NOT promote sleep — in fact, catecholamine secretion DECREASES during sleep."}
+];
+
+const flashcards = [
+  {q:"What makes the adrenal medulla histologically unique vs a normal sympathetic ganglion?",a:"It lacks postganglionic axons. Instead, it secretes hormones directly into the blood — acting as a neuroendocrine transducer, not a relay station."},
+  {q:"Name the precursor amino acid for catecholamine synthesis",a:"L-Tyrosine → through enzymatic cascade → Dopamine → Norepinephrine → Epinephrine"},
+  {q:"What spinal cord segments supply the adrenal medulla?",a:"Lateral horn cells of T5–T9, via preganglionic fibers traveling in the greater splanchnic nerve"},
+  {q:"What is VMA and why does it matter?",a:"Vanillyl Mandelic Acid = major urinary metabolite of catecholamines. Normal: 10–100 µg/day. >300 µg/day = pheochromocytoma"},
+  {q:"How does the A.S.C get activated during hemorrhage?",a:"Normally baroreceptors send INHIBITORY signals to A.S.C. Hemorrhage → BP drops → inhibition removed → A.S.C fires → catecholamine surge"},
+  {q:"Which two sites get vasodilation from epinephrine?",a:"Skeletal muscle + Liver (via β2 receptors). Everywhere else = vasoconstriction (α receptors)."},
+  {q:"What is 'adrenaline apnea'?",a:"Sudden epinephrine → acute BP spike → baroreceptors inhibit respiratory center → brief apnea. Then CNS excitation → hyperventilation."},
+  {q:"What is the Orbelli phenomenon?",a:"Epinephrine increases skeletal muscle contraction strength and delays fatigue via β2 vasodilation (more O2/nutrients) + metabolic stimulation"},
+  {q:"How does epinephrine cause hyperglycemia? (List 4 mechanisms)",a:"① Stimulates glycogenolysis ② Blocks insulin secretion (α) ③ Stimulates glucagon ④ Stimulates ACTH/cortisol ⑤ Suppresses GLUT transporters in muscle"},
+  {q:"MAO vs COMT — what's the key difference?",a:"MAO = Mitochondrial, inside neurons (neuronal uptake). COMT = extraneuronal tissues (liver/kidney/lung). Both produce VMA ultimately."},
+  {q:"Why doesn't cortisol deficiency affect adrenal medulla function?",a:"Catecholamine SYNTHESIS requires cortisol. If HPA axis fails → no cortisol → impaired epinephrine synthesis despite intact innervation."},
+  {q:"What percentage of chromaffin granules synthesize epinephrine vs norepinephrine?",a:"80% epinephrine, 20% norepinephrine. Both stored in separate chromaffin granule populations."},
+  {q:"Why is adrenal medulla hyposecretion asymptomatic?",a:"Sympathetic nerve endings throughout the body produce sufficient catecholamines for basal needs. Adrenal medulla is redundant for survival."},
+  {q:"What is the plasma half-life of catecholamines?",a:"Only 2–3 minutes! Rapidly inactivated by MAO and COMT."},
+  {q:"Epinephrine's renal actions — step by step",a:"① Vasoconstriction of renal arterioles → ↓ GFR → ② Stimulates renin (β1) → ③ Angiotensin II → ④ Aldosterone → ⑤ Na⁺ reabsorption in DISTAL tubules"},
+  {q:"What is a neuroendocrine transducer?",a:"A structure that converts a NEURAL signal (acetylcholine from preganglionic fiber) into an ENDOCRINE output (hormone into blood). The adrenal medulla is the prime example."},
+  {q:"How does epinephrine affect blood clotting?",a:"SHORTENS clotting time: ↑ hepatic fibrinogen + prothrombin production, and activates factor V — emergency hemostasis"},
+  {q:"What happens to GIT smooth muscle under catecholamine surge?",a:"Wall (propulsive) smooth muscle RELAXES (β2) — contents held; Sphincters CONTRACT (α) — prevents passage. Net: digestion suspended."},
+  {q:"Why does the elevated BP in pheochromocytoma NOT suppress catecholamine secretion?",a:"Normal: elevated BP → baroreceptors inhibit A.S.C → less medullary secretion. But pheochromocytoma is an AUTONOMOUS tumor — no feedback loop applies to it."},
+  {q:"Which cranial nerves carry baroreceptor signals to the A.S.C?",a:"CN IX (Glossopharyngeal — carotid sinus) and CN X (Vagus — aortic arch) → medulla oblongata A.S.C"}
+];
+
+const cases = [
+  {
+    title:"Case 1: The Mystery Experiment",
+    tags:["Neuroendocrine","Basic Science"],
+    vignette:"An experiment isolates a sympathetic ganglion and the adrenal medulla. Acetylcholine is applied to both. The ganglion transmits a nerve impulse down its postganglionic axon, while the adrenal medulla releases a substance directly into the surrounding fluid rather than firing a nerve impulse.",
+    questions:[
+      {q:"What structural feature explains why the adrenal medulla responds differently from the sympathetic ganglion?",a:"The adrenal medulla LACKS postganglionic axons. While a sympathetic ganglion relays the signal via a postganglionic neuron, the chromaffin cells of the adrenal medulla release their stored hormones (epinephrine/norepinephrine) directly into the circulation — acting as a neuroendocrine transducer."},
+      {q:"If the adrenal medulla is denervated (preganglionic fibers cut), what happens to catecholamine secretion?",a:"Secretion ceases. The adrenal medulla has NO postganglionic axons and depends entirely on preganglionic cholinergic input. Without it, chromaffin cells do not secrete (unlike pure endocrine glands that respond to blood signals). The body compensates via sympathetic nerve terminal release."}
+    ]
+  },
+  {
+    title:"Case 2: The Pale, Hypertensive Patient",
+    tags:["Pheochromocytoma","Clinical"],
+    vignette:"A 45-year-old male presents to the ER with a severe throbbing headache, profuse cold sweating, and extreme anxiety with a 'sense of impending doom.' BP: 210/120 mmHg, HR: 130 bpm. Lab tests show marked hyperglycemia and glucosuria. His skin is pale despite his racing heart. 24-hr urine catecholamine output: 420 µg/day.",
+    questions:[
+      {q:"What is the most likely diagnosis? Explain the diagnostic value of the urine test.",a:"Pheochromocytoma — a tumor of chromaffin cells causing autonomous hypersecretion of catecholamines. Normal urine output = 10–100 µg/day. This patient's 420 µg/day far exceeds the diagnostic threshold of >300 µg/day. The measured metabolite is VMA (vanillyl mandelic acid), the COMT product excreted in urine."},
+      {q:"Why is this patient pale despite having a racing heart?",a:"Massive catecholamine release acts on α1 receptors in skin arterioles → severe cutaneous vasoconstriction → pallor. The tachycardia is a β1 effect (↑ HR). These two effects occur simultaneously: α constricts skin (pallor) while β1 accelerates the heart."},
+      {q:"Why is elevated BP unable to suppress catecholamine secretion in this patient?",a:"Normally: elevated BP → baroreceptors inhibit A.S.C → reduces medullary secretion (feedback loop). In pheochromocytoma: the tumor secretes AUTONOMOUSLY — it is not under normal A.S.C control. The feedback loop is bypassed, and the tumor continues secreting regardless of how high BP climbs."}
+    ]
+  },
+  {
+    title:"Case 3: The Rabbit Experiment (Adrenaline Apnea)",
+    tags:["Respiratory","Pharmacology"],
+    vignette:"In a classic laboratory experiment, a high dose of intravenous epinephrine is administered to an anesthetized animal. Immediately after injection, respiration completely stops for 4–5 seconds, then returns with markedly increased rate and depth.",
+    questions:[
+      {q:"Explain the mechanism of the initial apnea (respiratory arrest).",a:"High-dose epinephrine causes massive α-mediated vasoconstriction + increased cardiac output → SUDDEN, sharp rise in arterial BP. This maximally stimulates the aortic arch and carotid sinus baroreceptors. They send powerful inhibitory signals (via CN IX and X) to the brainstem respiratory center → respiratory center is inhibited → APNEA."},
+      {q:"What causes the subsequent hyperventilation?",a:"After the brief reflex apnea, circulating epinephrine crosses the blood-brain barrier and DIRECTLY EXCITES the reticular activating system and the medullary respiratory center. Additionally, increased cellular metabolism (↑ O₂ consumption, ↑ CO₂ production) provides chemical drive. Net result: sustained hyperventilation — increased rate AND depth."},
+      {q:"If the baroreceptors were denervated before the experiment, how would the response change?",a:"Without baroreceptor input, the initial apnea phase would NOT occur. There would be no reflex inhibition of the respiratory center. The response would go straight to hyperventilation (CNS direct excitation). This confirms that adrenaline apnea is a BARORECEPTOR-MEDIATED reflex, not a direct drug effect."}
+    ]
+  },
+  {
+    title:"Case 4: Post-Hemorrhage Catecholamine Surge",
+    tags:["Emergency","Physiology"],
+    vignette:"A 32-year-old trauma patient loses 1.5 L of blood in a road accident. Despite this, his body attempts to compensate: heart rate rises to 120 bpm, pupils dilate, and blood glucose rises from 90 to 160 mg/dL.",
+    questions:[
+      {q:"Trace the complete pathway from hemorrhage to catecholamine release.",a:"① Hemorrhage → ↓ arterial BP + ↓ blood volume ② Baroreceptors (aortic arch/carotid sinus) stop sending inhibitory impulses to A.S.C ③ Atrial volume receptors also cease inhibitory signaling ④ A.S.C in medulla oblongata is RELEASED from inhibition → fires ⑤ Impulses descend reticulospinal tract → lateral horn cells T5–T9 ⑥ Preganglionic fibers in greater splanchnic nerve → chromaffin cells ⑦ Massive epinephrine + norepinephrine secretion into blood"},
+      {q:"Explain the mechanisms behind the rising blood glucose during hemorrhage.",a:"Catecholamines cause hyperglycemia via multiple pathways: ① Stimulate hepatic glycogenolysis (break glycogen to glucose) ② Stimulate glucagon secretion (β) ③ Stimulate ACTH → cortisol → gluconeogenesis ④ Block insulin secretion (α receptors on β-cells) ⑤ Suppress GLUT transporter expression in skeletal muscle (↓ glucose uptake). Net: blood glucose rises rapidly to fuel vital organs."}
+    ]
+  },
+  {
+    title:"Case 5: The Athlete's Secret (Orbelli Phenomenon)",
+    tags:["Exercise Physiology","Muscle Physiology"],
+    vignette:"During a competition, a sprinter achieves peak performance — muscles contracting forcefully with delayed onset of fatigue. Post-race analysis shows elevated plasma epinephrine levels that correlate with improved muscle performance.",
+    questions:[
+      {q:"What is the Orbelli phenomenon and what mechanisms drive it?",a:"The Orbelli phenomenon: epinephrine increases skeletal muscle contraction STRENGTH and DELAYS FATIGUE. Mechanisms: ① β2-mediated vasodilation in skeletal muscle blood vessels → increased O₂ + nutrient delivery + metabolic waste removal ② Direct stimulation of energy production (glycogenolysis, lipolysis) providing more fuel ③ Increased Ca²⁺ sensitivity of myofilaments (possibly) → greater force per stimulus"},
+      {q:"How does catecholamine-mediated lipolysis support the working athlete?",a:"Epinephrine activates hormone-sensitive lipase in adipocytes (β-adrenergic) → breaks triglycerides → releases FREE FATTY ACIDS into circulation. RESTING muscle predominantly uses FFA as its energy source. Even during moderate exercise, FFA provide significant fuel, sparing glycogen stores for high-intensity bursts."}
+    ]
+  }
+];
+
+const pathData = [
+  {icon:"🏛️",title:"Adrenal Medulla Structure",desc:"Modified sympathetic ganglion",detail:"The adrenal medulla is a neuroendocrine transducer — it lacks the postganglionic axons that a true sympathetic ganglion would have. Instead of firing action potentials, its chromaffin cells (pheochromocytes) release epinephrine and norepinephrine directly into the sinusoidal blood vessels. Innervated by LONG preganglionic cholinergic neurons from T5–T9 via the greater splanchnic nerve — no relay in between."},
+  {icon:"⚗️",title:"Chromaffin Granules",desc:"80% Epi / 20% NorEpi",detail:"Two distinct populations of chromaffin granules exist side by side in the medulla. Epinephrine-containing cells make up 80% — they have the enzyme PNMT (phenylethanolamine N-methyltransferase) which requires cortisol to function and converts NorEpi to Epi. The 20% norepinephrine cells lack this enzyme. When stimulated, both types release their contents by exocytosis."},
+  {icon:"🧬",title:"L-Tyrosine Pathway",desc:"Precursor → catecholamines",detail:"Synthesis: L-Tyrosine → (tyrosine hydroxylase) → L-DOPA → (DOPA decarboxylase) → Dopamine → (dopamine β-hydroxylase) → Norepinephrine → (PNMT + cortisol) → Epinephrine. The rate-limiting step is tyrosine hydroxylase. PNMT requires cortisol from the adrenal cortex (explaining the HPA axis dependency)."},
+  {icon:"🧠",title:"A.S.C — Adrenaline Secreting Center",desc:"Medulla oblongata control hub",detail:"Located in the medulla oblongata. Under normal conditions, it receives CONTINUOUS INHIBITORY impulses from: (1) Arterial baroreceptors — aortic arch + carotid sinus via CN IX/X, (2) Atrial volume receptors — during normal blood volume. It is stimulated by: hypothalamus (pain, emotions, cold, hypoglycemia), peripheral chemoreceptors (hypoxia). Sends impulses down reticulospinal tracts to T5–T9."},
+  {icon:"💊",title:"MAO — Mitochondrial Enzyme",desc:"Neuronal catecholamine termination",detail:"Monoamine Oxidase (MAO) is located in the mitochondria of sympathetic nerve endings. After neuronal uptake of catecholamines, MAO oxidatively deaminates them for local inactivation or intraneuronal storage. MAO inhibitors (e.g., phenelzine) block this → prolonged catecholamine effect → clinical use in depression. Risk: tyramine in food bypasses normal MAO → hypertensive crisis (cheese reaction)."},
+  {icon:"🏭",title:"COMT — Extraneuronal Enzyme",desc:"Peripheral catecholamine clearance",detail:"Catechol-O-Methyl Transferase (COMT) is found in liver, kidney, lung, and gut. It acts on circulating catecholamines taken up by these tissues. The final product — Vanillyl Mandelic Acid (VMA) — is the major urinary metabolite measured in diagnostic tests. COMT inhibitors (entacapone, tolcapone) prolong L-DOPA action in Parkinson's disease by preventing peripheral L-DOPA degradation."},
+  {icon:"🎯",title:"α Receptors",desc:"Vasoconstriction & metabolic",detail:"α1: vasoconstriction of arterioles (skin, kidney, GIT), sphincter contraction (GIT, bladder), pupillary dilation (iris dilator), ejaculation. α2: inhibits insulin and glucagon secretion from pancreatic islets, platelet aggregation, presynaptic inhibition. Net: α stimulation → vasoconstriction almost everywhere, hyperglycemia (blocks insulin), skin pallor."},
+  {icon:"🫀",title:"β Receptors",desc:"Cardiac & vasodilatory",detail:"β1: heart (↑ rate, force, conduction velocity), renin secretion from juxtaglomerular cells, lipolysis. β2: vasodilation in skeletal muscle + liver (exception to vasoconstriction rule!), bronchodilation, glycogenolysis in muscle/liver, insulin/glucagon secretion (slight), uterine relaxation. β3: lipolysis in adipose. The key MCQ β2 exception sites: skeletal muscle + liver = VASODILATION."},
+  {icon:"😵",title:"Pheochromocytoma",desc:"Autonomous catecholamine excess",detail:"A tumor (usually benign, 10% rule: 10% malignant, 10% bilateral, 10% extra-adrenal) of chromaffin cells → uncontrolled catecholamine secretion. Key point: the tumor is AUTONOMOUS — not under A.S.C control. Even massive BP elevation cannot suppress it via baroreceptors. This is why the normal feedback loop fails. Classic triad: hypertension + headache + sweating. Diagnosed by 24-hr urinary catecholamines + VMA (>300 µg/day)."}
+];
+
+const vivaData = [
+  {q:"Why is the adrenal medulla referred to as a neuroendocrine transducer?",a:"It receives neural signals (acetylcholine from preganglionic cholinergic neurons) and converts them into an endocrine output (epinephrine/norepinephrine released directly into the bloodstream). It literally transduces a nervous impulse into a hormonal response — bridging the nervous and endocrine systems."},
+  {q:"What is the histological difference between the adrenal medulla and a normal sympathetic ganglion?",a:"⚠️ HIGH-YIELD: The adrenal medulla is a 'specialized' ganglion because it LACKS postganglionic axons. A normal sympathetic ganglion has preganglionic input → postganglionic neuron → fires action potential to target organ. The adrenal medulla has preganglionic input → chromaffin cells → hormone secreted into blood. No axon, no action potential — just endocrine secretion."},
+  {q:"Name the precursor and the main storage products of chromaffin cells.",a:"Precursor: L-Tyrosine. Storage products: Epinephrine (80% of granules) and Norepinephrine (20% of granules), stored in separate chromaffin granule populations. Released by exocytosis upon acetylcholine stimulation."},
+  {q:"How does the body terminate the biologic effects of circulating catecholamines?",a:"Two mechanisms: (1) Neuronal uptake → inactivation by mitochondrial MAO (or re-storage). (2) Extraneuronal uptake by liver/kidney/lung/gut → inactivation by COMT → produces VMA excreted in urine. Plasma half-life = only 2–3 minutes due to this rapid termination."},
+  {q:"Explain the physiological principle behind 'Adrenaline Apnea.'",a:"Sudden high-dose epinephrine → massive α-mediated vasoconstriction + ↑ cardiac output → acute sharp rise in arterial BP → maximal stimulation of aortic arch + carotid sinus baroreceptors → reflex inhibition of medullary respiratory center → APNEA (seconds). Then epinephrine crosses BBB → directly excites CNS respiratory center → sustained hyperventilation (↑ rate + depth)."},
+  {q:"How does the adrenal medulla affect skeletal muscle performance during stress?",a:"The Orbelli Phenomenon: epinephrine → β2 vasodilation in skeletal muscle blood vessels → ↑ O₂ delivery + nutrient supply + metabolic waste removal. Plus metabolic stimulation (glycogenolysis, FFA mobilization) → increased contraction strength + delayed fatigue. Think: 'second wind' during fight-or-flight."},
+  {q:"Why does a patient with pheochromocytoma appear pale despite having a racing heart?",a:"Massive catecholamine release → α1 receptors in skin arterioles → severe cutaneous vasoconstriction → reduced skin blood flow → PALLOR. Simultaneously, β1 receptors in the heart → tachycardia. Both effects occur together from the same catecholamine surge — pallor is the alpha effect on skin; tachycardia is the beta effect on heart."},
+  {q:"Describe the effect of catecholamines on the urinary bladder and sphincters.",a:"Bladder wall (detrusor muscle): RELAXES via β2 → bladder expands, holds more urine. Internal urethral sphincter: CONTRACTS via α → prevents micturition. Net effect: urination is actively prevented during emergencies (fight-or-flight has no bathroom break)."},
+  {q:"How does epinephrine cause hyperglycemia at the cellular membrane level?",a:"Epinephrine SUPPRESSES the expression/activity of glucose transporter proteins (GLUT4) in skeletal muscle, cardiac muscle, and adipocytes. This blocks insulin-mediated facilitated diffusion of glucose into these cells. Even if insulin is present, glucose cannot enter muscle cells effectively → blood glucose stays elevated."},
+  {q:"If a patient has severe hemorrhage, how is the A.S.C activated?",a:"⚠️ EXAM TRAP: The A.S.C is NOT stimulated — it is RELEASED FROM INHIBITION. Normally: baroreceptors (aortic arch/carotid sinus) + volume receptors (atria) send continuous inhibitory signals to A.S.C. Hemorrhage → ↓ BP + ↓ volume → these receptors stop firing → inhibitory input removed → A.S.C fires freely → catecholamine surge. Say 'released from inhibition,' NOT 'stimulated.'"},
+  {q:"Why is a patient who has undergone bilateral adrenalectomy not given epinephrine replacement therapy?",a:"The adrenal medulla is NOT essential for life. Sympathetic postganglionic nerve endings throughout the body continuously produce norepinephrine (and some epinephrine) sufficient for all normal physiological requirements. The adrenal medullary hormone is important for extreme emergency responses, but the sympathetic nervous system compensates adequately for baseline needs."},
+  {q:"What is the diagnostic significance of VMA?",a:"Vanillyl Mandelic Acid (VMA) is the major urinary metabolite of catecholamines, produced mainly via COMT in the liver. Normal urinary output: 10–100 µg/day. In pheochromocytoma: >300 µg/day (often much higher). Measuring 24-hour urinary VMA is the key diagnostic test — it reflects the total catecholamine production over 24 hours, avoiding the false negatives of spot plasma measurements."}
+];
+
+// ===== STATE =====
+let currentQ = 0, score = 0, streak = 0, answered = false;
+let savedQ = parseInt(localStorage.getItem('adrenal_q')) || 0;
+let savedScore = parseInt(localStorage.getItem('adrenal_score')) || 0;
+let savedStreak = parseInt(localStorage.getItem('adrenal_streak')) || 0;
+score = savedScore; streak = savedStreak; currentQ = savedQ;
+updateStats();
+
+// ===== TAB SWITCHING =====
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  localStorage.setItem('adrenal_tab', id);
+}
+
+// ===== QUIZ =====
+function renderQ() {
+  if (currentQ >= quizData.length) {
+    document.getElementById('quizContainer').innerHTML = `
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:16px">🎉</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:8px">Quiz Complete!</div>
+        <div style="color:var(--text2);margin-bottom:16px">Final Score: <strong style="color:var(--accent)">${score}/${quizData.length}</strong> (${Math.round(score/quizData.length*100)}%)</div>
+        <div class="streak-badge" style="justify-content:center">🔥 Best Streak: ${streak}</div>
+      </div>`;
+    document.getElementById('nextBtn').style.display = 'none';
+    confetti();
+    return;
+  }
+  const d = quizData[currentQ];
+  const letters = ['A','B','C','D','E'];
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="quiz-card">
+      <div class="q-num">Q${currentQ + 1} of ${quizData.length}</div>
+      <div class="q-text">${d.q}</div>
+      <div class="options">${d.opts.map((o,i) => `
+        <div class="option" id="opt${i}" onclick="selectOpt(${i})">
+          <span class="option-key">${letters[i]}</span>${o}
+        </div>`).join('')}
+      </div>
+      <div class="explanation" id="exp">${d.exp}</div>
+    </div>`;
+  answered = false;
+  document.getElementById('nextBtn').style.display = 'none';
+  updateProgress();
+}
+
+function selectOpt(i) {
+  if (answered) return;
+  answered = true;
+  const d = quizData[currentQ];
+  document.querySelectorAll('.option').forEach(el => el.classList.add('disabled'));
+  const opts = document.querySelectorAll('.option');
+  opts[d.ans].classList.add('correct');
+  if (i !== d.ans) { opts[i].classList.add('wrong'); streak = 0; }
+  else { score++; streak++; if (streak > 0 && streak % 3 === 0) confetti(); }
+  document.getElementById('exp').classList.add('show');
+  updateStats();
+  localStorage.setItem('adrenal_score', score);
+  localStorage.setItem('adrenal_streak', streak);
+  document.getElementById('nextBtn').style.display = 'inline-flex';
+}
+
+function nextQ() {
+  currentQ++;
+  localStorage.setItem('adrenal_q', currentQ);
+  renderQ();
+}
+
+function resetQuiz() {
+  currentQ = 0; score = 0; streak = 0;
+  localStorage.setItem('adrenal_q', 0);
+  localStorage.setItem('adrenal_score', 0);
+  localStorage.setItem('adrenal_streak', 0);
+  updateStats();
+  renderQ();
+}
+
+function updateStats() {
+  document.getElementById('streakCount').textContent = streak;
+  document.getElementById('currentStreak').textContent = streak;
+  document.getElementById('scoreDisplay').textContent = `${score}/25`;
+  document.getElementById('quizScore').textContent = score;
+  const pct = Math.round(currentQ / quizData.length * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function updateProgress() {
+  document.getElementById('quizProgress').style.width = (currentQ / quizData.length * 100) + '%';
+}
+
+// ===== FLASHCARDS =====
+function renderFlashcards() {
+  const el = document.getElementById('flashcardsGrid');
+  el.innerHTML = flashcards.map((f,i) => `
+    <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-tag">Q${i+1}</div>
+          <div class="fc-q">${f.q}</div>
+          <div class="fc-hint" style="margin-top:16px">👆 Click to flip</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-tag">Answer</div>
+          <div class="fc-a">${f.a}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== CASES =====
+function renderCases() {
+  document.getElementById('casesContainer').innerHTML = cases.map((c,ci) => `
+    <div class="case-card">
+      <div class="case-header">
+        <div>
+          <div class="case-title">${c.title}</div>
+          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t => `<span class="tag tag-purple">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="case-vignette">${c.vignette}</div>
+        <div class="case-qs">${c.questions.map((q,qi) => `
+          <div>
+            <div class="case-q">❓ ${q.q}</div>
+            <button class="reveal-btn" onclick="toggleAnswer(this, '${ci}-${qi}')">Reveal Answer</button>
+            <div class="case-answer" id="ans-${ci}-${qi}">${q.a}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleAnswer(btn, id) {
+  const el = document.getElementById('ans-' + id);
+  el.classList.toggle('show');
+  btn.textContent = el.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+// ===== PATHOPHYS =====
+function renderPath() {
+  document.getElementById('pathGrid').innerHTML = pathData.map((p,i) => `
+    <div class="path-item" onclick="showPathDetail(${i})" id="pi${i}">
+      <h4>${p.icon} ${p.title}</h4>
+      <p>${p.desc}</p>
+    </div>`).join('');
+}
+
+function showPathDetail(i) {
+  document.querySelectorAll('.path-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('pi'+i).classList.add('active');
+  const d = pathData[i];
+  const det = document.getElementById('pathDetail');
+  det.innerHTML = `<h3>${d.icon} ${d.title}</h3><p style="margin-top:8px">${d.detail}</p>`;
+  det.classList.add('show');
+}
+
+// ===== VIVA =====
+function renderViva() {
+  document.getElementById('vivaList').innerHTML = vivaData.map((v,i) => `
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(${i})">
+        <span class="viva-num">V${i+1}</span>
+        ${v.q}
+      </div>
+      <div class="viva-a" id="viva${i}">${v.a}</div>
+    </div>`).join('');
+}
+
+function toggleViva(i) {
+  document.getElementById('viva'+i).classList.toggle('open');
+}
+
+// ===== SEARCH =====
+function searchContent() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const results = document.getElementById('searchResults');
+  if (!q || q.length < 2) { results.style.display = 'none'; return; }
+  const all = [
+    ...flashcards.map(f => ({type:'Flashcard',title:f.q,content:f.a})),
+    ...quizData.map(d => ({type:'MCQ',title:d.q,content:d.exp})),
+    ...vivaData.map(v => ({type:'Viva',title:v.q,content:v.a}))
+  ].filter(item => item.title.toLowerCase().includes(q) || item.content.toLowerCase().includes(q));
+  if (!results) return;
+  results.style.display = 'block';
+  results.innerHTML = results.length === 0 ? '<p style="color:var(--text3);font-size:13px">No results found.</p>' :
+    `<div style="font-size:13px;color:var(--text3);margin-bottom:12px">Found ${all.length} results for "${q}"</div>` +
+    all.slice(0,8).map(r => `
+      <div class="card" style="margin-bottom:10px">
+        <span class="tag tag-blue" style="margin-bottom:8px;display:inline-block">${r.type}</span>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">${r.title}</div>
+        <div style="font-size:12px;color:var(--text3)">${r.content.slice(0,150)}…</div>
+      </div>`).join('');
+}
+
+// ===== CONFETTI =====
+function confetti() {
+  const emojis = ['⚡','🔥','✅','🧠','💊','🩺','🎯'];
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-30px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2000);
+    }, i * 100);
+  }
+}
+
+// ===== INIT =====
+renderQ();
+renderFlashcards();
+renderCases();
+renderPath();
+renderViva();
+updateProgress();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

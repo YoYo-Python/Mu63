@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EndoPath Master — Pituitary, Adrenal & Endocrine Pancreas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-primary: #0a0e1a;
+--bg-secondary: #111827;
+--bg-card: #1a2235;
+--bg-card-hover: #1f2a40;
+--accent-primary: #6366f1;
+--accent-secondary: #8b5cf6;
+--accent-tertiary: #a78bfa;
+--accent-pink: #ec4899;
+--accent-cyan: #06b6d4;
+--accent-emerald: #10b981;
+--accent-amber: #f59e0b;
+--accent-red: #ef4444;
+--accent-orange: #f97316;
+--text-primary: #f1f5f9;
+--text-secondary: #94a3b8;
+--text-muted: #64748b;
+--border-color: #2a3550;
+--gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6);
+--gradient-2: linear-gradient(135deg, #ec4899, #8b5cf6);
+--gradient-3: linear-gradient(135deg, #06b6d4, #10b981);
+--gradient-4: linear-gradient(135deg, #f59e0b, #f97316);
+--gradient-5: linear-gradient(135deg, #ef4444, #ec4899);
+--shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+--shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+--shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+--shadow-glow: 0 0 20px rgba(99,102,241,0.3);
+--radius-sm: 8px;
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-xl: 20px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+font-family: 'Inter', sans-serif;
+background: var(--bg-primary);
+color: var(--text-primary);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Animated Background */
+.bg-animation {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+z-index: 0;
+pointer-events: none;
+overflow: hidden;
+}
+
+.bg-orb {
+position: absolute;
+border-radius: 50%;
+filter: blur(80px);
+opacity: 0.15;
+animation: orbFloat 20s ease-in-out infinite;
+}
+
+.bg-orb:nth-child(1) { width:400px; height:400px; background:#6366f1; top:10%; left:10%; animation-delay:0s; }
+.bg-orb:nth-child(2) { width:350px; height:350px; background:#ec4899; top:60%; right:10%; animation-delay:-5s; }
+.bg-orb:nth-child(3) { width:300px; height:300px; background:#06b6d4; bottom:10%; left:40%; animation-delay:-10s; }
+.bg-orb:nth-child(4) { width:250px; height:250px; background:#10b981; top:30%; right:30%; animation-delay:-15s; }
+
+@keyframes orbFloat {
+0%, 100% { transform: translate(0,0) scale(1); }
+25% { transform: translate(50px, -30px) scale(1.1); }
+50% { transform: translate(-20px, 50px) scale(0.9); }
+75% { transform: translate(30px, 20px) scale(1.05); }
+}
+
+/* Grid pattern overlay */
+.grid-overlay {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background-image:
+linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+background-size: 40px 40px;
+z-index: 0;
+pointer-events: none;
+}
+
+/* Main Container */
+.app-container {
+position: relative;
+z-index: 1;
+max-width: 1400px;
+margin: 0 auto;
+padding: 20px;
+}
+
+/* Header */
+.app-header {
+text-align: center;
+padding: 40px 20px 30px;
+position: relative;
+}
+
+.app-logo {
+font-size: 48px;
+margin-bottom: 10px;
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.05); }
+}
+
+.app-title {
+font-size: clamp(28px, 5vw, 42px);
+font-weight: 900;
+background: var(--gradient-1);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+letter-spacing: -1px;
+margin-bottom: 8px;
+}
+
+.app-subtitle {
+font-size: clamp(14px, 2vw, 18px);
+color: var(--text-secondary);
+font-weight: 400;
+}
+
+/* Stats Bar */
+.stats-bar {
+display: flex;
+gap: 12px;
+justify-content: center;
+flex-wrap: wrap;
+margin: 25px 0;
+}
+
+.stat-chip {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: 50px;
+padding: 8px 18px;
+font-size: 13px;
+font-weight: 600;
+display: flex;
+align-items: center;
+gap: 6px;
+transition: all 0.3s;
+}
+
+.stat-chip:hover {
+border-color: var(--accent-primary);
+box-shadow: var(--shadow-glow);
+transform: translateY(-2px);
+}
+
+.stat-chip .stat-value { color: var(--accent-tertiary); }
+
+/* Search Bar */
+.search-container {
+max-width: 500px;
+margin: 0 auto 25px;
+position: relative;
+}
+
+.search-input {
+width: 100%;
+padding: 14px 20px 14px 48px;
+border-radius: 50px;
+border: 1px solid var(--border-color);
+background: var(--bg-card);
+color: var(--text-primary);
+font-size: 15px;
+font-family: 'Inter', sans-serif;
+transition: all 0.3s;
+outline: none;
+}
+
+.search-input:focus {
+border-color: var(--accent-primary);
+box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+}
+
+.search-icon {
+position: absolute;
+left: 18px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 18px;
+color: var(--text-muted);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+display: flex;
+gap: 6px;
+overflow-x: auto;
+padding: 4px;
+background: var(--bg-secondary);
+border-radius: var(--radius-lg);
+border: 1px solid var(--border-color);
+margin-bottom: 30px;
+scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+flex: 0 0 auto;
+padding: 12px 20px;
+border-radius: var(--radius-md);
+border: none;
+background: transparent;
+color: var(--text-secondary);
+font-family: 'Inter', sans-serif;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+white-space: nowrap;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.nav-tab:hover { color: var(--text-primary); background: var(--bg-card); }
+
+.nav-tab.active {
+background: var(--gradient-1);
+color: white;
+box-shadow: var(--shadow-md);
+}
+
+/* Tab Content */
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(15px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section Headers */
+.section-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 24px;
+padding-bottom: 16px;
+border-bottom: 2px solid var(--border-color);
+}
+
+.section-icon { font-size: 28px; }
+
+.section-title {
+font-size: 24px;
+font-weight: 800;
+}
+
+.section-badge {
+background: var(--gradient-1);
+padding: 4px 12px;
+border-radius: 50px;
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+/* Cards */
+.card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+padding: 24px;
+transition: all 0.3s;
+position: relative;
+overflow: hidden;
+}
+
+.card:hover {
+border-color: var(--accent-primary);
+box-shadow: var(--shadow-md);
+transform: translateY(-2px);
+}
+
+.card::before {
+content: '';
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 3px;
+background: var(--gradient-1);
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+.card:hover::before { opacity: 1; }
+
+/* Grid Layouts */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+
+/* Tags */
+.tag {
+display: inline-block;
+padding: 3px 10px;
+border-radius: 50px;
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.tag-high-yield { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+.tag-exam { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+.tag-clinical { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.tag-pearl { background: rgba(99,102,241,0.15); color: #6366f1; border: 1px solid rgba(99,102,241,0.3); }
+
+/* Overview Cards */
+.overview-card {
+position: relative;
+padding-left: 16px;
+}
+
+.overview-card .card-accent {
+position: absolute;
+left: 0; top: 0;
+width: 4px; height: 100%;
+border-radius: 4px;
+}
+
+.overview-card h3 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.overview-card p {
+color: var(--text-secondary);
+font-size: 14px;
+line-height: 1.7;
+}
+
+.overview-card .key-point {
+background: rgba(99,102,241,0.1);
+border-left: 3px solid var(--accent-primary);
+padding: 10px 14px;
+margin-top: 12px;
+border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+font-size: 13px;
+color: var(--text-primary);
+}
+
+/* Timeline */
+.timeline {
+position: relative;
+padding: 20px 0;
+}
+
+.timeline::before {
+content: '';
+position: absolute;
+left: 30px;
+top: 0; bottom: 0;
+width: 2px;
+background: var(--gradient-1);
+}
+
+.timeline-item {
+position: relative;
+padding-left: 70px;
+margin-bottom: 30px;
+}
+
+.timeline-dot {
+position: absolute;
+left: 20px;
+top: 4px;
+width: 22px; height: 22px;
+border-radius: 50%;
+background: var(--gradient-1);
+border: 3px solid var(--bg-primary);
+z-index: 1;
+}
+
+.timeline-content {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+padding: 18px;
+}
+
+.timeline-content h4 {
+font-size: 16px;
+font-weight: 700;
+margin-bottom: 8px;
+}
+
+.timeline-content p {
+font-size: 14px;
+color: var(--text-secondary);
+line-height: 1.6;
+}
+
+/* Clinical Signs Grid */
+.signs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+
+.sign-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+padding: 16px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.sign-card:hover {
+border-color: var(--accent-primary);
+transform: translateY(-2px);
+}
+
+.sign-card .sign-emoji { font-size: 24px; margin-bottom: 8px; }
+.sign-card .sign-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.sign-card .sign-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.sign-card .sign-tags { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* Quiz Section */
+.quiz-container { max-width: 800px; margin: 0 auto; }
+
+.quiz-progress-bar {
+width: 100%;
+height: 8px;
+background: var(--bg-secondary);
+border-radius: 50px;
+margin-bottom: 24px;
+overflow: hidden;
+}
+
+.quiz-progress-fill {
+height: 100%;
+background: var(--gradient-1);
+border-radius: 50px;
+transition: width 0.5s ease;
+}
+
+.quiz-info-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+.quiz-counter { font-weight: 700; color: var(--accent-tertiary); }
+.quiz-score { display: flex; gap: 16px; }
+.quiz-score span { font-size: 13px; font-weight: 600; }
+
+.quiz-question-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 32px;
+margin-bottom: 20px;
+}
+
+.quiz-question-text {
+font-size: 17px;
+font-weight: 600;
+line-height: 1.6;
+margin-bottom: 24px;
+}
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+.quiz-option {
+padding: 16px 20px;
+border: 2px solid var(--border-color);
+border-radius: var(--radius-md);
+cursor: pointer;
+transition: all 0.3s;
+font-size: 14px;
+line-height: 1.5;
+display: flex;
+align-items: flex-start;
+gap: 12px;
+}
+
+.quiz-option:hover:not(.disabled) {
+border-color: var(--accent-primary);
+background: rgba(99,102,241,0.05);
+}
+
+.quiz-option .option-letter {
+flex-shrink: 0;
+width: 28px; height: 28px;
+border-radius: 50%;
+background: var(--bg-secondary);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+font-size: 13px;
+}
+
+.quiz-option.correct {
+border-color: var(--accent-emerald);
+background: rgba(16,185,129,0.1);
+animation: correctPulse 0.5s ease;
+}
+
+.quiz-option.correct .option-letter {
+background: var(--accent-emerald);
+color: white;
+}
+
+.quiz-option.wrong {
+border-color: var(--accent-red);
+background: rgba(239,68,68,0.1);
+animation: shake 0.5s ease;
+}
+
+.quiz-option.wrong .option-letter {
+background: var(--accent-red);
+color: white;
+}
+
+@keyframes correctPulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.02); }
+100% { transform: scale(1); }
+}
+
+@keyframes shake {
+0%, 100% { transform: translateX(0); }
+25% { transform: translateX(-8px); }
+75% { transform: translateX(8px); }
+}
+
+.quiz-explanation {
+margin-top: 20px;
+padding: 20px;
+background: rgba(99,102,241,0.08);
+border: 1px solid rgba(99,102,241,0.2);
+border-radius: var(--radius-md);
+display: none;
+animation: fadeIn 0.3s ease;
+}
+
+.quiz-explanation.show { display: block; }
+
+.quiz-explanation h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--accent-tertiary); }
+.quiz-explanation p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+.quiz-nav-btns {
+display: flex;
+gap: 12px;
+justify-content: center;
+margin-top: 20px;
+}
+
+/* Buttons */
+.btn {
+padding: 12px 28px;
+border-radius: 50px;
+border: none;
+font-family: 'Inter', sans-serif;
+font-weight: 700;
+font-size: 14px;
+cursor: pointer;
+transition: all 0.3s;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+}
+
+.btn-primary {
+background: var(--gradient-1);
+color: white;
+box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+
+.btn-secondary {
+background: var(--bg-card);
+color: var(--text-primary);
+border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover { border-color: var(--accent-primary); }
+
+.btn-success {
+background: linear-gradient(135deg, #10b981, #059669);
+color: white;
+}
+
+.btn-danger {
+background: linear-gradient(135deg, #ef4444, #dc2626);
+color: white;
+}
+
+/* Flashcards */
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+.flashcard-container {
+perspective: 1000px;
+height: 260px;
+cursor: pointer;
+}
+
+.flashcard-inner {
+position: relative;
+width: 100%;
+height: 100%;
+transition: transform 0.6s;
+transform-style: preserve-3d;
+}
+
+.flashcard-container.flipped .flashcard-inner {
+transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+position: absolute;
+width: 100%; height: 100%;
+backface-visibility: hidden;
+border-radius: var(--radius-lg);
+padding: 24px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+.flashcard-front {
+background: var(--bg-card);
+border: 2px solid var(--border-color);
+}
+
+.flashcard-front:hover { border-color: var(--accent-primary); }
+
+.flashcard-front .fc-emoji { font-size: 36px; margin-bottom: 12px; }
+.flashcard-front .fc-question { font-size: 14px; font-weight: 600; line-height: 1.6; }
+.flashcard-front .fc-hint { font-size: 11px; color: var(--text-muted); margin-top: 12px; }
+
+.flashcard-back {
+background: var(--gradient-1);
+transform: rotateY(180deg);
+}
+
+.flashcard-back .fc-answer { font-size: 14px; line-height: 1.7; color: white; }
+.flashcard-back .fc-source { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 12px; }
+
+/* Clinical Cases */
+.case-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 30px;
+margin-bottom: 24px;
+position: relative;
+overflow: hidden;
+}
+
+.case-card::before {
+content: '';
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 4px;
+}
+
+.case-card:nth-child(1)::before { background: var(--gradient-1); }
+.case-card:nth-child(2)::before { background: var(--gradient-2); }
+.case-card:nth-child(3)::before { background: var(--gradient-3); }
+.case-card:nth-child(4)::before { background: var(--gradient-4); }
+.case-card:nth-child(5)::before { background: var(--gradient-5); }
+.case-card:nth-child(6)::before { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
+
+.case-number {
+font-size: 12px;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: var(--accent-primary);
+margin-bottom: 12px;
+}
+
+.case-presentation {
+font-size: 15px;
+line-height: 1.8;
+margin-bottom: 20px;
+padding: 16px;
+background: rgba(99,102,241,0.05);
+border-radius: var(--radius-md);
+border-left: 3px solid var(--accent-primary);
+}
+
+.case-questions { margin-bottom: 16px; }
+
+.case-question {
+font-size: 14px;
+font-weight: 600;
+margin-bottom: 8px;
+padding: 8px 0;
+}
+
+.case-answer-area {
+display: none;
+padding: 20px;
+background: rgba(16,185,129,0.05);
+border: 1px solid rgba(16,185,129,0.2);
+border-radius: var(--radius-md);
+animation: fadeIn 0.4s ease;
+margin-top: 12px;
+}
+
+.case-answer-area.show { display: block; }
+
+.case-answer-area p {
+font-size: 14px;
+line-height: 1.7;
+color: var(--text-secondary);
+margin-bottom: 8px;
+}
+
+.case-answer-area strong { color: var(--accent-emerald); }
+
+/* Anatomy / Pathophysiology */
+.anatomy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+.anatomy-item {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+padding: 20px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.anatomy-item:hover {
+border-color: var(--accent-cyan);
+transform: translateY(-2px);
+}
+
+.anatomy-item .anat-icon { font-size: 32px; margin-bottom: 8px; }
+.anatomy-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.anatomy-item .anat-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; display: none; }
+.anatomy-item.expanded .anat-desc { display: block; animation: fadeIn 0.3s; }
+
+/* Flowcharts */
+.flowchart {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 30px;
+margin-bottom: 24px;
+}
+
+.flowchart-title {
+font-size: 18px;
+font-weight: 800;
+margin-bottom: 20px;
+text-align: center;
+}
+
+.flow-steps { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+.flow-step {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+padding: 14px 24px;
+text-align: center;
+font-size: 14px;
+font-weight: 600;
+max-width: 400px;
+width: 100%;
+transition: all 0.3s;
+}
+
+.flow-step:hover {
+border-color: var(--accent-primary);
+background: rgba(99,102,241,0.08);
+}
+
+.flow-arrow {
+font-size: 24px;
+color: var(--accent-primary);
+margin: 4px 0;
+}
+
+/* Diagnosis Tab */
+.criteria-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+padding: 24px;
+margin-bottom: 20px;
+}
+
+.criteria-card h3 {
+font-size: 17px;
+font-weight: 800;
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.criteria-list { list-style: none; }
+
+.criteria-list li {
+padding: 10px 0;
+border-bottom: 1px solid rgba(255,255,255,0.05);
+font-size: 14px;
+display: flex;
+align-items: flex-start;
+gap: 10px;
+line-height: 1.6;
+}
+
+.criteria-list li:last-child { border: none; }
+
+.badge-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+.invest-badge {
+padding: 6px 14px;
+border-radius: 50px;
+font-size: 12px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.invest-badge:hover { transform: scale(1.05); }
+
+/* Treatment Tab */
+.treatment-section { margin-bottom: 24px; }
+
+.treatment-card {
+border-radius: var(--radius-lg);
+padding: 24px;
+margin-bottom: 16px;
+border: 1px solid;
+}
+
+.treatment-card.emergency {
+background: rgba(239,68,68,0.08);
+border-color: rgba(239,68,68,0.3);
+}
+
+.treatment-card.medical {
+background: rgba(99,102,241,0.08);
+border-color: rgba(99,102,241,0.3);
+}
+
+.treatment-card.surgical {
+background: rgba(16,185,129,0.08);
+border-color: rgba(16,185,129,0.3);
+}
+
+.treatment-card.supportive {
+background: rgba(249,115,22,0.08);
+border-color: rgba(249,115,22,0.3);
+}
+
+.treatment-card h4 {
+font-size: 15px;
+font-weight: 700;
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.treatment-card ul { list-style: none; }
+.treatment-card li {
+padding: 6px 0;
+font-size: 13px;
+color: var(--text-secondary);
+display: flex;
+align-items: flex-start;
+gap: 8px;
+line-height: 1.6;
+}
+
+/* Comparison Tables */
+.comparison-table {
+width: 100%;
+border-collapse: separate;
+border-spacing: 0;
+border-radius: var(--radius-lg);
+overflow: hidden;
+margin-bottom: 24px;
+font-size: 13px;
+}
+
+.comparison-table th {
+background: var(--bg-secondary);
+padding: 14px 16px;
+text-align: left;
+font-weight: 700;
+color: var(--accent-tertiary);
+border-bottom: 2px solid var(--accent-primary);
+}
+
+.comparison-table td {
+padding: 12px 16px;
+border-bottom: 1px solid var(--border-color);
+color: var(--text-secondary);
+line-height: 1.5;
+}
+
+.comparison-table tr:hover td { background: rgba(99,102,241,0.05); }
+
+.comparison-table tr:last-child td { border-bottom: none; }
+
+/* Mnemonic Cards */
+.mnemonic-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 28px;
+margin-bottom: 20px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.mnemonic-card:hover {
+border-color: var(--accent-primary);
+transform: translateY(-2px);
+}
+
+.mnemonic-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 16px;
+}
+
+.mnemonic-emoji { font-size: 32px; }
+
+.mnemonic-title {
+font-size: 18px;
+font-weight: 800;
+background: var(--gradient-2);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.mnemonic-word {
+font-size: 28px;
+font-weight: 900;
+letter-spacing: 4px;
+margin-bottom: 16px;
+font-family: 'JetBrains Mono', monospace;
+color: var(--accent-amber);
+}
+
+.mnemonic-list { list-style: none; }
+
+.mnemonic-list li {
+padding: 6px 0;
+font-size: 14px;
+display: flex;
+align-items: flex-start;
+gap: 10px;
+}
+
+.mnemonic-letter {
+font-weight: 900;
+font-size: 18px;
+color: var(--accent-amber);
+font-family: 'JetBrains Mono', monospace;
+flex-shrink: 0;
+width: 24px;
+}
+
+.mnemonic-details {
+display: none;
+margin-top: 12px;
+padding-top: 12px;
+border-top: 1px solid var(--border-color);
+}
+
+.mnemonic-card.expanded .mnemonic-details { display: block; animation: fadeIn 0.3s; }
+
+/* Viva Section */
+.viva-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+margin-bottom: 12px;
+overflow: hidden;
+}
+
+.viva-question {
+padding: 18px 24px;
+cursor: pointer;
+display: flex;
+justify-content: space-between;
+align-items: center;
+transition: background 0.3s;
+}
+
+.viva-question:hover { background: rgba(99,102,241,0.05); }
+
+.viva-question h4 {
+font-size: 14px;
+font-weight: 600;
+flex: 1;
+line-height: 1.5;
+}
+
+.viva-toggle {
+font-size: 20px;
+transition: transform 0.3s;
+color: var(--accent-primary);
+}
+
+.viva-card.open .viva-toggle { transform: rotate(180deg); }
+
+.viva-answer {
+display: none;
+padding: 0 24px 18px;
+font-size: 14px;
+color: var(--text-secondary);
+line-height: 1.7;
+border-top: 1px solid var(--border-color);
+padding-top: 16px;
+}
+
+.viva-card.open .viva-answer { display: block; animation: fadeIn 0.3s; }
+
+/* Quiz Results */
+.quiz-results {
+text-align: center;
+padding: 40px;
+}
+
+.quiz-results .result-emoji { font-size: 64px; margin-bottom: 16px; }
+.quiz-results .result-score { font-size: 48px; font-weight: 900; }
+.quiz-results .result-text { font-size: 18px; color: var(--text-secondary); margin-top: 8px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+.app-container { padding: 12px; }
+.grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+.signs-grid { grid-template-columns: 1fr; }
+.flashcard-grid { grid-template-columns: 1fr; }
+.anatomy-grid { grid-template-columns: 1fr; }
+.nav-tab { padding: 10px 14px; font-size: 12px; }
+.quiz-question-card { padding: 20px; }
+.case-card { padding: 20px; }
+.comparison-table { font-size: 12px; }
+.comparison-table th, .comparison-table td { padding: 8px 10px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 50px; }
+
+/* Notification */
+.notification {
+position: fixed;
+top: 20px;
+right: 20px;
+padding: 14px 24px;
+border-radius: var(--radius-md);
+font-size: 14px;
+font-weight: 600;
+z-index: 1000;
+transform: translateX(120%);
+transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.notification.show { transform: translateX(0); }
+.notification.success { background: var(--accent-emerald); color: white; }
+.notification.info { background: var(--accent-primary); color: white; }
+.notification.warning { background: var(--accent-amber); color: #1a1a2e; }
+
+/* Motivational */
+.motivation-banner {
+background: var(--gradient-2);
+border-radius: var(--radius-lg);
+padding: 20px 28px;
+margin-bottom: 24px;
+text-align: center;
+font-weight: 600;
+font-size: 15px;
+}
+
+/* Table wrapper for overflow */
+.table-wrapper {
+overflow-x: auto;
+border-radius: var(--radius-lg);
+border: 1px solid var(--border-color);
+}
+
+/* Exam warning box */
+.exam-warning {
+background: rgba(249,115,22,0.1);
+border: 1px solid rgba(249,115,22,0.3);
+border-radius: var(--radius-md);
+padding: 16px 20px;
+margin: 16px 0;
+font-size: 14px;
+display: flex;
+align-items: flex-start;
+gap: 10px;
+line-height: 1.6;
+}
+
+/* Essay expander */
+.essay-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+margin-bottom: 16px;
+overflow: hidden;
+}
+
+.essay-question {
+padding: 20px;
+cursor: pointer;
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+gap: 12px;
+transition: background 0.3s;
+}
+
+.essay-question:hover { background: rgba(99,102,241,0.05); }
+
+.essay-question h4 { font-size: 15px; font-weight: 600; line-height: 1.6; flex: 1; }
+
+.essay-answer {
+display: none;
+padding: 0 20px 20px;
+font-size: 14px;
+color: var(--text-secondary);
+line-height: 1.8;
+border-top: 1px solid var(--border-color);
+padding-top: 16px;
+}
+
+.essay-card.open .essay-answer { display: block; animation: fadeIn 0.3s; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-animation">
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+</div>
+<div class="grid-overlay"></div>
+
+<div id="notification" class="notification"></div>
+
+<div class="app-container">
+
+<!-- Header -->
+<header class="app-header">
+<div class="app-logo">🧬</div>
+<h1 class="app-title">EndoPath Master</h1>
+<p class="app-subtitle">Pituitary · Adrenal · Endocrine Pancreas — Interactive Study Platform</p>
+</header>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+<div class="stat-chip">🎯 Progress: <span class="stat-value" id="stat-progress">0%</span></div>
+<div class="stat-chip">📝 Quiz Score: <span class="stat-value" id="stat-score">0/25</span></div>
+<div class="stat-chip">🔥 Streak: <span class="stat-value" id="stat-streak">0</span></div>
+<div class="stat-chip">🃏 Cards Flipped: <span class="stat-value" id="stat-cards">0/20</span></div>
+</div>
+
+<!-- Search -->
+<div class="search-container">
+<span class="search-icon">🔍</span>
+<input type="text" class="search-input" id="searchInput" placeholder="Search topics, diseases, mechanisms..." oninput="handleSearch(this.value)">
+</div>
+
+<!-- Navigation -->
+<nav class="nav-tabs" id="navTabs">
+<button class="nav-tab active" data-tab="overview" onclick="switchTab('overview')">📋 Overview</button>
+<button class="nav-tab" data-tab="quiz" onclick="switchTab('quiz')">🧪 Quiz</button>
+<button class="nav-tab" data-tab="flashcards" onclick="switchTab('flashcards')">🃏 Flashcards</button>
+<button class="nav-tab" data-tab="cases" onclick="switchTab('cases')">🏥 Cases</button>
+<button class="nav-tab" data-tab="anatomy" onclick="switchTab('anatomy')">🔬 Pathophysiology</button>
+<button class="nav-tab" data-tab="diagnosis" onclick="switchTab('diagnosis')">🩺 Diagnosis</button>
+<button class="nav-tab" data-tab="treatment" onclick="switchTab('treatment')">💊 Treatment</button>
+<button class="nav-tab" data-tab="mnemonics" onclick="switchTab('mnemonics')">🧠 Mnemonics</button>
+</nav>
+
+<!-- ============ OVERVIEW TAB ============ -->
+<div class="tab-content active" id="tab-overview">
+<div class="section-header">
+<span class="section-icon">📋</span>
+<h2 class="section-title">Overview</h2>
+<span class="section-badge">3 Systems</span>
+</div>
+
+<div class="motivation-banner">
+💪 "The only thing standing between you and your goal is the story you keep telling yourself as to why you can't achieve it." — Keep going!
+</div>
+
+<!-- Summary Cards -->
+<div class="grid-3" style="margin-bottom:32px">
+<div class="card overview-card">
+<div class="card-accent" style="background:var(--gradient-1)"></div>
+<h3>🧠 Pituitary Gland</h3>
+<p>Master gland controlling growth, reproduction, and metabolism. Key pathology: adenomas causing hyper/hypopituitarism and mass effects.</p>
+<div class="key-point">⚠️ EXAM: Benign vs malignant endocrine tumors — only metastasis differentiates them microscopically!</div>
+</div>
+<div class="card overview-card">
+<div class="card-accent" style="background:var(--gradient-2)"></div>
+<h3>🔺 Adrenal Gland</h3>
+<p>Cortex produces cortisol, aldosterone, androgens. Medulla produces catecholamines. Key pathologies: Cushing's, Conn's, Pheochromocytoma, Neuroblastoma.</p>
+<div class="key-point">⚠️ EXAM: Cushing's Syndrome ≠ Cushing's Disease. Disease = pituitary ACTH adenoma only!</div>
+</div>
+<div class="card overview-card">
+<div class="card-accent" style="background:var(--gradient-3)"></div>
+<h3>🫀 Endocrine Pancreas</h3>
+<p>Islets of Langerhans produce insulin, glucagon, somatostatin. Key pathology: Diabetes Mellitus (Type 1 vs 2), Islet cell tumors.</p>
+<div class="key-point">⚠️ EXAM: Type 2 DM is NOT lack of insulin — it's resistance! Insulin may be normal or increased.</div>
+</div>
+</div>
+
+<!-- Timeline -->
+<div class="section-header">
+<span class="section-icon">📌</span>
+<h2 class="section-title">Disease Progression Overview</h2>
+</div>
+
+<div class="timeline">
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h4>🔬 Pituitary Adenoma Formation</h4>
+<p>Uncontrolled proliferation of a single anterior pituitary cell type → monomorphic cellular mass → loss of reticulin network → microadenoma (&lt;1cm) → macroadenoma (&gt;1cm) with mass effects.</p>
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h4>⚡ Adrenal Cortex Hyperfunction</h4>
+<p>ACTH-secreting pituitary adenoma → bilateral adrenal hyperplasia → excess cortisol → Cushing's Disease. OR autonomous adrenal adenoma → Cushing's Syndrome with contralateral atrophy.</p>
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h4>🩸 Diabetic Complications</h4>
+<p>Chronic hyperglycemia → non-enzymatic glycosylation → capillary basement membrane thickening (microangiopathy) → retinopathy, nephropathy (Kimmelstiel-Wilson), neuropathy. Accelerated atherosclerosis → macroangiopathy.</p>
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h4>🎯 Pheochromocytoma Presentation</h4>
+<p>Chromaffin cell tumor → autonomous catecholamine secretion → paroxysmal hypertension, sweating, headache → VMA elevated in urine. "10% rule" applies.</p>
+</div>
+</div>
+</div>
+
+<!-- Key Clinical Signs Grid -->
+<div class="section-header">
+<span class="section-icon">🏷️</span>
+<h2 class="section-title">Key Clinical Signs & Concepts</h2>
+</div>
+
+<div class="signs-grid" id="signsGrid">
+<div class="sign-card searchable" data-terms="bitemporal hemianopia visual field pituitary macroadenoma optic chiasm">
+<div class="sign-emoji">👁️</div>
+<div class="sign-name">Bitemporal Hemianopia</div>
+<div class="sign-detail">Loss of outer visual fields from pituitary macroadenoma compressing the optic chiasm.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-exam">Exam</span></div>
+</div>
+<div class="sign-card searchable" data-terms="moon face central obesity cushing syndrome cortisol">
+<div class="sign-emoji">🌙</div>
+<div class="sign-name">Moon Facies & Central Obesity</div>
+<div class="sign-detail">Characteristic Cushing's Syndrome features from excess glucocorticoids (exogenous or endogenous).</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-clinical">Clinical</span></div>
+</div>
+<div class="sign-card searchable" data-terms="acromegaly gigantism growth hormone IGF enlarged jaw hands">
+<div class="sign-emoji">🤚</div>
+<div class="sign-name">Acromegaly Features</div>
+<div class="sign-detail">Enlarged jaw, hands, frontal bossing in adults from GH-secreting adenoma after epiphyseal closure.</div>
+<div class="sign-tags"><span class="tag tag-exam">Exam</span><span class="tag tag-pearl">Pearl</span></div>
+</div>
+<div class="sign-card searchable" data-terms="galactorrhea amenorrhea prolactin prolactinoma infertility">
+<div class="sign-emoji">🤱</div>
+<div class="sign-name">Galactorrhea & Amenorrhea</div>
+<div class="sign-detail">Prolactinoma (most common pituitary adenoma) causes inappropriate milk production and menstrual cessation.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span></div>
+</div>
+<div class="sign-card searchable" data-terms="paroxysmal hypertension sweating headache pheochromocytoma catecholamine VMA">
+<div class="sign-emoji">💥</div>
+<div class="sign-name">Paroxysmal Hypertension</div>
+<div class="sign-detail">Episodic severe HTN, sweating, headache — classic triad of pheochromocytoma. Elevated urine VMA.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-exam">Exam</span></div>
+</div>
+<div class="sign-card searchable" data-terms="polyuria polydipsia weight loss ketoacidosis DKA type 1 diabetes insulitis">
+<div class="sign-emoji">🚰</div>
+<div class="sign-name">Polyuria, Polydipsia, Weight Loss</div>
+<div class="sign-detail">Classic triad of Type 1 DM from absolute insulin deficiency. Prone to ketoacidosis (DKA).</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-clinical">Clinical</span></div>
+</div>
+<div class="sign-card searchable" data-terms="monomorphism reticulin adenoma pituitary microscopic">
+<div class="sign-emoji">🔬</div>
+<div class="sign-name">Monomorphism & Lost Reticulin</div>
+<div class="sign-detail">Classic microscopic features of pituitary adenoma — uniform single cell type, absent reticulin network.</div>
+<div class="sign-tags"><span class="tag tag-exam">Exam</span><span class="tag tag-pearl">Pearl</span></div>
+</div>
+<div class="sign-card searchable" data-terms="kimmelstiel wilson nodular glomerulosclerosis diabetic nephropathy kidney">
+<div class="sign-emoji">🫘</div>
+<div class="sign-name">Kimmelstiel-Wilson Lesions</div>
+<div class="sign-detail">Nodular glomerulosclerosis in 15-30% of diabetic patients — pathognomonic for diabetic nephropathy.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-exam">Exam</span></div>
+</div>
+<div class="sign-card searchable" data-terms="hypokalemia aldosterone conn syndrome primary hyperaldosteronism sodium retention">
+<div class="sign-emoji">⚡</div>
+<div class="sign-name">Hypokalemia in Conn's</div>
+<div class="sign-detail">Excess aldosterone → sodium retention + potassium excretion → hypokalemia and hypertension.</div>
+<div class="sign-tags"><span class="tag tag-clinical">Clinical</span><span class="tag tag-pearl">Pearl</span></div>
+</div>
+<div class="sign-card searchable" data-terms="neuroblastoma small round blue cells rosettes children VMA adrenal">
+<div class="sign-emoji">👶</div>
+<div class="sign-name">Small Round Blue Cell Tumor</div>
+<div class="sign-detail">Neuroblastoma in children — primitive neural crest cells forming rosettes. Most common extracranial solid tumor of childhood.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-exam">Exam</span></div>
+</div>
+<div class="sign-card searchable" data-terms="amyloid islet type 2 diabetes fibrosis pancreas">
+<div class="sign-emoji">🔸</div>
+<div class="sign-name">Islet Amyloid Deposition</div>
+<div class="sign-detail">Type 2 DM histology: amyloid deposition in islets with fibrous tissue accumulation and reduced islet mass.</div>
+<div class="sign-tags"><span class="tag tag-pearl">Pearl</span></div>
+</div>
+<div class="sign-card searchable" data-terms="metastasis malignant endocrine tumor diagnosis benign">
+<div class="sign-emoji">🎯</div>
+<div class="sign-name">Metastasis = Malignancy</div>
+<div class="sign-detail">ONLY metastases (not microscopic features) differentiate benign from malignant endocrine tumors.</div>
+<div class="sign-tags"><span class="tag tag-high-yield">High-Yield</span><span class="tag tag-exam">Exam</span></div>
+</div>
+</div>
+
+<!-- Essay Questions -->
+<div style="margin-top:32px">
+<div class="section-header">
+<span class="section-icon">📝</span>
+<h2 class="section-title">Essay Questions & Model Answers</h2>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q1: Explain the mechanisms by which a pituitary macroadenoma produces clinical symptoms, including both endocrine and local mass effects.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+A pituitary macroadenoma produces endocrine symptoms either by over-secreting a specific hormone (e.g., prolactin causing galactorrhea, GH causing acromegaly) or by compressing normal adjacent pituitary tissue, causing hypopituitarism (decreased normal hormone output). Local mass effects occur because the tumor is situated in the sella turcica; as it grows, it compresses the optic chiasm above it (causing bitemporal hemianopia) and raises intracranial pressure, leading to headaches. Spontaneous hemorrhage into the mass can cause acute pituitary apoplexy.
+</div>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q2: Contrast the pathogenesis and clinical manifestations of functional adenomas secreting Growth Hormone based on patient's age of onset.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+Both Gigantism and Acromegaly are caused by a functional pituitary adenoma comprising granular acidophilic cells that secrete excess Growth Hormone (GH). The mechanism involves GH stimulating the liver to overproduce IGF-I. The distinction is entirely dependent on the patient's age (whether the bone epiphyses have fused). If the adenoma occurs in children before epiphyseal closure, the long bones grow excessively, causing Gigantism. If it occurs in adults after closure, bones grow in thickness (jaw, hands, frontal bossing), resulting in Acromegaly. Both present with secondary issues like diabetes, hypertension, and heart failure.
+</div>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q3: Discuss the pathophysiological mechanisms differentiating primary from secondary hyperaldosteronism.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+Primary hyperaldosteronism (Conn's Syndrome) is caused by an intrinsic adrenal defect, most commonly (80%) a unilateral adrenal adenoma or bilateral primary adrenal hyperplasia. The autonomous secretion of aldosterone suppresses renin. Secondary hyperaldosteronism is an extrinsic response; decreased renal perfusion triggers the kidneys to secrete renin, activating the renin-angiotensin system, which subsequently stimulates the normal adrenal cortex to produce aldosterone. Both result in sodium retention, potassium excretion (hypokalemia), and hypertension.
+</div>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q4: Describe the pathogenesis, origin, and the "10% rule" characteristics of pheochromocytoma.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+Pheochromocytoma is a tumor of the adrenal medulla composed of chromaffin cells and nerve endings. It autonomously secretes catecholamines (epinephrine, norepinephrine), which are metabolized into VMA and excreted in urine. Excess catecholamines cause paroxysmal or sustained hypertension. It follows the "10% rule": 10% are bilateral, 10% are extra-adrenal (paragangliomas), 10% are familial (associated with MEN syndromes), and 10% are malignant. Malignancy can only be proven by the presence of metastases.
+</div>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q5: Outline the mechanisms of vascular and renal complications arising from chronic uncompensated hyperglycemia.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+Chronic uncompensated hyperglycemia causes widespread vascular damage known as diabetic microangiopathy. The mechanism involves diffuse thickening of the capillary basement membranes in the skin, retina, peripheral nerves, and renal medulla, leading to "leaky vessels." In the kidney, this manifests as diabetic nephropathy, specifically causing capillary BM thickening, nodular glomerulosclerosis (Kimmelstiel-Wilson lesions in 15-30%), and diffuse mesangial sclerosis. In large vessels, it accelerates atherosclerosis, increasing the risk of cardiovascular and CNS complications.
+</div>
+</div>
+
+<div class="essay-card" onclick="this.classList.toggle('open')">
+<div class="essay-question">
+<h4>Q6: Correlate the functional properties of islet cell tumors (Insulinoma, Gastrinoma) with their distinct clinical presentations.</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="essay-answer">
+An Insulinoma arises from beta cells and secretes unregulated insulin. Because insulin lowers blood glucose, patients present with severe hypoglycemic attacks (&lt;50 mg/dl) precipitated by fasting and relieved by eating. In contrast, a Gastrinoma secretes excess gastrin. Gastrin strongly stimulates the stomach to produce gastric acid. This massive hyperacidity overcomes intestinal neutralization, leading to Zollinger-Ellison Syndrome, characterized by intractable, multiple peptic ulcers (often in the jejunum) and diarrhea.
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============ QUIZ TAB ============ -->
+<div class="tab-content" id="tab-quiz">
+<div class="section-header">
+<span class="section-icon">🧪</span>
+<h2 class="section-title">Quiz Mode</h2>
+<span class="section-badge">25 Questions</span>
+</div>
+
+<div class="quiz-container">
+<div class="quiz-progress-bar">
+<div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div>
+</div>
+
+<div class="quiz-info-bar">
+<span class="quiz-counter" id="quizCounter">Question 1 of 25</span>
+<div class="quiz-score">
+<span>✅ <span id="quizCorrect">0</span></span>
+<span>❌ <span id="quizWrong">0</span></span>
+<span>🔥 Streak: <span id="quizStreak">0</span></span>
+</div>
+</div>
+
+<div id="quizArea"></div>
+
+<div class="quiz-nav-btns">
+<button class="btn btn-secondary" id="btnPrev" onclick="prevQuestion()" style="display:none">← Previous</button>
+<button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">Next →</button>
+<button class="btn btn-success" id="btnFinish" onclick="finishQuiz()" style="display:none">Finish Quiz 🎉</button>
+<button class="btn btn-danger" id="btnRestart" onclick="restartQuiz()" style="display:none">Restart Quiz 🔄</button>
+</div>
+</div>
+</div>
+
+<!-- ============ FLASHCARDS TAB ============ -->
+<div class="tab-content" id="tab-flashcards">
+<div class="section-header">
+<span class="section-icon">🃏</span>
+<h2 class="section-title">Flashcards</h2>
+<span class="section-badge">20 Cards</span>
+</div>
+
+<p style="text-align:center;color:var(--text-muted);margin-bottom:24px;font-size:14px">Click any card to flip and reveal the answer ✨</p>
+
+<div class="flashcard-grid" id="flashcardGrid"></div>
+</div>
+
+<!-- ============ CLINICAL CASES TAB ============ -->
+<div class="tab-content" id="tab-cases">
+<div class="section-header">
+<span class="section-icon">🏥</span>
+<h2 class="section-title">Clinical Cases</h2>
+<span class="section-badge">6 Vignettes</span>
+</div>
+
+<div id="casesArea"></div>
+
+<!-- Viva Questions -->
+<div style="margin-top: 40px;">
+<div class="section-header">
+<span class="section-icon">🗣️</span>
+<h2 class="section-title">Viva Questions</h2>
+<span class="section-badge">12 Questions</span>
+</div>
+<div id="vivaArea"></div>
+</div>
+</div>
+
+<!-- ============ ANATOMY / PATHOPHYSIOLOGY TAB ============ -->
+<div class="tab-content" id="tab-anatomy">
+<div class="section-header">
+<span class="section-icon">🔬</span>
+<h2 class="section-title">Pathophysiology & Structures</h2>
+</div>
+
+<h3 style="margin-bottom:16px;font-size:18px">🏗️ Key Structures (Click to expand)</h3>
+<div class="anatomy-grid" id="anatomyGrid"></div>
+
+<div style="margin-top:40px">
+<div class="section-header">
+<span class="section-icon">🔄</span>
+<h2 class="section-title">Mechanistic Flowcharts</h2>
+</div>
+<div id="flowchartArea"></div>
+</div>
+
+<!-- Comparison Tables -->
+<div style="margin-top:40px">
+<div class="section-header">
+<span class="section-icon">📊</span>
+<h2 class="section-title">Comparison Tables</h2>
+</div>
+<div id="tablesArea"></div>
+</div>
+</div>
+
+<!-- ============ DIAGNOSIS TAB ============ -->
+<div class="tab-content" id="tab-diagnosis">
+<div class="section-header">
+<span class="section-icon">🩺</span>
+<h2 class="section-title">Diagnostic Criteria & Algorithms</h2>
+</div>
+<div id="diagnosisArea"></div>
+</div>
+
+<!-- ============ TREATMENT TAB ============ -->
+<div class="tab-content" id="tab-treatment">
+<div class="section-header">
+<span class="section-icon">💊</span>
+<h2 class="section-title">Treatment & Management</h2>
+</div>
+<div id="treatmentArea"></div>
+</div>
+
+<!-- ============ MNEMONICS TAB ============ -->
+<div class="tab-content" id="tab-mnemonics">
+<div class="section-header">
+<span class="section-icon">🧠</span>
+<h2 class="section-title">Memory Aids & Mnemonics</h2>
+<span class="section-badge">6 Mnemonics</span>
+</div>
+
+<p style="text-align:center;color:var(--text-muted);margin-bottom:24px;font-size:14px">Click any card to expand details 🧩</p>
+
+<div id="mnemonicsArea"></div>
+</div>
+
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const quizData = [
+{q:"A patient presents with bitemporal hemianopia. Which mechanism best explains this finding?",options:["Invasion of the optic nerve by a malignant carcinoma","Compression of the optic chiasm by an expanding pituitary adenoma","Diabetic microangiopathy affecting the retina","Pituitary apoplexy destroying the optic tract","Excessive prolactin secretion damaging the visual cortex"],correct:1,explain:"Macroadenomas exert local mass effects by growing upward from the sella turcica and compressing the optic chiasm. Pituitary carcinoma is extremely rare. Diabetic retinopathy causes different visual symptoms. Apoplexy is hemorrhage, not slow compression. Hormones do not directly damage visual fields."},
+{q:"What is the primary mechanism of hypopituitarism in a patient with a non-functioning pituitary macroadenoma?",options:["Autoimmune destruction of the anterior pituitary","Pressure atrophy of adjacent normal hormone-secreting cells","Genetic mutation causing widespread cellular apoptosis","Ischemic necrosis due to vascular thrombosis","Ectopic hormone production suppressing the pituitary"],correct:1,explain:"A large growing adenoma exerts pressure on the remaining normal pituitary gland cells, causing pressure atrophy and loss of normal hormone secretion."},
+{q:"A patient with acromegaly has elevated blood pressure and cardiomegaly. What is the underlying biochemical mechanism?",options:["Decreased insulin-like growth factor I (IGF-I)","Persistent secretion of GH stimulating hepatic IGF-I","Primary hypersecretion of ACTH","Autoimmune stimulation of the thyroid gland","Loss of somatostatin inhibition"],correct:1,explain:"GH-secreting adenomas secrete excess GH, which stimulates the liver to produce excess IGF-I, driving overgrowth of tissues, hypertension, and heart failure."},
+{q:"In Conn's Syndrome, what is the mechanism behind the patient's hypokalemia?",options:["Excess cortisol causes potassium wasting","Decreased renal perfusion activates renin","Excess aldosterone drives renal sodium retention and potassium excretion","Catecholamines shift potassium into cells","Autoimmune destruction of adrenal cortex"],correct:2,explain:"Aldosterone functions to retain sodium and excrete potassium in the kidneys. Excess aldosterone directly causes hypokalemia."},
+{q:"How does diabetic microangiopathy lead to complications such as retinopathy and nephropathy?",options:["Embolization of large atherosclerotic plaques","Diffuse thickening of capillary basement membranes causing leaky vessels","Leukocytic infiltration of peripheral nerves","Deposition of amyloid in the glomeruli","Autoimmune attack on vascular endothelium"],correct:1,explain:"Microangiopathy features diffuse thickening of capillaries, leading to leaky vessels that damage the retina, kidneys, and nerves."},
+{q:"What mechanism causes Kimmelstiel-Wilson lesions in the kidney?",options:["Acute bacterial infection of the renal pelvis","Nodular glomerulosclerosis due to chronic hyperglycemia","Deposition of immune complexes","Ischemic necrosis of the renal papillae","Excessive renin secretion"],correct:1,explain:"Diabetic nephropathy causes nodular glomerulosclerosis (Kimmelstiel-Wilson lesions) in 15-30% of cases due to microvascular damage."},
+{q:"Why do patients with Type 1 Diabetes Mellitus frequently present with ketoacidosis?",options:["Relative insulin deficiency causes mild lipid breakdown","Absolute insulin deficiency forces the body to rapidly metabolize fat into ketones","Excessive glucagon secretion from a pancreatic tumor","Overproduction of amyloid in the islets","Peripheral resistance prevents ketone clearance"],correct:1,explain:"Type 1 DM features absolute beta-cell destruction. Without any insulin, the body breaks down fat, producing high levels of ketoacids."},
+{q:"What is the mechanism of hyperosmolar nonketotic coma in Type 2 Diabetes?",options:["Autoimmune destruction of the brainstem","Severe dehydration due to uncompensated hyperglycemic diuresis","Massive accumulation of ketone bodies","Hypoglycemia from excessive insulin therapy","Cerebral edema from rapid fluid shifts"],correct:1,explain:"High blood glucose causes severe osmotic diuresis (polyuria). Because enough insulin is present to prevent ketosis, the primary crisis is extreme dehydration."},
+{q:"In Zollinger-Ellison Syndrome, why do patients develop ulcers in unusual locations like the jejunum?",options:["Gastrinomas secrete excessive gastrin, leading to massive gastric acid hypersecretion","Somatostatin deficiency prevents ulcer healing","Insulinoma-induced hypoglycemia damages intestinal mucosa","VIPoma causes watery diarrhea that strips the mucosa","H. pylori infection is enhanced by pancreatic tumors"],correct:0,explain:"Excess gastrin from the tumor forces the stomach to produce massive amounts of acid, overcoming duodenal neutralization and burning into the jejunum."},
+{q:"A patient experiences fainting spells relieved by eating glucose. What is the pathophysiological mechanism?",options:["Hyperglycemia due to glucagonoma","Hypoglycemia caused by excess insulin secretion from an insulinoma","Watery diarrhea leading to hypovolemic shock","Excess somatostatin inhibiting glucose absorption","Adrenal insufficiency"],correct:1,explain:"Insulinomas secrete unregulated insulin, dropping blood glucose below 50 mg/dl. Attacks are relieved by eating."},
+{q:"Which mechanism explains the development of bilateral diffuse adrenal hyperplasia?",options:["An ACTH-secreting pituitary adenoma driving continuous adrenal cortex stimulation","Exogenous corticosteroid therapy","A unilateral adrenal cortex adenoma","Destruction of the pituitary stalk","Loss of angiotensin II receptors"],correct:0,explain:"Excess ACTH from the pituitary (Cushing's Disease) chronically stimulates both adrenal glands, causing diffuse or nodular hyperplasia."},
+{q:"What drives the virilization seen in some adrenocortical neoplasms?",options:["Excess cortisol production","Excess aldosterone production","Excess catecholamine production","Secretion of androgens by the tumor","Decreased renin production"],correct:3,explain:"Adrenocortical neoplasms can secrete sex steroids (androgens), causing virilization, precocious puberty, and ambiguous genitalia."},
+{q:"How does secondary hyperaldosteronism differ mechanically from primary hyperaldosteronism?",options:["Secondary is caused by a pituitary tumor","Secondary is triggered by decreased renal perfusion and activation of the renin-angiotensin system","Secondary features high potassium levels","Secondary is caused by an adrenal adenoma","Secondary does not cause hypertension"],correct:1,explain:"Secondary hyperaldosteronism is a physiological response to perceived low blood pressure at the kidney, activating renin, whereas primary is an autonomous adrenal tumor."},
+{q:"The pathogenesis of a VIPoma involves the hypersecretion of Vasoactive Intestinal Peptide. What is the clinical result?",options:["Intractable peptic ulcers","Watery diarrhea, hypokalemia, and achlorhydria","Skin rash and mild diabetes","Hypoglycemia and confusion","Gallstones and steatorrhea"],correct:1,explain:"VIP causes massive intestinal secretion of water and electrolytes, leading to the classic WDHA syndrome (Watery Diarrhea, Hypokalemia, Achlorhydria)."},
+{q:"Pituitary apoplexy is characterized by which of the following mechanisms?",options:["Slow fibrotic scarring of the pituitary","Spontaneous hemorrhage and necrosis into a pituitary tumor","Ischemic stroke of the posterior cerebral artery","Autoimmune destruction of lactotrophs","Amyloid deposition in the sella turcica"],correct:1,explain:"Apoplexy means sudden hemorrhage into a lesion, common in large pituitary adenomas, causing sudden symptoms."},
+{q:"Microscopically, a pituitary adenoma is classically described as having:",options:["Marked pleomorphism and frequent atypical mitoses","Uniform cells of one type (monomorphism) and absent reticulin network","A mixture of 5 different cell types","Extensive amyloid stroma","Prominent true rosettes"],correct:1,explain:"Pituitary adenomas show uniform cellularity (monomorphism) and lack the normal reticulin network seen in the healthy gland."},
+{q:"Which of the following defines 'LADA' in the context of diabetes?",options:["Large Adenoma Diabetic Association","Latent Autoimmune Diabetes in Adults (a delayed form of Type 1)","Low Aldosterone Diabetic Acidosis","Late Adulthood Diabetic Amyloidosis","Localized Adrenal Diabetic Atrophy"],correct:1,explain:"Type 1 DM usually occurs <20 years, but some cases are latent and occur in adults, termed LADA."},
+{q:"Histologically, neuroblastoma is characterized by:",options:["Granular acidophilic cells","Chromaphobe cells with reticulin","Malignant small round blue cells with rosette formation","Uniform clear cells with prominent nucleoli","Spindle cells in a fascicular pattern"],correct:2,explain:"Neuroblastoma is an embryonal tumor composed of primitive small round blue cells that can form rosettes — the most common extracranial solid tumor of childhood."},
+{q:"Which substance is typically elevated in the 24-hour urine of a patient with pheochromocytoma?",options:["17-hydroxyprogesterone","Insulin-like growth factor I","Vanillylmandelic acid (VMA)","Beta-hCG","Prolactin"],correct:2,explain:"Pheochromocytomas secrete catecholamines, which are metabolized into VMA and excreted in the urine."},
+{q:"What morphological feature definitively diagnoses an endocrine tumor as malignant?",options:["Large size (>5 cm)","Cellular pleomorphism","Absence of a capsule","Presence of metastases","Eosinophilic cytoplasm"],correct:3,explain:"In endocrine pathology, benign and malignant tumors cannot be differentiated by cellular atypia or pleomorphism. Only local invasion and metastasis definitively prove malignancy."},
+{q:"A patient shows an ill-defined reduction in islet cell mass, fibrous tissue accumulation, and amyloid deposition in the pancreatic islets. What is the diagnosis?",options:["Type 1 Diabetes Mellitus","Type 2 Diabetes Mellitus","Insulinoma","Chronic pancreatitis","Glucagonoma"],correct:1,explain:"These are the classic histopathological findings in the pancreas of a patient with Type 2 DM."},
+{q:"Which of the following is the most important stimulus for insulin synthesis and release?",options:["Somatostatin","Glucagon","Glucose","Vasoactive Intestinal Peptide","Adrenocorticotropic hormone"],correct:2,explain:"The most important stimulus that triggers insulin synthesis and release from pancreatic beta cells is glucose."},
+{q:"In comparing Gigantism and Acromegaly, which statement is true?",options:["Gigantism occurs in adults, Acromegaly in children","Both are caused by a prolactin-secreting tumor","Gigantism occurs before epiphyseal closure (children), Acromegaly occurs after (adults)","Acromegaly is caused by a lack of growth hormone","Gigantism is usually caused by an adrenal tumor"],correct:2,explain:"Both are caused by GH-secreting adenomas. The clinical difference depends purely on the age of onset (open vs closed bone epiphyses)."},
+{q:"Compared to normal pituitary tissue, how is the reticulin network altered in a pituitary adenoma?",options:["It is markedly thickened and fibrotic","It forms a prominent nodular pattern","It is entirely calcified","It is rare or absent","It is replaced by amyloid"],correct:3,explain:"Pituitary adenomas lack the normal acinar reticulin network, presenting as solid sheets of uniform cells."},
+{q:"Which diagnostic criteria correctly identifies Diabetes Mellitus?",options:["Fasting glucose ≥ 100 mg/dL","Random glucose ≥ 200 mg/dL + symptoms","Abnormal OGTT > 140 mg/dL after 2 hours","Fasting glucose ≥ 110 mg/dL on one occasion","Glucosuria without hyperglycemia"],correct:1,explain:"Diagnosis requires Random glucose ≥ 200 mg/dL with symptoms, Fasting glucose ≥ 126 mg/dL, or OGTT > 200 mg/dL."}
+];
+
+const flashcardsData = [
+{emoji:"🧠",q:"What is a pituitary adenoma?",a:"A benign neoplasm of the anterior pituitary gland, showing monomorphism and absent reticulin network. Can be functional or non-functioning."},
+{emoji:"👁️",q:"Why does a pituitary macroadenoma cause bitemporal hemianopia?",a:"The tumor grows upward from the sella turcica and compresses the optic chiasm, blocking signals from the outer visual fields."},
+{emoji:"🌙",q:"What is the difference between Cushing's Syndrome and Cushing's Disease?",a:"Syndrome = elevated cortisol from ANY cause. Disease = specifically an ACTH-secreting pituitary microadenoma causing excess cortisol."},
+{emoji:"💥",q:"What is the '10% rule' of pheochromocytoma?",a:"10% bilateral, 10% extra-adrenal (paragangliomas), 10% familial (MEN syndromes), 10% malignant."},
+{emoji:"🔬",q:"How do you differentiate benign from malignant endocrine tumors?",a:"Cannot differentiate by microscopy alone. ONLY metastases or extensive local invasion confirms malignancy."},
+{emoji:"🫘",q:"What are Kimmelstiel-Wilson lesions?",a:"Nodular glomerulosclerosis in the kidneys, seen in 15-30% of diabetic patients — a hallmark of diabetic nephropathy."},
+{emoji:"🩸",q:"Why does Type 1 DM cause ketoacidosis but Type 2 usually doesn't?",a:"Type 1 has absolute insulin deficiency → body breaks down fat → ketones. Type 2 has enough insulin to prevent ketosis but not hyperglycemia."},
+{emoji:"⚡",q:"What causes hypokalemia in Conn's Syndrome?",a:"Excess aldosterone from an adrenal adenoma drives renal sodium retention and potassium excretion."},
+{emoji:"🤱",q:"What is the most common type of pituitary adenoma?",a:"Prolactinoma — causes galactorrhea, amenorrhea, and infertility."},
+{emoji:"🔥",q:"What is pituitary apoplexy?",a:"Spontaneous hemorrhage and necrosis into a pituitary tumor, causing sudden symptoms including headache and visual changes."},
+{emoji:"🤚",q:"Why does acromegaly cause enlarged hands and jaw but not increased height?",a:"In adults, epiphyseal plates are closed. GH excess causes appositional (thickness) growth, not longitudinal growth."},
+{emoji:"👶",q:"What is neuroblastoma?",a:"Malignant tumor of primitive neural crest cells (adrenal medulla/sympathetic chain). Commonest extracranial solid tumor of childhood. Small round blue cells forming rosettes."},
+{emoji:"💊",q:"What is LADA?",a:"Latent Autoimmune Diabetes in Adults — a delayed form of Type 1 DM appearing in adulthood."},
+{emoji:"🔸",q:"What is the histological hallmark of Type 2 DM in the pancreas?",a:"Amyloid deposition in islets, fibrosis, and ill-defined reduction in islet cell mass."},
+{emoji:"📊",q:"What is the most important stimulus for insulin release?",a:"Glucose is the most important stimulus that triggers insulin synthesis and release from beta cells."},
+{emoji:"🌡️",q:"What is Zollinger-Ellison Syndrome?",a:"A gastrinoma secreting excess gastrin → massive gastric acid hypersecretion → intractable peptic ulcers (often in jejunum) + diarrhea."},
+{emoji:"💧",q:"What is WDHA syndrome (VIPoma)?",a:"Watery Diarrhea, Hypokalemia, Achlorhydria — caused by a VIP-secreting islet cell tumor."},
+{emoji:"🧪",q:"What gene mutation is associated with 40% of GH-secreting adenomas?",a:"GNAS 1 gene mutation."},
+{emoji:"🔺",q:"What causes bilateral adrenal atrophy?",a:"Exogenous corticosteroid therapy suppresses pituitary ACTH, removing trophic support from both adrenals."},
+{emoji:"⚕️",q:"What is the diagnostic criteria for Diabetes Mellitus?",a:"Random glucose ≥200 mg/dL + symptoms, OR Fasting glucose ≥126 mg/dL, OR OGTT >200 mg/dL at 2 hours."}
+];
+
+const casesData = [
+{num:"Case 1",title:"Pituitary Mass Effect",presentation:"A 52-year-old woman presents with progressively worsening peripheral vision loss over 6 months. She also complains of headaches and has noticed that she can no longer see cars approaching from the sides while driving. MRI reveals a large (2.5 cm) mass in the sella turcica.",questions:["1. What is the most likely diagnosis?","2. What mechanism causes the visual field defect?","3. What additional endocrine effects might be present?"],answer:"<strong>Diagnosis:</strong> Pituitary macroadenoma (>1cm). <strong>Mechanism:</strong> Upward expansion from the sella turcica compresses the optic chiasm, disrupting visual fibers carrying signals from the outer (temporal) visual fields, causing bitemporal hemianopia. <strong>Additional effects:</strong> The mass can cause pressure atrophy of normal pituitary tissue → hypopituitarism (low FSH/LH, TSH, GH, ACTH). If functional, it may secrete hormones (e.g., prolactin). Spontaneous hemorrhage = pituitary apoplexy."},
+{num:"Case 2",title:"Exogenous Cushing's",presentation:"A 38-year-old man who has been taking high-dose prednisone for 2 years for severe ulcerative colitis presents with moon facies, central obesity, purple striae, and easy bruising. His blood pressure is 160/100 mmHg.",questions:["1. What is the pathogenesis of his symptoms?","2. What would you expect to find on adrenal imaging?","3. What are the dangers of abrupt steroid cessation?"],answer:"<strong>Pathogenesis:</strong> Exogenous glucocorticoid excess causes iatrogenic Cushing's Syndrome. The exogenous steroids suppress pituitary ACTH via negative feedback. <strong>Adrenal imaging:</strong> Both adrenal glands will be atrophic (bilateral adrenal atrophy) due to lack of ACTH trophic support. <strong>Danger of abrupt cessation:</strong> The atrophied adrenals cannot mount a cortisol response, leading to life-threatening acute adrenal insufficiency (Addisonian crisis)."},
+{num:"Case 3",title:"Childhood Abdominal Mass",presentation:"A 4-year-old child is brought in with a large, palpable abdominal mass. The child has been irritable and losing weight. CT scan shows a large suprarenal mass with calcifications. Urine shows elevated VMA. Biopsy reveals small round blue cells forming Homer-Wright rosettes.",questions:["1. What is the diagnosis?","2. What is the cell of origin?","3. How does this differ from pheochromocytoma?"],answer:"<strong>Diagnosis:</strong> Neuroblastoma — the most common extracranial solid tumor of childhood. <strong>Cell of origin:</strong> Primitive neural crest cells (sympathetic nervous system / adrenal medulla). <strong>Difference from pheochromocytoma:</strong> Neuroblastoma occurs in children (<5 yrs), is malignant, composed of embryonal small round blue cells forming rosettes. Pheochromocytoma occurs in adults, arises from mature chromaffin cells, and is usually benign (only 10% malignant)."},
+{num:"Case 4",title:"Young Diabetic in Crisis",presentation:"A 14-year-old previously healthy boy presents to the ER with altered mental status. He has a 2-week history of polyuria, polydipsia, and 5 kg weight loss. Blood glucose is 480 mg/dL, pH 7.1, and urine ketones are strongly positive. He is tachypneic (Kussmaul breathing).",questions:["1. What is the diagnosis and pathogenesis?","2. What would pancreatic biopsy show?","3. Why doesn't Type 2 DM typically cause ketoacidosis?"],answer:"<strong>Diagnosis:</strong> Type 1 Diabetes Mellitus with Diabetic Ketoacidosis (DKA). <strong>Pathogenesis:</strong> Autoimmune T-cell mediated destruction of pancreatic beta cells (insulitis) → absolute insulin deficiency → inability to utilize glucose → severe hyperglycemia. The body shifts to fat metabolism → ketone bodies → metabolic acidosis. <strong>Pancreatic biopsy:</strong> Insulitis (leukocytic/T-cell infiltration of islets) with beta cell depletion. <strong>Type 2 DM:</strong> Has enough residual insulin to suppress lipolysis and prevent ketogenesis, so ketoacidosis is rare. Type 2 is more prone to hyperosmolar nonketotic coma from severe dehydration."},
+{num:"Case 5",title:"Episodic Hypertension",presentation:"A 45-year-old male presents with episodes of severe headache, profuse sweating, palpitations, and anxiety. During an episode, his BP is 240/140 mmHg. Between episodes, his BP is normal. 24-hour urine shows markedly elevated VMA. CT shows a 5 cm right adrenal mass.",questions:["1. What is the diagnosis?","2. Describe the '10% rule.'","3. What are the extra-adrenal variants called?"],answer:"<strong>Diagnosis:</strong> Pheochromocytoma — tumor of chromaffin cells in the adrenal medulla secreting excess catecholamines (epinephrine/norepinephrine). <strong>10% Rule:</strong> 10% bilateral, 10% extra-adrenal, 10% familial (MEN syndromes), 10% malignant. <strong>Extra-adrenal variants:</strong> Called paragangliomas — they arise from sympathetic chain ganglia and function similarly to adrenal pheochromocytomas."},
+{num:"Case 6",title:"Intractable Ulcers",presentation:"A 40-year-old woman presents with severe epigastric pain, multiple peptic ulcers found in the duodenum and jejunum that have been refractory to standard proton pump inhibitor therapy. She also has chronic watery diarrhea. Serum gastrin is markedly elevated.",questions:["1. What is the diagnosis?","2. Where is the tumor most likely located?","3. Why are ulcers found in the jejunum?"],answer:"<strong>Diagnosis:</strong> Zollinger-Ellison Syndrome caused by a gastrinoma (islet cell tumor secreting gastrin). <strong>Location:</strong> Most commonly in the pancreas or duodenum. <strong>Jejunal ulcers:</strong> The massive amount of gastrin drives extreme gastric acid hypersecretion. This volume of acid overwhelms the duodenal neutralization capacity, so acid reaches and damages the jejunum, creating ulcers in unusual locations."}
+];
+
+const vivaData = [
+{q:"What is the most common cause of hyperpituitarism?",a:"In most cases, hyperpituitarism is caused by an adenoma arising in the anterior lobe. Less common causes include hyperplasia, carcinoma, or ectopic hormone production."},
+{q:"Why is pheochromocytoma called the '10% tumor'?",a:"Because approximately 10% are bilateral, 10% are extra-adrenal (paragangliomas), 10% are familial (part of MEN syndromes), and 10% are malignant. ⚠️ EXAM FAVORITE"},
+{q:"How do you differentiate a benign from a malignant endocrine tumor under the microscope?",a:"You cannot differentiate them solely by microscopic cellular appearance, as both may show uniform or slightly pleomorphic cells. Malignancy is definitively confirmed only by local invasion and the presence of metastases. ⚠️ EXAM FAVORITE"},
+{q:"Distinguish between Cushing's Syndrome and Cushing's Disease.",a:"Cushing's Syndrome is the clinical state of elevated cortisol from any cause (exogenous steroids, adrenal tumor). Cushing's Disease specifically refers to excess cortisol driven by an ACTH-secreting pituitary adenoma. ⚠️ EXAM FAVORITE"},
+{q:"What are the gross morphological features of an adrenal gland responding to an ACTH-secreting pituitary adenoma?",a:"The chronic excess of ACTH causes bilateral diffuse or nodular hyperplasia of the adrenal glands."},
+{q:"What is pituitary apoplexy?",a:"Pituitary apoplexy is sudden spontaneous hemorrhage and necrosis within a pituitary tumor (often a macroadenoma), leading to acute symptoms including severe headache, visual loss, and hormonal crisis."},
+{q:"Name three visual or neurological effects of a pituitary macroadenoma.",a:"1) Visual field abnormalities (bitemporal hemianopia from optic chiasm compression), 2) Elevated intracranial pressure, 3) Radiological changes like an enlarged sella turcica."},
+{q:"What are the microscopic features of Type 1 Diabetes Mellitus in the pancreas?",a:"The pancreas shows 'insulitis,' which is leukocytic infiltration (T-cells) of the islets. This leads to progressive depletion of beta cells, eventually leaving small, indistinct, or absent islets."},
+{q:"What causes hyperosmolar nonketotic coma in Type 2 Diabetes?",a:"It is caused by severe dehydration due to uncompensated hyperglycemic diuresis. Because there is relative insulin present, ketoacidosis rarely occurs — the main problem is extreme dehydration."},
+{q:"What is the classic triad of symptoms for Zollinger-Ellison Syndrome?",a:"Intractable peptic ulcer disease (often in unusual locations like the jejunum), gastric acid hypersecretion, and diarrhea. It is caused by a gastrinoma."},
+{q:"What genetic mutation is commonly associated with GH-secreting adenomas?",a:"Approximately 40% are associated with a GNAS 1 gene mutation."},
+{q:"Describe the 'WDHA' symptoms of a VIPoma.",a:"A VIPoma secretes Vasoactive Intestinal Peptide, causing Watery Diarrhea, Hypokalemia, and Achlorhydria (WDHA syndrome / Verner-Morrison syndrome)."}
+];
+
+const anatomyData = [
+{icon:"🧠",title:"Anterior Pituitary (Adenohypophysis)",desc:"Contains 5 cell types: somatotrophs (GH), lactotrophs (PRL), corticotrophs (ACTH), thyrotrophs (TSH), gonadotrophs (FSH/LH). Adenomas arise from one cell type → monomorphism. Normal tissue has a reticulin network that is lost in adenomas."},
+{icon:"🔵",title:"Posterior Pituitary (Neurohypophysis)",desc:"Stores and releases ADH (antidiuretic hormone) and Oxytocin. These are synthesized in the hypothalamus and travel down the pituitary stalk. Tumors here are rare; the main pathology is diabetes insipidus from ADH deficiency."},
+{icon:"✂️",title:"Optic Chiasm",desc:"Located directly above the sella turcica. Crossing point of nasal retinal fibers. Compression by a pituitary macroadenoma causes bitemporal hemianopia (loss of outer visual fields bilaterally)."},
+{icon:"🟡",title:"Adrenal Cortex — Zona Glomerulosa",desc:"Outermost layer. Produces mineralocorticoids (aldosterone). Regulated by the renin-angiotensin system. Pathology: Conn's Syndrome (primary hyperaldosteronism — adenoma or hyperplasia)."},
+{icon:"🟠",title:"Adrenal Cortex — Zona Fasciculata",desc:"Middle layer (thickest). Produces glucocorticoids (cortisol). Regulated by pituitary ACTH. Pathology: Cushing's Syndrome (excess cortisol from any cause)."},
+{icon:"🔴",title:"Adrenal Cortex — Zona Reticularis",desc:"Innermost layer. Produces androgens (sex steroids). Pathology: Virilizing adrenocortical neoplasms causing precocious puberty, ambiguous genitalia, or virilization in females."},
+{icon:"💜",title:"Adrenal Medulla",desc:"Contains chromaffin cells derived from neural crest. Produces catecholamines (epinephrine, norepinephrine). Pathology: Pheochromocytoma (adults), Neuroblastoma (children)."},
+{icon:"🟢",title:"Islets of Langerhans — Beta Cells",desc:"Produce insulin. Stimulated primarily by glucose. Pathology: Type 1 DM (autoimmune destruction/insulitis), Insulinoma (benign tumor causing hypoglycemia)."},
+{icon:"🔶",title:"Islets of Langerhans — Alpha Cells",desc:"Produce glucagon. Counteracts insulin. Pathology: Glucagonoma — causes skin rash (necrolytic migratory erythema), mild diabetes, weight loss."},
+{icon:"⬜",title:"Islets of Langerhans — Delta Cells",desc:"Produce somatostatin. Inhibits insulin, glucagon, and gastrin. Pathology: Somatostatinoma — causes gallstones, steatorrhea, diabetes."},
+{icon:"🧬",title:"Sella Turcica",desc:"Bony fossa in the sphenoid bone that houses the pituitary gland. Expansion of pituitary tumors causes enlargement of the sella visible on X-ray/MRI — an important radiological sign."},
+{icon:"🔷",title:"Islet G-Cells / Gastrinoma Source",desc:"Non-beta islet cells or ectopic cells that may give rise to gastrinomas. Excess gastrin → massive acid secretion → Zollinger-Ellison Syndrome."}
+];
+
+const flowchartData = [
+{title:"🔄 Cushing's Disease (Pituitary Cause)",steps:["ACTH-secreting pituitary microadenoma","↓ Excess ACTH enters bloodstream","↓ Bilateral adrenal cortex stimulation","↓ Bilateral diffuse/nodular adrenal hyperplasia","↓ Excess cortisol production","↓ Cushing's Syndrome manifestations","Moon facies, central obesity, HTN, diabetes, osteoporosis"]},
+{title:"🔄 Secondary Hyperaldosteronism",steps:["Decreased renal perfusion (e.g., renal artery stenosis, CHF)","↓ Juxtaglomerular cells sense low pressure","↓ Renin secretion activated","↓ Angiotensin I → Angiotensin II (via ACE)","↓ Angiotensin II stimulates adrenal Zona Glomerulosa","↓ Aldosterone secretion increased","↓ Sodium retention + Potassium excretion","Hypertension + Hypokalemia"]},
+{title:"🔄 Pituitary Macroadenoma Mass Effects",steps:["Anterior pituitary adenoma grows (>1 cm)","↓ Expands within sella turcica","↓ Sella turcica enlargement (visible on imaging)","↓ Upward extension beyond sella","↓ Compresses optic chiasm → Bitemporal hemianopia","↓ Compresses normal pituitary → Hypopituitarism","↓ May increase intracranial pressure → Headaches"]},
+{title:"🔄 Type 1 DM → DKA Pathway",steps:["Autoimmune T-cell attack on beta cells (insulitis)","↓ Progressive beta cell destruction","↓ Absolute insulin deficiency","↓ Cannot utilize glucose → Severe hyperglycemia","↓ Body switches to fat metabolism","↓ Excessive ketone body production","↓ Metabolic acidosis (DKA)","Kussmaul breathing, altered consciousness"]},
+{title:"🔄 Diabetic Microangiopathy → Complications",steps:["Chronic hyperglycemia","↓ Non-enzymatic glycosylation of proteins","↓ Diffuse capillary basement membrane thickening","↓ 'Leaky vessels' throughout the body","→ Retina: Diabetic retinopathy (exudates, hemorrhages)","→ Kidneys: Nephropathy (Kimmelstiel-Wilson lesions)","→ Nerves: Peripheral neuropathy","→ Large vessels: Accelerated atherosclerosis"]}
+];
+
+const mnemonicsData = [
+{emoji:"🔟",title:"Pheochromocytoma — The 10% Tumor",word:"10-10-10-10",letters:[{l:"10%",desc:"Bilateral"},{l:"10%",desc:"Extra-adrenal (Paragangliomas)"},{l:"10%",desc:"Familial (MEN syndromes)"},{l:"10%",desc:"Malignant (proven only by metastasis)"}],detail:"Remember: Pheochromocytoma follows the rule of tens. The tumor arises from chromaffin cells of the adrenal medulla, secretes catecholamines → elevated urine VMA. Classic triad: Paroxysmal HTN + Sweating + Headache."},
+{emoji:"🎯",title:"Cushing's vs. Cushing's — D vs. S",word:"D = Disease = D-efinitely Pituitary",letters:[{l:"D",desc:"Disease → Due to pituitary ACTH adenoma → bilateral adrenal hyperplasia"},{l:"S",desc:"Syndrome → any cause of cortisol excess (exogenous, adrenal tumor, ectopic ACTH)"},{l:"E",desc:"Exogenous steroids → Bilateral adrenal ATROPHY (no ACTH)"}],detail:"Always specify: Disease = pituitary. Syndrome = umbrella term. This is an EXAM FAVORITE distinction."},
+{emoji:"🍬",title:"DM Diagnosis — '126-200-200'",word:"1-2-6 / 2-0-0",letters:[{l:"126",desc:"Fasting glucose ≥ 126 mg/dL"},{l:"200",desc:"Random glucose ≥ 200 mg/dL + symptoms"},{l:"200",desc:"OGTT > 200 mg/dL at 2 hours"}],detail:"Any ONE of these three criteria confirms Diabetes Mellitus. Remember: Fasting = 126, Random/OGTT = 200."},
+{emoji:"💧",title:"VIPoma — WDHA Syndrome",word:"W-D-H-A",letters:[{l:"W",desc:"Watery"},{l:"D",desc:"Diarrhea"},{l:"H",desc:"Hypokalemia"},{l:"A",desc:"Achlorhydria"}],detail:"VIPoma (Vasoactive Intestinal Peptide-secreting tumor) causes massive intestinal secretion. Also called Verner-Morrison syndrome or 'pancreatic cholera.'"},
+{emoji:"🔬",title:"Pituitary Adenoma Microscopy — 'MONO-NO'",word:"MONO-NO",letters:[{l:"MONO",desc:"MONOmorphism — uniform cells of ONE type"},{l:"NO",desc:"NO reticulin network (absent acinar pattern)"}],detail:"Compare to normal pituitary which has 5 cell types and a prominent reticulin framework. Adenomas are sheets of uniform cells. Cannot determine malignancy microscopically — need metastasis."},
+{emoji:"🏥",title:"Islet Cell Tumors — 'I Go Very Slowly'",word:"I-G-V-S",letters:[{l:"I",desc:"Insulinoma → Insulin → Hypoglycemia < 50 mg/dL, relieved by eating"},{l:"G",desc:"Gastrinoma → Gastrin → Zollinger-Ellison (intractable ulcers, jejunal ulcers)"},{l:"V",desc:"VIPoma → VIP → WDHA syndrome (watery diarrhea, hypokalemia)"},{l:"S",desc:"Somatostatinoma → Somatostatin → Gallstones, steatorrhea, diabetes"}],detail:"Each islet cell tumor is defined by its secretory product and the resulting clinical syndrome. Most are in the pancreas. Remember glucagonoma too: skin rash + mild diabetes."}
+];
+
+const diagnosisData = [
+{title:"🩺 Diabetes Mellitus Diagnostic Criteria",criteria:["✅ Fasting plasma glucose ≥ 126 mg/dL (confirmed on two occasions)","✅ Random plasma glucose ≥ 200 mg/dL + classic symptoms (polyuria, polydipsia, weight loss)","✅ Oral Glucose Tolerance Test (OGTT) > 200 mg/dL at 2 hours","⚠️ Pre-diabetes: Fasting 100-125 mg/dL or OGTT 140-199 mg/dL"],badges:[{text:"FPG ≥ 126",color:"#ef4444"},{text:"Random ≥ 200 + Sx",color:"#f59e0b"},{text:"OGTT > 200",color:"#6366f1"}]},
+{title:"🩺 Pheochromocytoma Diagnosis",criteria:["✅ 24-hour urine collection for VMA (Vanillylmandelic acid) — elevated","✅ Blood/urine metanephrines and catecholamines — elevated","✅ CT/MRI of adrenals showing unilateral or bilateral mass","✅ Clinical triad: Paroxysmal HTN + Sweating + Headache","⚠️ Malignancy confirmed ONLY by metastasis, not microscopy"],badges:[{text:"Urine VMA ↑",color:"#ef4444"},{text:"Metanephrines ↑",color:"#ec4899"},{text:"CT/MRI Mass",color:"#6366f1"},{text:"10% Rule",color:"#f59e0b"}]},
+{title:"🩺 Cushing's Syndrome Diagnosis",criteria:["✅ 24-hour urinary free cortisol — elevated","✅ Low-dose dexamethasone suppression test — cortisol NOT suppressed","✅ Plasma ACTH levels to differentiate causes:","→ ACTH high = pituitary (Disease) or ectopic ACTH","→ ACTH low = adrenal tumor (autonomous cortisol)","✅ MRI of pituitary / CT of adrenals / Chest CT for ectopic source"],badges:[{text:"24hr Cortisol ↑",color:"#ef4444"},{text:"Dex Suppression",color:"#8b5cf6"},{text:"ACTH Level",color:"#06b6d4"},{text:"MRI Pituitary",color:"#10b981"}]},
+{title:"🩺 Differentiating Endocrine Tumors: Benign vs Malignant",criteria:["❌ Size alone is NOT reliable","❌ Cellular pleomorphism is NOT reliable","❌ Nuclear atypia is NOT reliable","❌ Capsule presence/absence is NOT reliable","✅ ONLY definitive criterion: Presence of METASTASES or extensive local invasion","⚠️ This is a KEY EXAM POINT: 'We cannot differentiate benign and malignant endocrine tumors microscopically'"],badges:[{text:"Metastasis = Malignant",color:"#ef4444"},{text:"Microscopy Unreliable",color:"#f59e0b"},{text:"EXAM FAVORITE",color:"#ec4899"}]},
+{title:"🩺 Conn's Syndrome vs Secondary Hyperaldosteronism",criteria:["Primary (Conn's): Aldosterone ↑, Renin ↓ (suppressed)","→ Cause: Adrenal adenoma (80%) or bilateral hyperplasia","Secondary: Aldosterone ↑, Renin ↑ (activated)","→ Cause: Decreased renal perfusion → RAS activation","Both: Hypertension + Hypokalemia","Key differentiator: Renin levels (low in primary, high in secondary)"],badges:[{text:"Renin LOW = Primary",color:"#ef4444"},{text:"Renin HIGH = Secondary",color:"#6366f1"},{text:"Both → HypoK+",color:"#f59e0b"}]}
+];
+
+const treatmentData = [
+{category:"🚨 Emergency Management",type:"emergency",items:[
+{name:"Diabetic Ketoacidosis (DKA)",details:["IV fluid resuscitation (normal saline)","IV insulin infusion (regular insulin)","Potassium replacement (insulin drives K+ into cells)","Monitor glucose, K+, pH every 1-2 hours","Identify and treat precipitating factor"]},
+{name:"Pheochromocytoma Crisis",details:["Alpha-blocker FIRST (phenoxybenzamine/phentolamine)","Then beta-blocker (NEVER beta before alpha — risk of unopposed alpha stimulation)","IV nitroprusside for hypertensive emergency","Surgical removal after adequate alpha-blockade"]},
+{name:"Addisonian Crisis (Acute Adrenal Insufficiency)",details:["IV hydrocortisone (stress dose)","IV fluid resuscitation","Dextrose for hypoglycemia","Identify trigger (e.g., abrupt steroid cessation)"]}
+]},
+{category:"💊 Medical Management",type:"medical",items:[
+{name:"Prolactinoma",details:["First-line: Dopamine agonists (Cabergoline, Bromocriptine)","Dopamine inhibits prolactin secretion","Surgery reserved for drug-resistant cases","Monitor prolactin levels and tumor size"]},
+{name:"Type 1 DM",details:["Lifelong exogenous insulin therapy (subcutaneous)","Basal-bolus regimen (long-acting + mealtime rapid-acting)","Blood glucose monitoring","HbA1c target < 7%","Screen for complications (retinopathy, nephropathy, neuropathy)"]},
+{name:"Type 2 DM",details:["Lifestyle modifications (weight loss, diet, exercise)","Metformin (first-line oral agent)","Add sulfonylureas, DPP-4 inhibitors, GLP-1 agonists, or SGLT2 inhibitors as needed","Insulin when oral agents fail","Monitor HbA1c, screen for complications"]},
+{name:"Conn's Syndrome",details:["Spironolactone (aldosterone antagonist) for bilateral hyperplasia","Surgical removal for unilateral adenoma","Monitor potassium and blood pressure"]}
+]},
+{category:"🔪 Surgical Management",type:"surgical",items:[
+{name:"Pituitary Adenoma",details:["Trans-sphenoidal surgery (first-line for most)","Radiation therapy for residual/recurrent tumors","Medical therapy for prolactinomas (dopamine agonists preferred)","Hormone replacement post-surgery if hypopituitarism develops"]},
+{name:"Adrenal Adenoma / Carcinoma",details:["Laparoscopic or open adrenalectomy","For Cushing's: unilateral adrenalectomy for adenoma","Mitotane for inoperable adrenocortical carcinoma","Steroid replacement post-op until contralateral gland recovers"]},
+{name:"Pheochromocytoma",details:["Preoperative alpha-blockade (phenoxybenzamine) for 10-14 days","Add beta-blocker only AFTER adequate alpha-blockade","Surgical adrenalectomy","Lifelong follow-up for recurrence (especially if familial/MEN)"]}
+]},
+{category:"📋 Supportive & Monitoring",type:"supportive",items:[
+{name:"Diabetic Complications Screening",details:["Annual dilated eye exam (retinopathy)","Annual urine albumin (nephropathy)","Foot exam every visit (neuropathy, ulcers)","Lipid panel and BP monitoring (macrovascular risk)","HbA1c every 3-6 months"]},
+{name:"Post-Pituitary Surgery Monitoring",details:["Monitor all anterior pituitary hormones","Watch for diabetes insipidus (ADH disruption)","Replace deficient hormones (cortisol, thyroid, sex hormones, GH)","Periodic MRI for recurrence"]},
+{name:"MEN Syndrome Screening",details:["If pheochromocytoma or islet cell tumor → screen for associated tumors","MEN 1: Pituitary + Parathyroid + Pancreatic islet tumors","MEN 2: Medullary thyroid carcinoma + Pheochromocytoma + Parathyroid","Genetic testing and family screening"]}
+]}
+];
+
+// Comparison tables data
+const comparisonTables = [
+{title:"Pituitary Adenoma Types",headers:["Feature","Prolactinoma","GH Adenoma","Corticotroph Adenoma"],rows:[
+["Cell Type","Chromophobe / Acidophilic","Granular Acidophilic","Basophilic / Chromophobe"],
+["Hormone","Prolactin","Growth Hormone","ACTH"],
+["Mechanism","Unregulated PRL release","GNAS1 mutation → GH → hepatic IGF-1","Unregulated ACTH → adrenal cortisol"],
+["Clinical","Galactorrhea, amenorrhea, infertility","Gigantism (children) / Acromegaly (adults)","Cushing's Disease"],
+["Treatment","Dopamine agonists (1st line)","Trans-sphenoidal surgery","Trans-sphenoidal surgery"]]},
+{title:"Type 1 vs Type 2 Diabetes Mellitus",headers:["Feature","Type 1 DM","Type 2 DM"],rows:[
+["Insulin","Absolute deficiency","Relative deficiency (resistance)"],
+["Mechanism","Autoimmune beta-cell destruction (insulitis)","Peripheral insulin resistance"],
+["Age","Usually < 20 years (LADA = adults)","Usually > 40 years"],
+["Body Habitus","Often thin/normal","Often overweight/obese"],
+["Histology","Insulitis (T-cells), beta cell loss","Amyloid deposition, fibrosis"],
+["Insulin Levels","Absent/very low","Normal or increased"],
+["Acute Crisis","DKA (ketoacidosis)","Hyperosmolar nonketotic coma"],
+["Genetics","HLA-linked (DR3, DR4)","Stronger familial concordance"]]},
+{title:"Islet Cell Tumors Comparison",headers:["Tumor","Hormone","Clinical Syndrome","Key Feature"],rows:[
+["Insulinoma","Insulin","Hypoglycemia (<50 mg/dL)","Relieved by eating; most common islet tumor"],
+["Gastrinoma","Gastrin","Zollinger-Ellison (intractable ulcers)","Jejunal ulcers, diarrhea, acid hypersecretion"],
+["VIPoma","VIP","WDHA syndrome","Watery diarrhea, hypokalemia, achlorhydria"],
+["Glucagonoma","Glucagon","Skin rash + mild diabetes","Necrolytic migratory erythema"],
+["Somatostatinoma","Somatostatin","Gallstones + steatorrhea + diabetes","Rarest islet cell tumor"]]}
+];
+
+// ==================== STATE ====================
+let currentTab = localStorage.getItem('endopath-tab') || 'overview';
+let quizState = {
+current: 0,
+answers: new Array(quizData.length).fill(null),
+correct: 0,
+wrong: 0,
+streak: 0,
+maxStreak: 0,
+finished: false
+};
+let flippedCards = new Set(JSON.parse(localStorage.getItem('endopath-flipped') || '[]'));
+
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', () => {
+loadQuizState();
+switchTab(currentTab);
+renderQuiz();
+renderFlashcards();
+renderCases();
+renderViva();
+renderAnatomy();
+renderFlowcharts();
+renderTables();
+renderDiagnosis();
+renderTreatment();
+renderMnemonics();
+updateStats();
+});
+
+// ==================== TAB SWITCHING ====================
+function switchTab(tabId) {
+document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+document.getElementById('tab-' + tabId).classList.add('active');
+document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+currentTab = tabId;
+localStorage.setItem('endopath-tab', tabId);
+}
+
+// ==================== SEARCH ====================
+function handleSearch(val) {
+const term = val.toLowerCase();
+document.querySelectorAll('.searchable').forEach(el => {
+const text = (el.textContent + ' ' + (el.dataset.terms || '')).toLowerCase();
+el.style.display = text.includes(term) || term === '' ? '' : 'none';
+});
+}
+
+// ==================== QUIZ ====================
+function renderQuiz() {
+if (quizState.finished) { showQuizResults(); return; }
+const q = quizData[quizState.current];
+const i = quizState.current;
+const answered = quizState.answers[i] !== null;
+
+let html = `<div class="quiz-question-card">
+<div class="quiz-question-text">Q${i+1}. ${q.q}</div>
+<div class="quiz-options">`;
+
+const letters = ['A','B','C','D','E'];
+q.options.forEach((opt, j) => {
+let cls = '';
+if (answered) {
+cls = 'disabled';
+if (j === q.correct) cls += ' correct';
+else if (j === quizState.answers[i] && j !== q.correct) cls += ' wrong';
+}
+html += `<div class="quiz-option ${cls}" onclick="selectAnswer(${j})">
+<span class="option-letter">${letters[j]}</span>
+<span>${opt}</span>
+</div>`;
+});
+
+html += `</div>`;
+
+if (answered) {
+html += `<div class="quiz-explanation show">
+<h4>${quizState.answers[i] === q.correct ? '✅ Correct!' : '❌ Incorrect'}</h4>
+<p><strong>Answer: ${letters[q.correct]}</strong> — ${q.explain}</p>
+</div>`;
+}
+
+html += `</div>`;
+document.getElementById('quizArea').innerHTML = html;
+
+document.getElementById('quizCounter').textContent = `Question ${i+1} of ${quizData.length}`;
+document.getElementById('quizProgressFill').style.width = ((i+1)/quizData.length*100) + '%';
+document.getElementById('quizCorrect').textContent = quizState.correct;
+document.getElementById('quizWrong').textContent = quizState.wrong;
+document.getElementById('quizStreak').textContent = quizState.streak;
+
+document.getElementById('btnPrev').style.display = i > 0 ? '' : 'none';
+document.getElementById('btnNext').style.display = i < quizData.length - 1 ? '' : 'none';
+document.getElementById('btnFinish').style.display = i === quizData.length - 1 && answered ? '' : 'none';
+document.getElementById('btnRestart').style.display = 'none';
+}
+
+function selectAnswer(j) {
+const i = quizState.current;
+if (quizState.answers[i] !== null) return;
+quizState.answers[i] = j;
+if (j === quizData[i].correct) {
+quizState.correct++;
+quizState.streak++;
+if (quizState.streak > quizState.maxStreak) quizState.maxStreak = quizState.streak;
+showNotification('🎉 Correct! Streak: ' + quizState.streak, 'success');
+} else {
+quizState.wrong++;
+quizState.streak = 0;
+showNotification('❌ Not quite. Review the explanation below.', 'warning');
+}
+saveQuizState();
+updateStats();
+renderQuiz();
+}
+
+function nextQuestion() {
+if (quizState.current < quizData.length - 1) { quizState.current++; renderQuiz(); }
+}
+
+function prevQuestion() {
+if (quizState.current > 0) { quizState.current--; renderQuiz(); }
+}
+
+function finishQuiz() {
+quizState.finished = true;
+saveQuizState();
+showQuizResults();
+}
+
+function showQuizResults() {
+const pct = Math.round(quizState.correct / quizData.length * 100);
+let emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 50 ? '💪' : '📚';
+let msg = pct >= 90 ? 'Outstanding! You\'re exam-ready!' : pct >= 70 ? 'Great job! Keep reviewing weak areas.' : pct >= 50 ? 'Good effort! Focus on missed topics.' : 'Keep studying — you\'ll get there!';
+
+document.getElementById('quizArea').innerHTML = `
+<div class="quiz-results">
+<div class="result-emoji">${emoji}</div>
+<div class="result-score" style="background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${quizState.correct}/${quizData.length}</div>
+<div class="result-text">${pct}% — ${msg}</div>
+<p style="margin-top:12px;color:var(--text-muted)">Best streak: 🔥 ${quizState.maxStreak}</p>
+</div>`;
+
+document.getElementById('btnPrev').style.display = 'none';
+document.getElementById('btnNext').style.display = 'none';
+document.getElementById('btnFinish').style.display = 'none';
+document.getElementById('btnRestart').style.display = '';
+document.getElementById('quizProgressFill').style.width = '100%';
+}
+
+function restartQuiz() {
+quizState = { current:0, answers:new Array(quizData.length).fill(null), correct:0, wrong:0, streak:0, maxStreak:0, finished:false };
+saveQuizState();
+updateStats();
+renderQuiz();
+}
+
+function saveQuizState() { localStorage.setItem('endopath-quiz', JSON.stringify(quizState)); }
+function loadQuizState() {
+const saved = localStorage.getItem('endopath-quiz');
+if (saved) quizState = JSON.parse(saved);
+}
+
+// ==================== FLASHCARDS ====================
+function renderFlashcards() {
+let html = '';
+flashcardsData.forEach((fc, i) => {
+const flipped = flippedCards.has(i);
+html += `<div class="flashcard-container ${flipped ? 'flipped' : ''}" onclick="flipCard(${i}, this)">
+<div class="flashcard-inner">
+<div class="flashcard-front">
+<div class="fc-emoji">${fc.emoji}</div>
+<div class="fc-question">${fc.q}</div>
+<div class="fc-hint">Click to reveal answer</div>
+</div>
+<div class="flashcard-back">
+<div class="fc-answer">${fc.a}</div>
+</div>
+</div>
+</div>`;
+});
+document.getElementById('flashcardGrid').innerHTML = html;
+}
+
+function flipCard(i, el) {
+el.classList.toggle('flipped');
+if (el.classList.contains('flipped')) {
+flippedCards.add(i);
+} else {
+flippedCards.delete(i);
+}
+localStorage.setItem('endopath-flipped', JSON.stringify([...flippedCards]));
+updateStats();
+}
+
+// ==================== CLINICAL CASES ====================
+function renderCases() {
+let html = '';
+casesData.forEach((c, i) => {
+html += `<div class="case-card">
+<div class="case-number">${c.num} — ${c.title}</div>
+<div class="case-presentation">${c.presentation}</div>
+<div class="case-questions">
+${c.questions.map(q => `<div class="case-question">${q}</div>`).join('')}
+</div>
+<button class="btn btn-primary" onclick="toggleCaseAnswer(${i})">Reveal Answer 🔍</button>
+<div class="case-answer-area" id="caseAnswer${i}">
+<p>${c.answer}</p>
+</div>
+</div>`;
+});
+document.getElementById('casesArea').innerHTML = html;
+}
+
+function toggleCaseAnswer(i) {
+const el = document.getElementById('caseAnswer' + i);
+el.classList.toggle('show');
+}
+
+// ==================== VIVA ====================
+function renderViva() {
+let html = '';
+vivaData.forEach((v, i) => {
+html += `<div class="viva-card" onclick="this.classList.toggle('open')">
+<div class="viva-question">
+<h4>V${i+1}: ${v.q}</h4>
+<span class="viva-toggle">▼</span>
+</div>
+<div class="viva-answer">${v.a}</div>
+</div>`;
+});
+document.getElementById('vivaArea').innerHTML = html;
+}
+
+// ==================== ANATOMY ====================
+function renderAnatomy() {
+let html = '';
+anatomyData.forEach((a, i) => {
+html += `<div class="anatomy-item searchable" data-terms="${a.title.toLowerCase()}" onclick="this.classList.toggle('expanded')">
+<div class="anat-icon">${a.icon}</div>
+<h4>${a.title}</h4>
+<div class="anat-desc">${a.desc}</div>
+</div>`;
+});
+document.getElementById('anatomyGrid').innerHTML = html;
+}
+
+// ==================== FLOWCHARTS ====================
+function renderFlowcharts() {
+let html = '';
+flowchartData.forEach(fc => {
+html += `<div class="flowchart">
+<div class="flowchart-title">${fc.title}</div>
+<div class="flow-steps">`;
+fc.steps.forEach((step, j) => {
+if (step.startsWith('↓') || step.startsWith('→')) {
+html += `<div class="flow-arrow">${step.charAt(0) === '↓' ? '⬇️' : '➡️'}</div>
+<div class="flow-step">${step.substring(2)}</div>`;
+} else {
+if (j > 0) html += `<div class="flow-arrow">⬇️</div>`;
+html += `<div class="flow-step">${step}</div>`;
+}
+});
+html += `</div></div>`;
+});
+document.getElementById('flowchartArea').innerHTML = html;
+}
+
+// ==================== COMPARISON TABLES ====================
+function renderTables() {
+let html = '';
+comparisonTables.forEach(t => {
+html += `<h3 style="margin:24px 0 12px;font-size:17px">📊 ${t.title}</h3>
+<div class="table-wrapper"><table class="comparison-table"><thead><tr>`;
+t.headers.forEach(h => html += `<th>${h}</th>`);
+html += `</tr></thead><tbody>`;
+t.rows.forEach(row => {
+html += `<tr>`;
+row.forEach((cell, ci) => html += `<td style="${ci===0?'font-weight:700;color:var(--text-primary)':''}">${cell}</td>`);
+html += `</tr>`;
+});
+html += `</tbody></table></div>`;
+});
+document.getElementById('tablesArea').innerHTML = html;
+}
+
+// ==================== DIAGNOSIS ====================
+function renderDiagnosis() {
+let html = '';
+diagnosisData.forEach(d => {
+html += `<div class="criteria-card">
+<h3>${d.title}</h3>
+<ul class="criteria-list">`;
+d.criteria.forEach(c => {
+let icon = c.startsWith('✅') ? '✅' : c.startsWith('❌') ? '❌' : c.startsWith('⚠️') ? '⚠️' : c.startsWith('→') ? '→' : '•';
+let text = c.replace(/^[✅❌⚠️→]\s*/, '');
+html += `<li><span>${icon}</span><span>${text}</span></li>`;
+});
+html += `</ul><div class="badge-grid">`;
+d.badges.forEach(b => {
+html += `<span class="invest-badge" style="background:${b.color}22;color:${b.color};border:1px solid ${b.color}44">${b.text}</span>`;
+});
+html += `</div></div>`;
+});
+
+// Add diagnostic algorithm flowchart
+html += `<div class="flowchart" style="margin-top:24px">
+<div class="flowchart-title">🔄 Cushing's Syndrome — Diagnostic Algorithm</div>
+<div class="flow-steps">
+<div class="flow-step" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3)">Suspected Cushing's (moon facies, central obesity, striae, HTN)</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">24-hour urinary free cortisol OR Low-dose dexamethasone suppression test</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.3)">Cortisol elevated / Not suppressed → CONFIRMED Cushing's</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">Measure plasma ACTH</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3)">ACTH HIGH → Pituitary MRI (Cushing's Disease) or Chest CT (Ectopic ACTH)</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3)">ACTH LOW → Adrenal CT (Adrenal adenoma/carcinoma = autonomous cortisol)</div>
+</div>
+</div>`;
+
+document.getElementById('diagnosisArea').innerHTML = html;
+}
+
+// ==================== TREATMENT ====================
+function renderTreatment() {
+let html = '';
+treatmentData.forEach(section => {
+html += `<div class="treatment-section">
+<h3 style="font-size:20px;font-weight:800;margin-bottom:16px">${section.category}</h3>`;
+section.items.forEach(item => {
+html += `<div class="treatment-card ${section.type}">
+<h4>${item.name}</h4>
+<ul>`;
+item.details.forEach(d => html += `<li><span>•</span><span>${d}</span></li>`);
+html += `</ul></div>`;
+});
+html += `</div>`;
+});
+
+// Drug comparison table
+html += `<h3 style="font-size:20px;font-weight:800;margin:32px 0 16px">💊 Key Drug Comparison</h3>
+<div class="table-wrapper"><table class="comparison-table">
+<thead><tr><th>Condition</th><th>First-Line Drug</th><th>Mechanism</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700;color:var(--text-primary)">Prolactinoma</td><td>Cabergoline / Bromocriptine</td><td>Dopamine agonist → inhibits PRL</td><td>Medical treatment preferred over surgery</td></tr>
+<tr><td style="font-weight:700;color:var(--text-primary)">Pheochromocytoma (pre-op)</td><td>Phenoxybenzamine</td><td>Alpha-blocker → prevents HTN crisis</td><td>Always alpha BEFORE beta</td></tr>
+<tr><td style="font-weight:700;color:var(--text-primary)">Conn's Syndrome</td><td>Spironolactone</td><td>Aldosterone antagonist</td><td>For bilateral hyperplasia; surgery for adenoma</td></tr>
+<tr><td style="font-weight:700;color:var(--text-primary)">Type 2 DM</td><td>Metformin</td><td>Decreases hepatic gluconeogenesis</td><td>First-line oral agent; weight neutral</td></tr>
+<tr><td style="font-weight:700;color:var(--text-primary)">DKA</td><td>IV Insulin + IV Fluids</td><td>Restores glucose utilization, corrects acidosis</td><td>Monitor K+ closely</td></tr>
+<tr><td style="font-weight:700;color:var(--text-primary)">Adrenocortical Carcinoma</td><td>Mitotane</td><td>Adrenolytic agent</td><td>For inoperable tumors</td></tr>
+</tbody></table></div>`;
+
+document.getElementById('treatmentArea').innerHTML = html;
+}
+
+// ==================== MNEMONICS ====================
+function renderMnemonics() {
+let html = '';
+mnemonicsData.forEach((m, i) => {
+html += `<div class="mnemonic-card" onclick="this.classList.toggle('expanded')">
+<div class="mnemonic-header">
+<span class="mnemonic-emoji">${m.emoji}</span>
+<span class="mnemonic-title">${m.title}</span>
+</div>
+<div class="mnemonic-word">${m.word}</div>
+<ul class="mnemonic-list">`;
+m.letters.forEach(l => {
+html += `<li><span class="mnemonic-letter">${l.l}</span><span>${l.desc}</span></li>`;
+});
+html += `</ul>
+<div class="mnemonic-details">
+<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">${m.detail}</p>
+</div>
+</div>`;
+});
+document.getElementById('mnemonicsArea').innerHTML = html;
+}
+
+// ==================== STATS ====================
+function updateStats() {
+const answeredCount = quizState.answers.filter(a => a !== null).length;
+const totalItems = quizData.length + flashcardsData.length;
+const completedItems = answeredCount + flippedCards.size;
+const progress = Math.round(completedItems / totalItems * 100);
+
+document.getElementById('stat-progress').textContent = progress + '%';
+document.getElementById('stat-score').textContent = quizState.correct + '/' + quizData.length;
+document.getElementById('stat-streak').textContent = quizState.streak;
+document.getElementById('stat-cards').textContent = flippedCards.size + '/' + flashcardsData.length;
+}
+
+// ==================== NOTIFICATION ====================
+function showNotification(msg, type) {
+const el = document.getElementById('notification');
+el.textContent = msg;
+el.className = 'notification ' + type + ' show';
+setTimeout(() => el.classList.remove('show'), 2500);
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

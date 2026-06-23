@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KME · Congenital Viral Infections</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0d14;
+  --bg2: #0f1420;
+  --bg3: #141926;
+  --card: #161c2e;
+  --card2: #1c2338;
+  --border: #232a42;
+  --border2: #2d3557;
+  --text: #e8eaf6;
+  --text2: #9ba3c4;
+  --text3: #6b75a0;
+
+  --cyan:   #00d4ff;
+  --cyan2:  #0099bb;
+  --violet: #8b5cf6;
+  --violet2:#6d28d9;
+  --rose:   #f43f5e;
+  --rose2:  #be123c;
+  --amber:  #f59e0b;
+  --amber2: #b45309;
+  --teal:   #14b8a6;
+  --teal2:  #0f766e;
+  --green:  #22c55e;
+  --green2: #15803d;
+  --indigo: #6366f1;
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ORBS ── */
+.orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(90px); opacity: .18;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.orb1 { width:500px;height:500px;background:var(--cyan);   top:-150px;left:-150px; animation-duration:22s; }
+.orb2 { width:400px;height:400px;background:var(--violet); bottom:-100px;right:-100px; animation-duration:17s; animation-delay:-6s; }
+.orb3 { width:300px;height:300px;background:var(--rose);   top:40%;left:60%; animation-duration:25s; animation-delay:-11s; }
+@keyframes drift { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,30px) scale(1.08)} }
+
+/* ── LAYOUT ── */
+#app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* ── HEADER ── */
+.header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+.header-kme {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .25em;
+  color: var(--cyan);
+  background: rgba(0,212,255,.08);
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: 100px;
+  padding: 4px 14px;
+  margin-bottom: 18px;
+}
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--cyan), var(--violet), var(--rose));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 10px;
+}
+.header p { color: var(--text2); font-size: .95rem; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin: 0 0 32px;
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 100px; padding: 7px 16px;
+  font-size: .8rem; color: var(--text2);
+  transition: border-color .2s;
+}
+.stat-pill span { font-family: var(--font-mono); color: var(--cyan); font-weight: 600; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 32px; padding: 6px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: var(--radius);
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: .82rem; font-weight: 500;
+  color: var(--text3);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: var(--card); }
+.tab-btn.active { background: var(--card2); color: var(--cyan); border: 1px solid var(--border2); }
+
+/* ── SECTIONS ── */
+.section { display: none; animation: fadeIn .35s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+/* ── CARDS ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  transition: border-color .2s, transform .2s;
+}
+.card:hover { border-color: var(--border2); transform: translateY(-1px); }
+.card-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+.grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+
+/* ── SECTION HEADINGS ── */
+.sec-heading {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+  margin-bottom: 6px;
+}
+.sec-sub { color: var(--text2); font-size: .88rem; margin-bottom: 24px; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block; padding: 2px 9px; border-radius: 100px;
+  font-size: .7rem; font-weight: 600; font-family: var(--font-mono);
+}
+.badge-cyan   { background:rgba(0,212,255,.12); color:var(--cyan); border:1px solid rgba(0,212,255,.25); }
+.badge-violet { background:rgba(139,92,246,.12); color:var(--violet); border:1px solid rgba(139,92,246,.25); }
+.badge-rose   { background:rgba(244,63,94,.12); color:var(--rose); border:1px solid rgba(244,63,94,.25); }
+.badge-amber  { background:rgba(245,158,11,.12); color:var(--amber); border:1px solid rgba(245,158,11,.25); }
+.badge-teal   { background:rgba(20,184,166,.12); color:var(--teal); border:1px solid rgba(20,184,166,.25); }
+.badge-green  { background:rgba(34,197,94,.12); color:var(--green); border:1px solid rgba(34,197,94,.25); }
+
+/* ── SEARCH ── */
+.search-wrap { position: relative; margin-bottom: 24px; }
+.search-wrap input {
+  width: 100%; padding: 12px 18px 12px 46px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-family: var(--font-body); font-size: .9rem;
+  transition: border-color .2s;
+  outline: none;
+}
+.search-wrap input:focus { border-color: var(--cyan); }
+.search-wrap::before {
+  content: '🔍'; position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+  font-size: .9rem; pointer-events: none;
+}
+.search-wrap input::placeholder { color: var(--text3); }
+
+/* ── OVERVIEW CARDS ── */
+.overview-virus-card {
+  border-radius: var(--radius); padding: 22px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.ov-cmv  { background: linear-gradient(135deg,rgba(0,212,255,.06),rgba(99,102,241,.06)); border-color: rgba(0,212,255,.2); }
+.ov-vzv  { background: linear-gradient(135deg,rgba(139,92,246,.06),rgba(244,63,94,.06)); border-color: rgba(139,92,246,.2); }
+.ov-b19  { background: linear-gradient(135deg,rgba(245,158,11,.06),rgba(244,63,94,.06)); border-color: rgba(245,158,11,.2); }
+.ov-rub  { background: linear-gradient(135deg,rgba(20,184,166,.06),rgba(34,197,94,.06)); border-color: rgba(20,184,166,.2); }
+.ov-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; display:flex; align-items:center; gap:10px; }
+.fact-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.fact-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: .87rem; color: var(--text2); line-height: 1.5;
+}
+.fact-list li::before { content: '→'; color: var(--cyan); flex-shrink: 0; margin-top:1px; }
+
+/* ── HIGH YIELD ── */
+.hy-card {
+  background: rgba(244,63,94,.06); border: 1px solid rgba(244,63,94,.2);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 24px;
+}
+.hy-title { font-family: var(--font-display); font-weight: 700; color: var(--rose); margin-bottom: 10px; font-size: .95rem; }
+.hy-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.hy-list li { font-size: .86rem; color: var(--text2); display:flex; gap:8px; }
+.hy-list li::before { content:'⚠️'; flex-shrink:0; }
+
+/* ── QUIZ ── */
+.quiz-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+.quiz-progress-bar { background: var(--bg3); border-radius: 100px; height: 8px; margin-bottom: 28px; overflow:hidden; }
+.quiz-progress-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--cyan), var(--violet)); transition: width .4s ease; }
+.quiz-score-row { display:flex; gap:16px; flex-wrap:wrap; }
+.quiz-score-pill {
+  background: var(--card); border: 1px solid var(--border); border-radius: 100px;
+  padding: 6px 14px; font-size: .8rem; color: var(--text2);
+}
+.quiz-score-pill span { font-family: var(--font-mono); color: var(--cyan); font-weight: 600; }
+
+.question-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+}
+.q-number { font-family: var(--font-mono); font-size: .75rem; color: var(--text3); margin-bottom: 8px; }
+.q-text { font-size: .97rem; line-height: 1.6; margin-bottom: 18px; }
+.q-type-badge { margin-bottom: 14px; }
+.options { display: flex; flex-direction: column; gap: 9px; }
+.option-btn {
+  width: 100%; text-align: left; padding: 12px 16px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer;
+  font-family: var(--font-body); font-size: .88rem; color: var(--text2);
+  transition: all .18s; line-height: 1.5;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--text); background: rgba(0,212,255,.05); }
+.option-btn.correct { background: rgba(34,197,94,.1); border-color: var(--green); color: var(--green); animation: pulseGreen .4s ease; }
+.option-btn.wrong   { background: rgba(244,63,94,.1); border-color: var(--rose); color: var(--rose); animation: shakeWrong .4s ease; }
+.option-btn.reveal  { background: rgba(34,197,94,.06); border-color: rgba(34,197,94,.3); color: var(--green); }
+@keyframes pulseGreen { 0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)} }
+@keyframes shakeWrong { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.explanation {
+  margin-top: 14px; padding: 14px 16px;
+  background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.15);
+  border-radius: var(--radius-sm); font-size: .85rem; color: var(--text2);
+  line-height: 1.6; display: none;
+}
+.explanation.show { display: block; animation: fadeIn .3s ease; }
+.exp-correct { color: var(--green); font-weight: 600; margin-bottom: 6px; }
+.exp-wrong   { color: var(--rose); font-weight: 600; margin-bottom: 6px; }
+
+.quiz-nav { display: flex; gap: 12px; margin-top: 24px; flex-wrap:wrap; }
+.btn {
+  padding: 10px 22px; border-radius: var(--radius-sm); border: none; cursor: pointer;
+  font-family: var(--font-display); font-weight: 600; font-size: .85rem;
+  transition: all .2s;
+}
+.btn-primary { background: var(--cyan); color: #000; }
+.btn-primary:hover { background: var(--cyan2); transform:translateY(-1px); }
+.btn-ghost { background: var(--card2); border: 1px solid var(--border2); color: var(--text2); }
+.btn-ghost:hover { color: var(--text); border-color: var(--cyan); }
+.btn-rose { background: var(--rose); color: #fff; }
+.btn-rose:hover { background: var(--rose2); }
+.btn-violet { background: var(--violet); color: #fff; }
+.btn-violet:hover { background: var(--violet2); }
+
+/* ── FLASHCARDS ── */
+.fc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; }
+.fc-scene { perspective: 800px; height: 190px; cursor: pointer; }
+.fc-card {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1);
+  border-radius: var(--radius);
+}
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: var(--radius); display: flex; flex-direction: column;
+  justify-content: center; padding: 20px;
+  border: 1px solid var(--border);
+}
+.fc-front { background: var(--card); }
+.fc-back  { background: var(--card2); transform: rotateY(180deg); border-color: var(--border2); }
+.fc-q { font-size: .88rem; color: var(--text2); line-height: 1.6; }
+.fc-a { font-size: .86rem; color: var(--cyan); line-height: 1.6; }
+.fc-icon { font-size: 1.5rem; margin-bottom: 10px; }
+.fc-hint { font-family: var(--font-mono); font-size: .65rem; color: var(--text3); margin-top: 10px; }
+
+/* ── CASES ── */
+.case-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 20px; overflow: hidden;
+}
+.case-header {
+  padding: 18px 20px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: flex-start; gap:12px;
+}
+.case-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+.case-body { padding: 20px; }
+.case-vignette {
+  background: var(--bg3); border-left: 3px solid var(--cyan);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 16px; font-size: .88rem; color: var(--text); line-height: 1.7;
+  margin-bottom: 18px;
+}
+.case-q { font-size: .9rem; font-weight: 500; margin-bottom: 12px; color: var(--text); }
+.case-answer {
+  background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.15);
+  border-radius: var(--radius-sm); padding: 16px; margin-top: 12px;
+  font-size: .86rem; color: var(--text2); line-height: 1.7; display: none;
+}
+.case-answer.show { display: block; animation: fadeIn .3s ease; }
+.case-reveal-btn {
+  padding: 8px 18px; background: transparent;
+  border: 1px solid var(--cyan); border-radius: var(--radius-sm); cursor: pointer;
+  font-family: var(--font-body); font-size: .83rem; color: var(--cyan);
+  transition: all .2s;
+}
+.case-reveal-btn:hover { background: rgba(0,212,255,.08); }
+
+/* ── PATHOPHYSIOLOGY ── */
+.flow-box {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 20px; font-size: .87rem; color: var(--text2); line-height: 1.6;
+  position: relative;
+}
+.flow-arrow {
+  text-align: center; color: var(--text3); font-size: 1.3rem; padding: 4px 0;
+}
+.flow-label { font-family: var(--font-mono); font-size: .7rem; color: var(--text3); margin-bottom: 6px; }
+.flow-highlight { color: var(--cyan); font-weight: 600; }
+.flow-group { margin-bottom: 28px; }
+.flow-group-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+  margin-bottom: 14px; display:flex; align-items:center; gap:8px;
+}
+
+/* ── COMPARISON TABLE ── */
+.comp-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.comp-table th {
+  padding: 12px 14px; text-align: left;
+  background: var(--bg3); border: 1px solid var(--border);
+  font-family: var(--font-display); font-weight: 600; font-size: .82rem;
+}
+.comp-table td {
+  padding: 11px 14px; border: 1px solid var(--border);
+  color: var(--text2); vertical-align: top; line-height: 1.5;
+}
+.comp-table tr:nth-child(even) td { background: rgba(255,255,255,.015); }
+.comp-table tr:hover td { background: rgba(0,212,255,.03); }
+.comp-table .feature-col { color: var(--text); font-weight: 500; width: 18%; }
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 28px; }
+.table-wrap .comp-table th, .table-wrap .comp-table td { border-left: none; border-right: none; }
+.table-wrap .comp-table tr:first-child th:first-child { border-radius: var(--radius) 0 0 0; }
+.table-wrap .comp-table tr:first-child th:last-child { border-radius: 0 var(--radius) 0 0; }
+
+/* ── DIAGNOSIS ── */
+.diag-step {
+  display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start;
+}
+.diag-step-num {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: .8rem; color: #000;
+}
+.diag-step-body { flex: 1; padding-top: 4px; }
+.diag-step-title { font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+.diag-step-desc { font-size: .84rem; color: var(--text2); line-height: 1.55; }
+
+/* ── TREATMENT ── */
+.treat-card {
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+.treat-cmv   { border-color: rgba(0,212,255,.2); background: rgba(0,212,255,.04); }
+.treat-vzv   { border-color: rgba(139,92,246,.2); background: rgba(139,92,246,.04); }
+.treat-b19   { border-color: rgba(245,158,11,.2); background: rgba(245,158,11,.04); }
+.treat-rubella{border-color: rgba(20,184,166,.2); background: rgba(20,184,166,.04); }
+.treat-title { font-family: var(--font-display); font-weight: 700; margin-bottom: 10px; display:flex; align-items:center; gap:8px; }
+.treat-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.treat-list li { font-size: .86rem; color: var(--text2); display:flex; gap:8px; line-height:1.5; }
+.treat-list li::before { content:'•'; color:var(--cyan); flex-shrink:0; }
+
+/* ── MNEMONICS ── */
+.mnemonic-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px; margin-bottom: 16px; transition: border-color .2s;
+}
+.mnemonic-card:hover { border-color: var(--violet); }
+.mnemonic-word {
+  font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 6px; letter-spacing: .04em;
+}
+.mnemonic-name { font-size: .78rem; color: var(--text3); font-family: var(--font-mono); margin-bottom: 16px; }
+.mnemonic-expand { display: flex; flex-direction: column; gap: 7px; }
+.mne-row { display: flex; gap: 12px; font-size: .87rem; }
+.mne-letter {
+  font-family: var(--font-mono); font-weight: 700; color: var(--violet);
+  width: 20px; flex-shrink: 0; font-size: 1rem;
+}
+.mne-meaning { color: var(--text2); line-height: 1.5; }
+.mne-sub { color: var(--text3); font-size: .78rem; }
+
+/* ── VIVA ── */
+.viva-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+}
+.viva-q {
+  padding: 15px 20px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap:12px;
+  font-size: .9rem; font-weight: 500; transition: background .2s;
+  user-select: none;
+}
+.viva-q:hover { background: var(--card2); }
+.viva-arrow { color: var(--text3); transition: transform .25s; }
+.viva-card.open .viva-arrow { transform: rotate(90deg); }
+.viva-a {
+  padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .3s ease;
+  font-size: .86rem; color: var(--text2); line-height: 1.65;
+  border-top: 0 solid var(--border);
+}
+.viva-card.open .viva-a {
+  max-height: 600px; padding: 14px 20px 18px;
+  border-top: 1px solid var(--border);
+}
+.viva-exam { margin-top: 8px; font-size: .8rem; color: var(--amber); font-style: italic; }
+
+/* ── RESULT SCREEN ── */
+.result-screen {
+  text-align: center; padding: 60px 24px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.result-emoji { font-size: 5rem; margin-bottom: 20px; }
+.result-score {
+  font-family: var(--font-display); font-size: 3.5rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.result-label { color: var(--text2); font-size: 1rem; margin-bottom: 28px; }
+.result-msg { color: var(--text2); font-size: .9rem; max-width: 380px; margin: 0 auto 28px; line-height: 1.6; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px) {
+  .tabs { gap: 4px; padding: 4px; }
+  .tab-btn { padding: 7px 12px; font-size: .76rem; }
+  .quiz-nav { flex-direction: column; }
+  .quiz-score-row { flex-direction: column; gap:8px; }
+  .mnemonic-word { font-size: 1.6rem; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-kme">KME · MICROBIOLOGY</div>
+    <h1>Congenital Viral Infections</h1>
+    <p>CMV · VZV · Parvovirus B19 · Rubella | Mansoura University · Semester 4</p>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-pill">📊 Quiz Score: <span id="stat-score">0/25</span></div>
+    <div class="stat-pill">🔥 Streak: <span id="stat-streak">0</span></div>
+    <div class="stat-pill">📚 Flashcards: <span id="stat-fc">0/22</span></div>
+    <div class="stat-pill">✅ Progress: <span id="stat-prog">0%</span></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">🏠 Overview</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">🎯 Quiz</button>
+    <button class="tab-btn" onclick="switchTab('flashcards')">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('cases')">🩺 Clinical Cases</button>
+    <button class="tab-btn" onclick="switchTab('pathophys')">🧬 Pathophysiology</button>
+    <button class="tab-btn" onclick="switchTab('diagnosis')">🔬 Diagnosis</button>
+    <button class="tab-btn" onclick="switchTab('treatment')">💊 Treatment</button>
+    <button class="tab-btn" onclick="switchTab('mnemonics')">🧠 Mnemonics</button>
+    <button class="tab-btn" onclick="switchTab('viva')">🗣️ Viva</button>
+  </div>
+
+  <!-- ═══════════════ OVERVIEW ═══════════════ -->
+  <div id="tab-overview" class="section active">
+    <p class="sec-heading">TORCH Infections — Overview</p>
+    <p class="sec-sub">Four major congenital viral pathogens and their clinical significance</p>
+
+    <div class="hy-card">
+      <div class="hy-title">⚠️ EXAM HIGH-YIELD ALERTS</div>
+      <ul class="hy-list">
+        <li><strong>CMV periventricular calcifications</strong> → pathognomonic on fetal ultrasound</li>
+        <li><strong>CRS classic triad</strong> → Sensorineural Deafness + Cataracts + Congenital Heart Defect (PDA)</li>
+        <li><strong>SNHL</strong> is the most common single feature of BOTH CMV and CRS</li>
+        <li><strong>Parvovirus B19 is NOT a teratogen</strong> — causes hematological damage only</li>
+        <li><strong>Live-attenuated vaccines (MMR, Varivax)</strong> are CONTRAINDICATED in pregnancy</li>
+        <li><strong>Neonatal Varicella critical window</strong>: maternal rash 5 days before → 2 days after delivery</li>
+        <li><strong>MCA peak systolic velocity ↑</strong> on Doppler = non-invasive sign of fetal anemia (Parvo B19)</li>
+      </ul>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="overview-search" placeholder="Search facts, viruses, signs…" oninput="filterOverview(this.value)"/>
+    </div>
+
+    <div id="overview-content">
+      <div class="overview-virus-card ov-cmv searchable">
+        <div class="ov-title">🦠 Cytomegalovirus (CMV) — HHV-5 <span class="badge badge-cyan">Beta-herpesvirus</span></div>
+        <ul class="fact-list">
+          <li><strong>Genome:</strong> Linear dsDNA, ~235 kb — <em>largest human herpesvirus</em></li>
+          <li><strong>Latency site:</strong> Monocytes, macrophages, renal tubular cells</li>
+          <li><strong>Transmission:</strong> Saliva, sexual contact, vertical (transplacental), blood products</li>
+          <li><strong>Reactivation:</strong> Asymptomatic shedding in saliva/urine (healthy) → end-organ disease (immunocompromised) — retinitis, colitis</li>
+          <li><strong>Congenital CID triad:</strong> Microcephaly + Periventricular calcifications + Sensorineural hearing loss</li>
+          <li><strong>Pathognomonic finding in culture:</strong> Swollen "Owl-eye" intranuclear inclusions</li>
+          <li><strong>Most common congenital viral infection</strong></li>
+          <li><strong>Delayed SNHL:</strong> 10–15% of asymptomatic congenital CMV infants develop SNHL by school age</li>
+          <li><strong>Diagnosis:</strong> CMV PCR in urine/blood; amniocentesis (after 21 weeks + ≥6 weeks post infection)</li>
+        </ul>
+      </div>
+
+      <div class="overview-virus-card ov-vzv searchable">
+        <div class="ov-title">🫙 Varicella-Zoster Virus (VZV) — HHV-3 <span class="badge badge-violet">Alpha-herpesvirus</span></div>
+        <ul class="fact-list">
+          <li><strong>Genome:</strong> Linear dsDNA, ~125 kb; enveloped</li>
+          <li><strong>Latency site:</strong> Dorsal root ganglia (sensory neurons)</li>
+          <li><strong>Primary infection:</strong> Chickenpox (Varicella) — respiratory droplets</li>
+          <li><strong>Reactivation:</strong> Herpes Zoster (Shingles) — anterograde, unilateral dermatomal vesicular rash</li>
+          <li><strong>Congenital Varicella Syndrome (CVS) — &lt;20 weeks:</strong> Limb hypoplasia, cicatricial skin scarring, muscle atrophy (due to fetal sensory ganglia infection → denervation)</li>
+          <li><strong>Neonatal Varicella (critical window):</strong> Maternal rash −5 days to +2 days from delivery → no passive IgG transfer → pneumonia, hepatitis, encephalitis, <strong>30% mortality</strong></li>
+          <li><strong>Infantile Herpes Zoster:</strong> VZV latency in fetal ganglia → shingles in first 12 months of life</li>
+          <li><strong>Vaccine:</strong> Varivax (live-attenuated) — contraindicated in pregnancy</li>
+        </ul>
+      </div>
+
+      <div class="overview-virus-card ov-b19 searchable">
+        <div class="ov-title">🩸 Parvovirus B19 <span class="badge badge-amber">Autonomous Parvovirus</span></div>
+        <ul class="fact-list">
+          <li><strong>Genome:</strong> Linear ssDNA — <em>smallest human pathogenic virus; non-enveloped</em></li>
+          <li><strong>Target cell:</strong> Erythroid progenitor cells (requires mitotically active cells)</li>
+          <li><strong>Replication pathway:</strong> Nasopharynx → primary viremia → bone marrow → massive secondary viremia → placenta, joints, skin</li>
+          <li><strong>NOT a teratogen</strong> — causes hematological damage ONLY</li>
+          <li><strong>Hydrops Fetalis:</strong> Fetal RBC progenitor destruction → severe fetal anemia → fetal heart failure → fluid in ≥2 compartments (ascites, pleural/pericardial effusion, skin edema)</li>
+          <li><strong>Erythema Infectiosum (5th Disease):</strong> "Slapped-cheek" rash, lacy reticular trunk rash in children; rash appears day 14–21 (immunologic phase, after peak viremia)</li>
+          <li><strong>Transient Aplastic Crisis:</strong> In sickle cell, thalassemia, spherocytosis — sudden severe Hgb drop</li>
+          <li><strong>Chronic Pure Red Cell Aplasia:</strong> In immunocompromised — ongoing progenitor destruction</li>
+          <li><strong>Maternal diagnosis:</strong> IgM (recent infection), PCR for B19 DNA</li>
+          <li><strong>Fetal monitoring:</strong> MCA peak systolic velocity ↑ (non-invasive anemia marker)</li>
+          <li><strong>Treatment:</strong> Intrauterine blood transfusion (IUT) via cordocentesis for severe fetal anemia</li>
+          <li><strong>No vaccine available</strong></li>
+        </ul>
+      </div>
+
+      <div class="overview-virus-card ov-rub searchable">
+        <div class="ov-title">🌹 Rubella Virus <span class="badge badge-teal">Rubivirus (Togaviridae)</span></div>
+        <ul class="fact-list">
+          <li><strong>Genome:</strong> Positive-sense ssRNA; enveloped with hemagglutinin spikes</li>
+          <li><strong>Only member</strong> of genus Rubivirus (Matonaviridae)</li>
+          <li><strong>Replication pathway:</strong> Oropharynx → local lymph nodes → viremia (day 5–7) → internal organs, placenta, skin</li>
+          <li><strong>Classic TERATOGEN — risk by trimester:</strong> 0–12 wks ≈ 90% | 13–16 wks ≈ 10–20% | &gt;16 wks ≈ low</li>
+          <li><strong>CRS Classic Triad:</strong> Sensorineural Deafness (most common) + Cataracts + Congenital Heart Defects (PDA / branch pulmonary artery stenosis)</li>
+          <li><strong>Other CRS features:</strong> Blueberry muffin rash (dermal extramedullary hematopoiesis), hepatosplenomegaly, microcephaly</li>
+          <li><strong>Healthy child presentation:</strong> Pink maculopapular rash spreading head → foot, posterior auricular lymphadenopathy, low-grade fever</li>
+          <li><strong>Prevention:</strong> MMR vaccine (live-attenuated) — give &gt;1 month before conception; CONTRAINDICATED in pregnancy</li>
+          <li><strong>Diagnosis:</strong> Serology (IgM/IgG), RT-PCR most sensitive in viremic phase (before rash)</li>
+        </ul>
+      </div>
+
+      <!-- TORCH acronym -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">🔡 TORCH Acronym</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+          <div class="badge badge-amber" style="font-size:.82rem;padding:6px 14px;">T — Toxoplasma</div>
+          <div class="badge badge-cyan" style="font-size:.82rem;padding:6px 14px;">O — Others (VZV, Parvo B19, HIV, Zika)</div>
+          <div class="badge badge-teal" style="font-size:.82rem;padding:6px 14px;">R — Rubella</div>
+          <div class="badge badge-violet" style="font-size:.82rem;padding:6px 14px;">C — Cytomegalovirus</div>
+          <div class="badge badge-rose" style="font-size:.82rem;padding:6px 14px;">H — Herpes Simplex</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <div id="tab-quiz" class="section">
+    <p class="sec-heading">MCQ Quiz</p>
+    <p class="sec-sub">25 USMLE-style questions — click an option to answer</p>
+
+    <div class="quiz-header">
+      <div class="quiz-score-row">
+        <div class="quiz-score-pill">Question: <span id="q-num">1</span>/25</div>
+        <div class="quiz-score-pill">Score: <span id="q-score">0</span></div>
+        <div class="quiz-score-pill">Streak 🔥 <span id="q-streak">0</span></div>
+      </div>
+      <button class="btn btn-ghost" onclick="restartQuiz()">↺ Restart</button>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q-prog-fill" style="width:0%"></div></div>
+
+    <div id="quiz-area"></div>
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" onclick="prevQ()" id="btn-prev">← Prev</button>
+      <button class="btn btn-primary" onclick="nextQ()" id="btn-next">Next →</button>
+      <button class="btn btn-violet" onclick="finishQuiz()" id="btn-finish" style="display:none">🏁 Finish</button>
+    </div>
+    <div id="quiz-result" style="display:none;margin-top:24px;"></div>
+  </div>
+
+  <!-- ═══════════════ FLASHCARDS ═══════════════ -->
+  <div id="tab-flashcards" class="section">
+    <p class="sec-heading">Flashcards</p>
+    <p class="sec-sub">Click any card to flip it — 22 key concepts</p>
+    <div class="fc-grid" id="fc-grid"></div>
+  </div>
+
+  <!-- ═══════════════ CLINICAL CASES ═══════════════ -->
+  <div id="tab-cases" class="section">
+    <p class="sec-heading">Clinical Cases</p>
+    <p class="sec-sub">Exam-style vignettes — reveal the answer when ready</p>
+    <div id="cases-area"></div>
+  </div>
+
+  <!-- ═══════════════ PATHOPHYSIOLOGY ═══════════════ -->
+  <div id="tab-pathophys" class="section">
+    <p class="sec-heading">Pathophysiology</p>
+    <p class="sec-sub">Step-by-step mechanistic flowcharts for each pathogen</p>
+
+    <div class="flow-group">
+      <div class="flow-group-title">🦠 CMV — Congenital Infection Pathway <span class="badge badge-cyan">CID</span></div>
+      <div class="flow-box"><span class="flow-label">ENTRY</span>Primary CMV infection in mother (often asymptomatic mononucleosis-like illness)</div>
+      <div class="flow-arrow">↓ Transplacental crossing</div>
+      <div class="flow-box"><span class="flow-label">LATENCY</span>CMV establishes latency in <span class="flow-highlight">monocytes / macrophages / renal tubular cells</span></div>
+      <div class="flow-arrow">↓ Reactivation during pregnancy</div>
+      <div class="flow-box"><span class="flow-label">FETAL TARGET</span>Virus reaches fetal CNS via transplacental viremia</div>
+      <div class="flow-arrow">↓ Direct cytopathic effect on periventricular tissue</div>
+      <div class="flow-box" style="border-color:rgba(0,212,255,.3)"><span class="flow-label">OUTCOME</span>Necrosis → calcium deposits → <span class="flow-highlight">periventricular calcifications</span> (pathognomonic on US) → Microcephaly, SNHL, mental retardation, seizures</div>
+      <div style="margin-top:10px;padding:10px 14px;background:rgba(0,212,255,.05);border-radius:8px;font-size:.82rem;color:var(--text3)">
+        🔬 Pathognomonic cell culture finding: <strong style="color:var(--cyan)">"Owl-eye" intranuclear inclusions</strong> in cytomegalic (swollen, translucent) cells
+      </div>
+    </div>
+
+    <div class="flow-group">
+      <div class="flow-group-title">🩸 Parvovirus B19 — Fetal Anemia Pathway <span class="badge badge-amber">Hydrops Fetalis</span></div>
+      <div class="flow-box"><span class="flow-label">ENTRY</span>Respiratory droplet transmission to mother → Nasopharynx replication</div>
+      <div class="flow-arrow">↓ Day 5–10</div>
+      <div class="flow-box"><span class="flow-label">PRIMARY VIREMIA</span>Bloodstream → <span class="flow-highlight">Bone marrow (erythroid progenitors)</span> targeted and lysed</div>
+      <div class="flow-arrow">↓ Day 10–14: Massive secondary viremia</div>
+      <div class="flow-box"><span class="flow-label">DISSEMINATION</span>Virus reaches joints (polyarthralgia in mother), skin (rash on day 14–21), and <span class="flow-highlight">placenta</span></div>
+      <div class="flow-arrow">↓ Transplacental crossing to fetus</div>
+      <div class="flow-box"><span class="flow-label">FETAL HEMATOLOGY</span>Fetal RBC progenitors destroyed → <span class="flow-highlight">Severe fetal anemia</span> (MCA peak systolic velocity ↑)</div>
+      <div class="flow-arrow">↓ Compensatory cardiac hyperfunction fails</div>
+      <div class="flow-box" style="border-color:rgba(245,158,11,.3)"><span class="flow-label">HYDROPS FETALIS</span>Fetal heart failure → fluid leaks into ≥2 compartments: <span class="flow-highlight">ascites + pleural effusion + pericardial effusion + skin edema</span> → fetal death without IUT</div>
+    </div>
+
+    <div class="flow-group">
+      <div class="flow-group-title">🌹 Rubella — CRS Pathogenesis <span class="badge badge-teal">Teratogen</span></div>
+      <div class="flow-box"><span class="flow-label">ENTRY</span>Respiratory droplet → Oropharynx replication</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box"><span class="flow-label">LYMPHOID SPREAD</span>Local cervical lymph nodes → amplification → <span class="flow-highlight">Viremia day 5–7</span></div>
+      <div class="flow-arrow">↓ Transplacental crossing</div>
+      <div class="flow-box"><span class="flow-label">FETAL MULTIPLICATION</span>Virus <strong>actively multiplies in all fetal tissues</strong> — interferes with cell division and organogenesis</div>
+      <div class="flow-arrow">↓ First trimester (0–12 wks) = 90% risk</div>
+      <div class="flow-box" style="border-color:rgba(20,184,166,.3)"><span class="flow-label">CRS TRIAD</span><span class="flow-highlight">Sensorineural Deafness</span> (cochlear damage) + <span class="flow-highlight">Cataracts</span> (lens epithelium) + <span class="flow-highlight">PDA / cardiac defects</span> (endocardial disruption)</div>
+    </div>
+
+    <div class="flow-group">
+      <div class="flow-group-title">🫙 VZV — Neonatal Varicella Critical Window</div>
+      <div class="flow-box"><span class="flow-label">CRITICAL WINDOW</span>Maternal rash appears <span class="flow-highlight">5 days before → 2 days after</span> delivery</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box"><span class="flow-label">ANTIBODY GAP</span>Mother is in <em>primary viremic phase</em> — <strong>no time to produce and transfer protective IgG</strong> to fetus</div>
+      <div class="flow-arrow">↓ Neonate born without passive immunity</div>
+      <div class="flow-box" style="border-color:rgba(139,92,246,.3)"><span class="flow-label">SEVERE DISEASE</span>Neonatal Varicella: <span class="flow-highlight">Pneumonia + Hepatitis + Encephalitis</span> — up to <strong>30% mortality</strong></div>
+      <div style="margin-top:10px;padding:10px 14px;background:rgba(139,92,246,.05);border-radius:8px;font-size:.82rem;color:var(--text3)">
+        Note: If maternal rash &gt;2 days before birth, some passive IgG transfer occurs → milder disease
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ DIAGNOSIS ═══════════════ -->
+  <div id="tab-diagnosis" class="section">
+    <p class="sec-heading">Diagnosis</p>
+    <p class="sec-sub">Investigative approach for congenital viral infections</p>
+
+    <!-- Comparison table -->
+    <div class="card" style="margin-bottom:28px;">
+      <div class="card-title" style="margin-bottom:16px;">📊 Diagnostic Modalities — Comparison</div>
+      <div class="table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Investigation</th>
+              <th>CMV</th>
+              <th>VZV</th>
+              <th>Parvovirus B19</th>
+              <th>Rubella</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature-col">Serology (IgM)</td>
+              <td>Acute infection in mother; infant IgM doesn't cross placenta</td>
+              <td>Acute chickenpox; IgM indicates primary infection</td>
+              <td>Maternal IgM = recent infection (peak viremia)</td>
+              <td>Maternal IgM = recent; infant IgM = congenital</td>
+            </tr>
+            <tr>
+              <td class="feature-col">IgG kinetics</td>
+              <td>Rising IgG after 6 months in infant = true congenital infection</td>
+              <td>Rising IgG confirms past or active infection</td>
+              <td>Rising IgG = recent infection; persisting beyond 6 months in infant</td>
+              <td>Persisting or rising IgG &gt;6 months in infant = true congenital CRS</td>
+            </tr>
+            <tr>
+              <td class="feature-col">PCR / Viral DNA</td>
+              <td>CMV DNA in urine/blood — gold standard neonatal diagnosis within first 21 days</td>
+              <td>VZV PCR from vesicle fluid — highly sensitive</td>
+              <td>B19 DNA PCR in maternal blood — most sensitive in viremic phase (before rash)</td>
+              <td>RT-PCR in nasopharynx / blood — most sensitive before rash</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Amniocentesis</td>
+              <td>CMV PCR in amniotic fluid — after <strong>21 weeks</strong> + ≥6 weeks post-infection (fetal kidneys must excrete virus)</td>
+              <td>VZV PCR in AF (rarely needed)</td>
+              <td>B19 PCR in AF for fetal diagnosis</td>
+              <td>Rubella PCR rarely used; serology preferred</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Fetal Ultrasound</td>
+              <td><strong>Periventricular calcifications</strong>, microcephaly (pathognomonic)</td>
+              <td>Limb hypoplasia, cicatricial lesions on skin</td>
+              <td>Ascites, pleural effusion, thick placenta; <strong>↑ MCA PSV (fetal anemia)</strong></td>
+              <td>Cardiac defects (PDA), IUGR, echogenic structures</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Cell Culture</td>
+              <td>"Owl-eye" intranuclear inclusions in swollen cells — <strong>pathognomonic</strong></td>
+              <td>Cowdry Type A inclusions in multinucleated giant cells</td>
+              <td>Not routinely cultured (requires specific erythroid progenitor lines)</td>
+              <td>CPE in Vero cells; rarely performed clinically</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Cordocentesis (PUBS)</td>
+              <td>Fetal blood for CMV PCR + CBC</td>
+              <td>VZV PCR in fetal blood</td>
+              <td>Confirm fetal anemia (Hgb ↓) + B19 DNA PCR; allows IUT</td>
+              <td>Rarely used</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Diagnostic algorithm steps -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:18px;">🔭 Diagnostic Algorithm — Pregnant Woman with Suspected TORCH Infection</div>
+      <div class="diag-step">
+        <div class="diag-step-num">1</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">Clinical Assessment + Exposure History</div>
+          <div class="diag-step-desc">Identify rash type (slapped-cheek → B19; maculopapular descending → Rubella; vesicular dermatomal → VZV; absent → CMV). Document gestational age, maternal illness, travel, vaccine history.</div>
+        </div>
+      </div>
+      <div class="diag-step">
+        <div class="diag-step-num">2</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">Maternal Serology (IgM + IgG)</div>
+          <div class="diag-step-desc">IgM positive = acute/recent infection. Paired IgG titres (acute + convalescent) showing ≥4× rise = recent seroconversion. Note: IgM can be false positive in certain conditions.</div>
+        </div>
+      </div>
+      <div class="diag-step">
+        <div class="diag-step-num">3</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">PCR Confirmation in Mother</div>
+          <div class="diag-step-desc">Send pathogen-specific PCR from blood/nasopharynx. Most sensitive during viremic phase (before rash appears). CMV: urine PCR. B19: blood DNA. VZV: vesicle PCR.</div>
+        </div>
+      </div>
+      <div class="diag-step">
+        <div class="diag-step-num">4</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">Fetal Monitoring — Serial Ultrasound</div>
+          <div class="diag-step-desc">Assess every 1–2 weeks for: periventricular calcifications (CMV), limb hypoplasia (VZV), hydrops fetalis / increased MCA peak systolic velocity (B19), structural cardiac anomalies (Rubella), growth restriction.</div>
+        </div>
+      </div>
+      <div class="diag-step">
+        <div class="diag-step-num">5</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">Invasive Fetal Sampling (if indicated)</div>
+          <div class="diag-step-desc">Amniocentesis (≥21 weeks, ≥6 weeks post-infection): CMV PCR in AF — fetal kidneys must excrete virus. Cordocentesis (PUBS): fetal CBC for anemia (B19) + pathogen PCR. Enables IUT for B19 hydrops.</div>
+        </div>
+      </div>
+      <div class="diag-step">
+        <div class="diag-step-num">6</div>
+        <div class="diag-step-body">
+          <div class="diag-step-title">Neonatal Workup (≤21 days of age)</div>
+          <div class="diag-step-desc">CMV: urine PCR within 3 weeks (gold standard — differentiates congenital from postnatal). Hearing screening (SNHL — CMV & Rubella). Ophthalmology (cataracts — Rubella; chorioretinitis — CMV). Cardiac echo (PDA — Rubella).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TREATMENT ═══════════════ -->
+  <div id="tab-treatment" class="section">
+    <p class="sec-heading">Treatment & Prevention</p>
+    <p class="sec-sub">Management strategies for each congenital viral infection</p>
+
+    <div class="treat-card treat-cmv">
+      <div class="treat-title">🦠 Cytomegalovirus (CMV)</div>
+      <ul class="treat-list">
+        <li><strong>Symptomatic neonates:</strong> IV Ganciclovir or oral Valganciclovir for 6 months — improves hearing outcomes and neurodevelopment</li>
+        <li><strong>Immunocompromised adults (reactivation):</strong> Ganciclovir / Valganciclovir; Foscarnet if resistance; Cidofovir as last resort</li>
+        <li><strong>CMV retinitis:</strong> Intravitreal Ganciclovir implant + oral Valganciclovir</li>
+        <li><strong>Prevention:</strong> Universal newborn hearing screening; serial audiological follow-up to school age (delayed SNHL)</li>
+        <li><strong>No licensed CMV vaccine</strong> available currently</li>
+        <li><strong>Prophylaxis in transplant patients:</strong> Oral Valganciclovir (pre-emptive or universal strategy)</li>
+      </ul>
+    </div>
+
+    <div class="treat-card treat-vzv">
+      <div class="treat-title">🫙 Varicella-Zoster Virus (VZV)</div>
+      <ul class="treat-list">
+        <li><strong>Maternal chickenpox:</strong> Oral Acyclovir (initiate within 24h of rash)</li>
+        <li><strong>Neonatal Varicella (critical window):</strong> IV Acyclovir immediately; Varicella-Zoster Immune Globulin (VZIG) prophylactically to neonate</li>
+        <li><strong>Herpes Zoster:</strong> Oral Valacyclovir or Famciclovir (7–10 days)</li>
+        <li><strong>Prevention — Varivax (live-attenuated):</strong> 2 doses; given at 12–15 months + 4–6 years; CONTRAINDICATED IN PREGNANCY</li>
+        <li><strong>Pre-conception:</strong> Screen seronegative women → vaccinate ≥1 month before conception</li>
+        <li><strong>Congenital Varicella Syndrome:</strong> Supportive care; ophthalmology, physiotherapy, neurological follow-up</li>
+      </ul>
+    </div>
+
+    <div class="treat-card treat-b19">
+      <div class="treat-title">🩸 Parvovirus B19</div>
+      <ul class="treat-list">
+        <li><strong>Healthy children (5th Disease):</strong> Supportive care only — self-limiting (7–10 days)</li>
+        <li><strong>Fetal hydrops:</strong> <em>Intrauterine Blood Transfusion (IUT) via cordocentesis</em> — significantly improves fetal survival</li>
+        <li><strong>Monitoring fetal anemia:</strong> Serial MCA Doppler ultrasound (PSV &gt;1.5 MoM = significant anemia)</li>
+        <li><strong>Transient Aplastic Crisis:</strong> RBC transfusion support until immune clearance</li>
+        <li><strong>Chronic Pure Red Cell Aplasia (immunocompromised):</strong> IV Immunoglobulin (IVIG) — reduces viral load</li>
+        <li><strong>No vaccine available</strong></li>
+        <li><strong>Polyarthralgia in adults:</strong> NSAIDs for symptom relief</li>
+      </ul>
+    </div>
+
+    <div class="treat-card treat-rubella">
+      <div class="treat-title">🌹 Rubella Virus</div>
+      <ul class="treat-list">
+        <li><strong>Maternal Rubella:</strong> No antiviral treatment — supportive care only</li>
+        <li><strong>Congenital Rubella Syndrome:</strong> No cure — management of sequelae</li>
+        <li><strong>SNHL:</strong> Hearing aids / cochlear implants</li>
+        <li><strong>Cataracts:</strong> Early surgical removal; refractive correction</li>
+        <li><strong>Cardiac defects (PDA):</strong> Indomethacin (medical closure) or surgical ligation / catheter-based closure</li>
+        <li><strong>Prevention — MMR vaccine (live-attenuated):</strong> 2 doses at 12–15 months + 4–6 years; CONTRAINDICATED IN PREGNANCY</li>
+        <li><strong>Pre-conception:</strong> Rubella IgG screening → vaccinate seronegative women ≥1 month before conception</li>
+      </ul>
+    </div>
+
+    <!-- Vaccine comparison table -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">💉 Vaccine Summary</div>
+      <div class="table-wrap">
+        <table class="comp-table">
+          <thead><tr><th>Pathogen</th><th>Vaccine</th><th>Type</th><th>Pregnancy</th><th>Schedule</th></tr></thead>
+          <tbody>
+            <tr><td>Rubella</td><td>MMR (Measles-Mumps-Rubella)</td><td>Live-attenuated</td><td style="color:var(--rose)">⛔ CONTRAINDICATED</td><td>12–15 mo; 4–6 yr; pre-conception ≥1 mo</td></tr>
+            <tr><td>VZV</td><td>Varivax (Varicella)</td><td>Live-attenuated</td><td style="color:var(--rose)">⛔ CONTRAINDICATED</td><td>12–15 mo; 4–6 yr; pre-conception ≥1 mo</td></tr>
+            <tr><td>CMV</td><td>—</td><td>None licensed</td><td>—</td><td>Under development</td></tr>
+            <tr><td>Parvovirus B19</td><td>—</td><td>None available</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MNEMONICS ═══════════════ -->
+  <div id="tab-mnemonics" class="section">
+    <p class="sec-heading">Mnemonics</p>
+    <p class="sec-sub">Memory tricks built from the lecture content</p>
+    <div id="mnemonics-area"></div>
+  </div>
+
+  <!-- ═══════════════ VIVA ═══════════════ -->
+  <div id="tab-viva" class="section">
+    <p class="sec-heading">Viva Questions</p>
+    <p class="sec-sub">12 examiner-style questions — click to reveal the answer</p>
+    <div id="viva-area"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ DATA ═══════════════
+const QUESTIONS = [
+  {
+    num:1,type:"Mechanism",
+    q:"How does Parvovirus B19 lead to hydrops fetalis in an infected fetus?",
+    opts:["A) By inducing massive inflammatory responses in the fetal myocardium","B) By crossing the placenta and directly causing structural heart defects","C) By destroying fetal RBC progenitors, leading to severe anemia and secondary heart failure","D) By integrating into fetal DNA and causing malignant transformation","E) By causing immune-mediated destruction of fetal platelets"],
+    ans:2,
+    exp:"The virus specifically targets and destroys fetal RBC progenitors, causing severe fetal anemia which leads to heart failure, fluid leakage into ≥2 compartments, and hydrops fetalis. B19 is NOT a teratogen and does NOT cause structural defects.",
+    expWrong:"A — targets RBCs, not myocardium directly. B — B19 is not a teratogen. D — does not integrate into DNA. E — describes thrombocytopenic purpura mechanism."
+  },
+  {
+    num:2,type:"Mechanism",
+    q:"What is the underlying mechanism for the development of Herpes Zoster in an adult?",
+    opts:["A) De novo infection with VZV via respiratory droplets","B) Reactivation of latent VZV residing in the dorsal root ganglia","C) Reactivation of latent VZV residing in circulating monocytes","D) Secondary viremia localizing exclusively to the nasopharynx","E) Incomplete vaccination with the live-attenuated MMR vaccine"],
+    ans:1,
+    exp:"VZV establishes latency in sensory neurons of the dorsal root ganglia after primary infection (chickenpox). Reactivation travels anterograde down the nerve producing unilateral dermatomal vesicular rash (shingles).",
+    expWrong:"A — causes primary varicella. C — is the latency site for CMV. D — describes B19. E — MMR doesn't cover VZV."
+  },
+  {
+    num:3,type:"Mechanism",
+    q:"Why does Congenital Rubella Syndrome primarily manifest with anomalies like deafness and cataracts when infection occurs in the first trimester?",
+    opts:["A) The virus relies on a helper virus only present early in gestation","B) The virus destroys erythroid progenitors active in the first trimester","C) The virus crosses the placenta and multiplies in the fetus, posing ~90% risk during organogenesis (0–12 weeks)","D) Maternal IgG antibodies are destructive to fetal tissues before 12 weeks","E) The virus induces severe placental thickening cutting off blood supply"],
+    ans:2,
+    exp:"Rubella is a true teratogen. It crosses the placenta and multiplies in all fetal tissues. During the critical organogenic window (0–12 weeks) the risk of CRS is ~90%, directly disrupting developing cochlear, lens, and cardiac structures.",
+    expWrong:"A — refers to dependoviruses (AAV). B — describes B19's mechanism. D — maternal IgG doesn't attack the fetus. E — placental thickening is a B19 sign."
+  },
+  {
+    num:4,type:"Mechanism",
+    q:"What is the pathogenic consequence of CMV establishing latency in monocytes and macrophages?",
+    opts:["A) Lifelong pure red cell aplasia","B) Asymptomatic viral shedding in saliva and urine upon reactivation","C) Prevention of vertical transmission","D) Specific destruction of megakaryocytes","E) Transient aplastic crisis during stress"],
+    ans:1,
+    exp:"CMV latency in monocytes/macrophages and renal tubular cells allows the virus to persist. Reactivation typically causes asymptomatic shedding in saliva and urine, explaining CMV's prevalence and transmission in the general population.",
+    expWrong:"A and E — caused by B19. C — incorrect; CMV commonly transmits vertically. D — megakaryocyte destruction causes purpura, not the direct consequence of latency."
+  },
+  {
+    num:5,type:"Mechanism",
+    q:"A neonate develops vesicular rash, pneumonia, and encephalitis 3 days after birth. The mother had a pruritic rash starting 2 days before delivery. Why is the neonate's disease so severe?",
+    opts:["A) The neonate lacks passive maternal IgG antibodies because the maternal infection occurred too close to delivery","B) The virus mutated into a dependovirus in the birth canal","C) The neonate's macrophages amplified the virus exponentially","D) The mother was given a live-attenuated vaccine during delivery","E) The virus caused extramedullary hematopoiesis in the lungs and brain"],
+    ans:0,
+    exp:"The critical window is maternal rash 5 days before to 2 days after delivery. The mother was in the viremic phase and had no time to produce and transfer protective IgG antibodies to the fetus, leaving the neonate immunologically unprotected against a massive viral inoculum.",
+    expWrong:"B, C, D, E are all incorrect pathophysiological mechanisms for neonatal varicella."
+  },
+  {
+    num:6,type:"Mechanism",
+    q:"In an immunocompromised patient, how does persistent Parvovirus B19 infection typically present?",
+    opts:["A) Retinitis and blindness","B) Chronic pure red cell aplasia requiring repeated transfusions","C) Severe atypical rubella encephalitis","D) Congenital heart defects","E) Dermatomal vesicular rash"],
+    ans:1,
+    exp:"Without an effective immune response to clear B19, the virus continuously destroys erythroid progenitors, resulting in chronic pure red cell aplasia and severe chronic anemia requiring IVIG and repeated transfusions.",
+    expWrong:"A — CMV retinitis. C — Rubella-related. D — Congenital Rubella feature. E — Herpes Zoster (VZV)."
+  },
+  {
+    num:7,type:"Mechanism",
+    q:"How does Rubella virus characteristically spread within the host after initial respiratory droplet transmission?",
+    opts:["A) Nasopharynx → Bone marrow → Massive secondary viremia","B) Oropharynx → Local lymph nodes → Viremia (day 5–7) → Internal organs, placenta, skin","C) Salivary glands → Monocytes → Renal tubular cells","D) Dorsal root ganglia → Anterograde neural transport → Dermatome","E) Genital tract → Ascending infection → Placenta"],
+    ans:1,
+    exp:"Rubella replicates in the oropharynx, spreads to local lymph nodes, then enters the bloodstream causing viremia at days 5–7. This viremia seeds internal organs, the placenta (causing CRS), and the skin (German measles rash).",
+    expWrong:"A — B19 pathway. C — CMV pathway. D — VZV reactivation (shingles). E — not the primary route."
+  },
+  {
+    num:8,type:"Mechanism",
+    q:"Which mechanism best explains the 'blueberry muffin' rash seen in severe congenital viral infections?",
+    opts:["A) Localized viral replication in the epidermis causing targetoid lesions","B) Spontaneous hemorrhage from ruptured superficial veins","C) Dermal extramedullary hematopoiesis due to severe bone marrow stress and thrombocytopenia","D) Allergic reaction to maternal IgG antibodies","E) Vasculitis caused by immune complex deposition in the dermis"],
+    ans:2,
+    exp:"The blueberry muffin rash consists of purpuric non-blanching lesions caused by dermal extramedullary hematopoiesis. The bone marrow under extreme stress shifts blood cell production to the skin, and low platelet counts (thrombocytopenia) cause purpuric bleeding.",
+    expWrong:"A — Erythema Multiforme pattern. B, D, E — incorrect mechanisms for this specific dermatological finding."
+  },
+  {
+    num:9,type:"Structure",
+    q:"What is the pathognomonic cellular finding for Cytomegalovirus infection in culture or tissue?",
+    opts:["A) Multinucleated giant cells with Cowdry type A inclusions","B) Swollen, translucent cells with 'Owl-eye' intranuclear inclusions","C) Erythroid progenitor cells with massive vacuolization","D) Atypical lymphocytes (Downey cells)","E) Syncytia formation in respiratory epithelium"],
+    ans:1,
+    exp:"CMV-infected cells become markedly enlarged (cytomegalic) with a distinctive large 'owl-eye' intranuclear inclusion surrounded by a clear halo. This is pathognomonic for CMV infection.",
+    expWrong:"A — HSV/VZV Cowdry Type A. C — not a recognized finding. D — EBV (infectious mononucleosis). E — RSV."
+  },
+  {
+    num:10,type:"Mechanism",
+    q:"How is fetal anemia secondary to Parvovirus B19 typically detected non-invasively?",
+    opts:["A) By measuring maternal serum alpha-fetoprotein","B) By identifying a blueberry muffin rash on ultrasound","C) By measuring increased middle cerebral artery (MCA) peak systolic velocity via Doppler ultrasound","D) By detecting periventricular calcifications on ultrasound","E) By identifying sensorineural hearing loss in utero"],
+    ans:2,
+    exp:"An anemic fetus compensates by increasing cardiac output, which accelerates blood flow in the MCA. Doppler measurement of MCA peak systolic velocity is the gold-standard non-invasive method to screen for fetal anemia. PSV >1.5 MoM indicates significant anemia.",
+    expWrong:"A — screens for neural tube defects. B — postnatal clinical sign, not an ultrasound finding. D — pathognomonic for CMV, not B19. E — cannot be detected on ultrasound."
+  },
+  {
+    num:11,type:"Mechanism",
+    q:"Why does Congenital Varicella Syndrome typically present with cicatricial skin scarring and limb hypoplasia?",
+    opts:["A) The virus destroys bone marrow progenitor cells","B) VZV establishes latency in fetal sensory ganglia causing denervation and localized tissue destruction in utero","C) The virus induces severe placental insufficiency leading to generalized growth arrest","D) Maternal immune complexes attack fetal joints","E) The virus directly halts long bone endochondral ossification globally"],
+    ans:1,
+    exp:"VZV is neurotropic. In the fetus, it infects developing dorsal root ganglia and sensory neurons, causing denervation of the innervated limb and skin territories. Denervation leads to limb hypoplasia, muscle atrophy, and dermatomal cicatricial scarring.",
+    expWrong:"A — B19's target. C — causes IUGR but not the specific features. D — incorrect mechanism. E — not global ossification arrest."
+  },
+  {
+    num:12,type:"Mechanism",
+    q:"A child with congenital CMV appeared completely asymptomatic at birth. At age 5, they are diagnosed with sensorineural hearing loss. What explains this delayed presentation?",
+    opts:["A) The virus was completely cleared at birth but re-infected the child at age 4","B) SNHL in CMV is often delayed in onset, developing by school age in 10–15% of initially asymptomatic infants","C) The child acquired Rubella postnatally","D) The hearing loss is due to ototoxic drugs, not the virus","E) Reactivation of the virus in the dorsal root ganglia"],
+    ans:1,
+    exp:"Delayed-onset SNHL is a classic feature of congenital CMV. Approximately 10–15% of congenitally infected infants who appear normal at birth will develop SNHL by school age, making universal audiological follow-up essential.",
+    expWrong:"A — the virus persists, not cleared. C and D — unlikely in context. E — describes VZV shingles."
+  },
+  {
+    num:13,type:"Mechanism",
+    q:"Which statement correctly describes the mechanism of infantile Herpes Zoster?",
+    opts:["A) An infant exposed to VZV in utero has the virus establish latency in sensory ganglia, leading to shingles within the first 12 months of life","B) The infant receives a live vaccine at 1 month of age and develops shingles","C) The infant is exposed to CMV in the birth canal and develops a cross-reactive rash","D) The mother has a primary Parvovirus infection during the third trimester","E) Primary VZV infection immediately manifests as a dermatomal rash"],
+    ans:0,
+    exp:"When VZV crosses the placenta and infects the fetus in utero, it can establish latency in the fetal sensory ganglia. Since the fetus/infant has immature immunity, latency may be unstable, resulting in early reactivation (shingles) within the first 12 months.",
+    expWrong:"B — varicella vaccine given at 12–15 months, not 1 month. C and D — wrong viruses. E — primary infection causes chickenpox, not dermatomal shingles."
+  },
+  {
+    num:14,type:"Mechanism",
+    q:"How does Parvovirus B19 cause Erythema infectiosum (Fifth Disease) in healthy children?",
+    opts:["A) Continuous viral replication in the epidermis","B) Primary viremia triggering immediate blistering","C) Massive secondary viremia after bone marrow replication leads to immune complex deposition causing a 'slapped-cheek' rash then lacy reticular rash","D) Viral destruction of melanocytes","E) Cross-reaction with an adenovirus"],
+    ans:2,
+    exp:"B19 follows: nasopharynx → primary viremia → bone marrow replication → massive secondary viremia. The rash appears on day 14–21 as an immunologic response (immune complex deposition), NOT during peak viremia. By the time of the rash, the child is no longer contagious.",
+    expWrong:"A — not continuous skin replication. B — not immediate blistering. D — incorrect target. E — B19 is autonomous, not a dependovirus."
+  },
+  {
+    num:15,type:"Mechanism",
+    q:"Why is amniocentesis for CMV diagnosis preferred after 21 weeks gestation?",
+    opts:["A) Fetal kidneys do not produce sufficient urine to excrete the virus into amniotic fluid before this time","B) The virus does not cross the placenta before 21 weeks","C) Maternal IgG prevents viral detection earlier","D) The risk of spontaneous abortion is 100% before 21 weeks","E) The viral DNA is unstable in early amniotic fluid"],
+    ans:0,
+    exp:"For CMV PCR from amniotic fluid to work, the fetus must be excreting the virus via its kidneys into the amniotic fluid. This requires adequate fetal kidney maturation and time for enough viral particles to accumulate — hence ≥21 weeks gestation AND ≥6 weeks after maternal infection.",
+    expWrong:"B, C, D, E — medically incorrect explanations."
+  },
+  {
+    num:16,type:"Structure",
+    q:"What is the genomic structure of Cytomegalovirus (HHV-5)?",
+    opts:["A) Single-stranded DNA (ssDNA), linear","B) Single-stranded RNA (ssRNA), positive-sense","C) Double-stranded DNA (dsDNA), linear; ~235 kb, largest human herpesvirus","D) Double-stranded RNA (dsRNA), segmented","E) Single-stranded RNA (ssRNA), negative-sense"],
+    ans:2,
+    exp:"CMV (HHV-5) has a linear, double-stranded DNA genome of approximately 235 kilobases, making it the largest human herpesvirus. Like all herpesviruses, it is enveloped.",
+    expWrong:"A — Parvovirus B19. B — Rubella. D — Rotavirus. E — Influenza."
+  },
+  {
+    num:17,type:"Structure",
+    q:"What is the genomic structure of Parvovirus B19?",
+    opts:["A) Single-stranded DNA (ssDNA), linear — smallest known human pathogenic virus, non-enveloped","B) Double-stranded DNA (dsDNA), circular","C) Single-stranded RNA (ssRNA), positive-sense","D) Double-stranded RNA (dsRNA)","E) Single-stranded DNA (ssDNA), enveloped"],
+    ans:0,
+    exp:"Parvovirus B19 is the smallest human pathogenic virus, with a linear ssDNA genome. It is non-enveloped (naked), which explains its resistance to lipid solvents and stability in the environment.",
+    expWrong:"B — HPV/Polyoma. C — Rubella. D — Rotavirus. E — B19 is NOT enveloped."
+  },
+  {
+    num:18,type:"Structure",
+    q:"Which of the following defines the classic triad of Congenital Rubella Syndrome?",
+    opts:["A) Hydrops fetalis, severe anemia, heart failure","B) Sensorineural deafness, cataracts, congenital heart defects (e.g., PDA)","C) Microcephaly, periventricular calcifications, chorioretinitis","D) Cicatricial skin scarring, limb hypoplasia, muscle atrophy","E) Blueberry muffin rash, hepatosplenomegaly, jaundice"],
+    ans:1,
+    exp:"The classic CRS triad: (1) Sensorineural deafness (most common — cochlear damage), (2) Cataracts / structural eye anomalies, (3) Congenital heart defects — Patent Ductus Arteriosus (PDA) or branch pulmonary artery stenosis.",
+    expWrong:"A — B19 hydrops. C — CMV (periventricular calcifications). D — Congenital Varicella Syndrome. E — non-specific features, not the classic triad."
+  },
+  {
+    num:19,type:"Structure",
+    q:"In the TORCH acronym, what does the 'C' stand for?",
+    opts:["A) Coxsackievirus","B) Chlamydia","C) Cytomegalovirus","D) Coronavirus","E) Campylobacter"],
+    ans:2,
+    exp:"TORCH = Toxoplasma, Others (VZV, Parvovirus B19, HIV, Zika), Rubella, Cytomegalovirus, Herpes simplex. These are the major pathogens known to cause congenital infections with significant fetal morbidity.",
+    expWrong:"A, B, D, E — not part of the standard TORCH acronym."
+  },
+  {
+    num:20,type:"Definition",
+    q:"How is 'Stillbirth' defined in the context of TORCH sequelae?",
+    opts:["A) Fetal death at any time during pregnancy","B) Loss of pregnancy before 20 weeks of gestation","C) Fetal weight <10th percentile for gestational age","D) Fetal death at ≥20 weeks of gestation before delivery","E) Birth before 37 completed weeks of gestation"],
+    ans:3,
+    exp:"Stillbirth is defined as fetal death at ≥20 weeks of gestation occurring before delivery (some guidelines use ≥24 or ≥28 weeks depending on country). This distinguishes it from spontaneous abortion (<20 weeks).",
+    expWrong:"B — spontaneous abortion. C — intrauterine growth restriction (IUGR). E — preterm birth."
+  },
+  {
+    num:21,type:"Structure",
+    q:"Which of the following viral agents is the ONLY member of the genus Rubivirus?",
+    opts:["A) Parvovirus B19","B) Cytomegalovirus","C) Rubella Virus","D) Varicella-Zoster Virus","E) Adeno-associated virus (AAV)"],
+    ans:2,
+    exp:"Rubella virus is the sole member of the genus Rubivirus within the family Matonaviridae (formerly Togaviridae). This taxonomic uniqueness reflects its distinct ssRNA genome and enveloped structure with hemagglutinin spikes.",
+    expWrong:"A and E — Parvoviridae. B — Betaherpesviridae. D — Alphaherpesviridae."
+  },
+  {
+    num:22,type:"Regulatory",
+    q:"Which vaccine type is strictly contraindicated during pregnancy for the prevention of TORCH infections?",
+    opts:["A) Inactivated influenza vaccine","B) Live-attenuated vaccines (e.g., MMR, Varivax)","C) mRNA-based vaccines","D) Recombinant protein vaccines","E) Toxoid vaccines"],
+    ans:1,
+    exp:"Live-attenuated vaccines (MMR for Rubella and Varivax for VZV) are contraindicated in pregnancy because the attenuated virus could theoretically replicate and cause fetal harm. Women must be vaccinated at least 1 month before conception.",
+    expWrong:"A, C, D, E — generally safe or recommended during pregnancy (e.g., flu vaccine is recommended)."
+  },
+  {
+    num:23,type:"Comparative",
+    q:"Compare the teratogenic potential of Parvovirus B19 and Rubella Virus. Which statement is CORRECT?",
+    opts:["A) Both viruses cause severe structural malformations in the first trimester","B) Parvovirus B19 causes structural malformations while Rubella causes only hematological damage","C) Neither virus is considered a true teratogen","D) Rubella is a classic teratogen causing structural malformations; Parvovirus B19 causes hematological damage ONLY — it is NOT a teratogen","E) Both require a helper virus to cross the placenta"],
+    ans:3,
+    exp:"This is a critical distinction: Rubella virus is a potent teratogen (interferes with organogenesis → CRS triad). Parvovirus B19 is explicitly NOT a teratogen — it causes morbidity exclusively through hematological mechanisms (destruction of erythroid progenitors → hydrops fetalis).",
+    expWrong:"A, B, C — factually reversed or incorrect. E — dependoviruses like AAV require helpers, not these viruses."
+  },
+  {
+    num:24,type:"Comparative",
+    q:"Which statement accurately differentiates the clinical picture of Parvovirus B19 and Rubella in healthy children?",
+    opts:["A) Parvovirus causes a 'slapped-cheek' rash that worsens with heat, while Rubella causes a pink maculopapular rash spreading downward with posterior auricular lymphadenopathy","B) Parvovirus causes a 3-day fever with downward spreading rash, while Rubella causes a 'slapped-cheek' rash","C) Both viruses cause purpuric blueberry muffin lesions as their primary presentation","D) Parvovirus requires antiviral treatment in healthy children; Rubella does not","E) Rubella causes severe joint pain in children; Parvovirus only in pregnant women"],
+    ans:0,
+    exp:"B19 → Erythema Infectiosum: slapped-cheek facial rash + lacy reticular body rash, worsens with heat/exercise. Rubella → German Measles: pink maculopapular rash spreading craniocaudally + posterior auricular / suboccipital lymphadenopathy. The rash timings and lymph node patterns are key distinguishing features.",
+    expWrong:"B — reverses the presentations. C — blueberry muffin is a congenital sign, not typical childhood presentation. D — both are managed supportively. E — joint pain affects adults with both viruses."
+  },
+  {
+    num:25,type:"Comparative",
+    q:"When diagnosing congenital viral infection in a neonate beyond 6 months of age, how does the utility of maternal IgG differ from IgM?",
+    opts:["A) IgM easily crosses the placenta, so its presence at 6 months indicates maternal immunity","B) Persisting or rising IgG beyond 6 months indicates true congenital infection, as passively transferred maternal IgG normally declines by this time","C) IgG is only useful in the first 4 days of the rash","D) Rising IgM beyond 6 months indicates past immunity","E) Only PCR is useful after 6 months; serology becomes obsolete"],
+    ans:1,
+    exp:"Passively transferred maternal IgG has a half-life of ~3 weeks and normally disappears by 6 months. If IgG PERSISTS or RISES beyond 6 months, it means the infant's own immune system is producing antibodies against an active congenital infection. IgM does NOT cross the placenta, so neonatal IgM always indicates fetal infection.",
+    expWrong:"A — IgM does NOT cross the placenta (too large). C — incorrect. D — biologically incorrect for IgM. E — persistent IgG is itself diagnostic."
+  }
+];
+
+const FLASHCARDS = [
+  {q:"🦠 Where does CMV establish latency?", a:"Monocytes, macrophages, and renal tubular cells. Reactivation → asymptomatic shedding in saliva/urine OR severe end-organ disease in immunocompromised."},
+  {q:"🔬 What is the pathognomonic cell culture finding for CMV?", a:"Swollen, translucent 'cytomegalic' cells with large 'Owl-eye' intranuclear inclusions surrounded by a clear halo."},
+  {q:"📡 What is the pathognomonic ULTRASOUND finding of congenital CMV?", a:"Periventricular calcifications — calcium deposits in necrotic tissue surrounding the lateral ventricles (CID = Cytomegalic Inclusion Disease)."},
+  {q:"👂 What is the most common congenital infection?", a:"CMV — Cytomegalovirus. Most cases are asymptomatic at birth but 10–15% develop delayed sensorineural hearing loss (SNHL) by school age."},
+  {q:"🫙 Where does VZV establish latency?", a:"Dorsal root ganglia (sensory neurons). Reactivation travels anterograde → unilateral dermatomal vesicular rash = Herpes Zoster (Shingles)."},
+  {q:"⚠️ What is the critical window for Neonatal Varicella?", a:"Maternal rash 5 days BEFORE to 2 days AFTER delivery. No passive maternal IgG transferred → severe disseminated disease (pneumonia, hepatitis, encephalitis), up to 30% mortality."},
+  {q:"🦷 What causes limb hypoplasia in Congenital Varicella Syndrome?", a:"VZV infects fetal dorsal root ganglia → denervation of innervated limb territory → limb hypoplasia, muscle atrophy, dermatomal cicatricial scarring."},
+  {q:"🩸 What is the genomic structure of Parvovirus B19?", a:"Linear ssDNA, NON-enveloped (naked). Smallest human pathogenic virus. Only targets mitotically active erythroid progenitor cells."},
+  {q:"💧 Define Hydrops Fetalis", a:"Abnormal fluid accumulation in ≥2 fetal compartments: ascites + pleural effusion + pericardial effusion + skin edema. B19 causes it via: fetal RBC progenitor destruction → severe anemia → fetal heart failure → fluid leakage."},
+  {q:"📊 How is fetal anemia detected non-invasively?", a:"Increased Middle Cerebral Artery (MCA) peak systolic velocity on Doppler ultrasound. PSV >1.5 MoM = significant fetal anemia. Principle: anemia → ↑ cardiac output → ↑ MCA blood flow."},
+  {q:"⚡ What causes Transient Aplastic Crisis?", a:"Parvovirus B19 in patients with pre-existing hemolytic anemia (sickle cell, thalassemia, spherocytosis). Temporary shutdown of RBC production → sudden severe hemoglobin drop."},
+  {q:"🌹 What is the genomic structure of Rubella virus?", a:"Positive-sense ssRNA, enveloped with hemagglutinin spikes. Only member of genus Rubivirus (Matonaviridae). Classic TERATOGEN."},
+  {q:"👁️ What is the Classic Triad of CRS?", a:"1️⃣ Sensorineural Deafness (most common — cochlear damage)\n2️⃣ Cataracts (lens epithelium disruption)\n3️⃣ Congenital Heart Defects (PDA / branch pulmonary artery stenosis)"},
+  {q:"📅 CRS risk by trimester — what is the first trimester risk?", a:"0–12 weeks: ~90% risk of CRS. 13–16 weeks: 10–20%. After 16 weeks: low risk. First trimester = peak organogenesis = maximum teratogenic damage."},
+  {q:"💉 Name a live-attenuated vaccine that is CONTRAINDICATED in pregnancy", a:"MMR (Measles-Mumps-Rubella) and Varivax (Varicella). Must be given ≥1 month BEFORE conception. Postpartum vaccination is the strategy for seronegative pregnant women."},
+  {q:"🫐 What is the 'Blueberry Muffin' rash?", a:"Purpuric non-blanching skin lesions caused by DERMAL EXTRAMEDULLARY HEMATOPOIESIS. Occurs with severe bone marrow stress + thrombocytopenia. Seen in severe CRS and congenital CMV."},
+  {q:"🔡 What does TORCH stand for?", a:"T — Toxoplasma\nO — Others (VZV, Parvo B19, HIV, Zika)\nR — Rubella\nC — Cytomegalovirus\nH — Herpes simplex"},
+  {q:"🔬 Why is amniocentesis for CMV done after 21 weeks?", a:"Fetal kidneys must be mature enough to excrete CMV into amniotic fluid. Also need ≥6 weeks post-maternal infection. Before 21 weeks → insufficient fetal urine output → false negative PCR."},
+  {q:"💊 What is the treatment for severe fetal anemia from Parvovirus B19?", a:"Intrauterine Blood Transfusion (IUT) via cordocentesis. Directly replaces fetal RBCs. Significantly improves fetal survival in severe hydrops fetalis."},
+  {q:"🏥 How does CMV differ from B19 in immunocompromised patients?", a:"CMV → Retinitis, colitis, pneumonitis, encephalitis (end-organ disease). Parvovirus B19 → Chronic pure red cell aplasia (requires IVIG + repeated transfusions). Both are reactivation diseases in immunocompromised."},
+  {q:"📅 What is Stillbirth vs Spontaneous Abortion?", a:"Stillbirth: fetal death at ≥20 weeks gestation before delivery.\nSpontaneous Abortion (miscarriage): pregnancy loss before 20 weeks."},
+  {q:"👶 What is Infantile Herpes Zoster?", a:"VZV crosses placenta in utero → latency in fetal sensory ganglia → immature infant immunity → unstable latency → reactivation within first 12 months of life = infant gets Herpes Zoster (shingles)."}
+];
+
+const CASES = [
+  {
+    title:"Case 1 — The Routine Ultrasound Surprise",
+    badge:"CMV",
+    badgeClass:"badge-cyan",
+    vignette:"A routine fetal ultrasound at 24 weeks reveals bilateral periventricular calcifications in the fetal brain. The mother reports a mild flu-like illness with cervical lymphadenopathy 3 months ago. She is otherwise well and reports no rashes.",
+    questions:[
+      {q:"What is the most likely diagnosis?", a:"Congenital Cytomegalovirus Infection (Cytomegalic Inclusion Disease — CID). Periventricular calcifications are PATHOGNOMONIC for congenital CMV."},
+      {q:"What is the mechanism of periventricular calcifications?", a:"CMV crosses the placenta → transplacental viremia → reaches fetal CNS → direct cytopathic effect → necrosis of periventricular tissue → calcium deposits in dead tissue."},
+      {q:"What investigation confirms the diagnosis?", a:"CMV PCR in amniotic fluid via amniocentesis (≥21 weeks + ≥6 weeks post-infection). Also CMV PCR in maternal blood/urine. Neonatal: urine CMV PCR within first 21 days of life."},
+      {q:"What neurodevelopmental sequelae should be counselled?", a:"Microcephaly, mental retardation, seizures, chorioretinitis, and most importantly — delayed-onset Sensorineural Hearing Loss (SNHL) developing in 10–15% of asymptomatic neonates by school age."}
+    ]
+  },
+  {
+    title:"Case 2 — Ascites in a Fetus After 'Slapped Cheek' Exposure",
+    badge:"Parvovirus B19",
+    badgeClass:"badge-amber",
+    vignette:"A 28-year-old primary school teacher at 20 weeks gestation presents with polyarthralgia and mild fever for 5 days. Her colleague's child recently had a 'slapped cheek' rash. Fetal ultrasound shows ascites, bilateral pleural effusion, thickened placenta, and increased MCA peak systolic velocity.",
+    questions:[
+      {q:"What is the fetal diagnosis and what does it indicate?", a:"Hydrops Fetalis secondary to Parvovirus B19 infection. The ascites + pleural effusion (≥2 compartments) + increased MCA PSV (fetal anemia) are classic. Parvovirus destroys fetal RBC progenitors → fetal anemia → cardiac failure → hydrops."},
+      {q:"Why is B19 NOT classified as a teratogen?", a:"B19 causes HEMATOLOGICAL damage ONLY (erythroid progenitor destruction → anemia → hydrops). It does NOT interfere with organogenesis and does NOT cause structural malformations. Contrast with Rubella which is a classic teratogen."},
+      {q:"What is the best non-invasive fetal monitoring tool and why?", a:"Middle Cerebral Artery (MCA) peak systolic velocity Doppler. Rationale: fetal anemia → ↑ cardiac output → ↑ MCA blood flow velocity. PSV >1.5 MoM = significant anemia warranting intervention."},
+      {q:"What is the definitive treatment for severe fetal anemia?", a:"Intrauterine Blood Transfusion (IUT) via cordocentesis. Fetal blood sampling confirms anemia (Hgb ↓) and B19 DNA PCR. IUT directly replaces fetal RBCs and significantly improves survival."}
+    ]
+  },
+  {
+    title:"Case 3 — The Newborn With Ear, Eye, and Heart Problems",
+    badge:"Rubella CRS",
+    badgeClass:"badge-teal",
+    vignette:"A newborn delivered at term is noted to have bilateral cataracts, a systolic murmur (subsequently identified as PDA on echo), and fails the newborn hearing screening test. The mother is an unvaccinated immigrant who had a maculopapular rash at 8 weeks gestation with posterior auricular lymphadenopathy.",
+    questions:[
+      {q:"What is the diagnosis and what is the classic triad?", a:"Congenital Rubella Syndrome (CRS). Classic Triad: (1) Sensorineural Deafness — most common; (2) Cataracts / structural eye anomalies; (3) Congenital Heart Defects — PDA / branch pulmonary artery stenosis."},
+      {q:"Why was the first trimester the most dangerous time for this fetus?", a:"The risk of CRS is ~90% when maternal infection occurs 0–12 weeks (organogenesis). Rubella virus crosses the placenta and actively multiplies in fetal tissues, directly disrupting the developing cochlea, lens, and endocardium."},
+      {q:"What should have been done before this pregnancy?", a:"Rubella IgG screening pre-conception. Seronegative women should receive the MMR vaccine at least 1 month before conception. The MMR vaccine is a live-attenuated vaccine and is CONTRAINDICATED during pregnancy."},
+      {q:"What additional 'blueberry muffin' rash finding might you see and what causes it?", a:"Purpuric non-blanching lesions from dermal extramedullary hematopoiesis — bone marrow stress + thrombocytopenia drives skin production of blood cells. Also seen in severe congenital CMV."}
+    ]
+  },
+  {
+    title:"Case 4 — Maternal Rash 2 Days Before Delivery",
+    badge:"Neonatal Varicella",
+    badgeClass:"badge-violet",
+    vignette:"A 32-year-old woman at 39 weeks gestation develops a pruritic vesicular rash over her trunk and face. She is admitted and delivers 2 days later. The neonate appears well at birth but on day 3 develops new vesicular lesions, respiratory distress, and elevated liver enzymes.",
+    questions:[
+      {q:"What is the diagnosis and why is the prognosis concerning?", a:"Neonatal Varicella. This falls within the CRITICAL WINDOW: maternal rash 5 days before to 2 days after delivery. The neonate has NO passive maternal IgG protection. Mortality can reach 30% without treatment."},
+      {q:"Why did the neonate develop disease despite a transplacentally transmitted virus?", a:"The mother was in PRIMARY VIREMIA when she delivered — she had no time to produce and transfer protective IgG antibodies to the fetus. The neonate therefore faces massive viral inoculum with no maternal passive immunity."},
+      {q:"What are the clinical manifestations of severe neonatal varicella?", a:"Disseminated disease: Pneumonitis (respiratory distress), Hepatitis (elevated enzymes), Encephalitis (CNS involvement). Vesicular rash is widespread (not dermatomal — this is primary infection, not reactivation)."},
+      {q:"What immediate treatment should be given?", a:"IV Acyclovir immediately + Varicella-Zoster Immune Globulin (VZIG) prophylactically to the neonate. VZIG provides passive protection if given before or within 96 hours of exposure."}
+    ]
+  },
+  {
+    title:"Case 5 — Sickle Cell Patient With Sudden Pallor",
+    badge:"Aplastic Crisis",
+    badgeClass:"badge-rose",
+    vignette:"A 17-year-old with known sickle cell disease presents with sudden onset extreme fatigue, severe pallor, and dyspnea. His baseline hemoglobin is 8 g/dL but today it is 3.5 g/dL. He had mild joint pains and felt unwell for 2 weeks. His 8-year-old sister recently had a 'slapped cheek' rash.",
+    questions:[
+      {q:"What is the diagnosis?", a:"Transient Aplastic Crisis due to Parvovirus B19 infection. B19 destroys erythroid progenitors — temporary shutdown of RBC production. In patients with pre-existing hemolytic anemia (sickle cell, thalassemia, spherocytosis) who depend on high RBC turnover, this is catastrophic."},
+      {q:"Why is this patient more severely affected than a healthy person with B19?", a:"Healthy individuals can tolerate a brief cessation of RBC production because their RBCs last 120 days. In sickle cell disease, RBC lifespan is only ~20 days → constant RBC replacement is essential → B19 causes precipitous hemoglobin drop."},
+      {q:"How does this presentation differ from B19 in a healthy child?", a:"Healthy child: Erythema Infectiosum (5th Disease) — slapped cheek rash, lacy reticular rash, mild malaise. Sickle cell: NO rash typically; SEVERE anemia dominating the picture. Immunocompromised: Chronic pure red cell aplasia."},
+      {q:"What investigation and treatment are indicated?", a:"Diagnosis: B19 IgM serology / B19 DNA PCR (most sensitive). Treatment: Red blood cell transfusion support until immune recovery clears the virus. No antiviral treatment for B19. Monitor reticulocyte count for recovery."}
+    ]
+  },
+  {
+    title:"Case 6 — Long Integrative: The Complete B19 Story",
+    badge:"Integrative",
+    badgeClass:"badge-green",
+    vignette:"A 25-year-old teacher at 18 weeks gestation develops mild fever and symmetric polyarthralgia affecting the small joints of her hands. She works at an elementary school where several children recently had a 'slapped cheek' facial rash. Three weeks later, serial fetal ultrasound reveals a thickened placenta, fetal ascites, bilateral pleural effusion, and MCA PSV of 1.8 MoM. She has no rash herself.",
+    questions:[
+      {q:"Step 1 — Identify the complete pathogenic sequence from mother to fetus", a:"Parvovirus B19 respiratory droplet exposure → nasopharynx replication → primary viremia → bone marrow RBC progenitor replication/destruction → massive secondary viremia (day 10–14) causing mother's polyarthralgia → transplacental crossing → fetal RBC progenitor destruction → severe fetal anemia (MCA PSV ↑) → fetal cardiac failure → hydrops fetalis (ascites + pleural effusion ≥2 compartments)."},
+      {q:"Step 2 — Why does the mother have polyarthralgia but NO rash?", a:"The rash of Fifth Disease (Erythema Infectiosum) is an immunologic response occurring at day 14–21, AFTER peak viremia resolves. By the time of the rash, the patient is no longer viremic or infectious. The mother is STILL in the viremic/secondary viremia phase — hence polyarthralgia (joint deposition of immune complexes) but not yet the rash."},
+      {q:"Step 3 — How does B19 pathogenesis differ from Rubella at the fetal level?", a:"B19: Targets ONLY erythroid progenitors → hematological damage (anemia → hydrops). NO structural malformations. NOT a teratogen. Rubella: Multiplies in ALL fetal tissues → structural malformations during organogenesis (teratogen → CRS). Rubella does NOT cause hydrops fetalis."},
+      {q:"Step 4 — What is the gold-standard confirmatory test and the fetal treatment?", a:"Maternal: B19 IgM serology + B19 DNA PCR (most sensitive during viremia). Fetal: Cordocentesis (PUBS) for fetal CBC (confirm anemia: Hgb ↓) + B19 DNA PCR. TREATMENT: Intrauterine Blood Transfusion (IUT) via cordocentesis — significantly improves fetal survival. Monitor MCA PSV post-transfusion."}
+    ]
+  }
+];
+
+const MNEMONICS = [
+  {
+    word:"PORCH",
+    name:"TORCH Acronym Extension",
+    expand:[
+      {l:"P", m:"Parvovirus B19", s:"Slapped cheek, Aplastic crisis, Hydrops fetalis"},
+      {l:"O", m:"Others → now inside TORCH as 'O'", s:"(VZV, Parvo B19, HIV, Zika)"},
+      {l:"R", m:"Rubella", s:"CRS Triad: Deaf + Cataract + PDA"},
+      {l:"C", m:"CMV (Cytomegalovirus)", s:"Periventricular calcifications, Owl-eye"},
+      {l:"H", m:"Herpes Simplex Virus", s:"Neonatal HSV — meningoencephalitis"}
+    ]
+  },
+  {
+    word:"CHAD",
+    name:"CRS Classic Triad + Extra",
+    expand:[
+      {l:"C", m:"Cataracts", s:"Lens disruption during organogenesis"},
+      {l:"H", m:"Heart defects (PDA / branch PA stenosis)", s:"Endocardial disruption"},
+      {l:"A", m:"Auditory loss (Sensorineural)", s:"Most COMMON CRS feature"},
+      {l:"D", m:"Deaf (Confirmed SNHL)", s:"May be bilateral, progressive"}
+    ]
+  },
+  {
+    word:"MICRO",
+    name:"Congenital CMV Features",
+    expand:[
+      {l:"M", m:"Microcephaly", s:"Small head due to CNS destruction"},
+      {l:"I", m:"Intracranial (periventricular) calcifications", s:"Pathognomonic on US"},
+      {l:"C", m:"Chorioretinitis", s:"Retinal inflammation"},
+      {l:"R", m:"Retardation (mental)", s:"Intellectual disability"},
+      {l:"O", m:"Owl-eye inclusions", s:"Pathognomonic cell culture finding"}
+    ]
+  },
+  {
+    word:"FLAP",
+    name:"Parvovirus B19 Pathogenesis Steps",
+    expand:[
+      {l:"F", m:"First: Nasopharynx entry", s:"Respiratory droplet transmission"},
+      {l:"L", m:"Lumps (primary viremia → bone marrow)", s:"Erythroid progenitors destroyed"},
+      {l:"A", m:"Amplified secondary viremia", s:"Spreads to joints, skin, placenta"},
+      {l:"P", m:"Placenta crossed → Fetal anemia", s:"→ Hydrops Fetalis (≥2 compartments)"}
+    ]
+  },
+  {
+    word:"LASH",
+    name:"VZV Congenital + Neonatal Features",
+    expand:[
+      {l:"L", m:"Limb hypoplasia", s:"Denervation of fetal limb territory"},
+      {l:"A", m:"Atrophy (muscle)", s:"From fetal sensory ganglia infection"},
+      {l:"S", m:"Scars (cicatricial skin)", s:"Dermatomal distribution"},
+      {l:"H", m:"Herpes Zoster infantile", s:"Reactivation in first 12 months"}
+    ]
+  },
+  {
+    word:"NEVER",
+    name:"Vaccine Rule in Pregnancy",
+    expand:[
+      {l:"N", m:"Never give live vaccines in pregnancy", s:"MMR + Varivax contraindicated"},
+      {l:"E", m:"Even if seronegative, wait postpartum", s:"Vaccinate after delivery"},
+      {l:"V", m:"Varivax (VZV) — 1 month pre-conception min", s:"Or postpartum"},
+      {l:"E", m:"Ensure Rubella IgG before pregnancy", s:"MMR ≥1 month before conception"},
+      {l:"R", m:"Rubella + MMR included in this rule", s:"No exceptions for pregnancy"}
+    ]
+  }
+];
+
+const VIVA = [
+  {q:"What does the acronym TORCH stand for?", a:"Toxoplasma, Others (VZV, Parvovirus B19, HIV, Zika), Rubella, Cytomegalovirus, and Herpes simplex. These are the major pathogens known to cause congenital infections with significant fetal/neonatal morbidity.", exam:""},
+  {q:"Which human herpesvirus is the largest, and what is its genomic structure?", a:"Cytomegalovirus (HHV-5) is the largest human herpesvirus. It has a linear double-stranded DNA (dsDNA) genome of approximately 235 kilobases, is enveloped, and belongs to the Betaherpesvirinae subfamily.", exam:""},
+  {q:"What is the defining pathognomonic sign on fetal ultrasound for congenital CMV infection?", a:"Periventricular calcifications — calcium deposits in necrotic periventricular tissue caused by direct CMV cytopathic effect on the fetal CNS. Contrast with toxoplasmosis which causes scattered cortical calcifications.", exam:"⚠️ EXAM: 'كالسفيكيشن حوالين الفنتيكل' — periventricular, not cortical (which is toxoplasma)!"},
+  {q:"Contrast the primary cellular targets of CMV and Parvovirus B19.", a:"CMV: establishes latency in monocytes, macrophages, and renal tubular cells. Parvovirus B19: actively targets and DESTROYS erythroid progenitor cells in the bone marrow (not latency — active lysis). This is why B19 causes anemia while CMV causes neurological disease.", exam:""},
+  {q:"What are the three classic findings in Congenital Rubella Syndrome (CRS)?", a:"1) Sensorineural Deafness (most common — cochlear damage during organogenesis). 2) Cataracts / structural eye anomalies (lens epithelial disruption). 3) Congenital Heart Defects — Patent Ductus Arteriosus (PDA) or branch pulmonary artery stenosis.", exam:"⚠️ EXAM: 'ودنه وعينه وقلبه' — ear + eye + heart!"},
+  {q:"A pregnant patient with no Rubella immunity asks for the MMR vaccine. What is your management?", a:"The MMR vaccine is a live-attenuated vaccine and is STRICTLY CONTRAINDICATED during pregnancy due to theoretical risk of fetal infection by attenuated virus. Counsel her on avoiding Rubella exposure. Vaccinate POSTPARTUM before discharge. Ensure she waits ≥1 month post-vaccination before any future pregnancy.", exam:""},
+  {q:"Explain the clinical significance of Parvovirus B19 infection in a patient with hereditary spherocytosis.", a:"Transient Aplastic Crisis. B19 destroys erythroid progenitors → temporary RBC production shutdown. In spherocytosis (RBC lifespan ~10–30 days), the baseline compensatory high RBC production is essential for maintaining Hgb. B19 causes a sudden, catastrophic drop in hemoglobin requiring emergency transfusion.", exam:""},
+  {q:"What causes Hydrops Fetalis in Parvovirus B19 infection?", a:"Step by step: Fetal RBC progenitor destruction → severe fetal anemia → high-output cardiac failure (heart overworks to compensate) → capillary hydrostatic pressure rises → fluid leaks into ≥2 fetal compartments (ascites, pleural effusion, pericardial effusion, skin edema) = Hydrops Fetalis.", exam:"⚠️ EXAM: 'البارفو بيعمل هيدروبس فيتالس' — NOT via structural damage!"},
+  {q:"Describe the 'blueberry muffin' rash and its mechanism.", a:"Purpuric, non-blanching skin lesions. Mechanism: Severe bone marrow stress + thrombocytopenia → extramedullary hematopoiesis in the dermis (skin takes over blood cell production). Non-blanching = blood in extravascular dermal space. Seen in severe CRS and congenital CMV.", exam:""},
+  {q:"What is the critical window for Neonatal Varicella and why does it matter?", a:"Maternal rash −5 days to +2 days from delivery. During this window, the mother is in primary viremia with no time to produce and transfer protective IgG. The neonate is born with NO passive immunity, faces massive viral inoculum, and develops severe disseminated varicella (pneumonia, hepatitis, encephalitis) with mortality up to 30%.", exam:""},
+  {q:"How does Congenital Varicella Syndrome affect the limbs?", a:"VZV (neurotropic) infects fetal dorsal root ganglia and developing sensory neurons in utero → denervation of the innervated limb territory → Limb hypoplasia (shortened/malformed limbs), muscle atrophy, and dermatomal cicatricial skin scarring in the affected segment.", exam:""},
+  {q:"What is the treatment for a fetus suffering from severe Parvovirus-induced anemia?", a:"Intrauterine Blood Transfusion (IUT) via cordocentesis. The procedure involves: (1) Cordocentesis (sampling fetal blood from umbilical vein) to confirm anemia and B19 DNA; (2) Direct infusion of packed red cells into fetal circulation. This significantly improves fetal survival in severe hydrops fetalis.", exam:""}
+];
+
+// ═══════════════ STATE ═══════════════
+let qIdx = 0;
+let answered = new Array(25).fill(null); // index of chosen option
+let score = 0;
+let streak = 0;
+let maxStreak = 0;
+let fcFlipped = new Set();
+
+// localStorage
+function saveState(){
+  localStorage.setItem('kme_congen_v1', JSON.stringify({score, streak, answered, fcFlipped:[...fcFlipped]}));
+}
+function loadState(){
+  try{
+    const d = JSON.parse(localStorage.getItem('kme_congen_v1') || 'null');
+    if(d){
+      score = d.score||0;
+      streak = d.streak||0;
+      answered = d.answered||new Array(25).fill(null);
+      fcFlipped = new Set(d.fcFlipped||[]);
+    }
+  }catch(e){}
+}
+
+// ═══════════════ TABS ═══════════════
+function switchTab(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  localStorage.setItem('kme_congen_tab', id);
+  updateStats();
+}
+
+// ═══════════════ STATS ═══════════════
+function updateStats(){
+  const answered_count = answered.filter(a=>a!==null).length;
+  const pct = Math.round(answered_count/25*100);
+  document.getElementById('stat-score').textContent = score+'/25';
+  document.getElementById('stat-streak').textContent = streak;
+  document.getElementById('stat-fc').textContent = fcFlipped.size+'/22';
+  document.getElementById('stat-prog').textContent = pct+'%';
+}
+
+// ═══════════════ QUIZ ═══════════════
+function renderQuestion(){
+  const q = QUESTIONS[qIdx];
+  const pct = Math.round((qIdx)/(25)*100);
+  document.getElementById('q-prog-fill').style.width = pct+'%';
+  document.getElementById('q-num').textContent = qIdx+1;
+  document.getElementById('q-score').textContent = score;
+  document.getElementById('q-streak').textContent = streak;
+
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const btnFin = document.getElementById('btn-finish');
+  btnPrev.style.display = qIdx===0?'none':'';
+  if(qIdx===24){
+    btnNext.style.display='none';
+    btnFin.style.display='';
+  } else {
+    btnNext.style.display='';
+    btnFin.style.display='none';
+  }
+
+  const typeColors = {Mechanism:'badge-cyan',Structure:'badge-violet','Definition':'badge-amber',Regulatory:'badge-teal',Comparative:'badge-rose'};
+  const tc = typeColors[q.type]||'badge-cyan';
+
+  const userAns = answered[qIdx];
+  const optsHTML = q.opts.map((o,i)=>{
+    let cls = 'option-btn';
+    if(userAns!==null){
+      if(i===q.ans) cls+=' correct';
+      else if(i===userAns && i!==q.ans) cls+=' wrong';
+      else if(i!==q.ans && userAns===q.ans) cls+=' reveal';
+    }
+    return `<button class="${cls}" onclick="chooseOpt(${i})" ${userAns!==null?'disabled':''}>${o}</button>`;
+  }).join('');
+
+  const expShow = userAns!==null ? 'show' : '';
+  const expLabel = (userAns===q.ans) ? `<div class="exp-correct">✅ Correct!</div>` : (userAns!==null ? `<div class="exp-wrong">❌ Incorrect. Correct answer: ${q.opts[q.ans]}</div>` : '');
+  const expWrongBlock = (userAns!==null && userAns!==q.ans) ? `<div style="margin-top:8px;font-size:.82rem;color:var(--text3)">Why others wrong: ${q.expWrong}</div>` : '';
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="question-card">
+      <div class="q-number">Question ${qIdx+1} of 25</div>
+      <div class="q-type-badge"><span class="badge ${tc}">${q.type}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optsHTML}</div>
+      <div class="explanation ${expShow}">
+        ${expLabel}
+        <strong>Explanation:</strong> ${q.exp}
+        ${expWrongBlock}
+      </div>
+    </div>`;
+}
+
+function chooseOpt(i){
+  if(answered[qIdx]!==null) return;
+  answered[qIdx] = i;
+  if(i===QUESTIONS[qIdx].ans){
+    score++;
+    streak++;
+  } else {
+    streak=0;
+  }
+  saveState();
+  renderQuestion();
+  updateStats();
+}
+function nextQ(){ if(qIdx<24){qIdx++;renderQuestion();} }
+function prevQ(){ if(qIdx>0){qIdx--;renderQuestion();} }
+function restartQuiz(){
+  if(!confirm('Reset quiz progress?')) return;
+  qIdx=0; score=0; streak=0; answered=new Array(25).fill(null);
+  document.getElementById('quiz-result').style.display='none';
+  saveState(); renderQuestion(); updateStats();
+}
+function finishQuiz(){
+  const pct = Math.round(score/25*100);
+  let emoji='😅',msg='Keep reviewing the lecture notes!';
+  if(pct>=90){emoji='🏆';msg='Outstanding performance! You clearly know your TORCH!';}
+  else if(pct>=75){emoji='🎉';msg='Great job! A few more reviews and you\'ll ace the exam.';}
+  else if(pct>=60){emoji='💪';msg='Good effort. Focus on the high-yield mechanisms.';}
+  document.getElementById('quiz-result').style.display='block';
+  document.getElementById('quiz-result').innerHTML=`
+    <div class="result-screen">
+      <div class="result-emoji">${emoji}</div>
+      <div class="result-score">${score}/25</div>
+      <div class="result-label">${pct}% — ${pct>=75?'PASS':'Keep Studying'}</div>
+      <div class="result-msg">${msg}</div>
+      <button class="btn btn-primary" onclick="restartQuiz()">↺ Try Again</button>
+    </div>`;
+  document.getElementById('q-prog-fill').style.width='100%';
+}
+
+// ═══════════════ FLASHCARDS ═══════════════
+function renderFlashcards(){
+  const grid = document.getElementById('fc-grid');
+  grid.innerHTML = FLASHCARDS.map((fc,i)=>`
+    <div class="fc-scene" onclick="flipCard(${i})" id="fcs-${i}">
+      <div class="fc-card ${fcFlipped.has(i)?'flipped':''}" id="fcc-${i}">
+        <div class="fc-face fc-front">
+          <div class="fc-icon">❓</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">click to reveal →</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-icon">💡</div>
+          <div class="fc-a">${fc.a.replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function flipCard(i){
+  const card = document.getElementById('fcc-'+i);
+  card.classList.toggle('flipped');
+  if(card.classList.contains('flipped')) fcFlipped.add(i); else fcFlipped.delete(i);
+  saveState(); updateStats();
+}
+
+// ═══════════════ CASES ═══════════════
+function renderCases(){
+  const area = document.getElementById('cases-area');
+  area.innerHTML = CASES.map((c,ci)=>`
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-title">${c.title}</div>
+        <span class="badge ${c.badgeClass}">${c.badge}</span>
+      </div>
+      <div class="case-body">
+        <div class="case-vignette">${c.vignette}</div>
+        ${c.questions.map((cq,qi)=>`
+          <div style="margin-bottom:18px;">
+            <div class="case-q">Q${qi+1}: ${cq.q}</div>
+            <button class="case-reveal-btn" onclick="revealCase(${ci},${qi},this)">Reveal Answer</button>
+            <div class="case-answer" id="case-${ci}-${qi}"><strong>✅ Answer:</strong><br><br>${cq.a}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function revealCase(ci,qi,btn){
+  const el = document.getElementById(`case-${ci}-${qi}`);
+  el.classList.toggle('show');
+  btn.textContent = el.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+// ═══════════════ MNEMONICS ═══════════════
+function renderMnemonics(){
+  document.getElementById('mnemonics-area').innerHTML = MNEMONICS.map(m=>`
+    <div class="mnemonic-card">
+      <div class="mnemonic-word">${m.word}</div>
+      <div class="mnemonic-name">${m.name}</div>
+      <div class="mnemonic-expand">
+        ${m.expand.map(e=>`
+          <div class="mne-row">
+            <div class="mne-letter">${e.l}</div>
+            <div><div class="mne-meaning">${e.m}</div><div class="mne-sub">${e.s}</div></div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════ VIVA ═══════════════
+function renderViva(){
+  document.getElementById('viva-area').innerHTML = VIVA.map((v,i)=>`
+    <div class="viva-card" id="viva-${i}">
+      <div class="viva-q" onclick="toggleViva(${i})">
+        <span>V${i+1}: ${v.q}</span>
+        <span class="viva-arrow">▶</span>
+      </div>
+      <div class="viva-a">
+        ${v.a}
+        ${v.exam?`<div class="viva-exam">${v.exam}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+function toggleViva(i){
+  document.getElementById('viva-'+i).classList.toggle('open');
+}
+
+// ═══════════════ SEARCH ═══════════════
+function filterOverview(val){
+  const v = val.toLowerCase();
+  document.querySelectorAll('.searchable').forEach(el=>{
+    el.style.display = el.textContent.toLowerCase().includes(v) ? '' : 'none';
+  });
+}
+
+// ═══════════════ INIT ═══════════════
+function init(){
+  loadState();
+  renderQuestion();
+  renderFlashcards();
+  renderCases();
+  renderMnemonics();
+  renderViva();
+  updateStats();
+  const savedTab = localStorage.getItem('kme_congen_tab');
+  if(savedTab){
+    const btn = [...document.querySelectorAll('.tab-btn')].find(b=>b.getAttribute('onclick').includes(savedTab));
+    if(btn) btn.click();
+  }
+}
+init();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

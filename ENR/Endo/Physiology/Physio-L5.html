@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🧬 Adrenal Cortex — Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #1e2d45;
+  --gold: #f59e0b;
+  --gold-dim: rgba(245,158,11,0.15);
+  --teal: #06d6a0;
+  --teal-dim: rgba(6,214,160,0.12);
+  --coral: #f25f5c;
+  --coral-dim: rgba(242,95,92,0.12);
+  --blue: #4ea8de;
+  --blue-dim: rgba(78,168,222,0.12);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.07;animation:drift 20s ease-in-out infinite alternate;}
+.orb1{width:600px;height:600px;background:var(--gold);top:-200px;left:-150px;animation-duration:18s;}
+.orb2{width:500px;height:500px;background:var(--teal);bottom:-100px;right:-100px;animation-duration:22s;animation-delay:-8s;}
+.orb3{width:400px;height:400px;background:var(--blue);top:40%;left:60%;animation-duration:25s;animation-delay:-4s;}
+@keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(40px,30px) scale(1.1);}}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,14,26,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-icon{font-size:28px;}
+.brand-text h1{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);line-height:1;}
+.brand-text p{font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-top:2px;}
+.stats-bar{display:flex;gap:16px;flex-wrap:wrap;}
+.stat-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:40px;padding:5px 14px;font-size:0.75rem;font-weight:600;
+}
+.stat-pill .dot{width:8px;height:8px;border-radius:50%;}
+.stat-pill.gold .dot{background:var(--gold);}
+.stat-pill.teal .dot{background:var(--teal);}
+.stat-pill.coral .dot{background:var(--coral);}
+.stat-pill .val{color:var(--text);font-weight:800;}
+
+/* ===== SEARCH ===== */
+.search-wrap{max-width:1200px;margin:20px auto 0;padding:0 20px;}
+.search-box{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 20px;color:var(--text);
+  font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;
+  transition:border-color 0.2s;
+}
+.search-box::placeholder{color:var(--text-dim);}
+.search-box:focus{border-color:var(--gold);}
+
+/* ===== TABS ===== */
+.tabs-outer{max-width:1200px;margin:18px auto 0;padding:0 20px;}
+.tabs{
+  display:flex;gap:4px;overflow-x:auto;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:6px;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  flex-shrink:0;padding:8px 16px;border:none;border-radius:var(--radius-sm);
+  background:transparent;color:var(--text-muted);
+  font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:all 0.2s;
+}
+.tab-btn:hover{color:var(--text);background:var(--surface2);}
+.tab-btn.active{background:var(--gold);color:#0a0e1a;}
+
+/* ===== MAIN CONTENT ===== */
+.main{max-width:1200px;margin:0 auto;padding:24px 20px 60px;}
+.tab-panel{display:none;animation:fadeIn 0.3s ease;}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== TYPOGRAPHY ===== */
+.section-title{
+  font-family:'Playfair Display',serif;font-size:1.6rem;
+  color:var(--gold);margin-bottom:6px;
+}
+.section-sub{color:var(--text-muted);font-size:0.85rem;margin-bottom:24px;}
+h3.card-title{font-size:0.95rem;font-weight:700;margin-bottom:8px;}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.card-grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 10px;border-radius:40px;font-size:0.68rem;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;margin:2px;}
+.tag-gold{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);}
+.tag-teal{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal);}
+.tag-coral{background:var(--coral-dim);color:var(--coral);border:1px solid var(--coral);}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple);}
+
+/* Alert / Exam note */
+.exam-alert{
+  background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);
+  border-left:3px solid var(--gold);border-radius:var(--radius-sm);
+  padding:10px 14px;margin-top:10px;font-size:0.82rem;color:var(--gold);
+}
+.exam-alert::before{content:'⚠️ EXAM: ';}
+
+/* ===== OVERVIEW TAB ===== */
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:28px;}
+.zone-card{border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;}
+.zone-card.glom{background:linear-gradient(135deg,rgba(78,168,222,0.15),rgba(78,168,222,0.05));border:1px solid rgba(78,168,222,0.3);}
+.zone-card.fasc{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.3);}
+.zone-card.reti{background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(167,139,250,0.05));border:1px solid rgba(167,139,250,0.3);}
+.zone-card h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:4px;}
+.zone-card.glom h3{color:var(--blue);}
+.zone-card.fasc h3{color:var(--gold);}
+.zone-card.reti h3{color:var(--purple);}
+.zone-card .hormone{font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;}
+.zone-card ul{list-style:none;font-size:0.82rem;display:flex;flex-direction:column;gap:5px;}
+.zone-card li::before{content:'→ ';}
+
+/* Timeline */
+.timeline{position:relative;padding-left:24px;margin:20px 0;}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:20px;}
+.tl-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--gold);}
+.tl-item h4{font-size:0.88rem;font-weight:700;color:var(--gold);}
+.tl-item p{font-size:0.8rem;color:var(--text-muted);margin-top:3px;}
+
+/* Signs grid */
+.signs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.sign-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;}
+.sign-card h4{font-size:0.82rem;font-weight:700;margin-bottom:6px;}
+.sign-card p{font-size:0.78rem;color:var(--text-muted);}
+
+/* ===== QUIZ TAB ===== */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.progress-bar-wrap{flex:1;min-width:200px;background:var(--surface2);border-radius:40px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--teal));border-radius:40px;transition:width 0.4s ease;}
+.quiz-score{display:flex;gap:12px;align-items:center;font-size:0.82rem;}
+.score-badge{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:40px;font-weight:700;}
+.streak-badge{background:var(--coral-dim);color:var(--coral);border:1px solid var(--coral);padding:4px 12px;border-radius:40px;font-weight:700;}
+
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:18px;}
+.quiz-card .q-num{font-size:0.72rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.quiz-card .q-text{font-size:1rem;font-weight:600;line-height:1.55;margin-bottom:20px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:13px 16px;
+  cursor:pointer;text-align:left;transition:all 0.2s;
+  font-family:'Nunito',sans-serif;font-size:0.87rem;color:var(--text);
+}
+.option-btn:hover:not([disabled]){border-color:var(--gold);background:var(--gold-dim);}
+.option-btn .opt-letter{
+  width:26px;height:26px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;flex-shrink:0;
+}
+.option-btn.correct{border-color:var(--teal);background:var(--teal-dim);animation:pulse 0.4s ease;}
+.option-btn.correct .opt-letter{background:var(--teal);color:#0a0e1a;}
+.option-btn.wrong{border-color:var(--coral);background:var(--coral-dim);animation:shake 0.4s ease;}
+.option-btn.wrong .opt-letter{background:var(--coral);color:#0a0e1a;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+@keyframes shake{0%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}100%{transform:translateX(0);}}
+.explanation{
+  background:var(--surface2);border-left:3px solid var(--teal);
+  border-radius:var(--radius-sm);padding:14px;margin-top:14px;
+  font-size:0.83rem;line-height:1.6;display:none;
+}
+.explanation.show{display:block;animation:fadeIn 0.3s ease;}
+.explanation .correct-label{color:var(--teal);font-weight:700;margin-bottom:4px;}
+.explanation .wrong-label{color:var(--coral);font-weight:700;margin-top:8px;}
+
+/* ===== FLASHCARDS TAB ===== */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
+.fc-wrap{perspective:1000px;cursor:pointer;}
+.fc{
+  position:relative;height:180px;transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  border-radius:var(--radius);
+}
+.fc-wrap:hover .fc:not(.flipped){transform:rotateY(5deg) scale(1.02);}
+.fc.flipped{transform:rotateY(180deg);}
+.fc-front,.fc-back{
+  position:absolute;inset:0;border-radius:var(--radius);
+  display:flex;flex-direction:column;justify-content:center;
+  align-items:center;padding:20px;text-align:center;
+  backface-visibility:hidden;
+}
+.fc-front{
+  background:linear-gradient(135deg,var(--surface),var(--surface2));
+  border:1px solid var(--border);
+}
+.fc-back{
+  background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(6,214,160,0.08));
+  border:1px solid rgba(245,158,11,0.3);
+  transform:rotateY(180deg);
+}
+.fc-front .fc-icon{font-size:28px;margin-bottom:8px;}
+.fc-front .fc-q{font-size:0.85rem;font-weight:600;color:var(--text);line-height:1.4;}
+.fc-back .fc-a{font-size:0.82rem;color:var(--text);line-height:1.5;}
+.fc-hint{font-size:0.68rem;color:var(--text-dim);position:absolute;bottom:10px;right:14px;}
+
+/* ===== CLINICAL CASES TAB ===== */
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;margin-bottom:20px;}
+.case-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.case-num{
+  background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);
+  border-radius:var(--radius-sm);padding:4px 12px;font-size:0.72rem;font-weight:700;
+  white-space:nowrap;
+}
+.case-vignette{
+  background:var(--surface2);border-radius:var(--radius-sm);
+  padding:16px;margin-bottom:16px;font-size:0.87rem;line-height:1.65;
+  border-left:3px solid var(--blue);
+}
+.case-questions{display:flex;flex-direction:column;gap:12px;}
+.case-q{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);}
+.case-q p{font-size:0.85rem;font-weight:600;margin-bottom:8px;}
+.reveal-btn{
+  background:var(--gold-dim);border:1px solid var(--gold);
+  color:var(--gold);padding:7px 16px;border-radius:40px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:0.78rem;
+  cursor:pointer;transition:all 0.2s;
+}
+.reveal-btn:hover{background:var(--gold);color:#0a0e1a;}
+.case-answer{
+  display:none;background:rgba(6,214,160,0.08);border:1px solid rgba(6,214,160,0.25);
+  border-radius:var(--radius-sm);padding:12px;margin-top:8px;
+  font-size:0.82rem;line-height:1.6;color:var(--teal);
+}
+.case-answer.show{display:block;animation:fadeIn 0.3s ease;}
+
+/* ===== PATHOPHYSIOLOGY TAB ===== */
+.flow-chart{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;margin:20px 0;}
+.flow-node{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 20px;
+  text-align:center;font-size:0.82rem;font-weight:600;
+  width:100%;max-width:380px;position:relative;cursor:default;
+  transition:border-color 0.2s;
+}
+.flow-node:hover{border-color:var(--gold);}
+.flow-node.highlight-gold{border-color:var(--gold);background:var(--gold-dim);}
+.flow-node.highlight-teal{border-color:var(--teal);background:var(--teal-dim);}
+.flow-node.highlight-coral{border-color:var(--coral);background:var(--coral-dim);}
+.flow-arrow{font-size:1.4rem;color:var(--text-dim);margin:2px 0;line-height:1;}
+.flow-label{font-size:0.7rem;color:var(--text-dim);margin-top:-2px;text-align:center;}
+
+.path-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:20px 0;}
+.path-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:16px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;
+}
+.path-item:hover{border-color:var(--teal);transform:translateY(-2px);}
+.path-item h4{font-size:0.88rem;font-weight:700;margin-bottom:4px;}
+.path-item p{font-size:0.78rem;color:var(--text-muted);}
+.path-detail{
+  display:none;background:var(--teal-dim);border-radius:var(--radius-sm);
+  padding:10px;margin-top:10px;font-size:0.78rem;line-height:1.5;
+  color:var(--teal);
+}
+.path-detail.show{display:block;animation:fadeIn 0.2s ease;}
+
+/* ===== DIAGNOSIS TAB ===== */
+.diag-table-wrap{overflow-x:auto;margin:16px 0;}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+th{background:var(--surface2);color:var(--gold);font-weight:700;padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top;line-height:1.45;}
+tr:hover td{background:var(--surface2);color:var(--text);}
+td:first-child{font-weight:600;color:var(--text);}
+
+.algo-step{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;
+}
+.step-num{
+  background:var(--gold);color:#0a0e1a;width:28px;height:28px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:0.8rem;flex-shrink:0;
+}
+.algo-step .step-content h4{font-size:0.87rem;font-weight:700;}
+.algo-step .step-content p{font-size:0.8rem;color:var(--text-muted);margin-top:3px;line-height:1.45;}
+
+/* ===== TREATMENT TAB ===== */
+.tx-section{margin-bottom:24px;}
+.tx-section h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.emergency-box{
+  background:rgba(242,95,92,0.1);border:1px solid rgba(242,95,92,0.35);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;
+}
+.emergency-box h4{color:var(--coral);font-size:0.9rem;margin-bottom:8px;}
+.drug-row{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:8px;
+}
+.drug-name{font-weight:700;font-size:0.87rem;min-width:160px;}
+.drug-info{font-size:0.8rem;color:var(--text-muted);}
+.urgency-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.urgency-dot.emergency{background:var(--coral);}
+.urgency-dot.primary{background:var(--gold);}
+.urgency-dot.secondary{background:var(--teal);}
+.urgency-dot.monitoring{background:var(--blue);}
+
+/* ===== MNEMONICS TAB ===== */
+.mnem-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
+.mnem-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gold);margin-bottom:4px;}
+.mnem-phrase{font-size:1.4rem;font-weight:800;letter-spacing:2px;margin:10px 0;color:var(--teal);}
+.mnem-items{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.mnem-item{display:flex;gap:10px;align-items:flex-start;font-size:0.84rem;}
+.mnem-letter{font-weight:800;color:var(--gold);min-width:20px;font-size:1rem;}
+.mnem-def{color:var(--text-muted);line-height:1.4;}
+
+/* ===== UTILITY ===== */
+.btn-primary{
+  background:var(--gold);color:#0a0e1a;border:none;
+  padding:10px 22px;border-radius:40px;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.2s;
+}
+.btn-primary:hover{background:#d97706;transform:scale(1.02);}
+.btn-ghost{
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  padding:8px 18px;border-radius:40px;font-family:'Nunito',sans-serif;
+  font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;
+}
+.btn-ghost:hover{border-color:var(--text-muted);color:var(--text);}
+.mt-8{margin-top:8px;}
+.mt-16{margin-top:16px;}
+.mt-24{margin-top:24px;}
+.mb-16{margin-bottom:16px;}
+.divider{height:1px;background:var(--border);margin:24px 0;}
+.flex-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.hidden{display:none!important;}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">🧬</div>
+      <div class="brand-text">
+        <h1>Adrenal Cortex</h1>
+        <p>Physiology Study Platform</p>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill gold"><div class="dot"></div>Score: <span class="val" id="total-score">0</span></div>
+      <div class="stat-pill teal"><div class="dot"></div>Streak: <span class="val" id="streak-count">0</span>🔥</div>
+      <div class="stat-pill coral"><div class="dot"></div>Progress: <span class="val" id="progress-pct">0</span>%</div>
+    </div>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input class="search-box" type="text" placeholder="🔍 Search concepts, drugs, disorders..." id="search-input" />
+  <div id="search-results" style="margin-top:10px;"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-outer">
+  <nav class="tabs" id="tab-nav">
+    <button class="tab-btn active" data-tab="overview">🏠 Overview</button>
+    <button class="tab-btn" data-tab="quiz">🎯 Quiz (25 Qs)</button>
+    <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+    <button class="tab-btn" data-tab="cases">🏥 Clinical Cases</button>
+    <button class="tab-btn" data-tab="pathophysiology">⚙️ Pathophysiology</button>
+    <button class="tab-btn" data-tab="diagnosis">🔬 Diagnosis</button>
+    <button class="tab-btn" data-tab="treatment">💊 Treatment</button>
+    <button class="tab-btn" data-tab="mnemonics">🧠 Mnemonics</button>
+  </nav>
+</div>
+
+<main class="main">
+
+<!-- ===================== OVERVIEW TAB ===================== -->
+<section class="tab-panel active" id="tab-overview">
+  <h2 class="section-title">The Adrenal Cortex</h2>
+  <p class="section-sub">Physiology · Structure · Hormones · Regulation</p>
+
+  <div class="zone-grid">
+    <div class="zone-card glom">
+      <h3>🌊 Zona Glomerulosa</h3>
+      <p class="hormone">Mineralocorticoids → <strong>Aldosterone</strong></p>
+      <ul>
+        <li>Outermost layer</li>
+        <li>Regulated by RAAS & hyperkalemia</li>
+        <li>Reabsorbs Na⁺, excretes K⁺ & H⁺</li>
+        <li>Controls blood volume & pressure</li>
+        <li>NOT primarily ACTH-controlled</li>
+      </ul>
+      <div style="margin-top:12px;">
+        <span class="tag tag-blue">Mineralocorticoid</span>
+        <span class="tag tag-teal">RAAS</span>
+      </div>
+    </div>
+    <div class="zone-card fasc">
+      <h3>☀️ Zona Fasciculata</h3>
+      <p class="hormone">Glucocorticoids → <strong>Cortisol</strong></p>
+      <ul>
+        <li>Middle (largest) layer</li>
+        <li>Regulated exclusively by ACTH</li>
+        <li>Metabolic regulation, stress response</li>
+        <li>Anti-inflammatory powerhouse</li>
+        <li>Circadian rhythm: peak 4-10 AM</li>
+      </ul>
+      <div style="margin-top:12px;">
+        <span class="tag tag-gold">Glucocorticoid</span>
+        <span class="tag tag-gold">High-Yield</span>
+      </div>
+    </div>
+    <div class="zone-card reti">
+      <h3>🔴 Zona Reticularis</h3>
+      <p class="hormone">Androgens → <strong>DHEA & Androstenedione</strong></p>
+      <ul>
+        <li>Innermost layer</li>
+        <li>Shares ACTH control with fasciculata</li>
+        <li>Considered one functional zone</li>
+        <li>Weak androgens</li>
+        <li>Clinically less significant</li>
+      </ul>
+      <div style="margin-top:12px;">
+        <span class="tag tag-purple">Androgens</span>
+        <span class="tag tag-purple">ACTH-controlled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:16px;">⚡ Key Clinical Signs Grid</h3>
+  <div class="signs-grid">
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-gold">High-Yield</span></div>
+      <h4>Cortisol Half-Life</h4>
+      <p>60-90 min. Long due to heavy protein binding (75% transcortin + 15% albumin = only 10% free)</p>
+      <div class="exam-alert" style="margin-top:8px;font-size:0.77rem;padding:7px 10px;">10% free → long half-life</div>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-coral">Exam-Favourite</span></div>
+      <h4>Anti-inflammatory Effect</h4>
+      <p>Stabilizes lysosomes, ↓ capillary permeability, ↓ WBC migration, ↓ IL-1, ↓ histamine</p>
+      <div class="exam-alert" style="margin-top:8px;font-size:0.77rem;padding:7px 10px;">Comes as its own exam question</div>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-gold">High-Yield</span></div>
+      <h4>Moon Face — Cushing's</h4>
+      <p>Fat redistribution (lower limbs → face) + Na/H₂O retention + Polycythemia (redness)</p>
+      <div class="exam-alert" style="margin-top:8px;font-size:0.77rem;padding:7px 10px;">Red moon face = polycythemia</div>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-teal">Clinical Pearl</span></div>
+      <h4>Addisonian Crisis</h4>
+      <p>Stress + absent adrenal function → vascular collapse. Cannot maintain BP or mobilize glucose.</p>
+      <div class="exam-alert" style="margin-top:8px;font-size:0.77rem;padding:7px 10px;">Stress → shock in Addison's</div>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-blue">Exam-Favourite</span></div>
+      <h4>Vascular Reactivity</h4>
+      <p>Cortisol upregulates α₁ receptors on arterioles → sensitizes to norepinephrine vasopressor effect</p>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-coral">High-Yield</span></div>
+      <h4>Aldosterone-Escape</h4>
+      <p>In Conn's: ↑ECF → ↑GFR → ↓proximal Na⁺ reabsorption → Na⁺ excreted despite high aldosterone</p>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-gold">High-Yield</span></div>
+      <h4>Cortisol Metabolism</h4>
+      <p>↑Gluconeogenesis from extrahepatic proteins. ↑Blood glucose at expense of protein & lipids.</p>
+      <div class="exam-alert" style="margin-top:8px;font-size:0.77rem;padding:7px 10px;">"At expense of protein & lipids"</div>
+    </div>
+    <div class="sign-card">
+      <div style="margin-bottom:6px;"><span class="tag tag-purple">Clinical Pearl</span></div>
+      <h4>Addison's Pigmentation</h4>
+      <p>Loss of negative feedback → ↑ACTH with MSH activity → melanin deposition → dark skin</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:14px;">📋 Disorders at a Glance</h3>
+  <div class="card-grid" style="margin-bottom:20px;">
+    <div class="card" style="border-left:3px solid var(--blue);">
+      <div><span class="tag tag-blue">Hyperaldosteronism</span></div>
+      <h3 class="card-title" style="margin-top:8px;color:var(--blue);">Conn's Syndrome</h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;">Adrenal hyperplasia / tumor → excess aldosterone → <strong>Hypernatremia, Hypokalemia, Metabolic alkalosis, HTN</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gold);">
+      <div><span class="tag tag-gold">Hypercortisolism</span></div>
+      <h3 class="card-title" style="margin-top:8px;color:var(--gold);">Cushing's Syndrome</h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;">Excess glucocorticoids → <strong>Moon face, buffalo hump, central obesity, striae, osteoporosis, hyperglycemia, HTN</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--coral);">
+      <div><span class="tag tag-coral">Hypoadrenalism</span></div>
+      <h3 class="card-title" style="margin-top:8px;color:var(--coral);">Addison's Disease</h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;">Bilateral adrenal destruction → <strong>Hyponatremia, Hyperkalemia, Hypotension, Hypoglycemia, Dark pigmentation</strong></p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:14px;">🕐 Circadian Cortisol Rhythm</h3>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot" style="background:var(--blue);"></div><h4>4 AM – 10 AM</h4><p>Peak cortisol levels (highest in the day). Just before waking. Prepares body for daily stress.</p></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--gold);"></div><h4>Midday</h4><p>Cortisol declining from peak. Still metabolically active.</p></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--text-dim);"></div><h4>~Midnight</h4><p>Lowest cortisol levels (nadir). Important diagnostic reference point.</p></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--coral);"></div><h4>Acute Stress (Any Time)</h4><p>ACTH surge → cortisol spikes regardless of circadian phase. Overrides normal rhythm.</p></div>
+  </div>
+</section>
+
+<!-- ===================== QUIZ TAB ===================== -->
+<section class="tab-panel" id="tab-quiz">
+  <div class="quiz-header">
+    <div>
+      <h2 class="section-title">🎯 Quiz Mode</h2>
+      <p class="section-sub">25 MCQs from lecture content — General medical school style</p>
+    </div>
+    <div class="quiz-score">
+      <div class="score-badge">Score: <span id="score-display">0</span>/25</div>
+      <div class="streak-badge">🔥 <span id="streak-display">0</span> streak</div>
+      <button class="btn-ghost" onclick="resetQuiz()">Reset</button>
+    </div>
+  </div>
+  <div class="flex-between mb-16">
+    <span style="font-size:0.78rem;color:var(--text-dim);"><span id="answered-count">0</span>/25 answered</span>
+    <div class="progress-bar-wrap" style="max-width:300px;"><div class="progress-bar-fill" id="quiz-progress" style="width:0%"></div></div>
+  </div>
+  <div id="quiz-container"></div>
+</section>
+
+<!-- ===================== FLASHCARDS TAB ===================== -->
+<section class="tab-panel" id="tab-flashcards">
+  <h2 class="section-title">🃏 Flashcards</h2>
+  <p class="section-sub">Click any card to flip it and reveal the answer. 22 cards covering all key concepts.</p>
+  <div class="fc-grid" id="fc-container"></div>
+</section>
+
+<!-- ===================== CLINICAL CASES TAB ===================== -->
+<section class="tab-panel" id="tab-cases">
+  <h2 class="section-title">🏥 Clinical Cases</h2>
+  <p class="section-sub">Exam-style vignettes with step-by-step answers. Click "Reveal Answer" to check.</p>
+  <div id="cases-container"></div>
+</section>
+
+<!-- ===================== PATHOPHYSIOLOGY TAB ===================== -->
+<section class="tab-panel" id="tab-pathophysiology">
+  <h2 class="section-title">⚙️ Pathophysiology</h2>
+  <p class="section-sub">Mechanisms, axes, and flowcharts. Click any grid item for detail.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:14px;">HPA Axis — Cortisol Regulation</h3>
+  <div class="flow-chart">
+    <div class="flow-node highlight-gold">🧠 Hypothalamus (Paraventricular Nuclei)<br><small style="color:var(--text-muted);font-weight:400;">Triggered by: Circadian rhythm (4-10 AM peak) & Stress</small></div>
+    <div class="flow-arrow">↓</div><div class="flow-label">CRH secreted into portal blood</div>
+    <div class="flow-node">🫐 Anterior Pituitary<br><small style="color:var(--text-muted);font-weight:400;">Responds to CRH → releases ACTH</small></div>
+    <div class="flow-arrow">↓</div><div class="flow-label">ACTH in bloodstream</div>
+    <div class="flow-node">🟡 Adrenal Cortex (Fasciculata + Reticularis)<br><small style="color:var(--text-muted);font-weight:400;">↑ Cholesterol → Pregnenolone conversion</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight-teal">✅ Cortisol Released<br><small style="color:var(--text-muted);font-weight:400;">75% transcortin + 15% albumin + 10% free</small></div>
+    <div class="flow-arrow">↙</div>
+    <div class="flow-node highlight-coral">🔄 Negative Feedback<br><small style="color:var(--text-muted);font-weight:400;">High cortisol inhibits CRH & ACTH → loop closed</small></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--blue);margin-bottom:14px;">RAAS — Aldosterone Regulation</h3>
+  <div class="flow-chart">
+    <div class="flow-node">📉 ↓ Blood Volume<br><small style="color:var(--text-muted);font-weight:400;">OR: Hyperkalemia → direct aldosterone stimulus</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">🫀 ↓ Renal Perfusion Pressure</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight-gold">⚗️ Kidney releases Renin<br><small style="color:var(--text-muted);font-weight:400;">Angiotensinogen → Angiotensin I</small></div>
+    <div class="flow-arrow">↓</div><div class="flow-label">ACE (in lungs)</div>
+    <div class="flow-node">🔵 Angiotensin II formed<br><small style="color:var(--text-muted);font-weight:400;">Potent vasoconstrictor + aldosterone stimulant</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">🔵 Acts on Zona Glomerulosa<br><small style="color:var(--text-muted);font-weight:400;">↑ Corticosterone → Aldosterone conversion</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight-teal">✅ Aldosterone → Na⁺ reabsorption + K⁺/H⁺ excretion<br><small style="color:var(--text-muted);font-weight:400;">↑ ECF volume → restores blood pressure</small></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight-coral">⚡ Aldosterone-Escape: ↑GFR → ↓proximal Na⁺ reabsorption</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:14px;">🧩 Mechanisms — Click to Expand</h3>
+  <div class="path-grid">
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🔥 Anti-inflammatory Mechanism</h4>
+      <p>Multiple pathways by which cortisol suppresses inflammation</p>
+      <div class="path-detail">1️⃣ Stabilizes lysosomal membranes → prevents proteolytic enzyme release<br>2️⃣ Decreases capillary permeability → less edema<br>3️⃣ Reduces WBC migration to inflamed sites<br>4️⃣ Suppresses T-lymphocyte reproduction<br>5️⃣ Reduces IL-1 release → lowers fever<br>6️⃣ Inhibits histamine from mast cells & basophils (anti-allergic)</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🍬 Glucose Metabolism</h4>
+      <p>How cortisol causes hyperglycemia</p>
+      <div class="path-detail">↑ Extrahepatic gluconeogenesis from mobilized amino acids<br>↓ Cellular glucose utilization (insulin antagonism)<br>Net effect: ↑ Plasma glucose<br>Source: extrahepatic protein catabolism<br>→ Diabetogenic at high levels (steroid diabetes)</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🥩 Protein Metabolism</h4>
+      <p>Dual anabolic/catabolic protein effects</p>
+      <div class="path-detail">Extrahepatic: CATABOLIC — reduces cellular protein stores, mobilizes amino acids<br>Hepatic: ANABOLIC — increases liver protein synthesis & plasma proteins<br>Net: ↑ Amino acid supply to liver for gluconeogenesis<br>Clinical: muscle wasting, osteoporosis, thin skin, striae</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🫙 Fat Metabolism</h4>
+      <p>Lipolysis and fat redistribution</p>
+      <div class="path-detail">↑ Lipolysis → mobilizes fatty acids from adipose tissue<br>Shifts cellular fuel from glucose to fatty acids<br>Fat redistributes: limbs lose fat → central/facial accumulation<br>Clinical: buffalo hump, moon face, central obesity in Cushing's</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>💉 Blood Cell Effects</h4>
+      <p>Cortisol's hematopoietic actions</p>
+      <div class="path-detail">↑ RBCs → polycythemia (redness of moon face)<br>↑ Platelets (thrombocytosis)<br>↑ Neutrophils (stimulates hematopoiesis)<br>↓ Lymphocytes → migrate to lymphoid tissue<br>↓ Eosinophils & basophils → migrate out of circulation</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>💪 Permissive Action</h4>
+      <p>Cortisol's role enabling other hormones</p>
+      <div class="path-detail">Cortisol must be present for:<br>• Glucagon to produce gluconeogenesis<br>• Catecholamines to cause lipolysis<br>• Catecholamines to cause bronchodilation<br>• Catecholamines to exert vasopressor responses<br>→ Essential for stress survival</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🫀 Vascular Reactivity</h4>
+      <p>How cortisol maintains blood pressure</p>
+      <div class="path-detail">↑ Expression of α₁ receptors on arterioles<br>↑ Sensitivity to norepinephrine vasoconstrictor effect<br>Without cortisol: blood vessels lose responsiveness to catecholamines<br>This is why Addison's → hypotension + vasodilatory shock</div>
+    </div>
+    <div class="path-item" onclick="toggleDetail(this)">
+      <h4>🌊 Renal Cortisol Effect</h4>
+      <p>Antidiuretic effect of cortisol</p>
+      <div class="path-detail">Cortisol has weak mineralocorticoid activity<br>Enhances Na⁺ reabsorption from renal tubules<br>Obligatory water reabsorption follows Na⁺<br>In dehydration: antidiuretic effect secondary to enhanced Na⁺ reabsorption<br>Both ADH + cortisol absence → excessive water loss</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--coral);margin-bottom:14px;">⚠️ Cushing's Syndrome Cascade</h3>
+  <div class="flow-chart">
+    <div class="flow-node highlight-coral">Excess Cortisol (Primary / Secondary / Iatrogenic)</div>
+    <div class="flow-arrow">↓</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:600px;">
+      <div class="flow-node" style="max-width:none;">🦴 ↑Protein catabolism → Osteoporosis, striae, muscle wasting</div>
+      <div class="flow-node" style="max-width:none;">🍬 ↑Gluconeogenesis → Steroid diabetes, hyperglycemia</div>
+      <div class="flow-node" style="max-width:none;">🫙 Fat redistribution → Moon face, buffalo hump</div>
+      <div class="flow-node" style="max-width:none;">💧 Na⁺/H₂O retention → Hypertension, edema</div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node highlight-coral">🔄 Negative feedback: ↑Cortisol → ↓CRH, ↓ACTH (unless pituitary tumor)</div>
+  </div>
+</section>
+
+<!-- ===================== DIAGNOSIS TAB ===================== -->
+<section class="tab-panel" id="tab-diagnosis">
+  <h2 class="section-title">🔬 Diagnosis</h2>
+  <p class="section-sub">Diagnostic criteria, investigation findings, comparison tables, and algorithms.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:16px;">📊 Disorder Comparison Table</h3>
+  <div class="diag-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Conn's Syndrome</th>
+          <th>Cushing's Syndrome</th>
+          <th>Addison's Disease</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Type</td><td>Primary Hyperaldosteronism</td><td>Hypercortisolism</td><td>Primary Hypoadrenalism</td></tr>
+        <tr><td>Cause</td><td>Adrenal hyperplasia or tumor</td><td>Adrenal tumor (1°), Pituitary ACTH tumor (2°), Exogenous steroids (iatrogenic)</td><td>Bilateral adrenal destruction (autoimmune)</td></tr>
+        <tr><td>Sodium</td><td>↑ Hypernatremia</td><td>↑ (Na⁺/H₂O retention)</td><td>↓ Hyponatremia</td></tr>
+        <tr><td>Potassium</td><td>↓ Hypokalemia</td><td>Normal/mild ↓</td><td>↑ Hyperkalemia</td></tr>
+        <tr><td>Blood Pressure</td><td>↑ Hypertension</td><td>↑ Hypertension</td><td>↓ Hypotension</td></tr>
+        <tr><td>Blood Glucose</td><td>Normal</td><td>↑ Hyperglycemia (steroid diabetes)</td><td>↓ Hypoglycemia</td></tr>
+        <tr><td>Acid-Base</td><td>Metabolic alkalosis</td><td>Normal</td><td>Metabolic acidosis</td></tr>
+        <tr><td>ACTH</td><td>↓ (due to low cortisol feedback if any)</td><td>↑ (if pituitary driven) or ↓ (if adrenal tumor)</td><td>↑↑ High (loss of negative feedback)</td></tr>
+        <tr><td>Skin</td><td>Normal</td><td>Striae (purplish), bruising, thin skin</td><td>Dark pigmentation (ACTH/MSH)</td></tr>
+        <tr><td>Key Features</td><td>Muscle weakness, mild HTN, renal damage from K⁺ loss</td><td>Moon face, buffalo hump, central obesity, osteoporosis</td><td>Fatigue, hypotension, Addisonian crisis</td></tr>
+        <tr><td>Crisis</td><td>—</td><td>—</td><td>Addisonian crisis (stress exposure → shock)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--teal);margin-bottom:16px;">🔬 Investigation Findings</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3 class="card-title" style="color:var(--blue);">Conn's Syndrome</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        <span class="tag tag-blue">↑ Aldosterone</span>
+        <span class="tag tag-blue">↓ Renin</span>
+        <span class="tag tag-blue">↓ K⁺</span>
+        <span class="tag tag-blue">↑ Na⁺</span>
+        <span class="tag tag-blue">Alkalosis pH</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);">CT abdomen to identify adrenal adenoma. Aldosterone:renin ratio ↑↑.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-title" style="color:var(--gold);">Cushing's Syndrome</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        <span class="tag tag-gold">↑ Cortisol</span>
+        <span class="tag tag-gold">Loss of diurnal rhythm</span>
+        <span class="tag tag-gold">↑ ACTH (pituitary)</span>
+        <span class="tag tag-gold">↑ Glucose</span>
+        <span class="tag tag-gold">↑ RBCs</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);">24h urinary cortisol ↑. Dexamethasone suppression test: failed suppression. MRI pituitary or CT adrenal.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-title" style="color:var(--coral);">Addison's Disease</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        <span class="tag tag-coral">↓ Cortisol</span>
+        <span class="tag tag-coral">↑ ACTH</span>
+        <span class="tag tag-coral">↓ Na⁺</span>
+        <span class="tag tag-coral">↑ K⁺</span>
+        <span class="tag tag-coral">↓ Glucose</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);">Short synacthen test: cortisol fails to rise. ACTH stimulation test. Anti-adrenal antibodies if autoimmune.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:16px;">🗺️ Diagnostic Algorithm — Suspected Cushing's</h3>
+  <div class="algo-step"><div class="step-num">1</div><div class="step-content"><h4>Clinical Suspicion</h4><p>Moon face, central obesity, striae, hypertension, hyperglycemia, muscle wasting</p></div></div>
+  <div class="algo-step"><div class="step-num">2</div><div class="step-content"><h4>24-Hour Urinary Cortisol</h4><p>First-line screening. Loss of normal diurnal rhythm is key. Normal: peak at 4-10 AM, nadir at midnight.</p></div></div>
+  <div class="algo-step"><div class="step-num">3</div><div class="step-content"><h4>Plasma ACTH Level</h4><p>↑ ACTH → pituitary-driven (secondary Cushing's / Cushing's disease). ↓ ACTH → adrenal tumor (primary).</p></div></div>
+  <div class="algo-step"><div class="step-num">4</div><div class="step-content"><h4>Dexamethasone Suppression Test</h4><p>Give exogenous steroid → normal response: cortisol suppressed. Cushing's: cortisol NOT suppressed.</p></div></div>
+  <div class="algo-step"><div class="step-num">5</div><div class="step-content"><h4>Imaging</h4><p>MRI pituitary (if ACTH-dependent) or CT adrenal (if adrenal-dependent). Look for adenoma or hyperplasia.</p></div></div>
+  <div class="algo-step"><div class="step-num">6</div><div class="step-content"><h4>Differentiate Source</h4><p>Adrenal tumor → primary. Pituitary ACTH tumor → secondary/Cushing's disease. Exogenous steroids → iatrogenic.</p></div></div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-family:'Playfair Display',serif;color:var(--coral);margin-bottom:16px;">🚨 Diagnostic Algorithm — Addisonian Crisis</h3>
+  <div class="algo-step" style="border-left:3px solid var(--coral);"><div class="step-num" style="background:var(--coral);">1</div><div class="step-content"><h4>Trigger Recognition</h4><p>Patient with known Addison's exposed to acute stress (infection, surgery, trauma)</p></div></div>
+  <div class="algo-step" style="border-left:3px solid var(--coral);"><div class="step-num" style="background:var(--coral);">2</div><div class="step-content"><h4>Clinical Features</h4><p>Vascular collapse (shock), severe hypotension, nausea, vomiting, extreme weakness, confusion</p></div></div>
+  <div class="algo-step" style="border-left:3px solid var(--coral);"><div class="step-num" style="background:var(--coral);">3</div><div class="step-content"><h4>Emergency Labs</h4><p>↓ Cortisol, ↑ ACTH, ↓ Na⁺, ↑ K⁺, ↓ glucose. Do NOT delay treatment for lab results.</p></div></div>
+  <div class="algo-step" style="border-left:3px solid var(--coral);"><div class="step-num" style="background:var(--coral);">4</div><div class="step-content"><h4>Immediate Treatment</h4><p>IV hydrocortisone + IV saline + glucose. Life-saving — cannot wait for confirmation.</p></div></div>
+</section>
+
+<!-- ===================== TREATMENT TAB ===================== -->
+<section class="tab-panel" id="tab-treatment">
+  <h2 class="section-title">💊 Treatment</h2>
+  <p class="section-sub">Emergency protocols, drugs, and management by disorder.</p>
+
+  <!-- ADDISONIAN CRISIS -->
+  <div class="tx-section">
+    <h3 style="color:var(--coral);">🚨 Addisonian Crisis — Emergency</h3>
+    <div class="emergency-box">
+      <h4>⚡ IMMEDIATE ACTION REQUIRED</h4>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Patient in vascular collapse after stress exposure (infection, surgery, illness). Do NOT delay treatment for labs.</p>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+        <div class="drug-row"><div class="urgency-dot emergency"></div><div class="drug-name">IV Hydrocortisone</div><div class="drug-info">100 mg IV bolus immediately, then 50-100 mg every 6h. Replaces missing cortisol and aldosterone.</div></div>
+        <div class="drug-row"><div class="urgency-dot emergency"></div><div class="drug-name">IV Normal Saline</div><div class="drug-info">Aggressive fluid resuscitation for hypovolemia/shock. Corrects Na⁺ deficit.</div></div>
+        <div class="drug-row"><div class="urgency-dot emergency"></div><div class="drug-name">IV Dextrose</div><div class="drug-info">Corrects hypoglycemia. Give 50% dextrose if glucose very low.</div></div>
+        <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Treat Precipitant</div><div class="drug-info">Address underlying stress trigger (antibiotics for infection, etc.)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDISON'S CHRONIC -->
+  <div class="tx-section">
+    <h3 style="color:var(--coral);">🔴 Addison's Disease — Chronic Management</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Hydrocortisone</div><div class="drug-info">15-25 mg/day in divided doses. Replaces cortisol. Give higher dose at morning (mimics circadian peak).</div></div>
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Fludrocortisone</div><div class="drug-info">0.05-0.2 mg/day. Mineralocorticoid replacement. Reduces Na⁺ loss, prevents hyperkalemia.</div></div>
+      <div class="drug-row"><div class="urgency-dot secondary"></div><div class="drug-name">Sick Day Rules</div><div class="drug-info">Double/triple steroid dose during illness or surgery. Patient education critical.</div></div>
+      <div class="drug-row"><div class="urgency-dot monitoring"></div><div class="drug-name">Medical Alert Bracelet</div><div class="drug-info">Mandatory. Essential for emergency care providers to know about the condition.</div></div>
+    </div>
+  </div>
+
+  <!-- CUSHING'S -->
+  <div class="tx-section">
+    <h3 style="color:var(--gold);">🟡 Cushing's Syndrome — Treatment</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Surgical Removal</div><div class="drug-info">First-line for adrenal adenoma (adrenalectomy) or pituitary adenoma (transsphenoidal surgery).</div></div>
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Metyrapone</div><div class="drug-info">Inhibits cortisol synthesis (11β-hydroxylase inhibitor). Used pre-operatively or when surgery not possible.</div></div>
+      <div class="drug-row"><div class="urgency-dot secondary"></div><div class="drug-name">Ketoconazole</div><div class="drug-info">Inhibits multiple steroidogenic enzymes. Used for medical management.</div></div>
+      <div class="drug-row"><div class="urgency-dot secondary"></div><div class="drug-name">Cabergoline</div><div class="drug-info">Dopamine agonist — reduces ACTH in Cushing's disease (pituitary source).</div></div>
+      <div class="drug-row"><div class="urgency-dot monitoring"></div><div class="drug-name">Treat Iatrogenic Cause</div><div class="drug-info">Gradual steroid taper if caused by exogenous steroids. Do NOT stop suddenly (risk of Addisonian crisis).</div></div>
+    </div>
+  </div>
+
+  <!-- CONN'S -->
+  <div class="tx-section">
+    <h3 style="color:var(--blue);">🔵 Conn's Syndrome — Treatment</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Adrenalectomy</div><div class="drug-info">First-line if unilateral adenoma confirmed on imaging. Curative.</div></div>
+      <div class="drug-row"><div class="urgency-dot primary"></div><div class="drug-name">Spironolactone</div><div class="drug-info">Aldosterone antagonist. Used for bilateral hyperplasia or pre-surgery. Corrects hypokalemia and HTN.</div></div>
+      <div class="drug-row"><div class="urgency-dot secondary"></div><div class="drug-name">Eplerenone</div><div class="drug-info">Selective mineralocorticoid receptor antagonist. Fewer anti-androgenic side effects than spironolactone.</div></div>
+      <div class="drug-row"><div class="urgency-dot monitoring"></div><div class="drug-name">Potassium Supplementation</div><div class="drug-info">Correct hypokalemia. Monitor electrolytes regularly.</div></div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="card mt-16">
+    <p style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:10px;">URGENCY LEGEND</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.78rem;">
+      <span><span class="urgency-dot emergency" style="display:inline-block;vertical-align:middle;margin-right:4px;"></span>Emergency / Immediate</span>
+      <span><span class="urgency-dot primary" style="display:inline-block;vertical-align:middle;margin-right:4px;"></span>Primary / First-line</span>
+      <span><span class="urgency-dot secondary" style="display:inline-block;vertical-align:middle;margin-right:4px;"></span>Secondary / Alternative</span>
+      <span><span class="urgency-dot monitoring" style="display:inline-block;vertical-align:middle;margin-right:4px;"></span>Monitoring / Supportive</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MNEMONICS TAB ===================== -->
+<section class="tab-panel" id="tab-mnemonics">
+  <h2 class="section-title">🧠 Mnemonics</h2>
+  <p class="section-sub">7 custom mnemonics to make the adrenal cortex unforgettable.</p>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🏆 Adrenal Zones — "GFR"</div>
+    <div class="mnem-phrase">G.F.R.</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">The three layers of the adrenal cortex, outside → in (just like renal GFR — kidney physiology!)</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter">G</div><div class="mnem-def"><strong>Glomerulosa</strong> → Mineralocorticoids (Aldosterone) — outermost</div></div>
+      <div class="mnem-item"><div class="mnem-letter">F</div><div class="mnem-def"><strong>Fasciculata</strong> → Glucocorticoids (Cortisol) — middle, largest</div></div>
+      <div class="mnem-item"><div class="mnem-letter">R</div><div class="mnem-def"><strong>Reticularis</strong> → Androgens (DHEA, Androstenedione) — innermost</div></div>
+    </div>
+    <div style="margin-top:10px;"><span class="tag tag-gold">High-Yield</span><span class="tag tag-teal">Exam-Favourite</span></div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">☀️ Cortisol Effects — "GABS VAMP"</div>
+    <div class="mnem-phrase">GABS VAMP</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">Everything cortisol does — comprehensive!</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter">G</div><div class="mnem-def"><strong>Gluconeogenesis</strong> — ↑ extrahepatic gluconeogenesis → hyperglycemia</div></div>
+      <div class="mnem-item"><div class="mnem-letter">A</div><div class="mnem-def"><strong>Anti-inflammatory</strong> — stabilizes lysosomes, ↓ IL-1, ↓ WBC migration</div></div>
+      <div class="mnem-item"><div class="mnem-letter">B</div><div class="mnem-def"><strong>Blood pressure</strong> — ↑ α₁ receptor expression → ↑ NE sensitivity</div></div>
+      <div class="mnem-item"><div class="mnem-letter">S</div><div class="mnem-def"><strong>Stress response</strong> — mobilizes energy and maintains circulation</div></div>
+      <div class="mnem-item"><div class="mnem-letter">V</div><div class="mnem-def"><strong>Vascular reactivity</strong> — permissive action for catecholamines</div></div>
+      <div class="mnem-item"><div class="mnem-letter">A</div><div class="mnem-def"><strong>Androgens</strong> — weak androgenic activity (at zona reticularis)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">M</div><div class="mnem-def"><strong>Metabolism</strong> — protein catabolism, lipolysis, fat redistribution</div></div>
+      <div class="mnem-item"><div class="mnem-letter">P</div><div class="mnem-def"><strong>Permissive</strong> — allows glucagon, catecholamines to function fully</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🌝 Cushing's Features — "MOON FACES"</div>
+    <div class="mnem-phrase">MOON FACES</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">Classic features of Cushing's syndrome — just picture the moon!</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter">M</div><div class="mnem-def"><strong>Moon face</strong> — fat redistribution + Na/H₂O retention + polycythemia</div></div>
+      <div class="mnem-item"><div class="mnem-letter">O</div><div class="mnem-def"><strong>Obesity</strong> — central (truncal) obesity, buffalo hump</div></div>
+      <div class="mnem-item"><div class="mnem-letter">O</div><div class="mnem-def"><strong>Osteoporosis</strong> — protein catabolism reduces bone matrix</div></div>
+      <div class="mnem-item"><div class="mnem-letter">N</div><div class="mnem-def"><strong>Na⁺ retention</strong> — hypertension, fluid retention</div></div>
+      <div class="mnem-item"><div class="mnem-letter">F</div><div class="mnem-def"><strong>Fat in wrong places</strong> — limbs thin, face and trunk fat</div></div>
+      <div class="mnem-item"><div class="mnem-letter">A</div><div class="mnem-def"><strong>Aldosterone-like effects</strong> — hypertension, edema</div></div>
+      <div class="mnem-item"><div class="mnem-letter">C</div><div class="mnem-def"><strong>Cortisol excess</strong> — all symptoms stem from this</div></div>
+      <div class="mnem-item"><div class="mnem-letter">E</div><div class="mnem-def"><strong>Elevated glucose</strong> — steroid diabetes (hyperglycemia)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">S</div><div class="mnem-def"><strong>Striae</strong> — purple stretch marks from collagen breakdown</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🔴 Addison's Features — "ACHES HIGH"</div>
+    <div class="mnem-phrase">ACHES HIGH</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">Addison's is characterized by everything being low except potassium and ACTH which go HIGH!</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter">A</div><div class="mnem-def"><strong>ACTH ↑</strong> — high due to loss of negative feedback; has MSH activity → pigmentation</div></div>
+      <div class="mnem-item"><div class="mnem-letter">C</div><div class="mnem-def"><strong>Cortisol ↓</strong> — deficient, causing hypoglycemia, weakness, fatigue</div></div>
+      <div class="mnem-item"><div class="mnem-letter">H</div><div class="mnem-def"><strong>Hypotension</strong> — Na⁺ loss → fluid loss → low BP</div></div>
+      <div class="mnem-item"><div class="mnem-letter">E</div><div class="mnem-def"><strong>Electrolytes abnormal</strong> — ↓ Na⁺ (hyponatremia), ↑ K⁺ (hyperkalemia)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">S</div><div class="mnem-def"><strong>Skin darkening</strong> — bronze pigmentation (MSH from high ACTH)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">H</div><div class="mnem-def"><strong>Hypoglycemia</strong> — no gluconeogenic drive from cortisol</div></div>
+      <div class="mnem-item"><div class="mnem-letter">I</div><div class="mnem-def"><strong>Immune dysfunction</strong> — no anti-inflammatory cortisol</div></div>
+      <div class="mnem-item"><div class="mnem-letter">G</div><div class="mnem-def"><strong>Gland destroyed</strong> — bilateral, usually autoimmune</div></div>
+      <div class="mnem-item"><div class="mnem-letter">H</div><div class="mnem-def"><strong>Hyperkalemia</strong> — no aldosterone → K⁺ retained</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🌊 RAAS Steps — "DROP RACE"</div>
+    <div class="mnem-phrase">DROP RACE</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">The RAAS cascade, step by step — it all starts with a DROP in blood volume!</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter">D</div><div class="mnem-def"><strong>DROP in blood volume</strong> → ↓ renal perfusion pressure</div></div>
+      <div class="mnem-item"><div class="mnem-letter">R</div><div class="mnem-def"><strong>Renin</strong> released from kidney</div></div>
+      <div class="mnem-item"><div class="mnem-letter">O</div><div class="mnem-def"><strong>Of</strong> angiotensinogen → Angiotensin I (renin's substrate)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">P</div><div class="mnem-def"><strong>Produced</strong> → Angiotensin II (via ACE in lungs)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">R</div><div class="mnem-def"><strong>Reaches</strong> Zona Glomerulosa of adrenal cortex</div></div>
+      <div class="mnem-item"><div class="mnem-letter">A</div><div class="mnem-def"><strong>Aldosterone</strong> released (corticosterone → aldosterone)</div></div>
+      <div class="mnem-item"><div class="mnem-letter">C</div><div class="mnem-def"><strong>Collecting ducts</strong> → Na⁺ reabsorption ↑, K⁺ & H⁺ excreted</div></div>
+      <div class="mnem-item"><div class="mnem-letter">E</div><div class="mnem-def"><strong>ECF volume restored</strong> → blood volume & pressure ↑</div></div>
+    </div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🧪 Cortisol Transport — "75-15-10 Rule"</div>
+    <div class="mnem-phrase" style="font-size:1.8rem;">75 · 15 · 10</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">The binding proportions that explain cortisol's long half-life (60-90 min)</p>
+    <div class="mnem-items">
+      <div class="mnem-item"><div class="mnem-letter" style="color:var(--gold);">75%</div><div class="mnem-def"><strong>Transcortin (CBG)</strong> — tightly bound to cortisol-binding globulin. Largest fraction.</div></div>
+      <div class="mnem-item"><div class="mnem-letter" style="color:var(--teal);">15%</div><div class="mnem-def"><strong>Albumin</strong> — loosely bound to albumin. Available reservoir.</div></div>
+      <div class="mnem-item"><div class="mnem-letter" style="color:var(--coral);">10%</div><div class="mnem-def"><strong>Free / Active</strong> — ONLY this fraction is biologically active! Because so little is free, degradation is slow → long half-life.</div></div>
+    </div>
+    <div class="exam-alert" style="margin-top:12px;">"10% is circulating unbound... this makes its half-life long." — Exam pearl</div>
+  </div>
+
+  <div class="mnem-card">
+    <div class="mnem-title">🩺 Conn's vs Addison's Electrolytes — "FLIP"</div>
+    <div class="mnem-phrase">CONN FLIPS ADDISON</div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">Conn's and Addison's have exact opposite electrolyte patterns — just flip them!</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+      <div style="background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);padding:14px;">
+        <p style="font-weight:700;color:var(--blue);margin-bottom:8px;">Conn's Syndrome</p>
+        <p style="font-size:0.82rem;">Na⁺ ↑ Hypernatremia<br>K⁺ ↓ Hypokalemia<br>BP ↑ Hypertension<br>pH ↑ Alkalosis</p>
+      </div>
+      <div style="background:var(--coral-dim);border:1px solid var(--coral);border-radius:var(--radius-sm);padding:14px;">
+        <p style="font-weight:700;color:var(--coral);margin-bottom:8px;">Addison's Disease</p>
+        <p style="font-size:0.82rem;">Na⁺ ↓ Hyponatremia<br>K⁺ ↑ Hyperkalemia<br>BP ↓ Hypotension<br>pH ↓ Acidosis</p>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-dim);margin-top:10px;">💡 Think of them as mirror images!</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ===================== DATA =====================
+
+const quizData = [
+  {q:"How does cortisol elevate plasma glucose?",opts:["By stimulating hepatic glycogenolysis","By stimulating extrahepatic gluconeogenesis from mobilized amino acids","By increasing cellular glucose utilization","By increasing insulin secretion","By converting fatty acids to glucose"],ans:1,explain:"Cortisol accelerates gluconeogenesis from extrahepatic amino acids and moderately reduces cellular glucose utilization.",wrong:"Cortisol does NOT promote glycogenolysis, it DECREASES glucose utilization, and opposes (not promotes) insulin."},
+  {q:"What is the mechanism behind the long half-life of cortisol?",opts:["It is rapidly excreted by the kidney","75% is bound to cortisol-binding globulin and 15% to albumin","It is stored in the liver","It is reabsorbed in the proximal tubule","It has no enzymatic degradation pathway"],ans:1,explain:"Heavy protein binding leaves only 10% unbound, extending its half-life to 60–90 minutes.",wrong:"Protein binding directly prevents rapid clearance; it is NOT due to reabsorption or liver storage."},
+  {q:"By what mechanism does cortisol support vascular reactivity?",opts:["It releases nitric oxide","It up-regulates alpha-1 receptors on arterioles","It stimulates the parasympathetic nervous system","It converts angiotensin I to angiotensin II","It acts as a direct vasodilator"],ans:1,explain:"Cortisol up-regulates α₁ receptors, increasing arteriolar sensitivity to the vasoconstrictor effect of norepinephrine.",wrong:"Cortisol works permissively with catecholamines, not directly as a dilator or via nitric oxide."},
+  {q:"How does cortisol exert an anti-inflammatory effect at the cellular level?",opts:["By lysing white blood cells","By stabilizing the lysosomal membrane","By increasing capillary permeability","By stimulating fibroblastic activity","By increasing interleukin-1 release"],ans:1,explain:"It stabilizes the lysosomal membrane, preventing the release of proteolytic enzymes that fuel inflammation.",wrong:"It DECREASES capillary permeability, INHIBITS fibroblasts, and REDUCES IL-1."},
+  {q:"What is the primary mechanism of action of aldosterone on the kidney?",opts:["Stimulates active reabsorption of Na+ and promotes K+ secretion in distal tubules","Stimulates K+ reabsorption in the proximal tubule","Inhibits Na+ reabsorption in the collecting duct","Promotes water excretion independently of sodium","Stimulates H+ reabsorption"],ans:0,explain:"Aldosterone is the major mineralocorticoid — it stimulates active Na⁺ reabsorption and secondary K⁺ secretion in distal tubules.",wrong:"Aldosterone EXCRETES K⁺ and H⁺, and REABSORBS Na⁺. Direction matters!"},
+  {q:"Why does Conn's syndrome lead to metabolic alkalosis?",opts:["Due to excessive loss of H+ in urine alongside K+ secretion","Due to retention of bicarbonate in the stomach","Due to hyperventilation","Due to decreased glomerular filtration rate","Due to primary loss of chloride"],ans:0,explain:"Increased Na⁺ reabsorption drives increased secretion and loss of K⁺ and H⁺ in the urine, causing alkalosis.",wrong:"It is a renal mechanism of H⁺ loss driven by excess aldosterone."},
+  {q:"What explains the 'Aldosterone-escape phenomenon'?",opts:["Decreased Na+ reabsorption from proximal tubules due to increased GFR","Complete failure of the adrenal cortex","Destruction of distal tubule receptors","Inactivation of aldosterone by the liver","Secretion of ADH"],ans:0,explain:"When ECF volume reaches a limit, increased GFR decreases proximal Na⁺ reabsorption, allowing Na⁺ excretion despite high aldosterone.",wrong:"The receptors and hormones remain active, but increased GFR overrides the distal reabsorption."},
+  {q:"How does Cushing's syndrome cause osteoporosis?",opts:["By direct chelation of calcium","By increasing calcitonin release","By increasing protein breakdown, reducing bone matrix","By decreasing vitamin D synthesis","By stimulating osteoblast proliferation"],ans:2,explain:"Increased protein breakdown causes bones to become weak and fragile due to decreased protein (collagen) matrix.",wrong:"It primarily affects the protein matrix, not calcium or calcitonin. Cortisol INHIBITS osteoblasts."},
+  {q:"In Addison's disease, what causes dark skin pigmentation?",opts:["Iron deposition","Melanin pigment deposition as a result of MSH-activity of ACTH","Jaundice from liver failure","Cyanosis from poor perfusion","Cortisol breakdown products"],ans:1,explain:"Loss of negative feedback → high ACTH with MSH activity → melanin deposition in skin.",wrong:"It is strictly an ACTH/MSH-mediated mechanism — no other cause."},
+  {q:"How does cortisol affect blood cell counts?",opts:["Decreases RBCs and increases lymphocytes","Decreases all circulating blood cells","Increases circulating RBCs, platelets, and neutrophils","Increases eosinophils and basophils","Decreases neutrophils only"],ans:2,explain:"Cortisol stimulates hematopoiesis for RBCs, platelets, and neutrophils, while stimulating MIGRATION of lymphocytes and eosinophils OUT of circulation.",wrong:"It acts as an immunosuppressant by hiding lymphocytes in lymphoid tissues, but BOOSTS RBCs and neutrophils."},
+  {q:"What is the mechanism of the 'moon face' appearance in Cushing's syndrome?",opts:["Pure fat deposition in the cheeks","Edema from Na+/H₂O retention, polycythemia, and fat redistribution","Allergic reaction to excess cortisol","Localized inflammation","Hypertrophy of facial muscles"],ans:1,explain:"Fat mobilizes to the face, making it round, while edema (Na⁺ retention) and red color (polycythemia) complete the 'moon face'.",wrong:"It is a combination of fluid retention, fat redistribution, and excess red blood cells — NOT pure fat or muscle."},
+  {q:"How does the renin-angiotensin system respond to a decrease in blood volume?",opts:["Decreased renal perfusion increases renin, which converts angiotensinogen to Angiotensin I","Angiotensin II directly stimulates the zona fasciculata","Renin converts cortisol to aldosterone","Angiotensin I acts on the zona glomerulosa","It inhibits aldosterone secretion"],ans:0,explain:"↓ Renal perfusion → ↑ renin → angiotensinogen → Angiotensin I → Angiotensin II → stimulates aldosterone.",wrong:"Angiotensin II stimulates the ZONA GLOMERULOSA (not fasciculata); renin acts on angiotensinogen (not cortisol)."},
+  {q:"How does cortisol lower fever?",opts:["By direct action on the hypothalamus","By increasing sweating","By reducing the release of interleukin-1 from WBCs","By promoting vasodilation","By inhibiting prostaglandin synthesis exclusively"],ans:2,explain:"Cortisol lowers fever mainly because it reduces the release of interleukin-1 from white blood cells.",wrong:"It acts on cytokine mediators (IL-1) rather than directly as a sudorific or primary hypothalamic agent."},
+  {q:"What causes muscle wasting in Cushing's syndrome?",opts:["Inadequate protein intake","Increased protein breakdown (catabolism)","Hypokalemia alone","Neuropathy","Failure of the neuromuscular junction"],ans:1,explain:"Excessive glucocorticoids reduce extrahepatic protein stores via increased catabolism, leading to muscle wasting.",wrong:"The primary driver is direct cortisol-mediated protein breakdown, NOT nerve failure or insufficient intake."},
+  {q:"Why does an Addisonian crisis result in shock?",opts:["Due to massive internal hemorrhage","Due to exaggerated stress response lacking cortisol/aldosterone compensation, leading to severe hypovolemia","Due to acute heart failure from hypercalcemia","Due to an anaphylactic reaction","Due to severe hyperglycemia"],ans:1,explain:"Exposure to stress requires cortisol/aldosterone for vascular tone and volume; their absence leads to vascular collapse.",wrong:"Addison's features hypoglycemia and lacks the hormones needed to survive stress, leading to hypovolemic shock."},
+  {q:"Which layer of the adrenal cortex secretes mainly cortisol?",opts:["Capsule","Zona Glomerulosa","Zona Fasciculata","Zona Reticularis","Medulla"],ans:2,explain:"The zona fasciculata secretes mainly glucocorticoids (cortisol).",wrong:"Glomerulosa = mineralocorticoids; Reticularis = androgens; Medulla = catecholamines."},
+  {q:"What distinguishes a mineralocorticoid from a glucocorticoid functionally?",opts:["A mineralocorticoid has insignificant glucocorticoid activity but high mineral regulation activity","Mineralocorticoids only affect the liver","Glucocorticoids do not affect glucose","Mineralocorticoids are secreted by the medulla","They have the exact same functional activity"],ans:0,explain:"If a steroid has mainly mineralocorticoid activity, it is classified as such; aldosterone's glucocorticoid activity is insignificant.",wrong:"Cortisol has significant mineralocorticoid activity at high levels, but aldosterone does NOT significantly alter glucose."},
+  {q:"What is the primary cause of secondary Cushing's syndrome?",opts:["Adrenal tumors","Excessive administration of glucocorticoids","Pituitary tumors secreting excessive ACTH","Autoimmune destruction of the adrenal cortex","Renin-secreting tumors"],ans:2,explain:"Secondary Cushing's is caused by excessive secretion of ACTH by pituitary tumors, stimulating the adrenal cortex.",wrong:"Adrenal tumors cause PRIMARY Cushing's; autoimmune destruction causes Addison's."},
+  {q:"What is a defining structural feature of purplish striae in hyperadrenalism?",opts:["Epidermal thickening","Loss of collagenous tissues from the skin","Accumulation of melanin","Hyperproliferation of fibroblasts","Deposition of fat in the dermis"],ans:1,explain:"Loss of collagenous tissue from the skin leads to purplish striae and delayed wound healing.",wrong:"Cortisol INHIBITS (not stimulates) fibroblasts, reducing collagen — the striae result from this collagen loss."},
+  {q:"In what cellular location does Angiotensin II primarily act in the adrenal gland?",opts:["Adrenal Medulla","Zona Reticularis","Zona Glomerulosa","Cortisol-binding globulin","Zona Fasciculata"],ans:2,explain:"Angiotensin II acts on the zona glomerulosa of the adrenal cortex to increase conversion of corticosterone to aldosterone.",wrong:"It specifically targets the OUTER layer to regulate mineralocorticoids, not the medulla or inner layers."},
+  {q:"What happens to CRH and ACTH when cortisol levels are chronically elevated?",opts:["They are stimulated via positive feedback","They are inhibited by negative feedback","They remain unchanged","Only CRH is inhibited","ACTH levels rise to compensate"],ans:1,explain:"Cortisol inhibits the secretion of CRH from the hypothalamus and ACTH from the anterior pituitary via negative feedback.",wrong:"This is a classic NEGATIVE feedback loop, inhibiting BOTH CRH and ACTH."},
+  {q:"When are cortisol levels normally at their highest due to circadian rhythm?",opts:["12 midnight","2 PM to 4 PM","Just before waking (4 AM to 10 AM)","Immediately after eating","During deep sleep"],ans:2,explain:"Cortisol levels oscillate with a 24-hour periodicity and are highest between 4 AM and 10 AM.",wrong:"They are LOWEST in the evening (approximately midnight)."},
+  {q:"Which is a key difference between primary hyperaldosteronism and Addison's disease regarding electrolytes?",opts:["Conn's causes hyperkalemia; Addison's causes hypokalemia","Conn's causes hypernatremia; Addison's causes hyponatremia","Both cause severe hyperkalemia","Conn's causes metabolic acidosis","Addison's causes metabolic alkalosis"],ans:1,explain:"Conn's has excess aldosterone (hypernatremia + hypokalemia), while Addison's has deficient aldosterone (hyponatremia + hyperkalemia).",wrong:"They are EXACT OPPOSITES regarding Na⁺ and K⁺ balance — mirror images of each other."},
+  {q:"How does hyperkalemia directly affect the adrenal cortex?",opts:["It inhibits aldosterone secretion","It increases aldosterone secretion","It increases cortisol secretion","It destroys the zona glomerulosa","It suppresses ACTH"],ans:1,explain:"Hyperkalemia directly increases aldosterone secretion to restore blood K⁺ to normal by renal excretion.",wrong:"High potassium acts as a direct secretagogue for aldosterone, NOT an inhibitor."},
+  {q:"What permissive effect does cortisol have on catecholamines?",opts:["It allows catecholamines to induce sleep","It is required for catecholamines to produce lipolysis, bronchodilatation, and vasopressor responses","It inactivates catecholamines in the liver","It prevents catecholamines from acting on alpha-1 receptors","It converts catecholamines to androgens"],ans:1,explain:"Cortisol must be present (permissive effect) for catecholamines to produce lipolysis, bronchodilation, and vasopressor responses.",wrong:"It ENABLES, rather than inhibits, the key sympathetic actions of catecholamines — essential for stress response."}
+];
+
+const flashcardData = [
+  {icon:"🏗️",q:"What are the three zones of the adrenal cortex and their products?",a:"G.F.R. mnemonic: Glomerulosa (mineralocorticoids/aldosterone), Fasciculata (glucocorticoids/cortisol), Reticularis (androgens/DHEA). Outside to inside."},
+  {icon:"🔗",q:"What percentage of cortisol is bound to transcortin (CBG)?",a:"75% to cortisol-binding globulin (transcortin), 15% to albumin, only 10% free and biologically active. Heavy binding = long half-life of 60-90 min."},
+  {icon:"🍬",q:"How does cortisol increase blood glucose?",a:"Stimulates extrahepatic gluconeogenesis from mobilized amino acids AND decreases cellular glucose utilization. Net result: hyperglycemia at the expense of protein and lipids."},
+  {icon:"🔥",q:"List 4 mechanisms of cortisol's anti-inflammatory effect.",a:"1) Stabilizes lysosomal membranes 2) Decreases capillary permeability 3) Reduces WBC migration to inflamed sites 4) Decreases IL-1 release (↓ fever) 5) Inhibits histamine from mast cells"},
+  {icon:"💪",q:"How does cortisol maintain blood pressure?",a:"Up-regulates α₁ receptors on arterioles → increases sensitivity to norepinephrine's vasoconstrictor effect. Without cortisol, vessels lose responsiveness = hypotension."},
+  {icon:"⚡",q:"What is the permissive action of cortisol?",a:"Cortisol must be present for: catecholamines to cause lipolysis, bronchodilation, and vasopressor responses; glucagon to produce gluconeogenesis. Essential for stress survival."},
+  {icon:"🌊",q:"What regulates aldosterone secretion?",a:"Two main regulators: 1) Renin-Angiotensin System (activated by ↓ blood volume/renal perfusion). 2) Direct stimulation by hyperkalemia. ACTH plays only a minor tonic role."},
+  {icon:"🔄",q:"Explain the aldosterone-escape phenomenon.",a:"In Conn's: excess aldosterone → ↑ ECF volume → ↑ GFR → ↓ proximal tubule Na⁺ reabsorption → Na⁺ excretion resumes despite persistent aldosterone. Limits severity."},
+  {icon:"🌙",q:"Describe the features of Cushing's syndrome.",a:"MOON FACES: Moon face (fat/edema/polycythemia), Obesity (central/buffalo hump), Osteoporosis, Na retention (HTN), Fat redistribution, Aldosterone-like effects, Cortisol excess, Elevated glucose, Striae (purple)"},
+  {icon:"📉",q:"Describe the electrolyte pattern in Addison's disease.",a:"FLIP of Conn's: ↓ Na⁺ (hyponatremia), ↑ K⁺ (hyperkalemia), ↓ BP (hypotension), ↓ glucose (hypoglycemia), metabolic acidosis. Caused by absent aldosterone and cortisol."},
+  {icon:"🟤",q:"Why does Addison's disease cause skin darkening?",a:"Absent cortisol removes negative feedback → pituitary secretes ↑↑ ACTH. ACTH has melanocyte-stimulating hormone (MSH) activity → ↑ melanin deposition → bronze/dark skin."},
+  {icon:"🔴",q:"What triggers an Addisonian crisis and what happens?",a:"Acute stress (infection, surgery, trauma) in patient with Addison's. Cannot mount cortisol/aldosterone response → vascular collapse, severe hypotension, shock. Can be fatal without immediate treatment."},
+  {icon:"🔵",q:"What are the features of Conn's syndrome?",a:"Primary hyperaldosteronism from adrenal hyperplasia/tumor. Features: Hypernatremia, Hypokalemia, Metabolic alkalosis, Hypertension, Muscle weakness. Aldosterone-escape limits Na⁺ retention eventually."},
+  {icon:"⏰",q:"What is the circadian rhythm of cortisol?",a:"Highest levels 4-10 AM (just before waking). Lowest at midnight. Stress overrides the rhythm at any time. Loss of this rhythm is a key diagnostic sign in Cushing's."},
+  {icon:"🔬",q:"What is the HPA axis and how does negative feedback work?",a:"Hypothalamus → CRH → Anterior Pituitary → ACTH → Adrenal Cortex → Cortisol. High cortisol inhibits BOTH CRH (hypothalamus) and ACTH (pituitary) — classic negative feedback loop."},
+  {icon:"🥩",q:"What are cortisol's dual effects on protein metabolism?",a:"Extrahepatic: CATABOLIC — breaks down muscle/bone protein → mobilizes amino acids. Hepatic: ANABOLIC — increases liver protein synthesis. Net: more substrate for gluconeogenesis."},
+  {icon:"🫙",q:"How does cortisol affect fat metabolism?",a:"Promotes lipolysis → mobilizes fatty acids from adipose tissue. Shifts cellular fuel preference to fatty acids. Redistributes fat: limbs lose fat → central/facial accumulation → characteristic Cushing's appearance."},
+  {icon:"🩸",q:"How does cortisol affect blood cells? (All 5 types)",a:"↑ RBCs (polycythemia), ↑ Platelets, ↑ Neutrophils. Immunosuppression: ↓ Lymphocytes (migrate to lymphoid tissue), ↓ Eosinophils & Basophils (migrate out of circulation)."},
+  {icon:"⚗️",q:"What is the RAAS cascade in order?",a:"↓ Blood volume → ↓ renal perfusion → Renin released → Angiotensinogen → Angiotensin I → (ACE in lungs) → Angiotensin II → Zona Glomerulosa → Aldosterone → Na⁺ reabsorption → ↑ ECF"},
+  {icon:"🏥",q:"What are the steps of treatment for Addisonian crisis?",a:"EMERGENCY: 1) IV Hydrocortisone 100mg bolus 2) IV Normal Saline (fluid resuscitation) 3) IV Dextrose (correct hypoglycemia) 4) Treat precipitating cause. Do NOT wait for lab results."},
+  {icon:"🎯",q:"Primary vs Secondary Cushing's — how to differentiate?",a:"Measure ACTH: ↑ ACTH = pituitary-driven (secondary/Cushing's disease). ↓ ACTH = adrenal tumor (primary). Iatrogenic (exogenous steroids) → ↓ ACTH + both cortisol and ACTH suppressed."},
+  {icon:"🌡️",q:"What is the antidiuretic effect of cortisol?",a:"Cortisol has weak mineralocorticoid activity. Enhances Na⁺ reabsorption → obligatory water retention. In dehydration, this provides secondary antidiuresis. Without both ADH and cortisol → excessive water loss."}
+];
+
+const casesData = [
+  {
+    title:"Case 1 — Hypertension with Electrolyte Imbalance",
+    tags:["Mineralocorticoid","Primary Hyperaldosteronism"],
+    vignette:"A 48-year-old woman presents with persistent mild hypertension that has been difficult to control despite 3 antihypertensive medications. She complains of muscle weakness and cramping. Labs show K⁺ 2.8 mEq/L (low), Na⁺ 149 mEq/L (high), and arterial pH 7.52 (alkalotic). Blood pressure is 158/98 mmHg.",
+    questions:[
+      {q:"Q1. What is the most likely diagnosis?",a:"Conn's Syndrome (Primary Hyperaldosteronism). The triad of hypokalemia + hypernatremia + metabolic alkalosis + hypertension in the absence of secondary causes is classic. Caused by adrenal hyperplasia or aldosterone-secreting adenoma."},
+      {q:"Q2. What mechanism explains the metabolic alkalosis?",a:"Excess aldosterone drives active Na⁺ reabsorption in the distal convoluted tubule. This is coupled with obligatory secretion of K⁺ AND H⁺ into the urine. Loss of H⁺ from the body causes metabolic alkalosis."},
+      {q:"Q3. What investigation would you order and what would you find?",a:"Aldosterone:Renin ratio — elevated (high aldosterone, low renin since the adrenal, not renal, is the primary source). CT abdomen to visualize the adenoma. Serum K⁺ and Na⁺ as above. Aldosterone-escape can be assessed by GFR."}
+    ]
+  },
+  {
+    title:"Case 2 — Long-term Steroid Patient",
+    tags:["Glucocorticoid","Iatrogenic Cushing's"],
+    vignette:"A 35-year-old asthmatic man on oral prednisolone for 2 years presents with a rounder, reddish face and purple stretch marks on his abdomen. He has gained weight centrally despite not eating more. Examination shows a fat pad between the shoulder blades, thin skin, and bruising. BP 162/96 mmHg. Fasting glucose 8.2 mmol/L.",
+    questions:[
+      {q:"Q1. What syndrome does this patient have?",a:"Iatrogenic Cushing's Syndrome — caused by prolonged exogenous glucocorticoid (prednisolone) use. All classic features are present: moon face (round/red), buffalo hump, central obesity, purple striae, hypertension, and steroid-induced diabetes (hyperglycemia)."},
+      {q:"Q2. Explain the mechanism of the purple striae.",a:"Excess cortisol promotes protein catabolism in extrahepatic tissues including the skin. Collagenous tissue in the dermis breaks down → skin becomes thin, fragile, and lacks tensile strength. As the skin stretches (from central weight gain), it tears, producing purple striae (purple due to visibility of underlying blood vessels through thin skin)."},
+      {q:"Q3. What is the key risk if steroids are stopped suddenly?",a:"Addisonian crisis. Chronic exogenous steroid use suppresses the HPA axis via negative feedback. The pituitary and adrenal glands atrophy from disuse. Sudden withdrawal removes steroid replacement before the axis has recovered, leaving the patient unable to produce endogenous cortisol → acute hypoadrenalism → vascular collapse/shock. Steroids must be tapered gradually."}
+    ]
+  },
+  {
+    title:"Case 3 — Autoimmune Adrenal Failure",
+    tags:["Hypoadrenalism","Addison's","Addisonian Crisis"],
+    vignette:"A 29-year-old female with known autoimmune Addison's disease is brought in by ambulance. She developed a severe urinary tract infection 3 days ago and became progressively weak and confused. On arrival: BP 72/40 mmHg, HR 124 bpm, Na⁺ 126 mEq/L, K⁺ 6.1 mEq/L, glucose 2.8 mmol/L. Her skin shows bronze discoloration.",
+    questions:[
+      {q:"Q1. What event has occurred and why?",a:"Addisonian Crisis. The patient has Addison's disease (autoimmune bilateral adrenal destruction) and was exposed to acute physiological stress (UTI). She cannot mount a cortisol or aldosterone response. Result: vascular collapse from loss of vascular reactivity (no α₁ upregulation), hyponatremia/hyperkalemia from no aldosterone, and hypoglycemia from no gluconeogenic drive."},
+      {q:"Q2. Why is her skin bronze?",a:"In Addison's, the adrenal cortex is destroyed → no cortisol → no negative feedback → pituitary secretes very high ACTH. ACTH shares structural similarity with Melanocyte-Stimulating Hormone (MSH) and has MSH activity. This stimulates melanocytes to increase melanin production → characteristic bronze/hyperpigmented skin."},
+      {q:"Q3. What is the emergency treatment?",a:"Do NOT wait for labs. 1) IV Hydrocortisone 100mg bolus IMMEDIATELY (replaces both glucocorticoid and mineralocorticoid at high doses). 2) IV Normal Saline for volume resuscitation. 3) IV Dextrose for hypoglycemia. 4) Antibiotics to treat the precipitating UTI. Monitor and repeat labs."}
+    ]
+  },
+  {
+    title:"Case 4 — Blood Count Abnormality",
+    tags:["Glucocorticoid","Cortisol","Hematological"],
+    vignette:"A complete blood count in a patient on high-dose hydrocortisone reveals: RBC count 6.2 × 10¹² /L (high), neutrophils 12 × 10⁹ /L (high), but lymphocytes 0.6 × 10⁹/L (low), and eosinophils nearly absent. The patient has no signs of bone marrow disease.",
+    questions:[
+      {q:"Q1. What explains this pattern?",a:"This is the classic effect of cortisol/glucocorticoids on blood cells. Cortisol stimulates hematopoiesis → ↑ RBCs (polycythemia) and ↑ neutrophils. Simultaneously, it causes lymphocytes and eosinophils/basophils to migrate OUT of circulation into lymphoid tissue (spleen, lymph nodes) → lymphopenia and eosinopenia in the blood."},
+      {q:"Q2. Why is this phenomenon useful clinically?",a:"It provides the immunosuppressive benefit of steroids — decreasing circulating lymphocytes reduces immune-mediated inflammation. This is exploited therapeutically in autoimmune diseases, transplant rejection prevention, and severe allergic reactions. However, it also increases infection risk."}
+    ]
+  },
+  {
+    title:"Case 5 — Classic Integrative: Cushing's Deep Dive",
+    tags:["Glucocorticoid","Cushing's","Comprehensive"],
+    vignette:"A 45-year-old woman presents with: severe muscle weakness, easily-fractured bones, and frequent bruising. She reports insomnia, euphoria, and recent onset of depression. BP 165/98 mmHg, fasting glucose 10.1 mmol/L. Physical exam: rounded reddish face, truncal obesity, thin arms/legs, stretch marks on abdomen, excessive facial hair.",
+    questions:[
+      {q:"Q1. Identify the structure and process affected.",a:"Hyperfunction of the Zona Fasciculata producing excess cortisol — Cushing's syndrome. The clinical triad of central obesity + hypertension + hyperglycemia combined with muscle wasting, osteoporosis, striae, and neuropsychiatric symptoms all point to glucocorticoid excess."},
+      {q:"Q2. Explain the pathophysiology step by step.",a:"1) Excess cortisol → ↑ extrahepatic protein catabolism → muscle wasting & osteoporosis (reduced bone matrix) 2) ↑ Gluconeogenesis + ↓ cellular glucose use → hyperglycemia (steroid diabetes) 3) Fat redistribution: limbs lose fat → face/trunk gain fat → central obesity + moon face 4) ↑ Na/H₂O retention → HTN 5) Collagen breakdown in skin → striae, bruising, thin skin 6) Mood changes from direct CNS cortisol effects."},
+      {q:"Q3. How would you differentiate primary from secondary Cushing's?",a:"Measure plasma ACTH: ↑↑ ACTH → pituitary source (Cushing's disease, secondary). ↓ or undetectable ACTH → adrenal tumor (primary Cushing's). Iatrogenic: ↓ ACTH, history of steroid use. Dexamethasone suppression test: pituitary-driven may partially suppress; adrenal tumor will not suppress. Imaging: MRI pituitary or CT adrenal."},
+      {q:"Q4. What happens to HPA axis feedback?",a:"High cortisol (from any cause) will attempt to inhibit CRH (hypothalamus) and ACTH (pituitary) via negative feedback. However, if the source is a pituitary ACTH tumor (Cushing's disease), the tumor secretes ACTH autonomously, resisting feedback. If the source is an adrenal tumor, ACTH will be low (suppressed by high cortisol)."}
+    ]
+  }
+];
+
+// ===================== QUIZ LOGIC =====================
+let score = 0;
+let streak = 0;
+let answered = 0;
+const answeredQ = new Array(quizData.length).fill(null);
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = `qcard-${i}`;
+    const letters = ['A','B','C','D','E'];
+    card.innerHTML = `
+      <div class="q-num">Question ${i+1} of ${quizData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts-${i}">
+        ${q.opts.map((o,j)=>`<button class="option-btn" onclick="selectAnswer(${i},${j})" id="opt-${i}-${j}">
+          <div class="opt-letter">${letters[j]}</div><span>${o}</span>
+        </button>`).join('')}
+      </div>
+      <div class="explanation" id="exp-${i}">
+        <div class="correct-label">✅ Correct: ${letters[q.ans]}</div>
+        <div style="margin-top:4px;">${q.explain}</div>
+        <div class="wrong-label">❌ Why others are wrong:</div>
+        <div>${q.wrong}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, ai) {
+  if (answeredQ[qi] !== null) return;
+  answeredQ[qi] = ai;
+  answered++;
+  const correct = ai === quizData[qi].ans;
+  if (correct) { score++; streak++; } else { streak = 0; }
+  
+  const opts = document.querySelectorAll(`#opts-${qi} .option-btn`);
+  opts.forEach((btn, j) => {
+    btn.disabled = true;
+    if (j === quizData[qi].ans) btn.classList.add('correct');
+    else if (j === ai && !correct) btn.classList.add('wrong');
+  });
+  document.getElementById(`exp-${qi}`).classList.add('show');
+  
+  updateStats();
+  saveProgress();
+}
+
+function updateStats() {
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('streak-display').textContent = streak;
+  document.getElementById('answered-count').textContent = answered;
+  document.getElementById('quiz-progress').style.width = `${(answered/quizData.length)*100}%`;
+  document.getElementById('total-score').textContent = score;
+  document.getElementById('streak-count').textContent = streak;
+  document.getElementById('progress-pct').textContent = Math.round((answered/quizData.length)*100);
+}
+
+function resetQuiz() {
+  score = 0; streak = 0; answered = 0;
+  answeredQ.fill(null);
+  updateStats();
+  renderQuiz();
+  localStorage.removeItem('adrenal_quiz');
+}
+
+// ===================== FLASHCARDS =====================
+function renderFlashcards() {
+  const container = document.getElementById('fc-container');
+  container.innerHTML = '';
+  flashcardData.forEach((fc, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'fc-wrap';
+    wrap.innerHTML = `
+      <div class="fc" id="fc-${i}">
+        <div class="fc-front">
+          <div class="fc-icon">${fc.icon}</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">tap to flip</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-a">${fc.a}</div>
+          <div class="fc-hint">tap to flip back</div>
+        </div>
+      </div>
+    `;
+    wrap.addEventListener('click', () => {
+      document.getElementById(`fc-${i}`).classList.toggle('flipped');
+    });
+    container.appendChild(wrap);
+  });
+}
+
+// ===================== CASES =====================
+function renderCases() {
+  const container = document.getElementById('cases-container');
+  container.innerHTML = '';
+  casesData.forEach((c, ci) => {
+    const card = document.createElement('div');
+    card.className = 'case-card';
+    const tagHtml = c.tags.map(t => `<span class="tag tag-gold">${t}</span>`).join('');
+    const qHtml = c.questions.map((q, qi) => `
+      <div class="case-q">
+        <p>${q.q}</p>
+        <button class="reveal-btn" onclick="revealAnswer(${ci},${qi},this)">Reveal Answer</button>
+        <div class="case-answer" id="ca-${ci}-${qi}">${q.a}</div>
+      </div>
+    `).join('');
+    card.innerHTML = `
+      <div class="case-header">
+        <div>
+          <div style="margin-bottom:6px;">${tagHtml}</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);">${c.title}</h3>
+        </div>
+        <div class="case-num">Case ${ci+1}</div>
+      </div>
+      <div class="case-vignette">${c.vignette}</div>
+      <div class="case-questions">${qHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function revealAnswer(ci, qi, btn) {
+  const ans = document.getElementById(`ca-${ci}-${qi}`);
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+// ===================== PATH DETAILS =====================
+function toggleDetail(el) {
+  const detail = el.querySelector('.path-detail');
+  detail.classList.toggle('show');
+}
+
+// ===================== TABS =====================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tabId}`).classList.add('active');
+  document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+  localStorage.setItem('adrenal_tab', tabId);
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ===================== SEARCH =====================
+const searchIndex = [
+  {term:"zona glomerulosa",info:"Outermost layer → Mineralocorticoids → Aldosterone. Regulated by RAAS & hyperkalemia.",tab:"overview"},
+  {term:"zona fasciculata",info:"Middle layer → Glucocorticoids → Cortisol. Regulated exclusively by ACTH.",tab:"overview"},
+  {term:"zona reticularis",info:"Innermost layer → Androgens → DHEA, Androstenedione. Regulated with fasciculata by ACTH.",tab:"overview"},
+  {term:"aldosterone",info:"Mineralocorticoid. ↑ Na⁺ reabsorption, ↑ K⁺/H⁺ secretion. Controlled by RAAS & hyperkalemia.",tab:"overview"},
+  {term:"cortisol",info:"Major glucocorticoid. 75% transcortin + 15% albumin + 10% free. Half-life 60-90 min. Peaks 4-10 AM.",tab:"overview"},
+  {term:"cortisol binding globulin",info:"Transcortin binds 75% of cortisol. Makes half-life long (60-90 min). Only 10% is free/active.",tab:"overview"},
+  {term:"anti-inflammatory",info:"Cortisol: stabilizes lysosomes, ↓ capillary permeability, ↓ WBC migration, ↓ IL-1, ↓ histamine.",tab:"pathophysiology"},
+  {term:"gluconeogenesis",info:"Cortisol stimulates extrahepatic gluconeogenesis from amino acids → ↑ plasma glucose.",tab:"pathophysiology"},
+  {term:"conn syndrome",info:"Primary hyperaldosteronism. Hypernatremia, hypokalemia, metabolic alkalosis, hypertension.",tab:"diagnosis"},
+  {term:"cushing syndrome",info:"Hypercortisolism. Moon face, central obesity, buffalo hump, striae, osteoporosis, hyperglycemia, HTN.",tab:"diagnosis"},
+  {term:"addison disease",info:"Bilateral adrenal destruction → Hyponatremia, hyperkalemia, hypotension, hypoglycemia, dark pigmentation.",tab:"diagnosis"},
+  {term:"addisonian crisis",info:"Stress + Addison's → vascular collapse, shock. Emergency: IV hydrocortisone + saline + dextrose.",tab:"treatment"},
+  {term:"aldosterone escape",info:"↑ ECF volume → ↑ GFR → ↓ proximal Na⁺ reabsorption → Na⁺ excreted despite high aldosterone.",tab:"overview"},
+  {term:"RAAS",info:"↓ Blood volume → Renin → Angiotensinogen → Ang I → Ang II → Zona Glomerulosa → Aldosterone.",tab:"pathophysiology"},
+  {term:"HPA axis",info:"Hypothalamus (CRH) → Pituitary (ACTH) → Adrenal Cortex (Cortisol) → Negative feedback.",tab:"pathophysiology"},
+  {term:"moon face",info:"Cushing's: fat redistribution to face + Na/H₂O retention (edema) + polycythemia (redness).",tab:"overview"},
+  {term:"striae",info:"Cushing's: cortisol breaks down skin collagen → purple stretch marks, thin fragile skin.",tab:"overview"},
+  {term:"osteoporosis",info:"Cushing's: excess cortisol catabolizes bone matrix protein → brittle bones.",tab:"overview"},
+  {term:"pigmentation",info:"Addison's: ↑↑ ACTH (loss of negative feedback) → MSH activity → bronze skin.",tab:"overview"},
+  {term:"spironolactone",info:"Aldosterone antagonist. Used in Conn's syndrome / bilateral hyperplasia.",tab:"treatment"},
+  {term:"hydrocortisone",info:"Glucocorticoid + mineralocorticoid replacement. First-line in Addisonian crisis and Addison's chronic management.",tab:"treatment"},
+  {term:"fludrocortisone",info:"Mineralocorticoid replacement in Addison's chronic management.",tab:"treatment"},
+  {term:"permissive action",info:"Cortisol must be present for catecholamines to cause lipolysis, bronchodilation, vasopressor responses.",tab:"pathophysiology"},
+  {term:"dexamethasone suppression",info:"Test for Cushing's. Exogenous steroid given — normal: cortisol suppressed. Cushing's: cortisol NOT suppressed.",tab:"diagnosis"},
+  {term:"circadian rhythm",info:"Cortisol peaks 4-10 AM, lowest at midnight. Loss of diurnal rhythm = Cushing's.",tab:"overview"},
+];
+
+document.getElementById('search-input').addEventListener('input', function() {
+  const val = this.value.toLowerCase().trim();
+  const resultsEl = document.getElementById('search-results');
+  if (!val || val.length < 2) { resultsEl.innerHTML = ''; return; }
+  const hits = searchIndex.filter(s => s.term.includes(val) || s.info.toLowerCase().includes(val));
+  if (!hits.length) { resultsEl.innerHTML = '<p style="font-size:0.8rem;color:var(--text-dim);padding:8px;">No results found.</p>'; return; }
+  resultsEl.innerHTML = hits.slice(0,6).map(h => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;cursor:pointer;"
+         onclick="switchTab('${h.tab}');document.getElementById('search-input').value='';document.getElementById('search-results').innerHTML='';">
+      <div style="font-weight:700;font-size:0.83rem;color:var(--gold);text-transform:capitalize;">${h.term}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">${h.info}</div>
+      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;">→ ${h.tab.charAt(0).toUpperCase()+h.tab.slice(1)} tab</div>
+    </div>
+  `).join('');
+});
+
+// ===================== PERSISTENCE =====================
+function saveProgress() {
+  try {
+    localStorage.setItem('adrenal_quiz', JSON.stringify({score,streak,answered,answeredQ}));
+  } catch(e){}
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem('adrenal_quiz');
+    if (saved) {
+      const d = JSON.parse(saved);
+      score = d.score || 0;
+      streak = d.streak || 0;
+      answered = d.answered || 0;
+      d.answeredQ.forEach((a,i) => { if (a !== null) answeredQ[i] = a; });
+      updateStats();
+    }
+    const savedTab = localStorage.getItem('adrenal_tab');
+    if (savedTab) switchTab(savedTab);
+  } catch(e) {}
+}
+
+function restoreQuizAnswers() {
+  const letters = ['A','B','C','D','E'];
+  answeredQ.forEach((ai, qi) => {
+    if (ai === null) return;
+    const opts = document.querySelectorAll(`#opts-${qi} .option-btn`);
+    opts.forEach((btn, j) => {
+      btn.disabled = true;
+      if (j === quizData[qi].ans) btn.classList.add('correct');
+      else if (j === ai && ai !== quizData[qi].ans) btn.classList.add('wrong');
+    });
+    document.getElementById(`exp-${qi}`).classList.add('show');
+  });
+}
+
+// ===================== INIT =====================
+renderQuiz();
+renderFlashcards();
+renderCases();
+loadProgress();
+restoreQuizAnswers();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

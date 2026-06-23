@@ -1,370 +1,736 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 1. Keeps scaling correct -->
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<!-- 2. Links to your central config -->
-<link rel="manifest" href="manifest.json">
-
-<!-- 3. iOS Exceptions: Forces the phone to stay in full-screen app mode -->
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<!-- 4. iOS Exception: The icon (Safe to put on every page) -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <meta name="application-name" content="My App">
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="MU 63">
-    <meta name="apple-mobile-web-app-title" content="MU 63">
-    <link rel="apple-touch-icon" href="icons8-brain Background Removed.png">
-    <link rel="icon" sizes="192x192" href="icons8-brain Background Removed.png">
-    <!-- 100% privacy-first analytics -->
-    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" sizes="192x192" href="icons8-brain Background Removed.png">
 <title>MU 63</title>
-    <!-- Importing the fonts used in your existing aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-        var netlifyIdentity = window.netlifyIdentity;
-        if (netlifyIdentity) {
-            netlifyIdentity.on('init', function(user) {
-                if (!user) {
-                    window.location.href = '/';
-                }
-            });
-            netlifyIdentity.on('logout', function() {
-                window.location.href = '/';
-            });
-            netlifyIdentity.init();
-        }
-    </script>
-    <style>
-        html, body {
-            overflow: visible !important;
-            overflow-y: auto !important;
-            height: auto !important;
-        }
-        :root {
-            --bg: #05060e;
-            --surface: #0a0d1d;
-            --surface-card: #11152d;
-            --border: rgba(168, 85, 247, 0.15);
-            --accent: #00c8ff;
-            --accent2: #a855f7;
-            --accent3: #22d3ee;
-            --text: #f1f5f9;
-            --text-muted: #64748b;
-            --radius: 16px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #080b14;
+    --surface: rgba(18, 21, 35, 0.92);
+    --surface-strong: rgba(24, 28, 46, 0.98);
+    --surface-soft: rgba(12, 14, 24, 0.8);
+    --border: rgba(168, 146, 222, 0.10);
+    --border-hover: rgba(168, 146, 222, 0.28);
+    --accent: #b8a0e8;
+    --accent-2: #c8b0f0;
+    --accent-3: #a088d8;
+    --text-primary: #eceaf0;
+    --text-secondary: #9890a8;
+    --text-muted: #70688a;
+    --radius: 24px;
+    --radius-sm: 16px;
+    --radius-pill: 999px;
+    --shadow: 0 30px 80px rgba(0,0,0,0.35);
+    --shadow-lg: 0 50px 120px rgba(0,0,0,0.4);
+    --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-fast: 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    --card-glow: radial-gradient(circle at top left, rgba(168, 146, 222, 0.14), transparent 42%);
+    --card-glow-2: radial-gradient(circle at bottom right, rgba(200, 176, 240, 0.10), transparent 45%);
+    --header-glow-1: rgba(168, 146, 222, 0.15);
+    --header-glow-2: rgba(200, 176, 240, 0.10);
+  }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
+  [data-theme="light"] {
+    color-scheme: light;
+    --bg: #f0eef5;
+    --surface: rgba(255, 253, 255, 0.95);
+    --surface-strong: rgba(255, 255, 255, 1);
+    --surface-soft: rgba(245, 242, 250, 0.95);
+    --border: rgba(90, 60, 140, 0.08);
+    --border-hover: rgba(90, 60, 140, 0.22);
+    --accent: #5a3c8c;
+    --accent-2: #7a5cb8;
+    --accent-3: #9a7cd4;
+    --text-primary: #1a1624;
+    --text-secondary: #52486a;
+    --text-muted: #7a7290;
+    --shadow: 0 24px 60px rgba(40, 30, 60, 0.07);
+    --shadow-lg: 0 40px 100px rgba(40, 30, 60, 0.1);
+    --card-glow: radial-gradient(circle at top left, rgba(90, 60, 140, 0.07), transparent 42%);
+    --card-glow-2: radial-gradient(circle at bottom right, rgba(122, 92, 184, 0.07), transparent 45%);
+    --header-glow-1: rgba(90, 60, 140, 0.10);
+    --header-glow-2: rgba(122, 92, 184, 0.07);
+  }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* Prevents scrollbars from the glowing orbs */
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
-        /* Ambient Glowing Background from the Pharmacology Center */
-        .bg-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15;
-            animation: drift 20s ease-in-out infinite alternate;
-        }
-        .orb:nth-child(1) { width: 600px; height: 600px; background: var(--accent2); top: -150px; left: -150px; }
-        .orb:nth-child(2) { width: 500px; height: 500px; background: var(--accent); bottom: -150px; right: -100px; animation-delay: -5s; }
-        
-        @keyframes drift { 
-            0% { transform: translate(0,0) scale(1); } 
-            100% { transform: translate(40px,30px) scale(1.1); } 
-        }
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text-primary);
+    padding: 24px;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition-fast);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-        .wrapper { 
-            position: relative; 
-            z-index: 1; 
-            width: 100%;
-            max-width: 900px; 
-            padding: 40px 20px; 
-        }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 20%, var(--header-glow-1), transparent 40%),
+      radial-gradient(circle at 80% 80%, var(--header-glow-2), transparent 40%);
+    z-index: 0;
+    transition: background var(--transition);
+  }
 
-        header { 
-            text-align: center; 
-            margin-bottom: 60px; 
-        }
+  .page-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    gap: 28px;
+  }
 
-        .badge {
-            display: inline-block; 
-            background: rgba(0, 200, 255, 0.1); 
-            border: 1px solid rgba(0, 200, 255, 0.25);
-            color: var(--accent); 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 12px;
-            letter-spacing: 2px; 
-            padding: 8px 20px; 
-            border-radius: 100px; 
-            margin-bottom: 20px; 
-            text-transform: uppercase;
-        }
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+  }
 
-        header h1 {
-            font-family: 'Syne', sans-serif; 
-            font-size: clamp(32px, 5vw, 48px); 
-            font-weight: 800; 
-            line-height: 1.2;
-            background: linear-gradient(135deg, #fff 20%, var(--accent) 60%, var(--accent2) 100%);
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            background-clip: text;
-        }
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--radius-pill);
+    padding: 10px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--surface);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: badgePulse 4s ease-in-out infinite;
+  }
 
-        header p { 
-            color: var(--text-muted); 
-            margin-top: 12px; 
-            font-size: 16px; 
-        }
+  .brand-badge::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.7;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
 
-        /* Nav Grid for the two main buttons/cards */
-        .nav-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 24px; 
-        }
+  .theme-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .theme-switcher:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+  }
+  .theme-switcher:active {
+      transform: translateY(0) scale(0.97);
+    }
 
-        .card {
-            background: rgba(17, 21, 45, 0.6); 
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border); 
-            border-radius: var(--radius);
-            padding: 32px; 
-            transition: all 0.3s ease; 
-            display: flex; 
-            flex-direction: column;
-            text-decoration: none; 
-            color: inherit; 
-            position: relative; 
-            overflow: hidden;
-        }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
-            pointer-events: none;
-        }
+  .topbar-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 20px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.35);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
 
-        .card::after {
-            content: ''; 
-            position: absolute; 
-            inset: 0; 
-            border-radius: var(--radius);
-            border: 2px solid var(--accent2); 
-            opacity: 0; 
-            transition: opacity 0.3s ease; 
-            pointer-events: none;
-        }
+  .topbar-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.55);
+  }
 
-        .card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
-            border-color: transparent; 
-            background: rgba(17, 21, 45, 0.8);
-        }
+  .topbar-logout:active {
+    transform: translateY(0) scale(0.97);
+  }
+  .theme-switcher span {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .theme-icon {
+    font-size: 16px;
+    line-height: 1;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .theme-switcher:hover .theme-icon {
+    transform: rotate(15deg) scale(1.1);
+  }
 
-        .card:hover::after { 
-            opacity: 0.5; 
-        }
-        
-        /* Card specific accents */
-        .card:nth-child(1):hover::after { border-color: var(--accent); }
-        .card:nth-child(2):hover::after { border-color: var(--accent2); }
+  header {
+    text-align: center;
+    padding: 36px 28px 34px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  }
 
-        .card-icon {
-            font-size: 32px;
-            margin-bottom: 20px;
-            display: inline-block;
-            background: rgba(255,255,255,0.05);
-            width: 60px; height: 60px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+  header::before,
+  header::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    transition: opacity var(--transition), background var(--transition);
+  }
+  header::before {
+    width: 240px;
+    height: 240px;
+    background: var(--header-glow-1);
+    top: -70px;
+    right: -50px;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  header::after {
+    width: 200px;
+    height: 200px;
+    background: var(--header-glow-2);
+    bottom: -60px;
+    left: -40px;
+    animation: orbFloat 10s ease-in-out infinite reverse;
+  }
 
-        .card-title { 
-            font-family: 'Syne', sans-serif; 
-            font-size: 22px; 
-            font-weight: 700; 
-            margin-bottom: 12px; 
-            color: #fff; 
-        }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(15px, -15px) scale(1.08); }
+  }
 
-        .card-desc { 
-            font-size: 14px; 
-            color: var(--text-muted); 
-            line-height: 1.6; 
-            margin-bottom: 24px; 
-            flex: 1; 
-        }
-        
-        .card-footer { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-top: 1px solid rgba(255,255,255,0.05); 
-            padding-top: 16px; 
-            font-size: 13px; 
-        }
+  .header-shine {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.04) 45%,
+      rgba(255, 255, 255, 0.07) 50%,
+      rgba(255, 255, 255, 0.04) 55%,
+      transparent 60%
+    );
+    background-size: 250% 100%;
+    animation: shimmer 6s ease-in-out infinite;
+  }
 
-        .card-tag { 
-            font-family: 'JetBrains Mono', monospace; 
-            font-weight: 600; 
-        }
-        
-        .card:nth-child(1) .card-tag { color: var(--accent); }
-        .card:nth-child(2) .card-tag { color: var(--accent2); }
+  [data-theme="light"] .header-shine {
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.25) 45%,
+      rgba(255, 255, 255, 0.35) 50%,
+      rgba(255, 255, 255, 0.25) 55%,
+      transparent 60%
+    );
+  }
 
-        .launch-icon { 
-            color: #fff; 
-            font-weight: bold; 
-            transition: transform 0.2s;
-        }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
 
-        .card:hover .launch-icon {
-            transform: translateX(4px);
-        }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(34px, 5.5vw, 60px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    position: relative;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 600px) {
-            .wrapper { padding: 20px; }
-            header { margin-bottom: 40px; }
-            .card { padding: 24px; }
-        }
-    </style>
+  header p {
+    max-width: 720px;
+    margin: 0 auto;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.8;
+    position: relative;
+    letter-spacing: 0.01em;
+  }
 
-<button id="logout-btn"
-  style="position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); letter-spacing: 0.5px;">
-  Log Out
-</button>
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    perspective: 1200px;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 260px;
+    padding: 28px 26px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      box-shadow var(--transition),
+      background var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+
+  @keyframes cardEntrance {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.5;
+    transition: opacity var(--transition), transform var(--transition);
+    pointer-events: none;
+  }
+  .card::before {
+    inset: -16px auto auto -28px;
+    width: 180px;
+    height: 180px;
+    background: var(--card-glow);
+  }
+  .card::after {
+    inset: auto -20px -24px auto;
+    width: 160px;
+    height: 160px;
+    background: var(--card-glow-2);
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card:hover::before {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  .card:hover::after {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+
+  .card-shine {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.03) 38%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(255, 255, 255, 0.03) 52%,
+      transparent 60%
+    );
+    background-size: 300% 100%;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .card:hover .card-shine {
+    opacity: 1;
+    animation: cardShimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes cardShimmer {
+    0% { background-position: 300% 0; }
+    100% { background-position: -300% 0; }
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .card-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(168, 146, 222, 0.10);
+    color: var(--accent);
+    border: 1px solid rgba(168, 146, 222, 0.08);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .card:hover .pill {
+    background: rgba(168, 146, 222, 0.15);
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.45rem;
+    margin-bottom: 10px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    transition: color var(--transition-fast);
+  }
+
+  .card:hover .card-title {
+    color: var(--accent);
+  }
+
+  .card-desc {
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.8;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    transition: border-color var(--transition-fast);
+  }
+
+  .card:hover .card-footer {
+    border-color: rgba(168, 146, 222, 0.12);
+  }
+
+  .card-tag {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+  }
+
+  .launch-icon {
+    color: var(--accent-2);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .launch-icon .arrw {
+    display: inline-block;
+    transition: transform var(--transition-fast);
+  }
+
+  .card:hover .launch-icon {
+    color: var(--accent-3);
+  }
+  .card:hover .launch-icon .arrw {
+    transform: translateX(4px) scale(1.1);
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  @media (max-width: 900px) {
+    body { padding: 18px; }
+    .page-shell { gap: 22px; }
+    header { padding: 32px 24px 28px; }
+    h1 { font-size: clamp(28px, 5vw, 40px); }
+    header p { font-size: 14px; }
+    .nav-grid { gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 14px 12px 28px; }
+    .page-shell { gap: 18px; }
+    .topbar { flex-direction: column; align-items: stretch; }
+    .brand-badge { justify-content: center; }
+    .theme-switcher { justify-content: center; }
+    .topbar-actions { justify-content: center; }
+    header { padding: 28px 18px 24px; border-radius: 20px; }
+    header::before { width: 160px; height: 160px; top: -50px; right: -40px; }
+    header::after { width: 140px; height: 140px; bottom: -40px; left: -30px; }
+    h1 { font-size: clamp(24px, 7vw, 32px); margin-bottom: 12px; }
+    header p { font-size: 13px; line-height: 1.7; }
+    .nav-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .card {
+      min-height: auto;
+      padding: 22px 20px;
+      border-radius: 20px;
+    }
+    .card-title { font-size: 1.25rem; }
+    .card-desc { font-size: 13px; }
+    .card-footer { padding-top: 14px; }
+  }
+
+  @media (max-width: 400px) {
+    body { padding: 10px 8px 24px; }
+    .card { padding: 18px 16px; }
+    .pill { font-size: 9px; padding: 6px 10px; }
+    .brand-badge { font-size: 10px; padding: 8px 14px; }
+    .theme-switcher { padding: 10px 16px; }
+    .theme-switcher span { font-size: 12px; }
+    .topbar-logout { padding: 10px 16px; font-size: 12px; }
+    header p { font-size: 12px; }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .card {
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:active {
+      transform: scale(0.98);
+      border-color: var(--border-hover);
+    }
+    .theme-switcher:active {
+      transform: scale(0.97);
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <span class="brand-badge">MU 63rd &middot; Command Hub</span>
+      <div class="topbar-actions">
+        <button class="theme-switcher" id="themeToggle" aria-label="Toggle light and dark mode">
+          <span class="theme-icon" id="themeIcon">&#127769;</span>
+          <span id="themeLabel">Dark Mode</span>
+        </button>
+        <button id="logout-btn" class="topbar-logout">Log Out</button>
+      </div>
+    </div>
+
+    <header>
+      <div class="header-shine"></div>
+      <h1>Learn Intelligently MU 63</h1>
+      <p>Select your destination to access your platforms and study trackers.</p>
+    </header>
 <script>
+    var netlifyIdentity = window.netlifyIdentity;
+    if (netlifyIdentity) {
+        netlifyIdentity.on('init', function(user) {
+            if (!user && !window.location.hostname.match(/^(localhost|127\.0\.0\.1|\.local|.*\.local)$/)) {
+                window.location.href = "/";
+            }
+        });
+        netlifyIdentity.on('logout', function() {
+            window.location.href = "/";
+        });
+        netlifyIdentity.init();
+    }
+</script>
+
+    <div class="nav-grid">
+      <a href="master-dashboard.html" class="card">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="card-icon">⚤</span>
+          <span class="pill">Core Hub</span>
+        </div>
+        <h2 class="card-title">ENR</h2>
+        <p class="card-desc">Endocrine and Reproductive Module overview pages to ace your ENR exams.</p>
+        <div class="card-footer">
+          <span class="card-tag">Core Hub</span>
+          <span class="launch-icon">Deploy <span class="arrw">&rarr;</span></span>
+        </div>
+      </a>
+    <a href="ENR_Checklist.html" class="card">
+        <div class="card-shine"></div>
+        <div class="card-top">
+            <span class="card-icon">⚤</span>
+            <span class="pill">Core Hub</span>
+        </div>
+        <h2 class="card-title">ENR Checklist</h2>
+        <p class="card-desc">Endocrine and Reproductive Module <span style="font-weight: 600; color:rgb(194, 109, 5);">FINAL Checklist</span></p>
+        <div class="card-footer">
+            <span class="card-tag">Study Tools</span>
+            <span class="launch-icon">Deploy <span class="arrw">&rarr;</span></span>
+        </div>
+    </a>
+
+      <a href="/Research/dashboard.html" class="card">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="card-icon">&#128147;</span>
+          <span class="pill">Core Hub</span>
+        </div>
+        <h2 class="card-title">Research</h2>
+        <p class="card-desc">Ace your Research exams with our comprehensive study guides and resources.</p>
+        <div class="card-footer">
+          <span class="card-tag">Core Hub</span>
+          <span class="launch-icon">Deploy <span class="arrw">&rarr;</span></span>
+        </div>
+      </a>
+
+      <a href="/Research/RBS_Checklist.html" class="card">
+        <div class="card-shine"></div>
+        <div class="card-top">
+          <span class="card-icon">&#9201;&#65039;</span>
+          <span class="pill">Study Tools</span>
+        </div>
+        <h2 class="card-title">RBS Checklist &amp; Timer</h2>
+        <p class="card-desc">Launch the MU 63rd progress tracker for Research Module. Manage your study sessions with the built-in Pomodoro timer and subject checklist.</p>
+        <div class="card-footer">
+          <span class="card-tag">Study Tools</span>
+          <span class="launch-icon">Deploy <span class="arrw">&rarr;</span></span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+
+<script>
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  const themeIcon = document.getElementById('themeIcon');
+  const storedTheme = localStorage.getItem('mu63Theme');
+
+  const applyTheme = (theme) => {
+    root.setAttribute('data-theme', theme);
+    const isLight = theme === 'light';
+    themeLabel.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+    themeIcon.textContent = isLight ? '\u2600\uFE0F' : '\uD83C\uDF19';
+    document.querySelector('meta[name="theme-color"]')?.remove();
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = isLight ? '#f0eef5' : '#080b14';
+    document.head.appendChild(meta);
+  };
+
+  applyTheme(storedTheme === 'light' ? 'light' : 'dark');
+
+  themeToggle.addEventListener('click', () => {
+    const nextTheme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    localStorage.setItem('mu63Theme', nextTheme);
+    applyTheme(nextTheme);
+  });
     document.addEventListener("DOMContentLoaded", () => {
         // 1. Find the button
         const logoutBtn = document.getElementById("logout-btn");
 
         // 2. Attach the click event
         if (logoutBtn) {
-          logoutBtn.addEventListener("click", () => {
-            // Safety check: ensure Netlify Identity is loaded
-            if (window.netlifyIdentity) {
-              window.netlifyIdentity.logout();
-            } else {
-              console.error("Netlify Identity widget is not loaded.");
-            }
-          });
+            logoutBtn.addEventListener("click", () => {
+                // Safety check: ensure Netlify Identity is loaded
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.logout();
+                } else {
+                    console.error("Netlify Identity widget is not loaded.");
+                }
+            });
         }
 
-        // 3. Optional but recommended: Redirect the user after they log out
-        if (window.netlifyIdentity) {
-          window.netlifyIdentity.on("logout", () => {
-            // Redirects to the homepage. Change "/" to another URL if needed.
-            window.location.href = "/";
-          });
-        }
-      });
+    });
+
 </script>
-<style>
-  #logout-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    padding: 10px 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-family: "Inter",system-ui, -apple-system, sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    /* Smooth transition for the hover */
-  }
-
-  #logout-btn:hover {
-    transform: translateY(-2px);
-    /* Lifts the button up slightly */
-    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
-    /* Makes the glow bigger */
-  }
-</style>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RHSQ7HYJYZ"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-RHSQ7HYJYZ');
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+  }
 </script>
-</head>
-<body>
-
-    <!-- Ambient background -->
-    <div class="bg-canvas">
-        <div class="orb"></div>
-        <div class="orb"></div>
-    </div>
-
-    <div class="wrapper">
-        <header>
-            <div class="badge">MU 63rd · Command Hub</div>
-            <h1>Learn Intelligently MU 63</h1>
-            <p>Select your destination to access your platforms and study trackers.</p>
-        </header>
-
-        <div class="nav-grid">
-            <!-- Link to the Main Dashboard -->
-            <!-- Update "dashboard.html" to your actual main dashboard file -->
-            <a href="/Research/dashboard.html" class="card">
-                <div class="card-icon">🔬</div>
-                <h3 class="card-title">Research</h3>
-                <p class="card-desc">Ace your Research exams with our comprehensive study guides and resources.</p>
-                <div class="card-footer">
-                    <span class="card-tag">Core Hub</span>
-                    <span class="launch-icon">Deploy ↗</span>
-                </div>
-            </a>
-
-            <!-- Link to the Checklist & Timer -->
-            <!-- Update "checklist.html" to the name of the file containing the timer code -->
-            <a href="/Research/RBS_Checklist.html" class="card">
-                <div class="card-icon">⏱️</div>
-                <h3 class="card-title">RBS Checklist & Timer</h3>
-                <p class="card-desc">Launch the MU 63rd progress tracker for Research Module. Manage your study sessions with the built-in Pomodoro timer and subject checklist.</p>
-                <div class="card-footer">
-                    <span class="card-tag">Study Tools</span>
-                    <span class="launch-icon">Deploy ↗</span>
-                </div>
-            </a>
-        </div>
-    </div>
-
 </body>
 </html>

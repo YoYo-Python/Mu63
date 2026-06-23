@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🔬 Pancreas & Adrenal Glands — Anatomy & Embryology</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --bg2: #0f1320;
+    --bg3: #151b2e;
+    --surface: #1a2035;
+    --surface2: #1f2847;
+    --border: #2a3554;
+    --border2: #3a4870;
+    --text: #e8eaf6;
+    --text2: #9ba3c4;
+    --text3: #6b739a;
+    --gold: #f5c842;
+    --gold2: #e6a800;
+    --teal: #22d3a5;
+    --teal2: #16a37e;
+    --rose: #f0637a;
+    --rose2: #c94058;
+    --indigo: #818cf8;
+    --indigo2: #4f5fde;
+    --amber: #fb923c;
+    --amber2: #d97706;
+    --violet: #a78bfa;
+    --cyan: #22d3ee;
+    --green: #4ade80;
+    --red: #f87171;
+    --exam: #fbbf24;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BACKGROUND */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(81,103,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(34,211,165,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(167,139,250,0.04) 0%, transparent 70%);
+  }
+
+  /* HEADER */
+  header {
+    position: relative; z-index: 10;
+    background: linear-gradient(180deg, rgba(15,19,32,0.98) 0%, rgba(15,19,32,0.90) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 0;
+    backdrop-filter: blur(20px);
+  }
+
+  .header-top {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+
+  .header-badge {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--amber) 100%);
+    color: #0a0d14; font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+    padding: 4px 10px; border-radius: 50px; text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(18px, 3vw, 26px); font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, var(--teal) 50%, var(--indigo) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .header-stats {
+    margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap;
+  }
+
+  .hstat {
+    text-align: center;
+  }
+  .hstat-val { font-size: 18px; font-weight: 800; color: var(--gold); }
+  .hstat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* TABS */
+  .tab-bar {
+    display: flex; gap: 2px; overflow-x: auto; padding-bottom: 0;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex-shrink: 0;
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 12px; font-weight: 600;
+    padding: 10px 16px; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s; letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .tab-btn.active {
+    color: var(--gold); border-bottom-color: var(--gold);
+    background: rgba(245,200,66,0.06);
+  }
+
+  /* MAIN */
+  main {
+    position: relative; z-index: 5;
+    max-width: 1200px; margin: 0 auto; padding: 28px 20px;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .card-gold { border-color: rgba(245,200,66,0.3); background: linear-gradient(135deg, rgba(245,200,66,0.05) 0%, var(--surface) 100%); }
+  .card-teal { border-color: rgba(34,211,165,0.3); background: linear-gradient(135deg, rgba(34,211,165,0.05) 0%, var(--surface) 100%); }
+  .card-rose { border-color: rgba(240,99,122,0.3); background: linear-gradient(135deg, rgba(240,99,122,0.05) 0%, var(--surface) 100%); }
+  .card-indigo { border-color: rgba(129,140,248,0.3); background: linear-gradient(135deg, rgba(129,140,248,0.05) 0%, var(--surface) 100%); }
+  .card-violet { border-color: rgba(167,139,250,0.3); background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, var(--surface) 100%); }
+
+  .section-title {
+    font-size: 22px; font-weight: 800; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+
+  /* OVERVIEW */
+  .overview-card-title { font-size: 13px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .overview-card p { font-size: 13.5px; line-height: 1.7; color: var(--text2); }
+
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 0.8px; margin: 2px;
+  }
+  .tag-exam { background: rgba(251,191,36,0.15); color: var(--exam); border: 1px solid rgba(251,191,36,0.3); }
+  .tag-high { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .tag-pearl { background: rgba(34,211,165,0.15); color: var(--teal); border: 1px solid rgba(34,211,165,0.3); }
+  .tag-anatomy { background: rgba(129,140,248,0.15); color: var(--indigo); border: 1px solid rgba(129,140,248,0.3); }
+  .tag-embryo { background: rgba(167,139,250,0.15); color: var(--violet); border: 1px solid rgba(167,139,250,0.3); }
+
+  .exam-alert {
+    background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3);
+    border-left: 3px solid var(--gold); border-radius: var(--radius-sm);
+    padding: 12px 14px; margin: 8px 0; font-size: 13px; color: var(--text2);
+  }
+  .exam-alert strong { color: var(--gold); }
+
+  /* QUIZ */
+  .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .progress-bar { height: 6px; background: var(--surface2); border-radius: 50px; overflow: hidden; flex: 1; margin: 0 12px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--indigo)); border-radius: 50px; transition: width 0.4s ease; }
+
+  .quiz-q {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; margin-bottom: 16px;
+  }
+  .q-number { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+  .q-text { font-size: 15px; font-weight: 600; line-height: 1.6; margin-bottom: 16px; }
+  .q-tag { margin-bottom: 12px; }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    background: var(--bg3); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 16px;
+    cursor: pointer; font-size: 13.5px; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .option:hover { border-color: var(--indigo); background: rgba(129,140,248,0.06); }
+  .option.correct { border-color: var(--teal); background: rgba(34,211,165,0.1); color: var(--teal); animation: pulse 0.5s ease; }
+  .option.wrong { border-color: var(--rose); background: rgba(240,99,122,0.1); color: var(--rose); animation: shake 0.4s ease; }
+  .option.disabled { pointer-events: none; }
+  .opt-letter { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; width: 22px; flex-shrink: 0; }
+
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.01)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .explanation {
+    display: none; margin-top: 12px;
+    background: rgba(34,211,165,0.06); border: 1px solid rgba(34,211,165,0.2);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    font-size: 13px; line-height: 1.6; color: var(--text2);
+  }
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+  .explanation strong { color: var(--teal); }
+
+  .quiz-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+  .qstat { text-align: center; }
+  .qstat-val { font-size: 20px; font-weight: 800; }
+  .qstat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; }
+
+  .btn {
+    padding: 10px 22px; border-radius: var(--radius-sm); border: none;
+    cursor: pointer; font-weight: 700; font-size: 13px; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--amber)); color: #0a0d14; }
+  .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,200,66,0.3); }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--border2); }
+  .btn-teal { background: linear-gradient(135deg, var(--teal), var(--teal2)); color: #0a0d14; }
+  .btn-rose { background: linear-gradient(135deg, var(--rose), var(--rose2)); color: #fff; }
+
+  /* FLASHCARDS */
+  .flashcards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+  .flashcard { height: 200px; perspective: 1000px; cursor: pointer; }
+  .fc-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+  .flashcard.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .fc-front { background: var(--surface); border: 1px solid var(--border); }
+  .fc-back { background: linear-gradient(135deg, var(--surface), var(--bg3)); border: 1px solid var(--teal2); transform: rotateY(180deg); }
+  .fc-q { font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--text); }
+  .fc-a { font-size: 12.5px; line-height: 1.6; color: var(--teal); }
+  .fc-num { font-size: 10px; font-weight: 700; color: var(--text3); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .fc-hint { font-size: 10px; color: var(--text3); margin-top: auto; text-align: right; }
+
+  /* CASES */
+  .case-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 18px; }
+  .case-header { background: linear-gradient(135deg, var(--bg3), var(--surface2)); padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; }
+  .case-num { background: var(--gold); color: #0a0d14; font-weight: 800; font-size: 12px; padding: 3px 10px; border-radius: 50px; flex-shrink: 0; }
+  .case-scenario { font-size: 14px; line-height: 1.7; color: var(--text); font-weight: 500; }
+  .case-body { padding: 18px 20px; }
+  .case-qs { margin-bottom: 14px; }
+  .case-q { font-size: 13px; font-weight: 600; color: var(--indigo); margin-bottom: 6px; padding-left: 12px; border-left: 2px solid var(--indigo2); }
+  .reveal-btn {
+    background: var(--bg3); border: 1px dashed var(--border2); color: var(--text2);
+    border-radius: var(--radius-sm); padding: 10px 16px; cursor: pointer;
+    font-size: 12.5px; font-weight: 600; width: 100%; text-align: left;
+    transition: all 0.2s; font-family: 'Inter', sans-serif;
+  }
+  .reveal-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .case-answer {
+    display: none; margin-top: 10px;
+    background: rgba(34,211,165,0.05); border: 1px solid rgba(34,211,165,0.2);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-size: 13px; line-height: 1.7; color: var(--text2);
+  }
+  .case-answer.show { display: block; animation: fadeIn 0.3s ease; }
+  .case-answer strong { color: var(--teal); display: block; margin-bottom: 4px; }
+
+  /* ANATOMY */
+  .anatomy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .anatomy-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .anatomy-item:hover { border-color: var(--indigo); transform: translateY(-2px); }
+  .anatomy-item.active { border-color: var(--gold); background: rgba(245,200,66,0.06); }
+  .ai-icon { font-size: 22px; margin-bottom: 6px; }
+  .ai-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .ai-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .detail-panel {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 20px; min-height: 120px; margin-bottom: 24px;
+  }
+  .detail-panel h3 { font-size: 15px; font-weight: 700; color: var(--gold); margin-bottom: 10px; }
+  .detail-panel p { font-size: 13px; line-height: 1.7; color: var(--text2); }
+  .detail-panel ul { padding-left: 16px; }
+  .detail-panel li { font-size: 13px; line-height: 1.8; color: var(--text2); }
+  .detail-panel .exam-alert { margin-top: 10px; }
+
+  /* FLOWCHART */
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-node {
+    background: var(--surface); border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 10px 18px;
+    font-size: 12.5px; font-weight: 600; text-align: center; max-width: 360px; width: 100%;
+  }
+  .flow-node.gold { border-color: var(--gold); color: var(--gold); background: rgba(245,200,66,0.06); }
+  .flow-node.teal { border-color: var(--teal); color: var(--teal); background: rgba(34,211,165,0.06); }
+  .flow-node.indigo { border-color: var(--indigo); color: var(--indigo); background: rgba(129,140,248,0.06); }
+  .flow-node.rose { border-color: var(--rose); color: var(--rose); background: rgba(240,99,122,0.06); }
+  .flow-arrow { font-size: 18px; color: var(--text3); padding: 4px 0; }
+
+  /* COMPARISON TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .comp-table th { background: var(--surface2); padding: 10px 14px; text-align: left; font-weight: 700; color: var(--gold); border: 1px solid var(--border); }
+  .comp-table td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .comp-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .comp-table tr:hover td { background: rgba(245,200,66,0.03); }
+
+  /* MNEMONICS */
+  .mnemonic-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;
+  }
+  .mnem-header {
+    background: linear-gradient(135deg, var(--surface2), var(--bg3));
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    justify-content: space-between;
+  }
+  .mnem-title { font-size: 14px; font-weight: 700; color: var(--gold); }
+  .mnem-toggle { color: var(--text3); transition: transform 0.3s; }
+  .mnem-body { display: none; padding: 16px 18px; }
+  .mnem-body.open { display: block; animation: fadeIn 0.3s; }
+  .mnem-word { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--indigo); letter-spacing: 4px; margin-bottom: 14px; }
+  .mnem-list { list-style: none; }
+  .mnem-list li { padding: 6px 0; font-size: 13.5px; color: var(--text2); border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+  .mnem-list li:last-child { border: none; }
+  .mnem-letter { font-weight: 800; color: var(--gold); font-family: 'JetBrains Mono', monospace; min-width: 20px; }
+  .mnem-desc { color: var(--teal); }
+
+  /* VIVA */
+  .viva-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; }
+  .viva-q { padding: 14px 16px; cursor: pointer; font-size: 13.5px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+  .viva-q:hover { background: var(--surface2); }
+  .viva-q .vmark { color: var(--text3); transition: transform 0.3s; }
+  .viva-q.open .vmark { transform: rotate(180deg); }
+  .viva-a { display: none; padding: 12px 16px; background: rgba(34,211,165,0.04); border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text2); }
+  .viva-a.show { display: block; animation: fadeIn 0.25s; }
+  .viva-a .exam-note { color: var(--exam); font-weight: 600; margin-top: 6px; font-size: 12px; }
+
+  /* SEARCH */
+  .search-wrap { position: relative; margin-bottom: 20px; }
+  .search-input {
+    width: 100%; background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 16px 11px 42px;
+    color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--indigo); }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 16px; }
+
+  /* SCORE RING */
+  .score-ring { width: 80px; height: 80px; position: relative; }
+  .ring-bg { fill: none; stroke: var(--surface2); stroke-width: 8; }
+  .ring-fill { fill: none; stroke: var(--gold); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 226; stroke-dashoffset: 226; transition: stroke-dashoffset 1s ease; transform-origin: center; transform: rotate(-90deg); }
+  .ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: var(--gold); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    main { padding: 16px 12px; }
+    .flashcards-grid { grid-template-columns: 1fr 1fr; }
+    .quiz-header { flex-direction: column; }
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 600;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text2);
+  }
+  .chip.gold { background: rgba(245,200,66,0.1); border-color: rgba(245,200,66,0.3); color: var(--gold); }
+  .chip.teal { background: rgba(34,211,165,0.1); border-color: rgba(34,211,165,0.3); color: var(--teal); }
+  .chip.rose { background: rgba(240,99,122,0.1); border-color: rgba(240,99,122,0.3); color: var(--rose); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  .key-fact { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .key-fact:last-child { border: none; }
+  .key-fact-icon { flex-shrink: 0; }
+  .key-fact-text { color: var(--text2); line-height: 1.5; }
+  .key-fact strong { color: var(--text); }
+
+  .quiz-complete { text-align: center; padding: 40px 20px; }
+  .big-score { font-size: 72px; font-weight: 800; color: var(--gold); line-height: 1; }
+  .score-label { font-size: 14px; color: var(--text2); margin: 8px 0 24px; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="bg-layer"></div>
+
+<header>
+  <div class="header-top">
+    <span class="header-badge">📚 Semester 4 — Anatomy</span>
+    <h1>🔬 Pancreas & Adrenal Glands</h1>
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-val" id="h-score">0%</div>
+        <div class="hstat-lbl">Quiz Score</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="h-streak">🔥 0</div>
+        <div class="hstat-lbl">Streak</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="h-done">0/25</div>
+        <div class="hstat-lbl">Questions</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+    <button class="tab-btn" data-tab="quiz">🧠 Quiz (25)</button>
+    <button class="tab-btn" data-tab="flashcards">🃏 Flashcards</button>
+    <button class="tab-btn" data-tab="cases">🏥 Cases</button>
+    <button class="tab-btn" data-tab="anatomy">🫁 Anatomy</button>
+    <button class="tab-btn" data-tab="embryology">🧬 Embryology</button>
+    <button class="tab-btn" data-tab="mnemonics">💡 Mnemonics</button>
+    <button class="tab-btn" data-tab="viva">🗣️ Viva Prep</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<div id="tab-overview" class="tab-pane active">
+  <div class="section-title">📋 High-Yield Overview</div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="overview-search" placeholder="Search topics, facts, structures…" oninput="searchOverview(this.value)">
+  </div>
+
+  <div id="overview-content">
+
+  <div class="exam-alert" style="margin-bottom:20px">
+    <strong>⚠️ Top 3 Exam Priorities:</strong><br>
+    1. Portal vein forms <em>posterior to the neck</em> (union of SMV + splenic vein)<br>
+    2. Left suprarenal vein → left renal vein (must ligate before left nephrectomy)<br>
+    3. Ventral bud → uncinate + lower head | Dorsal bud → body + tail + rest of head
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-gold">
+      <div class="overview-card-title">🥞 Pancreas — Structure</div>
+      <div class="key-fact"><span class="key-fact-icon">📍</span><div class="key-fact-text"><strong>Location:</strong> Retroperitoneal, upper posterior abdominal wall. Soft, lobulated, elongated mixed gland.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🫀</span><div class="key-fact-text"><strong>Head:</strong> In concavity of duodenum. Posterior: IVC, CBD, aorta.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🔗</span><div class="key-fact-text"><strong>Neck:</strong> Posterior: Portal vein (SMV + splenic). Anterior: pyloroduodenal junction.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">📐</span><div class="key-fact-text"><strong>Body:</strong> Triangular cross-section. Anterior surface separated from stomach by lesser sac.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🔚</span><div class="key-fact-text"><strong>Tail:</strong> Passes through lienorenal ligament → reaches hilum of spleen.</div></div>
+    </div>
+
+    <div class="card card-teal">
+      <div class="overview-card-title">🩺 Pancreas — Clinical Pearls</div>
+      <div class="exam-alert"><strong>Cancer Head of Pancreas causes:</strong><br>
+        • CBD compression → <span class="chip teal">obstructive jaundice</span><br>
+        • IVC compression → <span class="chip rose">lower limb edema</span><br>
+        • Portal vein → <span class="chip gold">portal hypertension</span>
+      </div>
+      <div class="key-fact"><span class="key-fact-icon">⚠️</span><div class="key-fact-text">Pancreas <strong>looks like fat</strong> on surgery — detected late. Proximity to aorta, IVC, portal vein = rapid spread.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🔬</span><div class="key-fact-text">Peptic ulcer posterior wall → can erode anterior surface of pancreas (separated only by lesser sac) → acute pancreatitis.</div></div>
+    </div>
+
+    <div class="card card-indigo">
+      <div class="overview-card-title">🩸 Blood Supply</div>
+      <div class="key-fact"><span class="key-fact-icon">🔴</span><div class="key-fact-text"><strong>Arterial:</strong> Superior pancreaticoduodenal a. + Inferior pancreaticoduodenal a. + Splenic artery branches</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🔵</span><div class="key-fact-text"><strong>Venous:</strong> Portal v., Superior mesenteric v., Splenic v.</div></div>
+      <div class="key-fact"><span class="key-fact-icon">⚡</span><div class="key-fact-text"><strong>Innervation:</strong> Sympathetic (thoracic splanchnic) = inhibitory. Parasympathetic (vagus) = stimulatory (both exocrine + endocrine).</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🎯</span><div class="key-fact-text">Ampulla of Vater opens at <strong>major duodenal papilla</strong> on posteromedial wall of 2nd part duodenum.</div></div>
+    </div>
+
+    <div class="card card-rose">
+      <div class="overview-card-title">🧪 Suprarenal Glands</div>
+      <div style="overflow-x:auto">
+      <table class="comp-table" style="font-size:12px">
+        <tr><th>Feature</th><th>Right</th><th>Left</th></tr>
+        <tr><td>Shape</td><td>Triangular</td><td>Semilunar</td></tr>
+        <tr><td>Hilum</td><td>Does NOT reach</td><td>Reaches hilum ✓</td></tr>
+        <tr><td>Vein drains into</td><td>IVC (short)</td><td>Left renal vein (long) ⚠️</td></tr>
+      </table>
+      </div>
+      <div class="exam-alert" style="margin-top:10px"><strong>⚠️ Left nephrectomy:</strong> Must ligate left suprarenal vein (+ left gonadal vein) BEFORE left renal vein → prevent fatal hemorrhage.</div>
+    </div>
+
+    <div class="card card-violet">
+      <div class="overview-card-title">🔬 Suprarenal Embryology</div>
+      <div class="key-fact"><span class="key-fact-icon">🩸</span><div class="key-fact-text"><strong>Cortex:</strong> From <span class="chip gold">mesoderm</span> → 3 zones (glomerulosa, fasciculata, reticularis)</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🧠</span><div class="key-fact-text"><strong>Medulla:</strong> From <span class="chip rose">neural crest cells (ectoderm)</span> → chromaffin cells</div></div>
+      <div class="key-fact"><span class="key-fact-icon">📅</span><div class="key-fact-text">Fetal cortex (2nd trimester): acidophilic cells secrete <strong>DHEA</strong> → converted to estrogen by placenta</div></div>
+      <div class="key-fact"><span class="key-fact-icon">💊</span><div class="key-fact-text"><strong>Pheochromocytoma:</strong> Chromaffin cell tumor → excess epinephrine/norepinephrine → paroxysmal HTN, tachycardia, headache. 25% familial = <strong>RET gene</strong></div></div>
+    </div>
+
+    <div class="card card-gold">
+      <div class="overview-card-title">🔢 Key Numbers</div>
+      <div class="key-fact"><span class="key-fact-icon">📅</span><div class="key-fact-text"><strong>7th week:</strong> Ventral bud carried dorsally to fuse with dorsal bud</div></div>
+      <div class="key-fact"><span class="key-fact-icon">🧪</span><div class="key-fact-text"><strong>3rd month:</strong> Islets of Langerhans develop from parenchyma</div></div>
+      <div class="key-fact"><span class="key-fact-icon">💉</span><div class="key-fact-text"><strong>5th month:</strong> Islets begin secreting insulin</div></div>
+      <div class="key-fact"><span class="key-fact-icon">👶</span><div class="key-fact-text"><strong>Neonatal:</strong> Fetal cortex involutes; 3 definitive cortical layers form postnatally</div></div>
+      <div class="key-fact"><span class="key-fact-icon">📊</span><div class="key-fact-text"><strong>25%:</strong> Pheochromocytomas that are familial (RET gene)</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="section-title" style="font-size:16px">🗺️ Arterial Supply of Suprarenal Glands</div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:6px">⬆️</div>
+        <div style="font-weight:700;color:var(--gold);font-size:13px">Superior</div>
+        <div style="font-size:12px;color:var(--text2)">From inferior phrenic artery</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:6px">➡️</div>
+        <div style="font-weight:700;color:var(--teal);font-size:13px">Middle</div>
+        <div style="font-size:12px;color:var(--text2)">Directly from aorta</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:6px">⬇️</div>
+        <div style="font-weight:700;color:var(--indigo);font-size:13px">Inferior</div>
+        <div style="font-size:12px;color:var(--text2)">From renal artery</div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end overview-content -->
+</div>
+
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<div id="tab-quiz" class="tab-pane">
+  <div class="quiz-header">
+    <div class="quiz-stats">
+      <div class="qstat"><div class="qstat-val" style="color:var(--teal)" id="q-correct">0</div><div class="qstat-lbl">Correct</div></div>
+      <div class="qstat"><div class="qstat-val" style="color:var(--rose)" id="q-wrong">0</div><div class="qstat-lbl">Wrong</div></div>
+      <div class="qstat"><div class="qstat-val" style="color:var(--gold)" id="q-streak-d">🔥 0</div><div class="qstat-lbl">Streak</div></div>
+    </div>
+    <div style="display:flex;align-items:center;flex:1;min-width:150px">
+      <span style="font-size:11px;color:var(--text3);white-space:nowrap" id="q-progress-text">0 / 25</span>
+      <div class="progress-bar"><div class="progress-fill" id="q-progress-fill" style="width:0%"></div></div>
+    </div>
+    <button class="btn btn-ghost" onclick="resetQuiz()">↺ Reset</button>
+  </div>
+
+  <div id="quiz-container"></div>
+</div>
+
+
+<!-- ═══════════════ FLASHCARDS ═══════════════ -->
+<div id="tab-flashcards" class="tab-pane">
+  <div class="section-title">🃏 Flip Cards — Click to Reveal</div>
+  <div style="color:var(--text3);font-size:13px;margin-bottom:18px">Click any card to flip it and reveal the answer.</div>
+  <div class="flashcards-grid" id="fc-grid"></div>
+</div>
+
+
+<!-- ═══════════════ CASES ═══════════════ -->
+<div id="tab-cases" class="tab-pane">
+  <div class="section-title">🏥 Clinical Case Scenarios</div>
+  <div id="cases-container"></div>
+</div>
+
+
+<!-- ═══════════════ ANATOMY ═══════════════ -->
+<div id="tab-anatomy" class="tab-pane">
+  <div class="section-title">🫁 Pancreatic Anatomy — Interactive</div>
+
+  <div class="anatomy-grid" id="anatomy-grid"></div>
+  <div class="detail-panel" id="anatomy-detail">
+    <p style="color:var(--text3)">👆 Click any structure above to see detailed relations and clinical significance.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title" style="font-size:16px">🔄 Duct Formation Flowchart</div>
+  <div class="flowchart" style="margin-bottom:28px">
+    <div class="flow-node gold">Duodenal Endoderm</div>
+    <div class="flow-arrow">↓ forms</div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <div class="flow-node teal" style="width:auto">Dorsal Bud (earlier)</div>
+      <div class="flow-node indigo" style="width:auto">Ventral Bud (+ bile duct)</div>
+    </div>
+    <div class="flow-arrow">↓ Duodenum rotates clockwise (7th week)</div>
+    <div class="flow-node">Ventral bud carried DORSALLY → fuses with dorsal bud</div>
+    <div class="flow-arrow">↓ Fusion forms:</div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <div class="flow-node teal" style="width:auto">Distal Dorsal Duct + Ventral Duct</div>
+      <div class="flow-node indigo" style="width:auto">Proximal Dorsal Duct</div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <div class="flow-node gold" style="width:auto">Main Pancreatic Duct (Wirsung)</div>
+      <div class="flow-node rose" style="width:auto">Accessory Duct (Santorini) or obliterates</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:16px">📊 Comparison: Head vs Tail Relations</div>
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <tr><th>Region</th><th>Anterior</th><th>Posterior</th><th>Clinical Importance</th></tr>
+    <tr><td><strong>Head</strong></td><td>Transverse colon, jejunum, SMV</td><td>IVC, CBD, Aorta</td><td>Cancer → jaundice (CBD), edema (IVC), portal HTN</td></tr>
+    <tr><td><strong>Neck</strong></td><td>Pyloroduodenal junction</td><td>Portal vein begins here ⚠️</td><td>Portal vein compression = portal hypertension</td></tr>
+    <tr><td><strong>Body</strong></td><td>Lesser sac (→ stomach)</td><td>Aorta, L kidney, L suprarenal, splenic v.</td><td>Peptic ulcer → pancreatitis via lesser sac</td></tr>
+    <tr><td><strong>Tail</strong></td><td>—</td><td>—</td><td>In lienorenal ligament → reaches spleen hilum</td></tr>
+    <tr><td><strong>Uncinate</strong></td><td>Superior mesenteric vessels ⚠️</td><td>Aorta</td><td>SMA anterior to uncinate process</td></tr>
+  </table>
+  </div>
+</div>
+
+
+<!-- ═══════════════ EMBRYOLOGY ═══════════════ -->
+<div id="tab-embryology" class="tab-pane">
+  <div class="section-title">🧬 Embryology — Pancreas & Adrenal</div>
+
+  <div class="grid-2">
+    <div class="card card-indigo">
+      <div class="overview-card-title">🥞 Pancreatic Buds Summary</div>
+      <div style="overflow-x:auto">
+      <table class="comp-table">
+        <tr><th>Feature</th><th>Ventral Bud</th><th>Dorsal Bud</th></tr>
+        <tr><td>Origin</td><td colspan="2">Endoderm of duodenum</td></tr>
+        <tr><td>Forms</td><td>Uncinate process + most of head</td><td>Rest of head + body + tail</td></tr>
+        <tr><td>Duct contribution</td><td>Ventral duct → part of Main duct</td><td>Distal = Main duct; Proximal = Accessory</td></tr>
+        <tr><td>Rotation week</td><td colspan="2">7th week (duodenum rotates clockwise)</td></tr>
+        <tr><td>Anomaly</td><td>Annular pancreas if rotates incorrectly</td><td>—</td></tr>
+      </table>
+      </div>
+    </div>
+
+    <div class="card card-teal">
+      <div class="overview-card-title">⚠️ Congenital Anomalies</div>
+      <div style="background:rgba(240,99,122,0.07);border:1px solid rgba(240,99,122,0.2);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="font-weight:700;color:var(--rose);margin-bottom:6px">🔴 Annular Pancreas</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">Ventral bud splits: part rotates <em>left in front</em> of duodenum, rest rotates behind → ring of pancreatic tissue → <strong>duodenal obstruction</strong>. Presents as bilious vomiting in neonate.</div>
+      </div>
+      <div style="background:rgba(129,140,248,0.07);border:1px solid rgba(129,140,248,0.2);border-radius:8px;padding:14px">
+        <div style="font-weight:700;color:var(--indigo);margin-bottom:6px">🔵 Ectopic Pancreatic Tissue</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">Found in mucosa of stomach, duodenum, or <strong>Meckel's diverticulum</strong>. May cause pain, bleeding, or obstruction.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title" style="font-size:16px">🧠 Suprarenal Gland Development Flowchart</div>
+
+  <div class="grid-2">
+    <div>
+      <div style="font-weight:700;color:var(--gold);margin-bottom:12px;font-size:13px">CORTEX (Steroidogenic)</div>
+      <div class="flowchart">
+        <div class="flow-node gold">Intermediate Mesoderm</div>
+        <div class="flow-arrow">↓ proliferates into</div>
+        <div class="flow-node">Fetal Cortex (2nd trimester)</div>
+        <div class="flow-arrow">↓ acidophilic cells secrete</div>
+        <div class="flow-node teal">DHEA → Estrogen (via placenta)</div>
+        <div class="flow-arrow">↓ postnatally differentiates into</div>
+        <div class="flow-node gold">Zona Glomerulosa → Aldosterone</div>
+        <div class="flow-node teal" style="margin-top:4px">Zona Fasciculata → Cortisol</div>
+        <div class="flow-node indigo" style="margin-top:4px">Zona Reticularis → Androgens</div>
+        <div class="flow-arrow">↓ regulated by</div>
+        <div class="flow-node rose">ACTH from Pituitary</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-weight:700;color:var(--violet);margin-bottom:12px;font-size:13px">MEDULLA (Catecholaminergic)</div>
+      <div class="flowchart">
+        <div class="flow-node" style="border-color:var(--violet);color:var(--violet);background:rgba(167,139,250,0.06)">Neural Crest Cells (Ectoderm)</div>
+        <div class="flow-arrow">↓ migrate to suprarenal region</div>
+        <div class="flow-node">Arrange in cords and clusters</div>
+        <div class="flow-arrow">↓ differentiate into</div>
+        <div class="flow-node teal">Chromaffin Cells</div>
+        <div class="flow-arrow">↓ stimulated by</div>
+        <div class="flow-node indigo">Preganglionic Sympathetic Fibers</div>
+        <div class="flow-arrow">↓ secrete</div>
+        <div class="flow-node rose">Epinephrine + Norepinephrine</div>
+        <div class="flow-arrow">↓ tumor =</div>
+        <div class="flow-node gold">⚠️ Pheochromocytoma (RET gene)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-alert" style="margin-top:20px">
+    <strong>⚠️ Remember the dual origin:</strong> Suprarenal cortex = <strong>mesoderm</strong>; Suprarenal medulla = <strong>neural crest (ectoderm)</strong>. The medulla is essentially a modified sympathetic ganglion whose cells never grew axons.
+  </div>
+</div>
+
+
+<!-- ═══════════════ MNEMONICS ═══════════════ -->
+<div id="tab-mnemonics" class="tab-pane">
+  <div class="section-title">💡 Custom Mnemonics</div>
+  <div id="mnemonics-container"></div>
+</div>
+
+
+<!-- ═══════════════ VIVA ═══════════════ -->
+<div id="tab-viva" class="tab-pane">
+  <div class="section-title">🗣️ Viva Questions — Tap to Reveal</div>
+  <div id="viva-container"></div>
+</div>
+
+</main>
+
+<script>
+// ═══════════════ DATA ═══════════════
+
+const QUESTIONS = [
+  {
+    q:"Which structures unite to form the main pancreatic duct?",
+    opts:["Dorsal duct only","Ventral duct and proximal dorsal duct","Ventral duct and distal dorsal duct","Proximal dorsal duct and common bile duct","Accessory duct and common bile duct"],
+    ans:2, tag:"embryology",
+    exp:"The main duct is formed by the union of the <strong>distal dorsal duct</strong> with the <strong>ventral duct</strong>. The proximal dorsal duct becomes the accessory duct (Santorini) or obliterates."
+  },
+  {
+    q:"What is the mechanism of duodenal obstruction in an annular pancreas?",
+    opts:["Failure of the dorsal bud to develop","Hypertrophy of the pyloric sphincter","Part of the ventral bud rotates to the left in front of the duodenum","Complete agenesis of the ventral bud","The main pancreatic duct strictures"],
+    ans:2, tag:"embryology",
+    exp:"Part of the ventral bud rotates anteriorly (to the left, in front of the duodenum) while the rest rotates dorsally — creating a ring of pancreatic tissue that constricts the duodenum causing obstruction."
+  },
+  {
+    q:"A tumor infiltrating the common bile duct in the retroperitoneum is most likely from which part of the pancreas?",
+    opts:["Tail","Body","Neck","Head","Uncinate process"],
+    ans:3, tag:"clinical",
+    exp:"The CBD is a direct <strong>posterior relation of the head</strong> of the pancreas. Cancer of the head → CBD compression → obstructive jaundice."
+  },
+  {
+    q:"Why does a tumor in the head of the pancreas cause portal hypertension?",
+    opts:["Infiltration of the superior mesenteric artery","Infiltration of the portal vein","Infiltration of the inferior vena cava","Compression of the splenic artery","Destruction of islets of Langerhans"],
+    ans:1, tag:"clinical",
+    exp:"The portal vein forms <strong>posterior to the neck</strong> of the pancreas. A tumor in the head extending to the neck can compress or infiltrate the portal vein → portal hypertension. IVC → lower limb edema (different mechanism)."
+  },
+  {
+    q:"Which germ layer forms the chromaffin cells of the adrenal medulla?",
+    opts:["Endoderm","Splanchnic mesoderm","Somatic mesoderm","Ectoderm (Neural crest)","Surface ectoderm"],
+    ans:3, tag:"embryology",
+    exp:"Neural crest cells (ectodermal origin) migrate to the developing suprarenal gland and differentiate into chromaffin cells of the medulla. The cortex is from <strong>mesoderm</strong>."
+  },
+  {
+    q:"During a left nephrectomy, which venous structure must be carefully ligated due to its unique anatomy?",
+    opts:["Left inferior phrenic vein","Left superior mesenteric vein","Left suprarenal vein","Left splenic vein","Left portal vein"],
+    ans:2, tag:"clinical",
+    exp:"The left suprarenal vein is <strong>long</strong> and drains directly into the <strong>left renal vein</strong> (unlike the right which drains into IVC). It must be ligated before the renal vein to prevent fatal retroperitoneal hemorrhage."
+  },
+  {
+    q:"Which hormone regulates the secretory activity of the adrenal cortex?",
+    opts:["Insulin","Adrenaline","ACTH","Glucagon","Vagal acetylcholine"],
+    ans:2, tag:"physiology",
+    exp:"The adrenal cortex is regulated by <strong>ACTH</strong> from the anterior pituitary. The medulla is regulated by preganglionic sympathetic nerve fibers."
+  },
+  {
+    q:"In the 2nd trimester, what do the acidophilic cells of the fetal adrenal cortex secrete?",
+    opts:["Epinephrine","Cortisol","Aldosterone","Dehydroepiandrosterone (DHEA)","Glucagon"],
+    ans:3, tag:"embryology",
+    exp:"The acidophilic cells of the definitive (fetal) cortex secrete <strong>DHEA</strong>, which is converted to estrogen by the placenta during the 2nd trimester."
+  },
+  {
+    q:"What structure is directly anterior to the uncinate process of the pancreas?",
+    opts:["Aorta","Superior mesenteric vessels","Inferior Vena Cava","Portal vein","Transverse colon"],
+    ans:1, tag:"anatomy",
+    exp:"The uncinate process projects upward and to the left, passing <strong>behind</strong> the superior mesenteric vessels — meaning the SMA and SMV are <strong>anterior</strong> to the uncinate process."
+  },
+  {
+    q:"What is the mechanism of paroxysmal hypertension in pheochromocytoma?",
+    opts:["Overproduction of aldosterone","Excessive release of epinephrine and norepinephrine","Excessive renin secretion","Cortisol hypersecretion","Insulin resistance"],
+    ans:1, tag:"clinical",
+    exp:"Pheochromocytomas are tumors of <strong>chromaffin cells</strong> (adrenal medulla) that excessively produce and release <strong>epinephrine and norepinephrine</strong> → paroxysmal hypertension + tachycardia + headache."
+  },
+  {
+    q:"The splenic vein is a posterior relation to which part of the pancreas?",
+    opts:["Head","Uncinate process","Body","Neck","Minor duodenal papilla"],
+    ans:2, tag:"anatomy",
+    exp:"The <strong>body</strong> of the pancreas has the splenic vein on its posterior surface (above the SMA). The neck relates to portal vein formation; the head relates to IVC and CBD."
+  },
+  {
+    q:"What structure separates the anterior surface of the body of the pancreas from the stomach?",
+    opts:["The greater sac","The lesser sac","The transverse mesocolon","The lienorenal ligament","The greater omentum"],
+    ans:1, tag:"anatomy",
+    exp:"The anterior surface of the pancreatic body is covered by peritoneum of the <strong>posterior wall of the lesser sac</strong>, separating it from the posterior surface of the stomach. This is why peptic ulcers can erode into the pancreas."
+  },
+  {
+    q:"How do sympathetic fibers affect the pancreas?",
+    opts:["Stimulate exocrine secretions","Stimulate endocrine secretions","Have a predominantly inhibitory effect","Cause hypertrophy of Islets of Langerhans","Induce vasodilation"],
+    ans:2, tag:"physiology",
+    exp:"Sympathetic fibers (thoracic splanchnic nerves) have a <strong>predominantly inhibitory effect</strong> on the pancreas. In contrast, parasympathetic (vagus) stimulates both exocrine and endocrine secretions."
+  },
+  {
+    q:"The ampulla of Vater opens into which specific location in the GI tract?",
+    opts:["First part of duodenum","Second part at minor papilla","Second part at major papilla","Third part of duodenum","Jejunum"],
+    ans:2, tag:"anatomy",
+    exp:"The ampulla of Vater (hepatopancreatic ampulla) opens at the <strong>major duodenal papilla</strong>, located on the posteromedial aspect of the second part of the duodenum."
+  },
+  {
+    q:"When do the Islets of Langerhans start secreting insulin?",
+    opts:["3rd week","3rd month","5th month","7th month","At birth"],
+    ans:2, tag:"embryology",
+    exp:"Islets of Langerhans develop from pancreatic parenchyma during the <strong>3rd month</strong>, but begin <strong>insulin secretion</strong> only during the <strong>5th month</strong> of fetal development."
+  },
+  {
+    q:"What drives the differentiation of the adrenal medulla during development?",
+    opts:["Endodermal budding","Mesodermal invagination","Neural crest cell migration","Splanchnic mesoderm folding","Ureteric bud induction"],
+    ans:2, tag:"embryology",
+    exp:"Neural crest cells (ectoderm-derived) migrate to the suprarenal region, arrange in cords and clusters, and differentiate into the chromaffin cells of the medulla."
+  },
+  {
+    q:"Which artery supplies the superior aspect of the suprarenal gland?",
+    opts:["Renal artery","Celiac trunk","Superior mesenteric artery","Inferior phrenic artery","Abdominal aorta directly"],
+    ans:3, tag:"anatomy",
+    exp:"Three arteries supply the suprarenal gland: <strong>Superior</strong> = from inferior phrenic; <strong>Middle</strong> = from aorta directly; <strong>Inferior</strong> = from renal artery."
+  },
+  {
+    q:"What leads to lower limb edema in patients with cancer of the pancreatic head?",
+    opts:["Splenic vein thrombosis","Portal vein infiltration","Inferior Vena Cava infiltration","Common bile duct obstruction","Lymphatic blockade in celiac nodes"],
+    ans:2, tag:"clinical",
+    exp:"The IVC lies directly <strong>posterior to the head</strong> of the pancreas. Tumor infiltration of the IVC causes venous backup → <strong>lower limb edema</strong>. Portal vein → portal HTN. CBD → jaundice."
+  },
+  {
+    q:"Which part of the pancreas comes into direct contact with the hilum of the spleen?",
+    opts:["Head","Neck","Body","Tail","Uncinate process"],
+    ans:3, tag:"anatomy",
+    exp:"The <strong>tail</strong> of the pancreas passes through the lienorenal ligament and reaches the <strong>hilum of the spleen</strong>. This is the only intraperitoneal part of the pancreas."
+  },
+  {
+    q:"Ectopic pancreatic tissue is most frequently found in which structure?",
+    opts:["Liver","Gallbladder","Meckel's diverticulum","Transverse colon","Spleen"],
+    ans:2, tag:"embryology",
+    exp:"Ectopic pancreatic tissue is found in the mucosa of the stomach, duodenum, or <strong>Meckel's diverticulum</strong>. It can cause pain, bleeding, or obstruction if it becomes inflamed."
+  },
+  {
+    q:"The accessory pancreatic duct (duct of Santorini) drains which part of the pancreas?",
+    opts:["Tail and body","Upper part of the head","Uncinate process only","Lower part of the head","Neck only"],
+    ans:1, tag:"anatomy",
+    exp:"The accessory duct (Santorini) begins in the <strong>upper part of the head</strong> and opens at the <strong>minor duodenal papilla</strong>. The main duct drains the tail, body, and lower head."
+  },
+  {
+    q:"Which gene mutation is associated with familial pheochromocytoma?",
+    opts:["BRCA1","RET gene","p53","APC gene","KRAS"],
+    ans:1, tag:"clinical",
+    exp:"25% of pheochromocytomas are familial and associated with mutations in the <strong>RET gene</strong>, which plays a role in neural crest cell migration. This is why pheochromocytoma can occur in MEN2 syndrome."
+  },
+  {
+    q:"What is the shape of the right suprarenal gland?",
+    opts:["Semilunar","Pyramidal","Triangular","Oval","Crescentic"],
+    ans:2, tag:"anatomy",
+    exp:"The <strong>right</strong> suprarenal gland is <strong>triangular</strong> in shape and does NOT reach the renal hilum. The <strong>left</strong> is semilunar and extends down to reach the hilum."
+  },
+  {
+    q:"Where does the portal vein begin, and what are its two tributaries?",
+    opts:["Anterior to the head, from IVC + splenic vein","Posterior to the neck, from SMV + splenic vein","Anterior to the neck, from SMV + IVC","Posterior to the head, from hepatic veins","Posterior to the body, from splenic + left renal veins"],
+    ans:1, tag:"anatomy",
+    exp:"⚠️ <strong>Highly exam-favorite!</strong> The portal vein forms <strong>posterior to the neck</strong> of the pancreas by the union of the <strong>superior mesenteric vein (SMV)</strong> and the <strong>splenic vein</strong>."
+  },
+  {
+    q:"A patient has a long history of stomach pain and develops acute pancreatitis. What is the anatomical basis?",
+    opts:["Peptic ulcer erodes the posterior surface of the stomach reaching the pancreas via the lesser sac","Pancreatic cancer invades the stomach","Gastric varices rupture into the pancreatic duct","Splenic artery aneurysm erodes the pancreas","Duodenal perforation enters the lesser sac"],
+    ans:0, tag:"clinical",
+    exp:"A peptic ulcer on the <strong>posterior wall of the stomach</strong> can penetrate through the lesser sac and erode the <strong>anterior surface of the pancreatic body</strong>, causing secondary pancreatitis. The lesser sac is the only separator between them."
+  }
+];
+
+const FLASHCARDS = [
+  {q:"What is the posterior relation of the NECK of the pancreas?", a:"Portal vein — formed here by union of superior mesenteric vein (SMV) + splenic vein. ⚠️ Highly exam-tested!"},
+  {q:"What does the ventral pancreatic bud form?", a:"Uncinate process + most/lower part of the head. It rotates clockwise with the bile duct in week 7."},
+  {q:"What does the dorsal pancreatic bud form?", a:"Upper head + body + tail. Its proximal duct → accessory duct (Santorini); distal duct → contributes to main duct."},
+  {q:"Left suprarenal vein drains into?", a:"Left renal vein (long vein). Must be ligated BEFORE the left renal vein during left nephrectomy to prevent fatal hemorrhage."},
+  {q:"Right suprarenal vein drains into?", a:"Directly into the IVC (very short vein)."},
+  {q:"Origin of adrenal cortex vs medulla?", a:"Cortex = mesoderm | Medulla = neural crest cells (ectoderm) → chromaffin cells"},
+  {q:"What is the mechanism of annular pancreas?", a:"Ventral bud splits: part rotates anteriorly (left, in front) while rest rotates dorsally → ring of pancreatic tissue constricts duodenum → obstruction."},
+  {q:"When do islets of Langerhans begin secreting insulin?", a:"5th month of fetal development (they develop structurally in the 3rd month)."},
+  {q:"What is pheochromocytoma?", a:"Tumor of chromaffin cells (adrenal medulla) → excessive epinephrine + norepinephrine → paroxysmal HTN, tachycardia, headache. 25% familial = RET gene mutation."},
+  {q:"What structure is anterior to the uncinate process?", a:"Superior mesenteric vessels (SMA + SMV). The uncinate process passes behind them."},
+  {q:"What separates the body of the pancreas from the stomach?", a:"The lesser sac (posterior wall peritoneum). A peptic ulcer can erode through here → pancreatitis."},
+  {q:"Three arteries supplying the suprarenal glands?", a:"Superior = inferior phrenic artery | Middle = directly from aorta | Inferior = renal artery"},
+  {q:"What does fetal adrenal cortex secrete in 2nd trimester?", a:"DHEA (dehydroepiandrosterone) from acidophilic cells → converted to estrogen by the placenta."},
+  {q:"What controls adrenal cortex vs medulla?", a:"Cortex = ACTH (anterior pituitary) | Medulla = preganglionic sympathetic fibers"},
+  {q:"Ampulla of Vater opens where?", a:"Major duodenal papilla on the posteromedial aspect of the 2nd part of the duodenum."},
+  {q:"How does cancer head of pancreas cause obstructive jaundice?", a:"The CBD runs posterior to the head. Tumor compresses/infiltrates CBD → bile cannot drain → obstructive (painless) jaundice."},
+  {q:"The tail of the pancreas lies in which ligament?", a:"Lienorenal ligament (also called splenorenal ligament). It reaches the hilum of the spleen."},
+  {q:"What is the RET gene's role in pheochromocytoma?", a:"RET gene mutations disrupt neural crest cell migration. 25% of pheochromocytomas are familial, associated with MEN2 syndrome."},
+  {q:"What lies posterior to the head of the pancreas?", a:"IVC, Common Bile Duct (CBD), and Aorta. Cancer here → jaundice (CBD), edema (IVC)."},
+  {q:"Why is pancreatic cancer detected so late?", a:"1) Retroperitoneal location = silent until late. 2) Pancreatic tissue visually resembles fat → hard to see surgically. 3) Proximity to major vessels → rapid spread."}
+];
+
+const CASES = [
+  {
+    num:1,
+    scenario:"A 65-year-old male presents with painless jaundice, bilateral lower limb swelling, and dilated superficial abdominal veins. His surgeon notes that the retroperitoneal mass is nearly indistinguishable from surrounding fat on inspection.",
+    qs:["Identify the most likely diagnosis.","Explain the mechanism of each presenting symptom.","Why is surgical identification of this tumor particularly difficult?"],
+    answer:"<strong>Diagnosis:</strong> Cancer of the Head of the Pancreas.<br><br><strong>Symptom mechanisms:</strong><br>• <em>Painless jaundice</em> → tumor compresses/infiltrates the CBD (posterior relation to pancreatic head) → obstructive jaundice.<br>• <em>Lower limb edema</em> → tumor infiltrates the IVC (posterior to head) → venous backup.<br>• <em>Dilated abdominal veins (caput medusae)</em> → portal vein compressed behind the neck → portal hypertension → collateral venous drainage.<br><br><strong>Surgical difficulty:</strong> Pancreatic tissue visually mimics retroperitoneal fat → mass not visible without prior imaging. Proximity to aorta, IVC, and portal vein makes clean resection nearly impossible when tumor has spread."
+  },
+  {
+    num:2,
+    scenario:"A neonate presents with bilious vomiting starting within 24 hours of birth. Abdominal X-ray shows a 'double bubble' sign. A gastrograffin study reveals a stricture encircled by glandular tissue at the second part of the duodenum.",
+    qs:["What is the diagnosis?","What embryological error caused this?","What is the clinical significance of 'glandular tissue' surrounding the duodenum?"],
+    answer:"<strong>Diagnosis:</strong> Annular Pancreas.<br><br><strong>Embryological mechanism:</strong> During week 7, as the duodenum rotates clockwise, the ventral pancreatic bud normally rotates dorsally. In annular pancreas, the ventral bud splits: one part rotates normally (dorsally) and another part rotates to the LEFT in front of the duodenum. This creates a ring (annulus) of pancreatic tissue encircling the duodenum → mechanical obstruction.<br><br><strong>Clinical significance:</strong> The 'glandular tissue' IS the pancreas. Because it forms a continuous ring, surgical division is NOT performed (risk of fistula and pancreatitis) — instead, a duodenoduodenostomy bypass is performed."
+  },
+  {
+    num:3,
+    scenario:"During a left kidney transplant harvest, the surgeon rapidly clamped the left renal vein close to the IVC without prior dissection of its tributaries. The patient immediately developed massive retroperitoneal hemorrhage.",
+    qs:["What venous structure was injured?","Why does the left side carry higher surgical risk than the right?","What tributaries must be ligated before clamping the left renal vein?"],
+    answer:"<strong>Injured structure:</strong> Left suprarenal vein (and possibly left gonadal vein).<br><br><strong>Left vs Right asymmetry:</strong> The RIGHT suprarenal vein is very short and drains directly into the IVC — it is not a tributary of the right renal vein, so right nephrectomy carries less risk. The LEFT suprarenal vein is LONG and drains into the LEFT RENAL VEIN. When the left renal vein is suddenly clamped, the adrenal gland (receiving blood from 3 arteries) has no venous outflow → the unsecured tributary vein ruptures → massive bleeding.<br><br><strong>Must ligate before left renal vein:</strong> 1) Left suprarenal vein, 2) Left gonadal vein (also drains into left renal vein)."
+  },
+  {
+    num:4,
+    scenario:"A 38-year-old presents with episodic severe headaches, palpitations, and blood pressure spikes to 230/140 mmHg lasting 20 minutes each, then resolving completely. 24-hour urine shows elevated catecholamines and metanephrines.",
+    qs:["What is the diagnosis?","What cells of origin are involved, and what is their embryological derivation?","What genetic mutation may be involved?"],
+    answer:"<strong>Diagnosis:</strong> Pheochromocytoma.<br><br><strong>Cell of origin:</strong> Chromaffin cells of the adrenal medulla. These are derived from NEURAL CREST CELLS (ectoderm), which migrated from the neural crest to the developing adrenal gland. They are essentially modified postganglionic sympathetic neurons that never developed axons. The tumor causes paroxysmal (episodic) hypertension due to sudden excessive release of epinephrine and norepinephrine.<br><br><strong>Genetic mutation:</strong> 25% of pheochromocytomas are familial, associated with RET gene mutations (also seen in MEN2A and MEN2B). RET encodes a receptor tyrosine kinase involved in neural crest cell migration and differentiation. Other associated genes: VHL, NF1, SDHB/C/D."
+  },
+  {
+    num:5,
+    scenario:"A patient with chronic duodenal ulcer disease suddenly develops severe epigastric pain radiating to the back, elevated serum amylase, and features of acute pancreatitis. Endoscopy shows a deep ulcer crater on the posterior duodenal wall.",
+    qs:["Explain the anatomical pathway by which this duodenal ulcer caused pancreatitis.","What structure separates the pancreas from the posterior duodenal wall?","Why does this pain radiate to the back?"],
+    answer:"<strong>Anatomical pathway:</strong> The posterior wall of the duodenum (1st part) is closely related to the head of the pancreas. A deep peptic ulcer on this wall can penetrate through the duodenal wall and directly erode the pancreatic head, releasing pancreatic enzymes (trypsin, elastase, phospholipase A2) into the gland → autodigestion → acute pancreatitis.<br><br><strong>Separator:</strong> For the body of the pancreas and stomach — the lesser sac separates them. For the duodenum and head — they share a close fibrous/areolar attachment with minimal separation. The CBD also runs in a groove in the pancreatic head here.<br><br><strong>Back radiation:</strong> The pancreas is retroperitoneal. Inflammatory exudate extends posteriorly and irritates the posterior peritoneum and retroperitoneal structures → pain radiates to the back (T6-T10 dermatomal distribution)."
+  }
+];
+
+const MNEMONICS = [
+  {
+    title:"PANCREAS HEAD Posterior Relations",
+    word:"ICA",
+    items:[
+      {l:"I", w:"IVC", d:"Inferior vena cava"},
+      {l:"C", w:"CBD", d:"Common bile duct"},
+      {l:"A", w:"Aorta", d:"Abdominal aorta"}
+    ],
+    tip:"Cancer head → compresses all 3: IVC (edema), CBD (jaundice), and if neck involved → portal HTN"
+  },
+  {
+    title:"Suprarenal Artery Supply — SMI",
+    word:"SMI",
+    items:[
+      {l:"S", w:"Superior", d:"From inferior phrenic artery"},
+      {l:"M", w:"Middle", d:"Directly from Aorta"},
+      {l:"I", w:"Inferior", d:"From Renal artery"}
+    ],
+    tip:"All 3 arteries but ONLY 1 vein (either into IVC or left renal vein)"
+  },
+  {
+    title:"Dorsal Bud Forms — BHT (like British Summer Time!)",
+    word:"BHT",
+    items:[
+      {l:"B", w:"Body", d:"Entire body of pancreas"},
+      {l:"H", w:"Head (upper part)", d:"Rest of the head not formed by ventral"},
+      {l:"T", w:"Tail", d:"Entire tail of pancreas"}
+    ],
+    tip:"Ventral bud gets only the UNCINATE + LOWER HEAD. Everything else = dorsal."
+  },
+  {
+    title:"Left Renal Vein Tributaries — GAS",
+    word:"GAS",
+    items:[
+      {l:"G", w:"Gonadal vein (left)", d:"Left ovarian/testicular vein"},
+      {l:"A", w:"Adrenal vein (left suprarenal)", d:"Long, drains into left renal vein"},
+      {l:"S", w:"Spinal (hemiazygos)", d:"Some contribution"}
+    ],
+    tip:"Ligate G and A BEFORE clamping left renal vein during left nephrectomy!"
+  },
+  {
+    title:"Adrenal Gland Embryological Origin — ME",
+    word:"ME",
+    items:[
+      {l:"M", w:"Mesoderm", d:"Forms the CORTEX (steroids: cortisol, aldosterone, androgens)"},
+      {l:"E", w:"Ectoderm (neural crest)", d:"Forms the MEDULLA (catecholamines: epinephrine, norepinephrine)"}
+    ],
+    tip:"Meso = Cortex | Ecto = Medulla. Or: 'My Exterior is Meso, My Interior (medulla) is Ecto'"
+  },
+  {
+    title:"Pancreatic Cancer Signs — JEP",
+    word:"JEP",
+    items:[
+      {l:"J", w:"Jaundice", d:"CBD compression → obstructive jaundice"},
+      {l:"E", w:"Edema (lower limbs)", d:"IVC compression → venous back-pressure"},
+      {l:"P", w:"Portal hypertension", d:"Portal vein compression → splenomegaly, varices"}
+    ],
+    tip:"A pancreatic head tumor JEPs out at you with all 3 signs!"
+  }
+];
+
+const VIVA = [
+  {q:"What are the two functional components of the pancreas?", a:"Mixed gland: (1) Exocrine portion secretes digestive enzymes (amylase, lipase, proteases) into the GI tract. (2) Endocrine portion (Islets of Langerhans) secretes insulin and glucagon into the bloodstream to regulate blood sugar.", exam:true},
+  {q:"Where does the portal vein begin?", a:"It begins posterior to the NECK of the pancreas, formed by the union of the superior mesenteric vein (SMV) and the splenic vein.", exam:true},
+  {q:"Which blood vessels relate to the uncinate process of the pancreas?", a:"The superior mesenteric vessels pass directly ANTERIOR to the uncinate process. The aorta is located posteriorly.", exam:false},
+  {q:"Why is cancer of the head of the pancreas difficult to resect?", a:"(1) Often detected late due to silent retroperitoneal location. (2) Pancreatic tissue visually mimics surrounding fat. (3) Rapid infiltration of vital posterior structures: CBD, IVC, portal vein, and aorta makes surgical margins difficult.", exam:true},
+  {q:"What is the embryological origin of the main pancreatic duct?", a:"Formed by fusion of the DISTAL part of the dorsal pancreatic duct with the DUCT of the ventral pancreatic bud. The proximal dorsal duct becomes the accessory duct or obliterates.", exam:false},
+  {q:"What is an annular pancreas? How does it present?", a:"A congenital anomaly where the ventral pancreatic bud splits and rotates incorrectly, forming a ring of pancreatic tissue that surrounds and compresses the duodenum. Presents as bilious vomiting in a neonate with 'double bubble' sign on X-ray.", exam:true},
+  {q:"Outline the arterial supply of the suprarenal glands.", a:"Three arteries on each side: (1) Superior suprarenal artery from inferior phrenic artery; (2) Middle suprarenal artery directly from abdominal aorta; (3) Inferior suprarenal artery from renal artery.", exam:false},
+  {q:"Contrast the venous drainage of the right and left suprarenal glands.", a:"RIGHT: Short vein drains directly into IVC. LEFT: Long vein drains into LEFT RENAL VEIN. Clinical significance: During left nephrectomy, must ligate left suprarenal vein (and left gonadal vein) BEFORE cutting the left renal vein — otherwise fatal hemorrhage.", exam:true},
+  {q:"Which portion of the suprarenal gland is derived from the neural crest?", a:"The ADRENAL MEDULLA is derived from ectodermal neural crest cells, which differentiate into chromaffin cells. These are essentially modified sympathetic ganglion cells.", exam:false},
+  {q:"What is a pheochromocytoma?", a:"A rare tumor of chromaffin cells in the adrenal medulla that excessively secretes epinephrine and norepinephrine → paroxysmal hypertension, tachycardia, and headache. 25% are familial (RET gene mutation). Treated surgically after alpha-blockade.", exam:true},
+  {q:"What structures lie posterior to the body of the pancreas?", a:"Abdominal aorta, left psoas major, LEFT kidney, and LEFT suprarenal gland. These are separated from the pancreas by the SPLENIC VEIN and LEFT RENAL VEIN.", exam:false},
+  {q:"What covers the anterior surface of the body of the pancreas?", a:"Peritoneum of the posterior wall of the LESSER SAC, which separates it from the posterior surface of the stomach. This is the anatomical basis for peptic ulcers causing pancreatitis.", exam:false}
+];
+
+const ANATOMY_ITEMS = [
+  {icon:"🔲", name:"Head of Pancreas", sub:"Largest part", detail:{
+    title:"Head of Pancreas — Relations",
+    body:"<ul><li><strong>Lies in:</strong> Concavity (C-loop) of duodenum</li><li><strong>Anterior:</strong> Transverse colon, coils of jejunum, superior mesenteric vessels</li><li><strong>Posterior:</strong> IVC, Common Bile Duct (CBD), Aorta</li><li><strong>Uncinate process:</strong> Projects left/up behind superior mesenteric vessels</li></ul>",
+    exam:"⚠️ Cancer Head → CBD compression (jaundice) + IVC compression (lower limb edema). The CBD runs in a groove in the posterior surface."
+  }},
+  {icon:"🔗", name:"Neck of Pancreas", sub:"~2cm wide", detail:{
+    title:"Neck of Pancreas — Relations",
+    body:"<ul><li><strong>Anterior:</strong> Pyloroduodenal junction (beginning of 1st part duodenum)</li><li><strong>Posterior:</strong> Beginning of portal vein (union of SMV + splenic vein) ⚠️</li></ul>",
+    exam:"⚠️ HIGHLY EXAM-TESTED: Portal vein begins behind the NECK. Cancer neck/head → portal vein compression → portal hypertension."
+  }},
+  {icon:"📐", name:"Body of Pancreas", sub:"Triangular cross-section", detail:{
+    title:"Body of Pancreas — Relations",
+    body:"<ul><li><strong>Cross-section:</strong> Triangular (anterior, posterior, inferior surfaces)</li><li><strong>Anterior:</strong> Lesser sac → separates it from posterior wall of stomach</li><li><strong>Posterior:</strong> Aorta, left psoas, LEFT kidney, LEFT suprarenal gland (separated by splenic vein + left renal vein)</li><li><strong>Inferior:</strong> Duodenojejunal flexure, coils of jejunum</li></ul>",
+    exam:"Peptic ulcer posterior wall stomach → erodes through lesser sac → anterior surface of pancreatic body → acute pancreatitis."
+  }},
+  {icon:"🔚", name:"Tail of Pancreas", sub:"Intraperitoneal", detail:{
+    title:"Tail of Pancreas",
+    body:"<ul><li>Narrows progressively to the left</li><li>Passes through the <strong>lienorenal (splenorenal) ligament</strong></li><li>Reaches the <strong>hilum of the spleen</strong></li><li>Only intraperitoneal part of the pancreas</li></ul>",
+    exam:"The tail is the only mobile part — important in distal pancreatectomy. Splenectomy may injure the tail."
+  }},
+  {icon:"🔄", name:"Uncinate Process", sub:"Hook-like projection", detail:{
+    title:"Uncinate Process",
+    body:"<ul><li>Projects from lower part of head</li><li>Passes upward and to the LEFT</li><li><strong>Anterior:</strong> Superior mesenteric vessels (SMA + SMV)</li><li><strong>Posterior:</strong> Aorta</li></ul>",
+    exam:"The uncinate process passes BEHIND the SMA — meaning the SMA is anterior to it. Common MCQ trap."
+  }},
+  {icon:"💧", name:"Main Pancreatic Duct", sub:"Duct of Wirsung", detail:{
+    title:"Main Pancreatic Duct (Wirsung)",
+    body:"<ul><li>Formed by: <strong>Ventral duct + Distal dorsal duct</strong></li><li>Runs entire length of pancreas from tail to head</li><li>Joins the common bile duct to form <strong>ampulla of Vater</strong></li><li>Opens at <strong>major duodenal papilla</strong> on posteromedial wall of 2nd part duodenum</li></ul>",
+    exam:"The accessory duct (Santorini) opens at the MINOR papilla, proximal and slightly anterior to the major papilla."
+  }},
+  {icon:"🩸", name:"Blood Supply", sub:"Dual arterial supply", detail:{
+    title:"Pancreatic Blood Supply",
+    body:"<ul><li><strong>Head/Neck:</strong> Superior pancreaticoduodenal a. (from gastroduodenal) + Inferior pancreaticoduodenal a. (from SMA) — form arterial arcades</li><li><strong>Body/Tail:</strong> Branches of splenic artery</li><li><strong>Venous:</strong> Drains into portal, superior mesenteric, and splenic veins</li><li><strong>Sympathetic:</strong> Thoracic splanchnic nerves → inhibitory</li><li><strong>Parasympathetic:</strong> Vagus → stimulates exocrine + endocrine</li></ul>",
+    exam:"The head has a dual blood supply via arcades — this is why it can survive even if one artery is compromised."
+  }},
+  {icon:"🫀", name:"Portal Vein", sub:"Posterior to neck", detail:{
+    title:"Portal Vein Formation",
+    body:"<ul><li>Formed by: <strong>Superior Mesenteric Vein (SMV) + Splenic Vein</strong></li><li>Location of formation: <strong>Posterior to neck of pancreas</strong></li><li>Ascends to the liver in the free edge of the lesser omentum (hepatoduodenal ligament)</li></ul>",
+    exam:"⚠️ Most exam-tested pancreatic anatomy fact! The portal vein forms BEHIND the NECK. Remember: 'The portal vein is born behind the pancreatic neck.'"
+  }}
+];
+
+// ═══════════════ QUIZ ENGINE ═══════════════
+let quizState = { correct:0, wrong:0, streak:0, answered:new Set() };
+
+function renderQuiz() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.id = `q-${i}`;
+    const tagColor = {embryology:'embryo', clinical:'high', anatomy:'anatomy', physiology:'pearl'}[q.tag] || 'anatomy';
+    div.innerHTML = `
+      <div class="q-number">Question ${i+1} of ${QUESTIONS.length}</div>
+      <div class="q-tag"><span class="tag tag-${tagColor}">${q.tag}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt,j)=>`<div class="option" id="q-${i}-opt-${j}" onclick="selectAnswer(${i},${j})">
+          <span class="opt-letter">${String.fromCharCode(65+j)}</span> ${opt}
+        </div>`).join('')}
+      </div>
+      <div class="explanation" id="q-${i}-exp">
+        <strong>✅ Explanation:</strong> ${q.exp}
+      </div>
+    `;
+    c.appendChild(div);
+  });
+  updateQuizStats();
+}
+
+function selectAnswer(qi, sel) {
+  if (quizState.answered.has(qi)) return;
+  quizState.answered.add(qi);
+  const q = QUESTIONS[qi];
+  const opts = document.querySelectorAll(`#q-${qi} .option`);
+  opts.forEach(o => o.classList.add('disabled'));
+  if (sel === q.ans) {
+    opts[sel].classList.add('correct');
+    quizState.correct++;
+    quizState.streak++;
+  } else {
+    opts[sel].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    quizState.wrong++;
+    quizState.streak = 0;
+  }
+  document.getElementById(`q-${qi}-exp`).classList.add('show');
+  updateQuizStats();
+  saveState();
+}
+
+function updateQuizStats() {
+  const done = quizState.answered.size;
+  const pct = done ? Math.round(quizState.correct/done*100) : 0;
+  document.getElementById('q-correct').textContent = quizState.correct;
+  document.getElementById('q-wrong').textContent = quizState.wrong;
+  document.getElementById('q-streak-d').textContent = `🔥 ${quizState.streak}`;
+  document.getElementById('q-progress-text').textContent = `${done} / ${QUESTIONS.length}`;
+  document.getElementById('q-progress-fill').style.width = `${done/QUESTIONS.length*100}%`;
+  document.getElementById('h-score').textContent = pct + '%';
+  document.getElementById('h-streak').textContent = `🔥 ${quizState.streak}`;
+  document.getElementById('h-done').textContent = `${done}/${QUESTIONS.length}`;
+}
+
+function resetQuiz() {
+  quizState = { correct:0, wrong:0, streak:0, answered:new Set() };
+  renderQuiz();
+  localStorage.removeItem('pqz');
+}
+
+// ═══════════════ FLASHCARDS ═══════════════
+function renderFlashcards() {
+  const g = document.getElementById('fc-grid');
+  g.innerHTML = FLASHCARDS.map((fc, i) => `
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front">
+          <div class="fc-num">Card ${i+1} of ${FLASHCARDS.length}</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">tap to flip →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-num">Answer</div>
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════ CASES ═══════════════
+function renderCases() {
+  const c = document.getElementById('cases-container');
+  c.innerHTML = CASES.map((cs, i) => `
+    <div class="case-card">
+      <div class="case-header">
+        <span class="case-num">Case ${cs.num}</span>
+        <div class="case-scenario">${cs.scenario}</div>
+      </div>
+      <div class="case-body">
+        <div class="case-qs">
+          ${cs.qs.map((cq,j)=>`<div class="case-q">${j+1}. ${cq}</div>`).join('')}
+        </div>
+        <button class="reveal-btn" onclick="revealCase(${i}, this)">📋 Reveal Answer</button>
+        <div class="case-answer" id="case-ans-${i}">${cs.answer}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function revealCase(i, btn) {
+  const ans = document.getElementById(`case-ans-${i}`);
+  if (ans.classList.contains('show')) {
+    ans.classList.remove('show');
+    btn.textContent = '📋 Reveal Answer';
+  } else {
+    ans.classList.add('show');
+    btn.textContent = '🙈 Hide Answer';
+  }
+}
+
+// ═══════════════ ANATOMY ═══════════════
+function renderAnatomy() {
+  const g = document.getElementById('anatomy-grid');
+  g.innerHTML = ANATOMY_ITEMS.map((a, i) => `
+    <div class="anatomy-item" onclick="showAnatomy(${i}, this)">
+      <div class="ai-icon">${a.icon}</div>
+      <div class="ai-name">${a.name}</div>
+      <div class="ai-sub">${a.sub}</div>
+    </div>
+  `).join('');
+}
+
+function showAnatomy(i, el) {
+  document.querySelectorAll('.anatomy-item').forEach(a=>a.classList.remove('active'));
+  el.classList.add('active');
+  const d = ANATOMY_ITEMS[i].detail;
+  document.getElementById('anatomy-detail').innerHTML = `
+    <h3>${d.title}</h3>
+    ${d.body}
+    ${d.exam ? `<div class="exam-alert"><strong>⚠️ Exam Pearl:</strong> ${d.exam}</div>` : ''}
+  `;
+}
+
+// ═══════════════ MNEMONICS ═══════════════
+function renderMnemonics() {
+  const c = document.getElementById('mnemonics-container');
+  c.innerHTML = MNEMONICS.map((m, i) => `
+    <div class="mnemonic-card">
+      <div class="mnem-header" onclick="toggleMnem(${i}, this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px">💡</span>
+          <span class="mnem-title">${m.title}</span>
+        </div>
+        <span class="mnem-toggle" id="mnem-toggle-${i}">▼</span>
+      </div>
+      <div class="mnem-body" id="mnem-body-${i}">
+        <div class="mnem-word">${m.word}</div>
+        <ul class="mnem-list">
+          ${m.items.map(it=>`<li><span class="mnem-letter">${it.l}</span> <span>= <strong>${it.w}</strong> — <span class="mnem-desc">${it.d}</span></span></li>`).join('')}
+        </ul>
+        ${m.tip ? `<div class="exam-alert" style="margin-top:12px"><strong>💡 Tip:</strong> ${m.tip}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleMnem(i, header) {
+  const body = document.getElementById(`mnem-body-${i}`);
+  const toggle = document.getElementById(`mnem-toggle-${i}`);
+  body.classList.toggle('open');
+  toggle.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+  toggle.style.transition = 'transform 0.3s';
+}
+
+// ═══════════════ VIVA ═══════════════
+function renderViva() {
+  const c = document.getElementById('viva-container');
+  c.innerHTML = VIVA.map((v, i) => `
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(${i}, this)">
+        <span>${v.exam ? '⚠️' : '🗣️'} V${i+1}: ${v.q}</span>
+        <span class="vmark">▼</span>
+      </div>
+      <div class="viva-a" id="viva-a-${i}">
+        ${v.a}
+        ${v.exam ? '<div class="exam-note">⚠️ Commonly asked in viva — know this well!</div>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleViva(i, el) {
+  const ans = document.getElementById(`viva-a-${i}`);
+  const mark = el.querySelector('.vmark');
+  el.classList.toggle('open');
+  ans.classList.toggle('show');
+  mark.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+  mark.style.transition = 'transform 0.3s';
+}
+
+// ═══════════════ SEARCH ═══════════════
+function searchOverview(val) {
+  const cards = document.querySelectorAll('#overview-content .card, #overview-content .exam-alert, #overview-content .key-fact');
+  if (!val) { cards.forEach(c=>c.style.display=''); return; }
+  const q = val.toLowerCase();
+  cards.forEach(c => { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+}
+
+// ═══════════════ TABS ═══════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+  document.getElementById(`tab-${id}`).classList.add('active');
+  localStorage.setItem('last-tab', id);
+}
+
+// ═══════════════ PERSISTENCE ═══════════════
+function saveState() {
+  localStorage.setItem('pqz', JSON.stringify({
+    correct: quizState.correct, wrong: quizState.wrong,
+    streak: quizState.streak, answered: [...quizState.answered]
+  }));
+}
+
+function loadState() {
+  const d = localStorage.getItem('pqz');
+  if (d) {
+    const s = JSON.parse(d);
+    quizState.correct = s.correct; quizState.wrong = s.wrong; quizState.streak = s.streak;
+    quizState.answered = new Set(s.answered);
+    // Reapply UI
+    quizState.answered.forEach(qi => {
+      // Mark as done visually (greyed out)
+      const opts = document.querySelectorAll(`#q-${qi} .option`);
+      opts.forEach(o=>o.classList.add('disabled'));
+      document.getElementById(`q-${qi}-exp`).classList.add('show');
+    });
+    updateQuizStats();
+  }
+  const lt = localStorage.getItem('last-tab');
+  if (lt) switchTab(lt);
+}
+
+// ═══════════════ INIT ═══════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+renderQuiz();
+renderFlashcards();
+renderCases();
+renderAnatomy();
+renderMnemonics();
+renderViva();
+loadState();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

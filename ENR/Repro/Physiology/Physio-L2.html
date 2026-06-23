@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Female Reproductive Physiology — Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060c1a;
+  --bg2: #0d1629;
+  --bg3: #111d36;
+  --surface: #152040;
+  --surface2: #1c2b50;
+  --border: rgba(96,165,250,0.15);
+  --border2: rgba(96,165,250,0.25);
+  --teal: #0ea5e9;
+  --teal2: #38bdf8;
+  --gold: #f59e0b;
+  --gold2: #fbbf24;
+  --rose: #f43f5e;
+  --green: #10b981;
+  --purple: #a78bfa;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --glow: 0 0 40px rgba(14,165,233,0.2);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ANIMATED BACKGROUND */
+.bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 20% 20%, rgba(14,165,233,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(167,139,250,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, rgba(245,158,11,0.03) 0%, transparent 70%);
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(96,165,250,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(96,165,250,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* HEADER */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(6,12,26,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; gap: 24px;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 600;
+  background: linear-gradient(135deg, var(--teal2), var(--gold2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+.logo span { font-style: italic; }
+.stats-bar {
+  display: flex; gap: 20px; align-items: center;
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 0.75rem; font-weight: 500; color: var(--text2);
+}
+.stat-pill .val { color: var(--teal2); font-weight: 600; font-family: 'DM Mono', monospace; }
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex; gap: 2px; overflow-x: auto; padding: 0;
+  scrollbar-width: none; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em;
+  transition: all 0.2s; border-bottom: 2px solid transparent;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-tab:hover { color: var(--text2); background: var(--surface); }
+.nav-tab.active {
+  color: var(--teal2); border-bottom-color: var(--teal);
+  background: rgba(14,165,233,0.06);
+}
+.tab-icon { font-size: 1rem; }
+
+/* MAIN LAYOUT */
+.main { max-width: 1400px; margin: 0 auto; padding: 32px 24px; position: relative; z-index: 1; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* SECTION HEADERS */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; font-weight: 700; margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--text), var(--teal2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.section-sub { color: var(--text3); font-size: 0.875rem; margin-bottom: 28px; }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover { border-color: var(--border2); box-shadow: var(--glow); }
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+
+/* TAGS */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 10px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.tag-gold { background: rgba(245,158,11,0.15); color: var(--gold2); border: 1px solid rgba(245,158,11,0.3); }
+.tag-teal { background: rgba(14,165,233,0.15); color: var(--teal2); border: 1px solid rgba(14,165,233,0.3); }
+.tag-rose { background: rgba(244,63,94,0.15); color: var(--rose); border: 1px solid rgba(244,63,94,0.3); }
+.tag-green { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.tag-purple { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+
+/* OVERVIEW TAB */
+.overview-hero {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--bg3) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.overview-hero::before {
+  content: '🔬';
+  position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+  font-size: 5rem; opacity: 0.08;
+}
+.phase-timeline {
+  display: flex; gap: 0; margin: 24px 0;
+  border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+}
+.phase-block {
+  flex: 1; padding: 16px 12px; text-align: center;
+  border-right: 1px solid var(--border); cursor: pointer;
+  transition: all 0.2s;
+}
+.phase-block:last-child { border-right: none; }
+.phase-block:hover { background: rgba(14,165,233,0.08); }
+.phase-block .days { font-size: 0.7rem; color: var(--text3); margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.phase-block .name { font-size: 0.875rem; font-weight: 600; }
+.phase-block .driver { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
+.phase-block.phase-a { background: rgba(244,63,94,0.06); }
+.phase-block.phase-b { background: rgba(14,165,233,0.06); }
+.phase-block.phase-c { background: rgba(167,139,250,0.06); }
+.phase-block.phase-d { background: rgba(16,185,129,0.06); }
+
+.key-concept-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: all 0.2s;
+}
+.key-concept-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.key-concept-card h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; color: var(--teal2); }
+.key-concept-card p { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+
+.exam-alert {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-size: 0.82rem; color: var(--gold2);
+  display: flex; gap: 10px; align-items: flex-start;
+}
+
+/* SEARCH */
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 16px;
+  margin-bottom: 20px;
+}
+.search-bar input {
+  background: none; border: none; outline: none;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem; flex: 1;
+}
+.search-bar input::placeholder { color: var(--text3); }
+.search-icon { color: var(--text3); font-size: 1rem; }
+
+/* QUIZ TAB */
+.quiz-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+}
+.progress-bar-container {
+  flex: 1; background: var(--surface2); border-radius: 4px; height: 6px; min-width: 200px;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--teal), var(--teal2));
+  transition: width 0.4s ease;
+}
+.quiz-score-display {
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+.score-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 8px 16px; text-align: center;
+}
+.score-box .num { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; }
+.score-box .lbl { font-size: 0.68rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.quiz-question {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px; margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.quiz-question.correct { border-color: var(--green); background: rgba(16,185,129,0.05); }
+.quiz-question.wrong { border-color: var(--rose); background: rgba(244,63,94,0.05); }
+.q-number { font-size: 0.72rem; color: var(--text3); margin-bottom: 10px; font-family: 'DM Mono', monospace; }
+.q-text { font-size: 0.95rem; font-weight: 500; line-height: 1.6; margin-bottom: 16px; }
+.q-options { display: flex; flex-direction: column; gap: 8px; }
+.q-option {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  cursor: pointer; font-size: 0.875rem;
+  display: flex; align-items: center; gap: 10px;
+  transition: all 0.15s;
+}
+.q-option:hover:not(.selected):not(.reveal) { border-color: var(--teal); background: rgba(14,165,233,0.06); }
+.q-option.correct-ans { border-color: var(--green); background: rgba(16,185,129,0.1); color: var(--green); }
+.q-option.wrong-ans { border-color: var(--rose); background: rgba(244,63,94,0.1); color: var(--rose); }
+.q-option .opt-letter {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface2); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 600; flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+}
+.q-explanation {
+  margin-top: 14px; padding: 12px 14px;
+  background: var(--bg3); border-radius: var(--radius-sm);
+  font-size: 0.82rem; color: var(--text2); line-height: 1.6;
+  display: none; border-left: 3px solid var(--teal);
+}
+.q-explanation.show { display: block; animation: fadeUp 0.25s ease; }
+.q-explanation strong { color: var(--teal2); }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+.anim-correct { animation: pulse 0.4s ease; }
+.anim-wrong { animation: shake 0.4s ease; }
+
+.quiz-controls {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px;
+}
+.btn {
+  padding: 10px 20px; border: none; border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-primary { background: var(--teal); color: white; }
+.btn-primary:hover { background: var(--teal2); transform: translateY(-1px); }
+.btn-outline {
+  background: none; border: 1px solid var(--border2);
+  color: var(--text2);
+}
+.btn-outline:hover { border-color: var(--teal); color: var(--teal2); }
+.btn-gold { background: var(--gold); color: #1a1000; font-weight: 600; }
+.btn-gold:hover { background: var(--gold2); }
+
+/* FLASHCARDS */
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.flashcard-wrapper { perspective: 1000px; height: 200px; cursor: pointer; }
+.flashcard-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+.flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.flashcard-front {
+  background: var(--surface);
+}
+.flashcard-back {
+  background: linear-gradient(135deg, var(--surface2), var(--bg3));
+  transform: rotateY(180deg);
+  border-color: var(--teal);
+}
+.card-label {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text3); margin-bottom: 10px;
+}
+.card-q { font-size: 0.875rem; font-weight: 600; line-height: 1.5; color: var(--text); }
+.card-a { font-size: 0.82rem; color: var(--teal2); line-height: 1.6; }
+.flip-hint { font-size: 0.68rem; color: var(--text3); margin-top: 10px; }
+
+.fc-progress {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+}
+.fc-counter { font-family: 'DM Mono', monospace; font-size: 0.875rem; color: var(--text2); }
+
+/* CLINICAL CASES */
+.case-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 20px; overflow: hidden;
+}
+.case-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--surface2), var(--bg3));
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.case-badge {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(14,165,233,0.15); color: var(--teal2);
+  border: 1px solid rgba(14,165,233,0.3);
+  flex-shrink: 0;
+}
+.case-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+.case-vignette {
+  padding: 20px 24px;
+  font-size: 0.875rem; line-height: 1.8; color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+.case-questions { padding: 20px 24px; }
+.case-q {
+  margin-bottom: 16px; padding: 14px;
+  background: var(--bg3); border-radius: var(--radius-sm);
+}
+.case-q-text { font-size: 0.875rem; font-weight: 500; margin-bottom: 10px; }
+.reveal-btn {
+  padding: 7px 16px; background: none;
+  border: 1px solid var(--teal); border-radius: var(--radius-sm);
+  color: var(--teal2); font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; cursor: pointer; transition: all 0.15s;
+}
+.reveal-btn:hover { background: rgba(14,165,233,0.1); }
+.case-answer {
+  display: none; margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(14,165,233,0.05);
+  border: 1px solid rgba(14,165,233,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem; line-height: 1.7; color: var(--text);
+  animation: fadeUp 0.3s ease;
+}
+.case-answer.show { display: block; }
+.case-answer strong { color: var(--teal2); }
+
+/* PHYSIOLOGY TAB */
+.flow-chart {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 24px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.flow-node {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 20px;
+  text-align: center; min-width: 220px; max-width: 320px;
+  font-size: 0.82rem; font-weight: 500; cursor: pointer;
+  transition: all 0.2s; position: relative;
+}
+.flow-node:hover { border-color: var(--teal); background: rgba(14,165,233,0.06); }
+.flow-node.highlight { border-color: var(--gold); background: rgba(245,158,11,0.08); color: var(--gold2); }
+.flow-node.surge { border-color: var(--rose); background: rgba(244,63,94,0.08); color: var(--rose); }
+.flow-arrow { color: var(--text3); font-size: 1.2rem; line-height: 1; }
+.flow-tooltip {
+  display: none; position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(100% + 8px); background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 0.78rem; color: var(--text2);
+  width: 240px; text-align: left; z-index: 10; line-height: 1.5;
+}
+.flow-node:hover .flow-tooltip { display: block; }
+
+.hormone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 20px; }
+.hormone-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+}
+.hormone-header { padding: 14px 18px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+.hormone-header.estro { background: rgba(244,63,94,0.1); color: #fb7185; border-bottom: 1px solid rgba(244,63,94,0.2); }
+.hormone-header.prog { background: rgba(167,139,250,0.1); color: var(--purple); border-bottom: 1px solid rgba(167,139,250,0.2); }
+.hormone-body { padding: 14px 18px; }
+.hormone-effect {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--text2);
+}
+.hormone-effect:last-child { border-bottom: none; }
+.eff-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+
+/* MNEMONICS TAB */
+.mnemonic-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 16px; overflow: hidden;
+}
+.mnemonic-header {
+  padding: 16px 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2);
+}
+.mnemonic-title { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+.mnemonic-word {
+  font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+  color: var(--teal2); letter-spacing: 0.05em;
+}
+.mnemonic-body { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.2s; }
+.mnemonic-body.open { max-height: 500px; padding: 16px 20px; }
+.mnemonic-letter {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.mnemonic-letter:last-child { border-bottom: none; }
+.letter-char {
+  font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--gold2); width: 30px; flex-shrink: 0; line-height: 1;
+}
+.letter-content { font-size: 0.875rem; }
+.letter-content strong { color: var(--text); }
+.letter-content span { color: var(--text2); font-size: 0.8rem; }
+
+/* DIAGNOSIS / CYCLE TAB */
+.cycle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; }
+.cycle-cell { padding: 16px; border-right: 1px solid var(--border); }
+.cycle-cell:last-child { border-right: none; }
+.cycle-cell h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.cycle-cell p { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+.cycle-menstrual h4 { color: var(--rose); }
+.cycle-proliferative h4 { color: var(--teal2); }
+.cycle-ovulatory h4 { color: var(--gold2); }
+.cycle-secretory h4 { color: var(--purple); }
+
+.compare-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.compare-table th {
+  background: var(--surface2); padding: 12px 16px; text-align: left;
+  font-weight: 600; font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text2); border-bottom: 2px solid var(--border2);
+}
+.compare-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.compare-table tr:hover td { background: rgba(14,165,233,0.04); }
+.compare-table .estro-col { color: #fb7185; }
+.compare-table .prog-col { color: var(--purple); }
+
+.ovulation-signs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.sign-card {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 14px; display: flex; gap: 10px; align-items: flex-start;
+}
+.sign-icon { font-size: 1.3rem; }
+.sign-text h5 { font-size: 0.82rem; font-weight: 600; margin-bottom: 3px; }
+.sign-text p { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
+
+/* TREATMENT / INTEGRATION TAB */
+.integrative-case {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px;
+}
+.step-flow { display: flex; flex-direction: column; gap: 0; margin-top: 20px; }
+.step-item {
+  display: flex; gap: 16px; padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step-item:last-child { border-bottom: none; }
+.step-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 600;
+  color: white; flex-shrink: 0;
+}
+.step-content h5 { font-size: 0.875rem; font-weight: 600; margin-bottom: 5px; color: var(--teal2); }
+.step-content p { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+
+/* FOLLICLE TAB */
+.follicle-stages { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.follicle-stage {
+  flex: 1; min-width: 150px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; text-align: center; transition: all 0.2s; cursor: pointer;
+}
+.follicle-stage:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: var(--glow); }
+.follicle-icon { font-size: 2rem; margin-bottom: 8px; }
+.follicle-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; }
+.follicle-detail { font-size: 0.72rem; color: var(--text2); line-height: 1.5; }
+.follicle-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text3); padding: 0 4px; align-self: center; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main { padding: 20px 16px; }
+  .header-inner { gap: 12px; }
+  .stats-bar { display: none; }
+  .section-title { font-size: 1.4rem; }
+  .phase-timeline { flex-direction: column; }
+  .phase-block { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 200;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.show { display: flex; animation: fadeUp 0.2s ease; }
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 24px;
+  max-width: 480px; width: 100%;
+}
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 12px; }
+.modal-body { font-size: 0.875rem; color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+.modal-close {
+  float: right; background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 6px 14px; border-radius: var(--radius-sm);
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">♀ Female Repro <span>Physiology</span></div>
+    <div class="stats-bar">
+      <div class="stat-pill">🎯 Score <span class="val" id="hdr-score">0/0</span></div>
+      <div class="stat-pill">🔥 Streak <span class="val" id="hdr-streak">0</span></div>
+      <div class="stat-pill">📊 Progress <span class="val" id="hdr-progress">0%</span></div>
+      <div class="stat-pill">📋 Cards <span class="val" id="hdr-cards">0/22</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('overview')" id="tab-overview">
+    <span class="tab-icon">🏠</span> Overview
+  </button>
+  <button class="nav-tab" onclick="switchTab('quiz')" id="tab-quiz">
+    <span class="tab-icon">🧠</span> Quiz Mode
+  </button>
+  <button class="nav-tab" onclick="switchTab('flashcards')" id="tab-flashcards">
+    <span class="tab-icon">🃏</span> Flashcards
+  </button>
+  <button class="nav-tab" onclick="switchTab('cases')" id="tab-cases">
+    <span class="tab-icon">🏥</span> Clinical Cases
+  </button>
+  <button class="nav-tab" onclick="switchTab('physiology')" id="tab-physiology">
+    <span class="tab-icon">⚗️</span> Physiology & Hormones
+  </button>
+  <button class="nav-tab" onclick="switchTab('cycle')" id="tab-cycle">
+    <span class="tab-icon">📅</span> Cycle & Ovulation
+  </button>
+  <button class="nav-tab" onclick="switchTab('mnemonics')" id="tab-mnemonics">
+    <span class="tab-icon">🧩</span> Mnemonics
+  </button>
+  <button class="nav-tab" onclick="switchTab('integration')" id="tab-integration">
+    <span class="tab-icon">🔗</span> Integration
+  </button>
+</nav>
+
+<main class="main">
+
+<!-- ==================== OVERVIEW TAB ==================== -->
+<section id="content-overview" class="tab-content active">
+  <div class="overview-hero">
+    <div class="section-title">Female Reproductive Physiology</div>
+    <p style="color:var(--text2);font-size:0.875rem;line-height:1.7;max-width:700px;">
+      A comprehensive guide to the ovarian and uterine cycles, sex hormone physiology, ovulation mechanisms, and clinical correlates. Covers all high-yield exam content for medical physiology.
+    </p>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+      <span class="tag tag-gold">⚠️ High Yield</span>
+      <span class="tag tag-teal">🔬 Physiology</span>
+      <span class="tag tag-green">📖 Exam Ready</span>
+      <span class="tag tag-purple">🏥 Clinical</span>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="overview-search" placeholder="Search key concepts, hormones, phases…" oninput="searchOverview(this.value)">
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px;">📅 The Menstrual Cycle at a Glance</h3>
+  <div class="phase-timeline">
+    <div class="phase-block phase-a">
+      <div class="days">Days 1–5</div>
+      <div class="name">🩸 Menstrual</div>
+      <div class="driver">↓ E₂ + P₄</div>
+    </div>
+    <div class="phase-block phase-b">
+      <div class="days">Days 5–14</div>
+      <div class="name">🌱 Proliferative</div>
+      <div class="driver">↑ Estrogen (FSH)</div>
+    </div>
+    <div class="phase-block" style="background:rgba(245,158,11,0.1);flex:0 0 60px;">
+      <div class="days">Day ~14</div>
+      <div class="name">💥 Ovulation</div>
+      <div class="driver">LH Surge</div>
+    </div>
+    <div class="phase-block phase-c">
+      <div class="days">Days 14–28</div>
+      <div class="name">🌿 Secretory</div>
+      <div class="driver">Progesterone (CL)</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px;margin-top:24px;">🔑 Core Concepts</h3>
+  <div class="grid-3" id="overview-concepts">
+    <div class="key-concept-card" data-search="primordial follicle development granulosa theca">
+      <h4>Follicle Development</h4>
+      <p>Primordial → Primary (granulosa proliferate) → Secondary/Antral (theca cells + antrum) → Mature Graafian follicle. 400,000 at puberty.</p>
+      <div style="margin-top:10px;"><span class="tag tag-teal">Preovulatory Phase</span></div>
+    </div>
+    <div class="key-concept-card" data-search="estrogen synthesis aromatase theca interna FSH LH androgens">
+      <h4>Estrogen Synthesis</h4>
+      <p>Theca interna → LH → Androgens → Granulosa cells → Aromatase (FSH-driven) → Estrogen. Two-cell, two-gonadotropin model.</p>
+      <div style="margin-top:10px;"><span class="tag tag-rose" style="background:rgba(244,63,94,0.15);color:var(--rose);border:1px solid rgba(244,63,94,0.3);">⚠️ High Yield</span></div>
+    </div>
+    <div class="key-concept-card" data-search="LH surge ovulation positive feedback estrogen">
+      <h4>LH Surge & Ovulation</h4>
+      <p>Massive estrogen rise → positive feedback on anterior pituitary → LH surge 2 days before ovulation → release of haploid secondary oocyte.</p>
+      <div style="margin-top:10px;"><span class="tag tag-gold">⭐ Most Famous +ve Feedback</span></div>
+    </div>
+    <div class="key-concept-card" data-search="corpus luteum progesterone hCG pregnancy">
+      <h4>Corpus Luteum</h4>
+      <p>Remnant granulosa + theca cells → secretes progesterone + estrogen. Maintained to week 12 of pregnancy by hCG. Degenerates in 10 days if no fertilization.</p>
+      <div style="margin-top:10px;"><span class="tag tag-purple">hCG Maintains CL</span></div>
+    </div>
+    <div class="key-concept-card" data-search="secretory phase progesterone glycogen tortuous glands implantation">
+      <h4>Secretory Phase</h4>
+      <p>Days 14–28, always constant 14 days. Progesterone-driven. Glands tortuous + store glycogen/lipids. Prepares endometrium for implantation.</p>
+      <div style="margin-top:10px;"><span class="tag tag-green">Always 14 Days!</span></div>
+    </div>
+    <div class="key-concept-card" data-search="progesterone thermogenic basal body temperature corpus luteum ovulation">
+      <h4>BBT & Progesterone</h4>
+      <p>Progesterone from corpus luteum → thermogenic effect on hypothalamus → 0.5°C rise in BBT post-ovulation, persisting until day 26.</p>
+      <div style="margin-top:10px;"><span class="tag tag-gold">⚠️ Exam Favorite</span></div>
+    </div>
+    <div class="key-concept-card" data-search="cervical mucus ferning spinnbarkeit estrogen progesterone">
+      <h4>Cervical Mucus</h4>
+      <p>Estrogen → thin, watery, ferning + spinnbarkeit. Progesterone → thick, viscid, cellular. Abolishes ferning pattern in luteal phase.</p>
+      <div style="margin-top:10px;"><span class="tag tag-teal">Clinical Sign</span></div>
+    </div>
+    <div class="key-concept-card" data-search="myometrium progesterone excitability anti-estrogenic oxytocin">
+      <h4>Myometrial Quieting</h4>
+      <p>Progesterone → anti-estrogenic effect on myometrium → decreases excitability + oxytocin sensitivity. Critical for maintaining pregnancy.</p>
+      <div style="margin-top:10px;"><span class="tag tag-purple">Pregnancy Protection</span></div>
+    </div>
+    <div class="key-concept-card" data-search="natriuresis progesterone aldosterone kidney large dose">
+      <h4>Progesterone: Natriuresis</h4>
+      <p>Large doses block aldosterone action on the kidney → natriuresis (sodium excretion). Unique metabolic effect of progesterone.</p>
+      <div style="margin-top:10px;"><span class="tag tag-rose" style="background:rgba(244,63,94,0.15);color:var(--rose);border:1px solid rgba(244,63,94,0.3);">MCQ Trap!</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;">
+    <div class="exam-alert">
+      <span>⚠️</span>
+      <div><strong>EXAM KEY:</strong> The most famous example of positive feedback in the human body is the effect of high estrogen on LH. The secretory phase is always constant at 14 days — variations in cycle length come from changes in the proliferative phase duration.</div>
+    </div>
+    <div class="exam-alert" style="margin-top:10px;">
+      <span>🏆</span>
+      <div><strong>HIGH YIELD:</strong> Females are born with a limited, fixed number of follicles (oogenesis is complete before birth). Males maintain continuous spermatogenesis throughout life. This explains menopause — when follicles are exhausted.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUIZ TAB ==================== -->
+<section id="content-quiz" class="tab-content">
+  <h2 class="section-title">🧠 Quiz Mode</h2>
+  <p class="section-sub">25 MCQs extracted from lecture content — click an option to answer. Explanations reveal after selection.</p>
+
+  <div class="quiz-header">
+    <div style="flex:1;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.78rem;color:var(--text3);">
+        <span>Progress</span><span id="q-progress-text">0 / 25</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="quiz-progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="quiz-score-display">
+      <div class="score-box">
+        <div class="num" id="score-correct" style="color:var(--green)">0</div>
+        <div class="lbl">Correct</div>
+      </div>
+      <div class="score-box">
+        <div class="num" id="score-wrong" style="color:var(--rose)">0</div>
+        <div class="lbl">Wrong</div>
+      </div>
+      <div class="score-box">
+        <div class="num" id="score-streak" style="color:var(--gold2)">0</div>
+        <div class="lbl">Streak 🔥</div>
+      </div>
+    </div>
+    <div class="quiz-controls">
+      <button class="btn btn-outline" onclick="resetQuiz()">↺ Reset</button>
+      <button class="btn btn-outline" onclick="scrollToFirst()">⬆ First Q</button>
+    </div>
+  </div>
+
+  <div id="quiz-container"></div>
+</section>
+
+<!-- ==================== FLASHCARDS TAB ==================== -->
+<section id="content-flashcards" class="tab-content">
+  <h2 class="section-title">🃏 Flashcards</h2>
+  <p class="section-sub">22 cards covering core concepts — click any card to flip it and reveal the answer.</p>
+  <div class="fc-progress">
+    <div class="fc-counter">Flipped: <span id="fc-flipped">0</span> / 22</div>
+    <button class="btn btn-outline" onclick="resetFlashcards()">↺ Reset All</button>
+  </div>
+  <div class="flashcard-grid" id="fc-grid"></div>
+</section>
+
+<!-- ==================== CLINICAL CASES TAB ==================== -->
+<section id="content-cases" class="tab-content">
+  <h2 class="section-title">🏥 Clinical Cases</h2>
+  <p class="section-sub">Exam-style vignettes with structured answers — click "Reveal Answer" for each question.</p>
+  <div id="cases-container"></div>
+</section>
+
+<!-- ==================== PHYSIOLOGY TAB ==================== -->
+<section id="content-physiology" class="tab-content">
+  <h2 class="section-title">⚗️ Physiology & Hormones</h2>
+  <p class="section-sub">Interactive hormone action comparison, two-cell model, and feedback mechanisms.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px;">🔄 Feedback Loop: HPO Axis</h3>
+  <div class="flow-chart">
+    <div class="flow-node" style="border-color:var(--purple);">
+      🧠 Hypothalamus
+      <div class="flow-tooltip">Secretes GnRH (Gonadotropin-Releasing Hormone) in a pulsatile manner. Receives feedback from estrogen and progesterone.</div>
+    </div>
+    <div class="flow-arrow">↓ GnRH</div>
+    <div class="flow-node" style="border-color:var(--teal);">
+      🫘 Anterior Pituitary
+      <div class="flow-tooltip">Secretes FSH (follicle stimulating hormone) and LH (luteinizing hormone) in response to GnRH.</div>
+    </div>
+    <div class="flow-arrow">↓ FSH + LH</div>
+    <div class="flow-node">
+      🌸 Ovarian Follicle
+      <div class="flow-tooltip">FSH → granulosa cell proliferation + aromatase activation. LH → theca interna androgen synthesis.</div>
+    </div>
+    <div class="flow-arrow">↑ Estrogen rises gradually</div>
+    <div class="flow-node highlight">
+      ⚡ Estrogen Peak (>200 pg/mL for 48h)
+      <div class="flow-tooltip">Critical threshold: when estrogen rises sharply and is sustained, it switches from NEGATIVE to POSITIVE feedback on the pituitary!</div>
+    </div>
+    <div class="flow-arrow">↑ Positive feedback!</div>
+    <div class="flow-node surge">
+      🚀 LH SURGE (most famous +ve feedback in humans!)
+      <div class="flow-tooltip">The LH surge occurs 2 days before ovulation. This is the most famous example of positive feedback in human physiology.</div>
+    </div>
+    <div class="flow-arrow">↓ 36–40 hours later</div>
+    <div class="flow-node" style="border-color:var(--green);">
+      💥 OVULATION — Release of Secondary Oocyte
+      <div class="flow-tooltip">The secondary oocyte (haploid, 23 chromosomes) is released into the peritoneal cavity. Occurs on day ~14 of a 28-day cycle.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin:24px 0 8px;">🔬 Two-Cell, Two-Gonadotropin Model</h3>
+  <p style="font-size:0.82rem;color:var(--text2);margin-bottom:16px;">Estrogen synthesis requires coordinated action of both cell types and both gonadotropins.</p>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+    <div style="text-align:center;">
+      <div style="font-weight:600;margin-bottom:8px;color:#a78bfa;">Theca Interna Cells</div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:1.7;">
+        Stimulated by: <strong style="color:#a78bfa;">LH</strong><br>
+        Substrate: Cholesterol<br>
+        Product: <strong>Androgens</strong><br>
+        (androstenedione, testosterone)
+      </div>
+    </div>
+    <div style="text-align:center;font-size:1.5rem;color:var(--gold2);">→</div>
+    <div style="text-align:center;">
+      <div style="font-weight:600;margin-bottom:8px;color:#fb7185;">Granulosa Cells</div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:1.7;">
+        Stimulated by: <strong style="color:#fb7185;">FSH</strong><br>
+        Enzyme: <strong>Aromatase</strong><br>
+        Converts androgens → <strong style="color:#fb7185;">Estrogen</strong>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px;">💊 Hormone Actions Comparison</h3>
+  <div class="hormone-grid">
+    <div class="hormone-card">
+      <div class="hormone-header estro">💗 Estrogen Actions</div>
+      <div class="hormone-body">
+        <div class="hormone-effect"><span class="eff-icon">🌸</span> Stimulates follicle growth and development</div>
+        <div class="hormone-effect"><span class="eff-icon">⚡</span> Generates LH surge via <strong style="color:#fb7185;">positive feedback</strong> on anterior pituitary</div>
+        <div class="hormone-effect"><span class="eff-icon">🧫</span> Induces endometrial cellular proliferation (proliferative phase)</div>
+        <div class="hormone-effect"><span class="eff-icon">💧</span> Makes cervical mucus thin + watery → ferning + spinnbarkeit</div>
+        <div class="hormone-effect"><span class="eff-icon">🦷</span> Converts vaginal epithelium: cuboidal → stratified squamous</div>
+        <div class="hormone-effect"><span class="eff-icon">🦴</span> Protein-anabolic effect on bone; promotes growth, closes epiphyseal plates</div>
+        <div class="hormone-effect"><span class="eff-icon">🫀</span> Increases plasma proteins (TBG, SHBG, ceruloplasmin)</div>
+        <div class="hormone-effect"><span class="eff-icon">🧪</span> Increases vaginal glycogen → lactic acid → low pH (acidic, protective)</div>
+      </div>
+    </div>
+    <div class="hormone-card">
+      <div class="hormone-header prog">🌿 Progesterone Actions</div>
+      <div class="hormone-body">
+        <div class="hormone-effect"><span class="eff-icon">🌀</span> Induces secretory changes in endometrium (tortuous glands, glycogen)</div>
+        <div class="hormone-effect"><span class="eff-icon">🤫</span> Decreases myometrial excitability (anti-estrogenic = maintains pregnancy)</div>
+        <div class="hormone-effect"><span class="eff-icon">🌡️</span> <strong style="color:var(--purple);">Thermogenic</strong> — raises BBT by 0.5°C on hypothalamus</div>
+        <div class="hormone-effect"><span class="eff-icon">🔒</span> Makes cervical mucus thick, viscid, cellular → blocks sperm</div>
+        <div class="hormone-effect"><span class="eff-icon">🧂</span> Large doses → <strong style="color:var(--purple);">natriuresis</strong> (blocks aldosterone)</div>
+        <div class="hormone-effect"><span class="eff-icon">🚫</span> Negative feedback on hypothalamus + pituitary → inhibits LH/FSH</div>
+        <div class="hormone-effect"><span class="eff-icon">🫁</span> Stimulates respiratory center → increased alveolar ventilation</div>
+        <div class="hormone-effect"><span class="eff-icon">🩺</span> Large doses → abolishes LH surge (mechanism of progesterone-only OCP)</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin:24px 0 16px;">📊 Hormone Comparison Table</h3>
+  <div style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature / Effect</th>
+          <th class="estro-col">Estrogen 💗</th>
+          <th class="prog-col">Progesterone 🌿</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cervical mucus</td><td class="estro-col">Thin, watery, ferning ✓</td><td class="prog-col">Thick, viscid, cellular</td></tr>
+        <tr><td>BBT</td><td class="estro-col">No effect / slight decrease</td><td class="prog-col">↑ 0.5°C (thermogenic)</td></tr>
+        <tr><td>Endometrium</td><td class="estro-col">Proliferation (regeneration)</td><td class="prog-col">Secretory (glycogen storage)</td></tr>
+        <tr><td>Myometrium</td><td class="estro-col">↑ Excitability, ↑ oxytocin sensitivity</td><td class="prog-col">↓ Excitability (quieting)</td></tr>
+        <tr><td>Vaginal epithelium</td><td class="estro-col">Cuboidal → stratified squamous</td><td class="prog-col">No direct effect</td></tr>
+        <tr><td>LH feedback</td><td class="estro-col">Positive (surge) or negative</td><td class="prog-col">Negative only</td></tr>
+        <tr><td>Sodium (Na⁺)</td><td class="estro-col">Slight retention</td><td class="prog-col">Natriuresis (blocks aldosterone)</td></tr>
+        <tr><td>Sperm transport</td><td class="estro-col">Facilitates (thin mucus)</td><td class="prog-col">Blocks (thick mucus)</td></tr>
+        <tr><td>Bone</td><td class="estro-col">Anabolic, closes epiphyses</td><td class="prog-col">Minimal direct effect</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== CYCLE TAB ==================== -->
+<section id="content-cycle" class="tab-content">
+  <h2 class="section-title">📅 Cycle & Ovulation</h2>
+  <p class="section-sub">Detailed breakdown of the uterine cycle, follicular development stages, and clinical signs of ovulation.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px;">🗓️ Uterine (Menstrual) Cycle</h3>
+  <div class="cycle-grid" style="margin-bottom:24px;">
+    <div class="cycle-cell cycle-menstrual" style="background:rgba(244,63,94,0.05);">
+      <h4>🩸 Menstrual Phase</h4>
+      <p>Days 1–5. Corpus luteum degenerates → ↓ E₂ + P₄ → withdrawal of hormonal support → shedding of functional endometrial layer (stratum functionale).</p>
+    </div>
+    <div class="cycle-cell cycle-proliferative" style="background:rgba(14,165,233,0.05);">
+      <h4>🌱 Proliferative Phase</h4>
+      <p>Days 5–14. Estrogen-driven (FSH → follicle growth → E₂). Endometrium regenerates from basal layer. Variable duration — accounts for cycle length variation!</p>
+    </div>
+    <div class="cycle-cell cycle-secretory" style="background:rgba(167,139,250,0.05);">
+      <h4>🌿 Secretory Phase</h4>
+      <p>Days 14–28. Always constant 14 days. Progesterone from corpus luteum → tortuous glands, glycogen + lipid storage. Prepares for implantation. Pregnanediol in urine confirms this phase.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:12px;">🌸 Follicular Development Stages</h3>
+  <div class="follicle-stages">
+    <div class="follicle-stage">
+      <div class="follicle-icon">🥚</div>
+      <div class="follicle-name">Primordial Follicle</div>
+      <div class="follicle-detail">400,000 at puberty. Primary oocyte arrested in prophase I. Single layer flat granulosa cells. Fixed pool — no regeneration!</div>
+    </div>
+    <div class="follicle-arrow">→</div>
+    <div class="follicle-stage">
+      <div class="follicle-icon">🌱</div>
+      <div class="follicle-name">Primary Follicle</div>
+      <div class="follicle-detail">Granulosa cells proliferate (cuboidal). Zona pellucida forms around oocyte. No antrum yet.</div>
+    </div>
+    <div class="follicle-arrow">→</div>
+    <div class="follicle-stage">
+      <div class="follicle-icon">💧</div>
+      <div class="follicle-name">Secondary/Antral Follicle</div>
+      <div class="follicle-detail">Theca interna + externa differentiate. Antrum forms (follicular fluid rich in estrogen secreted by granulosa cells). FSH + LH both active.</div>
+    </div>
+    <div class="follicle-arrow">→</div>
+    <div class="follicle-stage">
+      <div class="follicle-icon">🌕</div>
+      <div class="follicle-name">Mature Graafian Follicle</div>
+      <div class="follicle-detail">Large antrum. Oocyte on cumulus oophorus. Ready for LH surge → ovulation. Highest estrogen output.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin:24px 0 12px;">💥 Ovulation — Clinical Signs</h3>
+  <div class="ovulation-signs">
+    <div class="sign-card">
+      <div class="sign-icon">🌡️</div>
+      <div class="sign-text">
+        <h5>BBT Rise (+0.5°C)</h5>
+        <p>Progesterone thermogenic effect on hypothalamus after corpus luteum forms. Persists days 15–26.</p>
+      </div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">🔬</div>
+      <div class="sign-text">
+        <h5>Ferning Disappears</h5>
+        <p>Pre-ovulation: ferning present (estrogen). Post-ovulation: ferning absent (progesterone thickens mucus).</p>
+      </div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">💊</div>
+      <div class="sign-text">
+        <h5>Pregnanediol in Urine</h5>
+        <p>Urinary metabolite of progesterone. Presence confirms active corpus luteum and ovulation occurred.</p>
+      </div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">🏥</div>
+      <div class="sign-text">
+        <h5>Endometrial Biopsy</h5>
+        <p>Secretory changes (tortuous glands, glycogen) on biopsy from 2nd half of cycle confirm ovulation.</p>
+      </div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">📉</div>
+      <div class="sign-text">
+        <h5>LH Surge Detection</h5>
+        <p>Urine/serum LH surge detectable 24–36h before ovulation. Basis of ovulation predictor kits.</p>
+      </div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-icon">😣</div>
+      <div class="sign-text">
+        <h5>Mittelschmerz</h5>
+        <p>Mid-cycle pelvic pain at time of ovulation. Due to follicular rupture and peritoneal irritation by follicular fluid.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin:24px 0 12px;">🔄 Corpus Luteum: Fate Comparison</h3>
+  <div style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>No Fertilization</th>
+          <th>Fertilization Occurs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Name</td><td>Corpus Luteum of Menstruation</td><td>Corpus Luteum of Pregnancy</td></tr>
+        <tr><td>Duration</td><td>~10 days → degenerates</td><td>Maintained until week 12</td></tr>
+        <tr><td>Maintained by</td><td>LH (short-lived)</td><td>hCG from trophoblast/placenta</td></tr>
+        <tr><td>Fate</td><td>→ Corpus albicans (white scar)</td><td>→ Placenta takes over at week 12</td></tr>
+        <tr><td>Hormone output</td><td>↓ P₄ + E₂ → menstruation</td><td>↑ P₄ + E₂ maintain endometrium</td></tr>
+        <tr><td>Endometrial result</td><td>Shedding (menstruation)</td><td>Decidua (implantation support)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== MNEMONICS TAB ==================== -->
+<section id="content-mnemonics" class="tab-content">
+  <h2 class="section-title">🧩 Mnemonics</h2>
+  <p class="section-sub">Custom memory aids built from the lecture content — click any card to expand.</p>
+  <div id="mnemonics-container"></div>
+</section>
+
+<!-- ==================== INTEGRATION TAB ==================== -->
+<section id="content-integration" class="tab-content">
+  <h2 class="section-title">🔗 Integration — Long Case</h2>
+  <p class="section-sub">A step-by-step analysis of the integrative anovulatory cycle scenario from your notes.</p>
+
+  <div class="integrative-case">
+    <div style="padding:16px 20px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:20px;border-left:4px solid var(--gold);">
+      <div style="font-weight:600;color:var(--gold2);margin-bottom:8px;">📋 Clinical Presentation</div>
+      <p style="font-size:0.875rem;color:var(--text2);line-height:1.8;">
+        A 26-year-old female presents to a fertility clinic. Her charts show <strong style="color:var(--text);">no basal body temperature rise</strong> throughout her 28-day cycle. Cervical mucus remains <strong style="color:var(--text);">thin and shows continuous ferning and spinnbarkeit phenomena</strong> up to day 26. She is trying to conceive.
+      </p>
+    </div>
+
+    <div class="step-flow">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h5>Identify the Process</h5>
+          <p><strong>Anovulatory cycle</strong> — failure to ovulate. Without the LH surge, the Graafian follicle does not rupture. No corpus luteum forms. The ovary continues to secrete estrogen (from follicle) but no progesterone is produced.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h5>Step-by-Step Mechanism</h5>
+          <p>Normal: High E₂ → LH surge → ovulation → corpus luteum → P₄ secretion → BBT rise + cervical mucus thickening (ferning disappears).<br><br>
+          In this patient: Ovulation failed → no corpus luteum → no P₄ → no thermogenic effect → no change in cervical mucus → continuous ferning reflects unopposed estrogen.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h5>Alternative Explanations</h5>
+          <p>① Pituitary failure to generate LH surge (e.g., hypopituitarism).<br>
+          ② Insufficient estrogen to trigger positive feedback (follicle fails to mature sufficiently).<br>
+          ③ LH receptor deficiency on granulosa/theca cells.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h5>Best Investigations</h5>
+          <p>① <strong>Urinary pregnanediol</strong> — absent → confirms no progesterone production → confirms anovulation.<br>
+          ② <strong>Endometrial biopsy</strong> (day 21–22) — proliferative pattern (not secretory) → confirms anovulation.<br>
+          ③ Serum P₄ level on day 21 — if &lt;3 ng/mL → anovulatory.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h5>Consequences of Disruption</h5>
+          <p>Without ovulation, the endometrium remains in a <strong>prolonged proliferative state</strong> driven by unopposed estrogen. This causes:<br>
+          • Infertility (no egg released)<br>
+          • Irregular, unpredictable uterine bleeding<br>
+          • Long-term: endometrial hyperplasia risk (unopposed estrogen)</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h5>Broader Principle</h5>
+          <p>Progesterone is <strong>exclusively</strong> produced by the corpus luteum in the second half of the cycle. Its absence in the luteal phase (days 14–28) is the definitive biochemical marker of anovulation.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h5>Compensatory Mechanisms</h5>
+          <p>The overgrown endometrium eventually outgrows its blood supply → ischemia → unpredictable sloughing (dysfunctional uterine bleeding / DUB). This is NOT organized like normal menstruation — it lacks the progesterone withdrawal trigger, making it irregular and prolonged.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <button class="modal-close" onclick="closeModal()">Close ✕</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const quizData = [
+  {
+    q: "What is the direct physiological trigger for the LH surge that causes ovulation?",
+    opts: ["Negative feedback of progesterone","Positive feedback of sudden high estrogen levels","Constant basal secretion of LH","Drop in FSH levels","Secretion of inhibin"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> A sudden, sustained increase in plasma estrogen (>200 pg/mL for ~48h) switches feedback from negative to positive, triggering the LH surge approximately 2 days before ovulation. This is the most famous example of positive feedback in human physiology. Progesterone inhibits LH; basal LH does not cause a surge; FSH drop and inhibin are unrelated triggers."
+  },
+  {
+    q: "The breakdown of the functional layer of the endometrium during menstruation is primarily caused by:",
+    opts: ["An increase in LH","A sudden spike in estrogen","Withdrawal of estrogen and progesterone support","Release of hCG","Proliferation of the basal layer"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Degeneration of the corpus luteum leads to a sharp drop in both estrogen and progesterone, withdrawing the hormonal support from the endometrium → vasospasm → ischemia → shedding of the functional layer (stratum functionale). The basal layer (stratum basalis) is NOT shed."
+  },
+  {
+    q: "Which enzyme is responsible for converting androgens to estrogen in the ovarian follicle?",
+    opts: ["5-alpha reductase","Lipase","Aromatase","Protease","Lysozyme"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Aromatase (CYP19A1) in granulosa cells converts androgens (androstenedione, testosterone) supplied by theca interna into estrogens (estradiol, estrone). This is FSH-dependent. 5-alpha reductase converts testosterone → DHT (relevant in males)."
+  },
+  {
+    q: "What is the mechanism behind the 0.5°C increase in basal body temperature following ovulation?",
+    opts: ["Increased metabolic rate from estrogen","Thermogenic effect of progesterone on the hypothalamus","Friction from the rupturing follicle","Increased blood flow to the ovaries","LH surge effect on the thyroid"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Progesterone secreted by the newly formed corpus luteum exerts a direct thermogenic effect on the hypothalamic thermostat, raising the basal body temperature by approximately 0.5°C. This temperature rise persists until day ~26, when the corpus luteum degenerates and progesterone falls."
+  },
+  {
+    q: "Which cells are responsible for converting cholesterol into androgens in the developing follicle?",
+    opts: ["Granulosa cells","Theca externa cells","Theca interna cells","The oocyte itself","Luteal cells"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Theca interna cells (stimulated by LH) convert cholesterol → androgens (androstenedione, testosterone). These androgens are then passed to adjacent granulosa cells where aromatase converts them to estrogens (FSH-dependent). Theca externa has a structural (supportive) role only."
+  },
+  {
+    q: "How does progesterone affect the myometrium of the uterus?",
+    opts: ["Increases contractility","Decreases resting membrane potential","Sensitizes it to oxytocin","Exerts an anti-estrogenic effect, decreasing excitability","Promotes extreme hypertrophy"],
+    correct: 3,
+    explain: "<strong>Correct: D.</strong> Progesterone exerts an anti-estrogenic effect on myometrial cells, decreasing excitability and reducing sensitivity to oxytocin. This 'quieting' effect is critical for maintaining pregnancy. Estrogen does the opposite — it increases myometrial excitability and oxytocin receptor expression."
+  },
+  {
+    q: "The corpus luteum of pregnancy is maintained until the 12th week by which hormone?",
+    opts: ["LH","FSH","Progesterone","Estrogen","Human Chorionic Gonadotropin (hCG)"],
+    correct: 4,
+    explain: "<strong>Correct: E.</strong> hCG (human chorionic gonadotropin), secreted by the trophoblast of the implanting embryo and later the placenta, mimics LH and prevents corpus luteum degeneration. The corpus luteum remains the primary source of progesterone and estrogen until week 12, when the placenta takes over (luteo-placental shift)."
+  },
+  {
+    q: "What happens to the cervical mucus under the predominant influence of estrogen?",
+    opts: ["Becomes thick and viscid","Becomes cellular and blocks sperm","Decreases in quantity","Becomes thin, watery, and shows ferning","Loses its spinnbarkeit property"],
+    correct: 3,
+    explain: "<strong>Correct: D.</strong> Estrogen increases cervical mucus quantity and decreases viscosity, increasing salt/water content. This causes the ferning (arborization) pattern on drying and spinnbarkeit (thread-like stretching). These changes FACILITATE sperm transport. All options A, B, C, E describe progesterone's effects on cervical mucus."
+  },
+  {
+    q: "Which metabolic effect is uniquely attributed to LARGE doses of progesterone?",
+    opts: ["Decreasing plasma cholesterol","Natriuresis by blocking aldosterone action","Bone growth via epiphyseal proliferation","Increasing thyroxine-binding globulin","Retaining calcium and phosphate"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Large doses of progesterone produce natriuresis, probably by competitively blocking the action of aldosterone on renal tubular cells, leading to sodium excretion. Options C, D, and E are all metabolic effects of estrogen. This is a classic MCQ trap!"
+  },
+  {
+    q: "At the time of ovulation, the oocyte released is in which stage of meiotic division?",
+    opts: ["Oogonium (mitosis)","Primary oocyte (prophase I)","Haploid secondary oocyte (metaphase II)","Diploid secondary oocyte","Mature ovum (completed meiosis II)"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Just before ovulation, meiosis I completes → primary oocyte (diploid) → secondary oocyte (haploid, 23 chromosomes) + first polar body. The secondary oocyte arrests at metaphase II. It only completes meiosis II if fertilization occurs. So the released oocyte is a haploid secondary oocyte."
+  },
+  {
+    q: "During the early follicular phase, why are FSH levels relatively elevated?",
+    opts: ["Positive feedback from inhibin","Negative feedback from low plasma estrogen levels","Positive feedback from high progesterone","Direct stimulation by LH","Secretion of FSH from theca cells"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> At the beginning of the cycle, estrogen and progesterone are both low (corpus luteum degenerated). Low estrogen removes the negative feedback on the pituitary, allowing FSH (and LH) to rise. As estrogen gradually rises from the growing follicle, it re-establishes negative feedback, lowering FSH — except at the peak where positive feedback triggers the LH surge."
+  },
+  {
+    q: "What causes the appearance of the 'antrum' in a developing secondary follicle?",
+    opts: ["Secretion of estrogen-rich follicular fluid by granulosa cells","Breakdown of the zona pellucida","Infiltration of leukocytes","Deposition of glycogen and lipids","Hypertrophy of the theca externa"],
+    correct: 0,
+    explain: "<strong>Correct: A.</strong> As granulosa cells proliferate and become more active under FSH stimulation, they secrete follicular fluid rich in estrogen, proteins, and electrolytes. This fluid accumulates between granulosa cells and coalesces to form the fluid-filled cavity called the antrum, transitioning the follicle to the antral/secondary stage."
+  },
+  {
+    q: "How does estrogen affect vaginal epithelium?",
+    opts: ["Converts it to simple squamous epithelium","Converts it from cuboidal to stratified squamous epithelium","Prevents glycogen deposition","Decreases vaginal acidity","Decreases mucosal vascularity"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Estrogen converts the vaginal epithelium from a simple/cuboidal to a thick stratified squamous epithelium, making it more resistant to trauma and infection. Estrogen also INCREASES glycogen deposition; bacteria convert glycogen to lactic acid, INCREASING acidity (↓ pH), which is protective against infection."
+  },
+  {
+    q: "The luteal phase of the ovarian cycle coincides with which phase of the uterine cycle?",
+    opts: ["Menstrual phase","Proliferative phase","Secretory phase","Follicular phase","Regenerative phase"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> The luteal phase (days 14–28 of ovary cycle, driven by the corpus luteum secreting progesterone) coincides exactly with the secretory phase of the uterine cycle (days 14–28, progesterone-driven). Both phases are always 14 days long and are linked by progesterone from the corpus luteum."
+  },
+  {
+    q: "A woman undergoes bilateral oophorectomy at 8 weeks gestation and aborts. What is the most likely explanation?",
+    opts: ["Loss of GnRH secretion","Loss of hCG production by the ovaries","Loss of the corpus luteum, the sole source of progesterone and estrogen before week 12","Loss of FSH and LH stimulation","Inability of the placenta to form adequately"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Before week 12 of pregnancy, the corpus luteum (maintained by hCG) is the sole source of progesterone and estrogen. Removing the ovaries removes the corpus luteum → progesterone drops → endometrium can no longer maintain the decidua → abortion. After week 12, the placenta takes over (luteo-placental shift), and oophorectomy is survivable for the pregnancy."
+  },
+  {
+    q: "A high-dose progesterone-only contraceptive pill prevents ovulation mainly by:",
+    opts: ["Blocking FSH receptors on follicles","Inhibiting GnRH neurons only","Negative feedback decreasing LH secretion + potentiating estrogen inhibition","Directly killing developing follicles","Blocking the antrum formation"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Large doses of progesterone exert negative feedback on both the hypothalamus (↓ GnRH) and anterior pituitary (↓ LH). They also potentiate the inhibitory effects of estrogen. The net result is suppression of the LH surge required for ovulation. The thick cervical mucus is an additional contraceptive mechanism."
+  },
+  {
+    q: "An endometrial biopsy taken on day 22 showing tortuous glands with glycogen confirms activity of which structure?",
+    opts: ["Growing Graafian follicle","Theca interna","Corpus luteum","Placenta","Corpus albicans"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> The secretory phase (day 14–28) is driven exclusively by progesterone from the corpus luteum. Tortuous glands + glycogen/lipid storage = progesterone-driven secretory changes = active corpus luteum. This biopsy confirms that ovulation occurred and the corpus luteum is functional."
+  },
+  {
+    q: "Pregnanediol in the urine is a metabolite of which hormone?",
+    opts: ["Estradiol","FSH","hCG","Progesterone","LH"],
+    correct: 3,
+    explain: "<strong>Correct: D.</strong> Pregnanediol is the urinary metabolite (breakdown product) of progesterone. Its detection in the urine during the second half of the menstrual cycle confirms that ovulation has occurred and the corpus luteum is actively secreting progesterone. It is used clinically as a non-invasive test for ovulation."
+  },
+  {
+    q: "Which phase of the uterine cycle is always constant in duration (14 days) regardless of total cycle length?",
+    opts: ["Menstrual phase","Proliferative phase","Ovulatory phase","Secretory phase","All phases vary equally"],
+    correct: 3,
+    explain: "<strong>Correct: D.</strong> The secretory phase is always 14 days because the corpus luteum has a fixed lifespan (~14 days) in the absence of pregnancy. Variations in cycle length (e.g., 28 vs 35 days) are entirely due to changes in the duration of the proliferative phase — the secretory phase remains constant."
+  },
+  {
+    q: "The primary function of hCG in early pregnancy is to:",
+    opts: ["Stimulate breast development","Maintain the endometrial lining directly","Maintain the corpus luteum as a source of estrogen and progesterone","Suppress FSH and LH from the fetal pituitary","Induce labor contractions"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> The most important function of hCG (secreted by the trophoblast) is to maintain the corpus luteum, preventing its degeneration. The corpus luteum continues to secrete progesterone and estrogen essential for maintaining the endometrium and supporting early pregnancy until the placenta takes over at week 12."
+  },
+  {
+    q: "Spinnbarkeit describes a property of cervical mucus at mid-cycle. What is the underlying mechanism?",
+    opts: ["Progesterone increases mucus molecular weight","Estrogen decreases mucus viscosity by reducing mucin polymer crosslinking and increasing water content","Progesterone denatures mucin proteins","FSH directly acts on cervical glands","LH surge causes mucus crystallization"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Spinnbarkeit (stretchability/thread-forming) is caused by estrogen's action on cervical mucus: it increases water content and reduces viscosity by decreasing crosslinking of mucin polymers. This allows the mucus to be stretched into long threads (>6 cm). It peaks at ovulation and facilitates sperm penetration."
+  },
+  {
+    q: "Why do primordial follicles represent a non-renewable resource in females?",
+    opts: ["Oogenesis continues throughout adult life","FSH constantly recruits new follicles from stem cells","All oocytes are formed during fetal development and no new ones are created after birth","Estrogen inhibits new follicle formation","The hypothalamus limits follicle production"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Unlike males (where spermatogenesis is continuous), female oogenesis is complete before birth. All primary oocytes are formed during fetal development and arrested in prophase I of meiosis. No new follicles are created after birth. At puberty, ~400,000 primordial follicles remain. As these deplete over decades, menopause occurs."
+  },
+  {
+    q: "After ovulation, the granulosa and theca cells undergo luteinization to form the corpus luteum. What structural change characterizes this?",
+    opts: ["Cells shrink and lose their nuclei","Cells enlarge and deposit lipid material, acquiring a yellow appearance","Cells become fibrotic and form a scar immediately","Cells migrate to the endometrium","Cells transform into decidual cells"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Under LH influence, the remaining granulosa and theca cells undergo luteinization: they enlarge significantly and accumulate yellow lipid material (carotenoids + lipid droplets containing cholesterol for steroid synthesis). This gives the corpus luteum its characteristic yellow color (hence 'luteum' = yellow in Latin)."
+  },
+  {
+    q: "A patient's cervical mucus sample on day 21 of her cycle shows ferning under the microscope. What does this suggest?",
+    opts: ["Normal secretory phase — progesterone is working","Anovulation — no corpus luteum, no progesterone to thicken mucus","Pregnancy — hCG is stimulating estrogen","Menopause — no more follicles","Normal menstrual phase"],
+    correct: 1,
+    explain: "<strong>Correct: B.</strong> Ferning (arborization pattern) in cervical mucus is caused by estrogen. Normally, ferning DISAPPEARS after ovulation because progesterone (from the corpus luteum) makes the mucus thick and cellular. Persistent ferning on day 21 means no progesterone → no corpus luteum → anovulation. This is consistent with the integrative case in the notes."
+  },
+  {
+    q: "Which description best characterizes the effect of estrogen on bone?",
+    opts: ["Stimulates osteoclasts to cause bone resorption","Causes demineralization leading to osteoporosis","Protein-anabolic effect on bone matrix; promotes growth but closes epiphyseal plates","Has no significant effect on bone","Causes hypercalcemia by increasing calcium absorption only"],
+    correct: 2,
+    explain: "<strong>Correct: C.</strong> Estrogen has a protein-anabolic effect on bone — it promotes bone matrix formation. It also promotes closure of the epiphyseal growth plates at puberty (hence why females are typically shorter than males, as plates close earlier). Post-menopause, falling estrogen leads to accelerated bone loss and osteoporosis risk."
+  }
+];
+
+const flashcardData = [
+  { q: "What are the two cell types and two gonadotropins in the Two-Cell, Two-Gonadotropin Model?", a: "Theca interna cells (LH → androgens) + Granulosa cells (FSH → aromatase → estrogens). LH drives androgen synthesis; FSH drives aromatization to estrogens." },
+  { q: "How many primordial follicles are present at puberty?", a: "~400,000 primordial follicles. This is a fixed, non-renewable pool — females are born with all oocytes already formed (oogenesis complete in fetal life)." },
+  { q: "What is the most famous example of positive feedback in human physiology?", a: "High estrogen → positive feedback on anterior pituitary → LH surge 2 days before ovulation. This is unique because most hormonal feedback is negative." },
+  { q: "What is the constant duration of the secretory phase and why?", a: "Always 14 days — because the corpus luteum has a fixed lifespan of ~14 days. Cycle length variations are due ONLY to changes in the proliferative phase duration." },
+  { q: "What hormone maintains the corpus luteum of pregnancy and until when?", a: "hCG (human chorionic gonadotropin) from the trophoblast/placenta maintains the corpus luteum until week 12, after which the placenta takes over (luteo-placental shift)." },
+  { q: "What oocyte stage is released at ovulation?", a: "A haploid secondary oocyte (23 chromosomes), arrested at metaphase II of meiosis. It only completes meiosis II if fertilization occurs." },
+  { q: "What causes the BBT (basal body temperature) rise of 0.5°C post-ovulation?", a: "Thermogenic effect of progesterone (from the corpus luteum) acting on the hypothalamic thermostat. Absence of this rise suggests anovulation." },
+  { q: "Describe the cervical mucus under estrogen vs. progesterone influence.", a: "Estrogen → thin, watery, ferning + spinnbarkeit (facilitates sperm). Progesterone → thick, viscid, cellular, no ferning (blocks sperm)." },
+  { q: "What is the urinary metabolite of progesterone used to confirm ovulation?", a: "Pregnanediol. Its presence in urine during the second half of the cycle confirms ovulation and active corpus luteum function." },
+  { q: "What endometrial changes occur in the secretory phase?", a: "Progesterone-driven: glands become tortuous, store glycogen and lipids, endometrium thickens. Prepares uterus for embryo implantation." },
+  { q: "Why does anovulation cause persistent ferning on day 21?", a: "No ovulation → no corpus luteum → no progesterone → unopposed estrogen keeps mucus thin and shows ferning. Normally, progesterone abolishes ferning after day 14." },
+  { q: "What happens to the corpus luteum if no fertilization occurs?", a: "It degenerates after ~10 days → corpus albicans (white scar) → progesterone/estrogen fall → endometrial shedding (menstruation)." },
+  { q: "How does progesterone affect the myometrium?", a: "Anti-estrogenic effect — decreases myometrial excitability and oxytocin sensitivity. Keeps the uterus quiet during pregnancy." },
+  { q: "What is the unique metabolic effect of large doses of progesterone on the kidney?", a: "Natriuresis — blocks aldosterone action on renal tubules, causing sodium excretion. (All other listed metabolic effects belong to estrogen.)" },
+  { q: "What structural change defines the transition from primary to secondary follicle?", a: "Formation of the antrum — a fluid-filled cavity from follicular fluid (rich in estrogen) secreted by proliferating granulosa cells. Theca interna also differentiates at this stage." },
+  { q: "What are the four key clinical signs of ovulation?", a: "① BBT rise 0.5°C, ② Ferning disappears from cervical mucus, ③ Pregnanediol detected in urine, ④ Secretory changes on endometrial biopsy (+ LH surge detection, Mittelschmerz)." },
+  { q: "What is the effect of estrogen on vaginal epithelium?", a: "Converts cuboidal epithelium → stratified squamous epithelium. Increases glycogen → lactic acid production → ↓ pH (acidic vaginal environment, protective)." },
+  { q: "Describe the proliferative phase of the uterine cycle.", a: "Days 5–14, estrogen-driven. The functional layer of the endometrium regenerates from the basal layer. Duration varies (accounts for cycle length differences)." },
+  { q: "At what point does estrogen switch from negative to positive feedback on the pituitary?", a: "When estrogen rises SHARPLY and is sustained at high levels for ~48 hours. Below this threshold = negative feedback (inhibits FSH/LH). Above it = positive feedback (triggers LH surge)." },
+  { q: "Why does oophorectomy at 8 weeks cause abortion but not at 14 weeks?", a: "Before week 12: corpus luteum is the sole source of P₄/E₂. Removing ovaries = loss of corpus luteum = abortion. After week 12: placenta has taken over (luteo-placental shift) and maintains the pregnancy." },
+  { q: "What is Spinnbarkeit and what causes it?", a: "The ability of mid-cycle cervical mucus to form a long thread (>6 cm). Caused by estrogen-induced decrease in mucus viscosity (↑ water, ↓ mucin crosslinks). Peaks at ovulation." },
+  { q: "How does estrogen affect the feedback on LH throughout the cycle?", a: "Early cycle: low E₂ → negative feedback (keeps LH moderate). Rising E₂ mid-cycle: initially still negative. High sustained E₂ pre-ovulation: POSITIVE feedback → massive LH surge → ovulation." }
+];
+
+const casesData = [
+  {
+    title: "The Mystery of the Persistent Fern",
+    badge: "Anovulation",
+    vignette: "A 28-year-old woman is trying to conceive and has been tracking her cervical mucus for 3 months. She notes that her mucus shows continuous thin, watery secretion with a feather-like crystal pattern under the microscope from day 5 all the way to day 25 of her 28-day cycles. She also reports that her thermometer shows no variation in temperature throughout the cycle. Her periods are irregular and sometimes very heavy.",
+    questions: [
+      {
+        q: "Q1. What clinical phenomenon is described by the 'feather-like crystal pattern' on drying, and what hormone primarily drives it?",
+        a: "<strong>Ferning (arborization).</strong> When cervical mucus high in salt (NaCl) content is allowed to dry on a glass slide, the sodium chloride crystallizes in a branching, fern-like pattern. This is driven by <strong>estrogen</strong>, which increases the salt and water content of cervical mucus while decreasing its viscosity. This is called the 'ferning phenomenon.'"
+      },
+      {
+        q: "Q2. What does the absence of a BBT rise and persistence of ferning to day 25 indicate about this woman's cycle?",
+        a: "<strong>Anovulation.</strong> In a normal cycle: Ovulation → corpus luteum forms → secretes progesterone → ① BBT rises 0.5°C and ② progesterone makes cervical mucus thick and cellular, ABOLISHING the ferning pattern. In this patient, neither change occurs → no corpus luteum formed → no progesterone → anovulatory cycle with unopposed estrogen."
+      },
+      {
+        q: "Q3. What is the best single investigation to confirm anovulation, and what result would you expect?",
+        a: "<strong>Urinary pregnanediol (progesterone metabolite)</strong> on day 21 of the cycle. Expected result: <strong>absent/undetectable</strong> — because no corpus luteum means no progesterone production, and no pregnanediol in the urine. Alternatively, a serum progesterone <3 ng/mL on day 21 also confirms anovulation. An endometrial biopsy would show a proliferative (not secretory) pattern."
+      },
+      {
+        q: "Q4. Explain the mechanism behind her irregular, heavy periods.",
+        a: "Without ovulation and corpus luteum, the endometrium is exposed to <strong>unopposed estrogen</strong>, leading to a prolonged proliferative state. The endometrium hypertrophies but eventually outgrows its blood supply. Without the organized progesterone withdrawal that triggers normal menstruation, shedding occurs irregularly and unpredictably — leading to <strong>Dysfunctional Uterine Bleeding (DUB)</strong> that is irregular and often heavy."
+      }
+    ]
+  },
+  {
+    title: "The Pregnancy Complication",
+    badge: "Corpus Luteum of Pregnancy",
+    vignette: "A 24-year-old woman, 8 weeks pregnant with her first child, requires emergency surgery for acute appendicitis. During the laparoscopic procedure, both ovaries are accidentally removed due to severe adhesions. Four days post-operatively, she develops vaginal bleeding, cramping, and ultimately delivers non-viable products of conception, confirming pregnancy loss.",
+    questions: [
+      {
+        q: "Q1. What was the critical physiological role of the ovaries at 8 weeks gestation?",
+        a: "At 8 weeks, the <strong>corpus luteum of pregnancy</strong> (within the ovary) is the <strong>sole source of progesterone and estrogen</strong>. Maintained by hCG from the trophoblast, it secretes progesterone to: ① Maintain the decidua (gestational endometrium), ② Suppress myometrial contractions, ③ Support embryonic development. The placenta cannot yet take over (it does so at week 12 — the 'luteo-placental shift')."
+      },
+      {
+        q: "Q2. What hormone maintains the corpus luteum of pregnancy, and until when?",
+        a: "<strong>hCG (Human Chorionic Gonadotropin)</strong>, secreted by the syncytiotrophoblast of the implanting embryo (and later the placenta). It mimics LH, binding to LH receptors on the corpus luteum and preventing its degeneration. The corpus luteum is maintained until approximately <strong>week 12</strong>, after which the fully developed placenta produces sufficient progesterone and estrogen on its own."
+      },
+      {
+        q: "Q3. Would the same outcome have occurred if the surgery was at 16 weeks? Explain.",
+        a: "<strong>No</strong> — oophorectomy after week 12 would NOT cause abortion. By week 16, the <strong>luteo-placental shift</strong> has occurred. The placenta is now fully capable of synthesizing progesterone (from maternal cholesterol) and estrogen (via fetal adrenal DHEA-S as precursor). The corpus luteum is no longer needed. Progesterone levels would remain adequate to maintain the pregnancy."
+      }
+    ]
+  },
+  {
+    title: "The Contraceptive Mechanism",
+    badge: "OCP Physiology",
+    vignette: "A 22-year-old woman starts a high-dose progesterone-only oral contraceptive pill (mini-pill). Her gynecologist explains that it works through multiple mechanisms. After 3 months of use, she reports absent periods and wants to understand the physiology.",
+    questions: [
+      {
+        q: "Q1. Explain the primary mechanism by which high-dose progesterone prevents ovulation.",
+        a: "<strong>Negative feedback on the hypothalamic-pituitary axis:</strong> ① Progesterone inhibits GnRH secretion from the hypothalamus (↓ pulse frequency and amplitude). ② Progesterone acts directly on the anterior pituitary to decrease LH secretion. ③ Progesterone potentiates the inhibitory effect of any remaining estrogen on LH. Net result: the <strong>LH surge is suppressed</strong> → no ovulation occurs."
+      },
+      {
+        q: "Q2. What additional contraceptive mechanisms does high-dose progesterone provide?",
+        a: "<strong>Three additional mechanisms:</strong> ① <strong>Thick cervical mucus</strong> — progesterone makes mucus viscid, cellular, and impermeable to sperm (abolishes spinnbarkeit and ferning). ② <strong>Endometrial changes</strong> — even if ovulation and fertilization occurred, the endometrium becomes non-receptive to implantation (altered secretory pattern). ③ <strong>↓ Tubal motility</strong> — progesterone may impair egg transport in the fallopian tube."
+      },
+      {
+        q: "Q3. Why might this patient have absent periods (amenorrhea)?",
+        a: "Continuous high-dose progesterone keeps the endometrium in an atrophic/decidualized state. Without the cyclical rise and fall of estrogen and progesterone, there is no organized endometrial proliferation followed by progesterone withdrawal. Therefore, there is no coordinated endometrial shedding and no menstrual bleeding — resulting in <strong>progesterone-induced amenorrhea</strong>. This is a normal, expected effect of the mini-pill."
+      }
+    ]
+  },
+  {
+    title: "The Temperature Tracker",
+    badge: "BBT & Progesterone",
+    vignette: "A 30-year-old woman charts her basal body temperature (BBT) daily for fertility awareness. Her chart for the past cycle shows: Days 1–14: temperature stable at 36.4°C. Day 15: temperature rises to 36.9°C. Days 15–26: temperature remains at ~36.9°C. Day 27: temperature drops back to 36.4°C. Day 28: menstruation begins.",
+    questions: [
+      {
+        q: "Q1. What physiological event occurred on day 14-15, and what hormone drives the temperature rise?",
+        a: "<strong>Ovulation</strong> occurred around day 14. The temperature rise on day 15 is due to the <strong>thermogenic effect of progesterone</strong> from the newly formed corpus luteum acting on the hypothalamic thermoregulatory center, raising the set-point by approximately 0.5°C. This is a key sign confirming that ovulation has occurred."
+      },
+      {
+        q: "Q2. Why does the temperature fall on day 27?",
+        a: "The corpus luteum has a fixed lifespan of ~14 days (in absence of hCG). As it degenerates (corpus luteum of menstruation), <strong>progesterone levels fall sharply</strong>. Loss of the thermogenic stimulus → hypothalamic set-point returns to baseline → BBT falls. The simultaneous withdrawal of both progesterone and estrogen triggers endometrial shedding (menstruation on day 28)."
+      },
+      {
+        q: "Q3. If this woman were pregnant, how would the BBT chart differ?",
+        a: "If fertilization and implantation occurred, hCG from the trophoblast would <strong>maintain the corpus luteum</strong>. Progesterone would continue to be secreted → the <strong>BBT would remain elevated</strong> (not fall on day 27). A sustained temperature elevation beyond the expected 14-day luteal phase duration is one of the earliest indirect signs of pregnancy detected by BBT charting."
+      }
+    ]
+  },
+  {
+    title: "The Mid-Cycle Surge",
+    badge: "Estrogen & LH Surge",
+    vignette: "A researcher measures plasma hormone levels every 2 hours in a volunteer with a regular 28-day cycle. On day 12, they observe: Estradiol: 280 pg/mL (peak). LH: rapidly rising to 100 mIU/mL (surge). FSH: moderate rise accompanying LH. Progesterone: still low (0.5 ng/mL). By day 14, the volunteer reports mild left-sided pelvic pain (Mittelschmerz).",
+    questions: [
+      {
+        q: "Q1. What type of feedback is responsible for the LH surge observed on day 12, and why is this unusual?",
+        a: "This is <strong>positive feedback</strong> — an unusual phenomenon in endocrinology where a rising hormone (estradiol, >200 pg/mL sustained for ~48h) STIMULATES further secretion of its regulating hormone (LH) rather than inhibiting it. This is <strong>the most famous example of positive feedback in human physiology</strong>. Normally, estradiol exerts negative feedback on LH; this switch to positive feedback occurs only at high sustained estradiol concentrations."
+      },
+      {
+        q: "Q2. What will happen to the developing Graafian follicle in response to the LH surge?",
+        a: "The LH surge triggers: ① <strong>Resumption and completion of meiosis I</strong> in the primary oocyte → formation of secondary oocyte + first polar body. ② Increased prostaglandin and proteolytic enzyme secretion causing follicular wall thinning and rupture. ③ Ovulation: <strong>release of the secondary oocyte</strong> (surrounded by cumulus oophorus) into the peritoneal cavity ~36-40 hours after the LH surge peak. The remaining granulosa and theca cells then undergo luteinization."
+      },
+      {
+        q: "Q3. What is Mittelschmerz and what causes it?",
+        a: "<strong>Mittelschmerz</strong> (German: 'middle pain') is mid-cycle pelvic pain occurring around ovulation. Caused by: ① <strong>Follicular rupture</strong> with release of follicular fluid + blood into the peritoneal cavity → peritoneal irritation. ② Prostaglandins (which drive follicular rupture) can also cause smooth muscle contractions (cramp-like pain). It is typically unilateral (one ovary ovulates) and self-limiting, lasting hours to 1-2 days."
+      }
+    ]
+  }
+];
+
+const mnemonicsData = [
+  {
+    word: "FERTILE",
+    title: "Estrogen Actions",
+    emoji: "💗",
+    items: [
+      { l: "F", strong: "Follicle growth", detail: "Stimulates follicular development and granulosa cell proliferation" },
+      { l: "E", strong: "Estrogen LH surge", detail: "Positive feedback on anterior pituitary → LH surge (most famous +ve feedback!)" },
+      { l: "R", strong: "Regenerates endometrium", detail: "Proliferative phase — rebuilds functional layer from basal layer" },
+      { l: "T", strong: "Thin cervical mucus", detail: "Ferning + spinnbarkeit — facilitates sperm transport at ovulation" },
+      { l: "I", strong: "Increases vaginal acidity", detail: "Glycogen → lactic acid → ↓ pH (protective, stratified squamous epithelium)" },
+      { l: "L", strong: "Lipid/protein anabolic", detail: "Bone matrix anabolic; increases plasma proteins (TBG, SHBG, ceruloplasmin)" },
+      { l: "E", strong: "Epiphyseal closure", detail: "Promotes closure of growth plates — explains shorter female stature at puberty" }
+    ]
+  },
+  {
+    word: "PROGESTA",
+    title: "Progesterone Actions",
+    emoji: "🌿",
+    items: [
+      { l: "P", strong: "Prepares endometrium (secretory)", detail: "Tortuous glands, glycogen + lipid storage for implantation" },
+      { l: "R", strong: "Raises BBT by 0.5°C", detail: "Thermogenic effect on hypothalamic thermostat — sign of ovulation" },
+      { l: "O", strong: "OCP mechanism (inhibits LH surge)", detail: "Negative feedback + potentiates estrogen inhibition → no LH surge" },
+      { l: "G", strong: "Gooey (thick) cervical mucus", detail: "Viscid, cellular, impenetrable to sperm — abolishes ferning" },
+      { l: "E", strong: "Excitability of myometrium ↓", detail: "Anti-estrogenic; quiets uterus — essential for maintaining pregnancy" },
+      { l: "S", strong: "Sodium excretion (natriuresis)", detail: "Large doses block aldosterone → natriuresis (classic MCQ trap!)" },
+      { l: "T", strong: "Temperature-regulated by hypothalamus", detail: "Thermogenic = acts on anterior hypothalamus thermoregulatory center" },
+      { l: "A", strong: "Alone produces no LH surge", detail: "Only negative feedback; positive feedback is exclusively an estrogen action" }
+    ]
+  },
+  {
+    word: "COPS",
+    title: "Corpus Luteum Basics",
+    emoji: "🌕",
+    items: [
+      { l: "C", strong: "Corpus luteum = yellow body", detail: "Luteum = Latin for yellow; due to lipid/carotenoid deposits in luteinized cells" },
+      { l: "O", strong: "Only source of P₄ before week 12", detail: "Essential until luteo-placental shift; oophorectomy before wk12 causes abortion" },
+      { l: "P", strong: "Pregnancy maintained by hCG", detail: "hCG mimics LH → maintains CL of pregnancy until placenta takes over" },
+      { l: "S", strong: "Survives 10 days without pregnancy", detail: "CL of menstruation degenerates in 10 days → corpus albicans → P₄ falls → menstruation" }
+    ]
+  },
+  {
+    word: "FLAMES",
+    title: "Signs of Ovulation",
+    emoji: "💥",
+    items: [
+      { l: "F", strong: "Ferning disappears", detail: "Progesterone thickens mucus — ferning abolished post-ovulation" },
+      { l: "L", strong: "LH surge detectable", detail: "Urine/serum LH surge 24–36h before ovulation (ovulation predictor kits)" },
+      { l: "A", strong: "Abdominal pain (Mittelschmerz)", detail: "Mid-cycle unilateral pain from follicular rupture + peritoneal irritation" },
+      { l: "M", strong: "Mucus changes (thick + opaque)", detail: "Progesterone converts thin elastic mucus → viscid, cellular, impermeable" },
+      { l: "E", strong: "Endometrial biopsy: secretory pattern", detail: "Tortuous glands + glycogen on day 21–22 biopsy confirms ovulation" },
+      { l: "S", strong: "Slight rise in BBT 0.5°C", detail: "Thermogenic progesterone from corpus luteum, persists days 15–26" }
+    ]
+  },
+  {
+    word: "GRAAF",
+    title: "Follicle Development Stages",
+    emoji: "🌸",
+    items: [
+      { l: "G", strong: "Granulosa cells proliferate (Primary follicle)", detail: "Flat→cuboidal granulosa cells, zona pellucida forms, no antrum yet" },
+      { l: "R", strong: "Roster of theca cells forms (Secondary follicle)", detail: "Theca interna (LH-responsive, androgen-producing) differentiates" },
+      { l: "A", strong: "Antrum appears (Antral follicle)", detail: "Follicular fluid accumulates from granulosa cells; estrogen-rich" },
+      { l: "A", strong: "Aromatase in granulosa (Active synthesis)", detail: "FSH → aromatase converts theca-derived androgens → estrogens" },
+      { l: "F", strong: "Final: Mature Graafian follicle", detail: "Large antrum, oocyte on cumulus oophorus, peak E₂ → LH surge → ovulation" }
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let quizAnswered = new Array(quizData.length).fill(null);
+let quizCorrect = 0, quizWrong = 0, streak = 0;
+let fcFlipped = 0;
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  buildQuiz();
+  buildFlashcards();
+  buildCases();
+  buildMnemonics();
+  updateStats();
+  restoreTab();
+});
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('content-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  localStorage.setItem('repro-tab', id);
+}
+function restoreTab() {
+  const saved = localStorage.getItem('repro-tab');
+  if (saved) switchTab(saved);
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const answered = quizAnswered[qi];
+    const div = document.createElement('div');
+    div.className = 'quiz-question' + (answered !== null ? (answered ? ' correct' : ' wrong') : '');
+    div.id = 'qq-' + qi;
+
+    const opts = q.opts.map((o, oi) => {
+      let cls = 'q-option';
+      if (answered !== null) {
+        if (oi === q.correct) cls += ' correct-ans';
+        else if (oi === answered && answered !== q.correct) cls += ' wrong-ans';
+        cls += ' reveal';
+      }
+      return `<div class="${cls}" onclick="answerQ(${qi}, ${oi})">
+        <div class="opt-letter">${['A','B','C','D','E'][oi]}</div>
+        <span>${o}</span>
+      </div>`;
+    }).join('');
+
+    div.innerHTML = `
+      <div class="q-number">Q${qi+1} of ${quizData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">${opts}</div>
+      <div class="q-explanation ${answered !== null ? 'show' : ''}">${q.explain}</div>
+    `;
+    container.appendChild(div);
+  });
+  updateQuizStats();
+}
+
+function answerQ(qi, oi) {
+  if (quizAnswered[qi] !== null) return;
+  quizAnswered[qi] = oi;
+  const correct = oi === quizData[qi].correct;
+
+  if (correct) {
+    quizCorrect++;
+    streak++;
+  } else {
+    quizWrong++;
+    streak = 0;
+  }
+
+  const card = document.getElementById('qq-' + qi);
+  card.className = 'quiz-question ' + (correct ? 'correct' : 'wrong');
+  card.querySelector('.q-explanation').classList.add('show');
+  card.classList.add(correct ? 'anim-correct' : 'anim-wrong');
+  setTimeout(() => card.classList.remove('anim-correct', 'anim-wrong'), 500);
+
+  // Update options
+  card.querySelectorAll('.q-option').forEach((el, idx) => {
+    el.classList.add('reveal');
+    if (idx === quizData[qi].correct) el.classList.add('correct-ans');
+    else if (idx === oi && !correct) el.classList.add('wrong-ans');
+  });
+
+  saveState();
+  updateQuizStats();
+  updateStats();
+}
+
+function updateQuizStats() {
+  const answered = quizAnswered.filter(a => a !== null).length;
+  document.getElementById('quiz-progress-bar').style.width = (answered / quizData.length * 100) + '%';
+  document.getElementById('q-progress-text').textContent = `${answered} / ${quizData.length}`;
+  document.getElementById('score-correct').textContent = quizCorrect;
+  document.getElementById('score-wrong').textContent = quizWrong;
+  document.getElementById('score-streak').textContent = streak;
+}
+
+function resetQuiz() {
+  quizAnswered = new Array(quizData.length).fill(null);
+  quizCorrect = 0; quizWrong = 0; streak = 0;
+  saveState();
+  buildQuiz();
+  updateStats();
+}
+
+function scrollToFirst() {
+  document.getElementById('qq-0').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+function buildFlashcards() {
+  const grid = document.getElementById('fc-grid');
+  grid.innerHTML = '';
+  fcFlipped = 0;
+  flashcardData.forEach((fc, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flashcard-wrapper';
+    wrapper.id = 'fc-' + i;
+    wrapper.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">
+          <div class="card-label">Question</div>
+          <div class="card-q">${fc.q}</div>
+          <div class="flip-hint">👆 Tap to flip</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="card-label">Answer</div>
+          <div class="card-a">${fc.a}</div>
+        </div>
+      </div>
+    `;
+    wrapper.addEventListener('click', () => {
+      const wasFlipped = wrapper.classList.contains('flipped');
+      wrapper.classList.toggle('flipped');
+      if (!wasFlipped) { fcFlipped++; }
+      else { fcFlipped = Math.max(0, fcFlipped-1); }
+      document.getElementById('fc-flipped').textContent = fcFlipped;
+      document.getElementById('hdr-cards').textContent = fcFlipped + '/' + flashcardData.length;
+    });
+    grid.appendChild(wrapper);
+  });
+}
+
+function resetFlashcards() {
+  document.querySelectorAll('.flashcard-wrapper').forEach(w => w.classList.remove('flipped'));
+  fcFlipped = 0;
+  document.getElementById('fc-flipped').textContent = '0';
+  document.getElementById('hdr-cards').textContent = '0/' + flashcardData.length;
+}
+
+// ============================================================
+// CASES
+// ============================================================
+function buildCases() {
+  const container = document.getElementById('cases-container');
+  container.innerHTML = '';
+  casesData.forEach((c, ci) => {
+    const qs = c.questions.map((q, qi) => `
+      <div class="case-q">
+        <div class="case-q-text">${q.q}</div>
+        <button class="reveal-btn" onclick="revealCaseAnswer(${ci}, ${qi}, this)">🔍 Reveal Answer</button>
+        <div class="case-answer" id="case-${ci}-${qi}">${q.a}</div>
+      </div>
+    `).join('');
+
+    const div = document.createElement('div');
+    div.className = 'case-card';
+    div.innerHTML = `
+      <div class="case-header">
+        <div>
+          <div style="margin-bottom:8px;"><span class="case-badge">${c.badge}</span></div>
+          <div class="case-title">${c.title}</div>
+        </div>
+      </div>
+      <div class="case-vignette">${c.vignette}</div>
+      <div class="case-questions">
+        <div style="font-size:0.8rem;color:var(--text3);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Questions</div>
+        ${qs}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function revealCaseAnswer(ci, qi, btn) {
+  const el = document.getElementById(`case-${ci}-${qi}`);
+  if (el.classList.contains('show')) {
+    el.classList.remove('show');
+    btn.textContent = '🔍 Reveal Answer';
+  } else {
+    el.classList.add('show');
+    btn.textContent = '🙈 Hide Answer';
+  }
+}
+
+// ============================================================
+// MNEMONICS
+// ============================================================
+function buildMnemonics() {
+  const container = document.getElementById('mnemonics-container');
+  container.innerHTML = '';
+  mnemonicsData.forEach((m, mi) => {
+    const letters = m.items.map(item => `
+      <div class="mnemonic-letter">
+        <div class="letter-char">${item.l}</div>
+        <div class="letter-content">
+          <strong>${item.strong}</strong><br>
+          <span>${item.detail}</span>
+        </div>
+      </div>
+    `).join('');
+
+    const div = document.createElement('div');
+    div.className = 'mnemonic-card';
+    div.innerHTML = `
+      <div class="mnemonic-header" onclick="toggleMnemonic(${mi})">
+        <div class="mnemonic-title">
+          <span>${m.emoji}</span>
+          <span class="mnemonic-word">${m.word}</span>
+          <span style="font-size:0.82rem;color:var(--text2);font-weight:400;">— ${m.title}</span>
+        </div>
+        <span id="mnem-arrow-${mi}" style="color:var(--text3);">▼</span>
+      </div>
+      <div class="mnemonic-body" id="mnem-body-${mi}">
+        ${letters}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function toggleMnemonic(mi) {
+  const body = document.getElementById('mnem-body-' + mi);
+  const arrow = document.getElementById('mnem-arrow-' + mi);
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function searchOverview(val) {
+  const cards = document.querySelectorAll('#overview-concepts .key-concept-card');
+  val = val.toLowerCase();
+  cards.forEach(c => {
+    const text = (c.textContent + c.dataset.search).toLowerCase();
+    c.style.display = (!val || text.includes(val)) ? '' : 'none';
+  });
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function updateStats() {
+  const answered = quizAnswered.filter(a => a !== null).length;
+  const pct = Math.round(answered / quizData.length * 100);
+  document.getElementById('hdr-score').textContent = `${quizCorrect}/${answered}`;
+  document.getElementById('hdr-streak').textContent = streak;
+  document.getElementById('hdr-progress').textContent = pct + '%';
+}
+
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
+function saveState() {
+  try {
+    localStorage.setItem('repro-quiz', JSON.stringify(quizAnswered));
+    localStorage.setItem('repro-scores', JSON.stringify({ quizCorrect, quizWrong, streak }));
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const qa = localStorage.getItem('repro-quiz');
+    const sc = localStorage.getItem('repro-scores');
+    if (qa) quizAnswered = JSON.parse(qa);
+    if (sc) {
+      const s = JSON.parse(sc);
+      quizCorrect = s.quizCorrect || 0;
+      quizWrong = s.quizWrong || 0;
+      streak = s.streak || 0;
+    }
+  } catch(e) {}
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function showModal(title, body) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

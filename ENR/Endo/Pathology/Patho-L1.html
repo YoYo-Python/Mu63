@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Thyroid Pathology — Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070d1a;
+  --surface: #0d1728;
+  --surface2: #132035;
+  --surface3: #1a2a42;
+  --border: rgba(100,180,255,0.12);
+  --border2: rgba(100,180,255,0.22);
+  --accent: #38bdf8;
+  --accent2: #0ea5e9;
+  --accent3: #7dd3fc;
+  --gold: #f59e0b;
+  --gold2: #fcd34d;
+  --red: #f87171;
+  --green: #4ade80;
+  --purple: #c084fc;
+  --teal: #2dd4bf;
+  --text: #e2eeff;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --radius: 14px;
+  --radius2: 20px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --glow: 0 0 30px rgba(56,189,248,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden}
+
+/* ── BG BLOBS ── */
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.07}
+.blob1{width:600px;height:600px;background:radial-gradient(circle,#38bdf8,transparent);top:-150px;left:-100px;animation:drift1 18s ease-in-out infinite alternate}
+.blob2{width:500px;height:500px;background:radial-gradient(circle,#c084fc,transparent);bottom:-100px;right:-100px;animation:drift2 22s ease-in-out infinite alternate}
+.blob3{width:400px;height:400px;background:radial-gradient(circle,#2dd4bf,transparent);top:40%;left:40%;animation:drift3 15s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(80px,60px)}}
+@keyframes drift2{to{transform:translate(-60px,-80px)}}
+@keyframes drift3{to{transform:translate(-40px,50px)}}
+
+/* ── LAYOUT ── */
+#app{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 20px 80px}
+
+/* ── HEADER ── */
+header{padding:40px 0 24px;text-align:center}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(56,189,248,0.1);border:1px solid var(--border2);border-radius:100px;padding:6px 18px;font-size:12px;color:var(--accent3);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:20px}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:800;background:linear-gradient(135deg,#e2eeff 0%,#38bdf8 50%,#7dd3fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:12px}
+.header-sub{color:var(--text2);font-size:16px;font-weight:300;max-width:560px;margin:0 auto 28px}
+
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.stat-pill span{color:var(--accent);font-weight:600;font-family:'DM Mono',monospace;font-size:14px}
+.stat-pill.streak span{color:var(--gold)}
+.stat-pill.score span{color:var(--green)}
+
+/* ── SEARCH ── */
+.search-wrap{max-width:480px;margin:0 auto 36px;position:relative}
+.search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:100px;padding:12px 20px 12px 48px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:all .25s}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,0.12)}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;font-size:16px}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:32px;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:9px 22px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .22s;white-space:nowrap}
+.tab-btn:hover{border-color:var(--border2);color:var(--text)}
+.tab-btn.active{background:linear-gradient(135deg,var(--accent2),var(--accent));border-color:transparent;color:#fff;box-shadow:0 4px 18px rgba(56,189,248,0.3)}
+
+/* ── PANELS ── */
+.tab-panel{display:none;animation:fadeUp .3s ease}
+.tab-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION TITLE ── */
+.section-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.section-title .tag{background:rgba(56,189,248,0.12);border:1px solid var(--border2);border-radius:100px;padding:3px 14px;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--accent3);letter-spacing:.06em}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:var(--border2);box-shadow:var(--glow)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+
+/* ── OVERVIEW ── */
+.overview-hero{background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);border:1px solid var(--border2);border-radius:var(--radius2);padding:32px;margin-bottom:28px;position:relative;overflow:hidden}
+.overview-hero::after{content:'🦋';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:64px;opacity:0.08}
+.topic-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:8px}
+.tag-hyper{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.3)}
+.tag-hypo{background:rgba(56,189,248,0.12);color:var(--accent3);border:1px solid rgba(56,189,248,0.3)}
+.tag-goiter{background:rgba(245,158,11,0.12);color:var(--gold2);border:1px solid rgba(245,158,11,0.3)}
+.tag-neoplasm{background:rgba(192,132,252,0.12);color:var(--purple);border:1px solid rgba(192,132,252,0.3)}
+.tag-exam{background:rgba(45,212,191,0.12);color:var(--teal);border:1px solid rgba(45,212,191,0.3)}
+.concept-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s;height:100%}
+.concept-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(56,189,248,0.1)}
+.concept-card h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.concept-card p{font-size:13.5px;color:var(--text2);line-height:1.55}
+.exam-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);border-radius:100px;padding:3px 10px;font-size:11px;color:var(--gold);margin-top:10px;font-weight:600}
+
+/* timeline */
+.timeline{position:relative;padding-left:32px;margin-bottom:28px}
+.timeline::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),var(--purple),transparent)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:'';position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.tl-item h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--accent3);margin-bottom:4px}
+.tl-item p{font-size:13.5px;color:var(--text2)}
+
+/* axis diagram */
+.axis-flow{display:flex;align-items:center;gap:0;margin-bottom:28px;flex-wrap:wrap;gap:2px}
+.axis-node{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text);text-align:center;flex:1;min-width:90px}
+.axis-node span{display:block;font-size:11px;color:var(--text3);font-weight:400;margin-top:2px}
+.axis-arrow{color:var(--accent3);font-size:16px;padding:0 4px;flex-shrink:0}
+.axis-neg{color:var(--red);font-size:11px;padding:4px 8px;border:1px dashed rgba(248,113,113,0.3);border-radius:8px;font-style:italic;background:rgba(248,113,113,0.05)}
+
+/* ── QUIZ ── */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.quiz-progress-bar{background:var(--surface2);border-radius:100px;height:8px;margin-bottom:28px;overflow:hidden}
+.quiz-progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s ease;min-width:6px}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;margin-bottom:20px}
+.qcard .qnum{font-size:12px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:10px;letter-spacing:.05em}
+.qcard .qtext{font-size:16px;font-weight:500;color:var(--text);margin-bottom:20px;line-height:1.55}
+.options{display:grid;gap:10px}
+.opt-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:13px 18px;text-align:left;font-family:'DM Sans',sans-serif;font-size:14.5px;color:var(--text2);cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px;line-height:1.45}
+.opt-btn .opt-letter{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent3);min-width:20px;margin-top:1px}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);color:var(--text);background:rgba(56,189,248,0.06)}
+.opt-btn.correct{border-color:var(--green)!important;background:rgba(74,222,128,0.1)!important;color:var(--green)!important;animation:pulse-green .5s ease}
+.opt-btn.wrong{border-color:var(--red)!important;background:rgba(248,113,113,0.1)!important;color:var(--red)!important;animation:shake .4s ease}
+.opt-btn:disabled{cursor:default}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 rgba(74,222,128,0)}50%{box-shadow:0 0 18px rgba(74,222,128,0.35)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.explanation{background:rgba(56,189,248,0.06);border:1px solid var(--border2);border-radius:10px;padding:14px 18px;margin-top:14px;font-size:13.5px;color:var(--text2);display:none}
+.explanation.show{display:block}
+.explanation strong{color:var(--accent3)}
+.quiz-nav-btn{background:var(--accent2);border:none;border-radius:100px;padding:10px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;margin-top:16px}
+.quiz-nav-btn:hover{background:var(--accent);box-shadow:0 4px 16px rgba(56,189,248,0.35)}
+.quiz-nav-btn:disabled{opacity:.4;cursor:default}
+.score-board{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border2);border-radius:var(--radius2);padding:40px;text-align:center;display:none}
+.score-board.show{display:block}
+.big-score{font-family:'Syne',sans-serif;font-size:5rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── FLASHCARDS ── */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.flip-card{height:200px;cursor:pointer;perspective:1000px}
+.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;border-radius:var(--radius2);padding:24px;backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center}
+.flip-front{background:var(--surface);border:1px solid var(--border2)}
+.flip-back{background:linear-gradient(135deg,var(--surface2),var(--surface3));border:1px solid rgba(56,189,248,0.25);transform:rotateY(180deg)}
+.flip-front .fc-q{font-size:15px;font-weight:600;color:var(--text);line-height:1.5}
+.flip-front .fc-tap{font-size:12px;color:var(--text3);margin-top:12px}
+.flip-back .fc-a{font-size:13.5px;color:var(--text2);line-height:1.55}
+.flip-back .fc-a strong{color:var(--accent3)}
+.fc-cat{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+
+/* ── CASES ── */
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;margin-bottom:24px}
+.case-vignette{background:var(--surface2);border-left:3px solid var(--accent2);border-radius:0 10px 10px 0;padding:16px 20px;margin-bottom:20px;font-size:14.5px;line-height:1.65;color:var(--text2)}
+.case-q{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px}
+.reveal-btn{background:transparent;border:1.5px solid var(--accent2);border-radius:100px;padding:9px 22px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;color:var(--accent);cursor:pointer;transition:all .22s}
+.reveal-btn:hover{background:rgba(56,189,248,0.1)}
+.case-answer{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:16px 20px;margin-top:14px;font-size:14px;color:var(--text2);display:none;line-height:1.6}
+.case-answer.show{display:block;animation:fadeUp .3s ease}
+.case-answer strong{color:var(--green)}
+.step-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+
+/* ── PATHOPHYSIOLOGY ── */
+.flow-chart{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:28px}
+.flow-node{background:var(--surface2);border:1.5px solid var(--border2);border-radius:14px;padding:12px 24px;font-size:14px;font-weight:600;color:var(--text);text-align:center;max-width:380px;width:100%;cursor:pointer;transition:all .2s;position:relative}
+.flow-node:hover{border-color:var(--accent);box-shadow:0 0 20px rgba(56,189,248,0.12)}
+.flow-node.highlighted{border-color:var(--gold);background:rgba(245,158,11,0.08);color:var(--gold2)}
+.flow-node .fn-detail{font-size:12px;color:var(--text3);font-weight:400;margin-top:4px;display:none}
+.flow-node.expanded .fn-detail{display:block;color:var(--text2)}
+.flow-arrow-down{color:var(--accent3);font-size:20px;line-height:1;padding:4px 0}
+.path-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:28px}
+.path-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .2s}
+.path-item:hover{border-color:var(--accent);transform:translateY(-2px)}
+.path-item h5{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:6px}
+.path-item p{font-size:13px;color:var(--text2)}
+.path-detail{background:rgba(56,189,248,0.06);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-top:10px;font-size:13px;color:var(--text2);display:none}
+.path-detail.show{display:block}
+
+/* ── DIAGNOSIS ── */
+.dx-table{width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13.5px}
+.dx-table th{background:var(--surface2);color:var(--accent3);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:2px solid var(--border2)}
+.dx-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.dx-table tr:hover td{background:rgba(56,189,248,0.04)}
+.dx-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600;margin:2px}
+.dx-pos{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
+.dx-neg{background:rgba(248,113,113,0.12);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
+.dx-var{background:rgba(56,189,248,0.1);color:var(--accent3);border:1px solid var(--border2)}
+.algo-step{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.algo-num{min-width:34px;height:34px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.algo-content h6{font-weight:700;font-size:14px;margin-bottom:4px;color:var(--text)}
+.algo-content p{font-size:13px;color:var(--text2)}
+
+/* ── TREATMENT ── */
+.tx-section{margin-bottom:28px}
+.tx-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.tx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tx-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.tx-item h6{font-weight:700;font-size:13.5px;margin-bottom:6px}
+.tx-item p{font-size:12.5px;color:var(--text2)}
+.urgent{border-color:rgba(248,113,113,0.3)!important;background:rgba(248,113,113,0.06)!important}
+.urgent h6{color:var(--red)}
+.moderate{border-color:rgba(245,158,11,0.25)!important}
+.moderate h6{color:var(--gold)}
+.routine{border-color:rgba(74,222,128,0.2)!important}
+.routine h6{color:var(--green)}
+
+/* ── MNEMONICS ── */
+.mnem-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;margin-bottom:20px;cursor:pointer;transition:all .2s}
+.mnem-card:hover{border-color:var(--gold);box-shadow:0 0 24px rgba(245,158,11,0.1)}
+.mnem-word{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.mnem-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:12px}
+.mnem-list{list-style:none;display:none}
+.mnem-list.show{display:block;animation:fadeUp .25s ease}
+.mnem-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2);display:flex;gap:10px}
+.mnem-list li:last-child{border:none}
+.mnem-letter{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--gold);min-width:20px}
+
+/* ── UTILITY ── */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px}
+.highlight-box{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:16px 20px;margin-bottom:16px;font-size:14px;color:var(--text2)}
+.highlight-box strong{color:var(--gold2)}
+.tip-box{background:rgba(56,189,248,0.06);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;margin-bottom:12px;font-size:13.5px;color:var(--text2)}
+.tip-box strong{color:var(--accent3)}
+.search-no-results{text-align:center;padding:40px;color:var(--text3);display:none}
+.hidden-search{display:none!important}
+.reset-btn{background:transparent;border:1.5px solid var(--border2);border-radius:100px;padding:8px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent)}
+kbd{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:12px;color:var(--accent3)}
+.chip{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;margin:2px}
+.chip-hy{background:rgba(248,113,113,0.12);color:var(--red)}
+.chip-exam{background:rgba(245,158,11,0.12);color:var(--gold)}
+.chip-pearl{background:rgba(45,212,191,0.12);color:var(--teal)}
+@media(max-width:640px){
+  .axis-flow{flex-direction:column;gap:4px}
+  .axis-arrow{transform:rotate(90deg)}
+  .dx-table{font-size:12px}
+  .dx-table th,.dx-table td{padding:8px 10px}
+}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+<div id="app">
+  <header>
+    <div class="header-badge">🔬 Pathology · Endocrine System</div>
+    <h1>Thyroid Gland Pathology</h1>
+    <p class="header-sub">Comprehensive interactive study platform covering functional disorders, thyroiditis, goiter & neoplasms</p>
+    <div class="stats-bar">
+      <div class="stat-pill">Progress <span id="stat-progress">0%</span></div>
+      <div class="stat-pill score">Quiz Score <span id="stat-score">—</span></div>
+      <div class="stat-pill streak">🔥 Streak <span id="stat-streak">0</span></div>
+      <div class="stat-pill">Cards Flipped <span id="stat-cards">0</span></div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="globalSearch" placeholder="Search any concept, disease, or keyword…" oninput="handleSearch(this.value)">
+    </div>
+  </header>
+
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">🗺️ Overview</button>
+    <button class="tab-btn" onclick="switchTab('quiz',this)">🧪 Quiz Mode</button>
+    <button class="tab-btn" onclick="switchTab('flashcards',this)">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('cases',this)">🏥 Clinical Cases</button>
+    <button class="tab-btn" onclick="switchTab('pathophys',this)">⚙️ Pathophysiology</button>
+    <button class="tab-btn" onclick="switchTab('diagnosis',this)">🔎 Diagnosis</button>
+    <button class="tab-btn" onclick="switchTab('treatment',this)">💊 Treatment</button>
+    <button class="tab-btn" onclick="switchTab('mnemonics',this)">🧠 Mnemonics</button>
+  </nav>
+
+  <!-- ══════════════════════════ OVERVIEW ══════════════════════════ -->
+  <div id="tab-overview" class="tab-panel active">
+    <div class="overview-hero">
+      <div class="topic-tag tag-exam">⭐ HIGH-YIELD MODULE</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:10px">Thyroid Pathology at a Glance</h2>
+      <p style="color:var(--text2);max-width:600px;font-size:15px">From autoimmune hyperthyroidism to malignant neoplasms — master every mechanism, microscopic feature, and exam favourite in one unified platform.</p>
+    </div>
+
+    <div class="section-title">HPT Axis <span class="tag">Regulation</span></div>
+    <div class="axis-flow" style="margin-bottom:28px">
+      <div class="axis-node">Hypothalamus<span>Releases TRH</span></div>
+      <div class="axis-arrow">→</div>
+      <div class="axis-node">Anterior Pituitary<span>Releases TSH</span></div>
+      <div class="axis-arrow">→</div>
+      <div class="axis-node" style="border-color:rgba(56,189,248,0.35)">Thyroid Gland<span>Releases T3 / T4</span></div>
+      <div class="axis-arrow">→</div>
+      <div class="axis-neg">⟵ Negative Feedback on TSH & TRH</div>
+    </div>
+
+    <div class="section-title">Disease Map <span class="tag">4 Major Categories</span></div>
+    <div class="card-grid" id="overview-cards">
+
+      <div class="concept-card search-item" data-keywords="graves disease hyperthyroidism TSI autoantibody TSH receptor diffuse hyperplasia exophthalmos pretibial myxedema">
+        <div class="topic-tag tag-hyper">⬆️ Hyperthyroidism</div>
+        <h4>Graves' Disease</h4>
+        <p>Autoimmune. TSI antibodies activate TSH receptors → unregulated diffuse hyperplasia → excess T3/T4. Triad: Goiter + Exophthalmos + Pretibial myxedema.</p>
+        <div class="exam-badge">⚠️ EXAM: Diffuse & symmetrical enlargement</div>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="hashimoto thyroiditis hypothyroidism CD4 CD8 hurthle cell lymphocytic anti-thyroglobulin anti-peroxidase">
+        <div class="topic-tag tag-hypo">⬇️ Hypothyroidism</div>
+        <h4>Hashimoto Thyroiditis</h4>
+        <p>CD4+ helper T cells recruit CD8+ cytotoxic T cells + B cells → anti-thyroglobulin & anti-TPO antibodies → follicular destruction → primary hypothyroidism.</p>
+        <div class="exam-badge">⚠️ EXAM: 2nd most common cause of hypothyroidism</div>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="de quervain subacute granulomatous thyroiditis viral giant cell granuloma colloid tender">
+        <div class="topic-tag tag-hypo">🦠 Thyroiditis</div>
+        <h4>De Quervain Thyroiditis</h4>
+        <p>Post-viral. Acute follicular destruction → granulomas with giant cells around extravasated colloid. Self-limiting. Tender gland. Preceding URI.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="riedel thyroiditis fibrosclerosis idiopathic stony hard carcinoma mimics compression">
+        <div class="topic-tag tag-hypo">🪨 Thyroiditis</div>
+        <h4>Riedel Thyroiditis</h4>
+        <p>Idiopathic fibrosclerosis → replaces parenchyma with dense fibrosis → stony hard gland mimicking carcinoma. Can compress trachea & esophagus.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="simple goiter iodine deficiency TSH euthyroid diffuse hyperplasia nontoxic">
+        <div class="topic-tag tag-goiter">🔵 Goiter</div>
+        <h4>Simple (Non-toxic) Goiter</h4>
+        <p>Iodine deficiency → low T3/T4 → excess TSH → diffuse follicular hyperplasia. Maintains euthyroid state. "Toxic" = hyperfunction, NOT poisoning.</p>
+        <div class="exam-badge">⚠️ EXAM: Iodine deficiency = #1 cause of hypothyroidism globally</div>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="multinodular goiter cyclic hyperplasia involution fibrosis calcification cyst hemorrhage toxic MNG">
+        <div class="topic-tag tag-goiter">🔵 Goiter</div>
+        <h4>Multinodular Goiter</h4>
+        <p>Cyclic hyperplasia → involution → fibrosis, calcification, hemorrhage, cyst formation → asymmetrical nodular surface. Can become toxic (MNG).</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="follicular adenoma carcinoma capsular vascular invasion encapsulated benign RAS">
+        <div class="topic-tag tag-neoplasm">🔴 Neoplasm</div>
+        <h4>Follicular Adenoma vs. Carcinoma</h4>
+        <p>Both encapsulated & look identical. ONLY diagnosis = capsular +/− vascular invasion in carcinoma. RAS mutation. Hematogenous spread to lung & bone.</p>
+        <div class="exam-badge">⚠️ EXAM: Invasion = Malignant. No invasion = Benign.</div>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="papillary carcinoma RET mutation radiation psammoma bodies nuclear grooving optically clear lymphatic cervical nodes">
+        <div class="topic-tag tag-neoplasm">🔴 Neoplasm</div>
+        <h4>Papillary Carcinoma</h4>
+        <p>Most common thyroid cancer. RET mutation or radiation. Nuclear features: grooving + optically clear "Orphan Annie" nuclei + Psammoma bodies. Lymphatic spread → cervical LN. Best prognosis.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="follicular carcinoma RAS hematogenous lung bone blood vessels">
+        <div class="topic-tag tag-neoplasm">🔴 Neoplasm</div>
+        <h4>Follicular Carcinoma</h4>
+        <p>RAS mutation. Hematogenous spread to lungs and bone. Encapsulated but with capsular/vascular invasion. Intermediate prognosis.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="medullary carcinoma parafollicular C cells calcitonin amyloid RET MEN syndrome familial polygonal">
+        <div class="topic-tag tag-neoplasm">🔴 Neoplasm</div>
+        <h4>Medullary Carcinoma</h4>
+        <p>Parafollicular C-cells. RET oncogene point mutation. Secretes calcitonin → amyloid stroma. Associated with MEN syndromes. Both lymphatic & hematogenous spread.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="anaplastic undifferentiated carcinoma p53 elderly poor prognosis aggressive">
+        <div class="topic-tag tag-neoplasm">🔴 Neoplasm</div>
+        <h4>Anaplastic Carcinoma</h4>
+        <p>Undifferentiated. P53 mutation. Elderly patients. Extremely aggressive. Worst prognosis of all thyroid cancers. Rapid fatal course.</p>
+      </div>
+
+      <div class="concept-card search-item" data-keywords="palpation thyroiditis mechanical trauma vigorous examination granulomatous features">
+        <div class="topic-tag tag-hypo">🤚 Thyroiditis</div>
+        <h4>Palpation Thyroiditis</h4>
+        <p>Vigorous clinical palpation causes mechanical trauma to follicles → morphological changes similar to subacute granulomatous thyroiditis.</p>
+      </div>
+    </div>
+
+    <div class="search-no-results" id="no-results">No concepts found for "<span id="search-term"></span>" — try a different keyword.</div>
+
+    <div class="section-title">Disease Timeline <span class="tag">Pathological Progression</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="grid-2">
+      <div class="card">
+        <div class="section-title" style="font-size:1rem;margin-bottom:14px">Goiter Evolution</div>
+        <div class="timeline">
+          <div class="tl-item"><h5>Stage 1 — Iodine Deficiency</h5><p>↓ T3/T4 → loss of negative feedback → excessive TSH secretion</p></div>
+          <div class="tl-item"><h5>Stage 2 — Diffuse Hyperplasia</h5><p>TSH drives uniform follicular cell hypertrophy & hyperplasia → Simple goiter (euthyroid)</p></div>
+          <div class="tl-item"><h5>Stage 3 — Involution</h5><p>T3/T4 restored → TSH falls → follicles involute with colloid accumulation</p></div>
+          <div class="tl-item"><h5>Stage 4 — Nodule Formation</h5><p>Repeated cycles → fibrosis, hemorrhage, calcification, cysts → multinodular goiter</p></div>
+          <div class="tl-item"><h5>Stage 5 — Toxic MNG</h5><p>Autonomous nodule becomes hyperfunctioning → hyperthyroidism</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:1rem;margin-bottom:14px">Hashimoto Progression</div>
+        <div class="timeline">
+          <div class="tl-item"><h5>Stage 1 — Sensitization</h5><p>CD4+ T cells become sensitized to thyroid antigens (thyroglobulin, TPO)</p></div>
+          <div class="tl-item"><h5>Stage 2 — Recruitment</h5><p>CD4+ cells recruit CD8+ cytotoxic T cells and B lymphocytes</p></div>
+          <div class="tl-item"><h5>Stage 3 — Antibody Production</h5><p>B cells produce anti-thyroglobulin + anti-TPO antibodies</p></div>
+          <div class="tl-item"><h5>Stage 4 — Follicular Destruction</h5><p>Combined T-cell cytotoxicity + antibody-mediated damage → follicle death</p></div>
+          <div class="tl-item"><h5>Stage 5 — Hypothyroidism</h5><p>Hurthle cell metaplasia, lymphoid follicles, atrophy → clinical hypothyroidism</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:20px">
+      <strong>⚠️ Exam Pearl — The Golden Rule of Follicular Lesions:</strong> Follicular Adenoma and Follicular Carcinoma are histologically <em>identical</em> in architecture. The ONLY differentiating criterion is the presence of <strong>capsular invasion</strong> and/or <strong>vascular invasion</strong> — which confirms carcinoma. No invasion = benign adenoma.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ QUIZ ══════════════════════════ -->
+  <div id="tab-quiz" class="tab-panel">
+    <div class="quiz-header">
+      <div class="section-title" style="margin:0">Quiz Mode <span class="tag">25 Questions</span></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span style="font-size:13px;color:var(--text2)" id="quiz-counter">Q <span id="qcur">1</span>/25</span>
+        <button class="reset-btn" onclick="resetQuiz()">↺ Restart</button>
+      </div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-bar" style="width:4%"></div></div>
+
+    <div id="quiz-container"></div>
+
+    <div class="score-board" id="score-board">
+      <div style="font-size:14px;color:var(--text3);margin-bottom:8px;font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase">Final Score</div>
+      <div class="big-score" id="final-score">0</div>
+      <div style="font-size:16px;color:var(--text2);margin-bottom:28px">out of 25 questions</div>
+      <div id="score-msg" style="font-size:15px;color:var(--text2);max-width:360px;margin:0 auto 28px;line-height:1.6"></div>
+      <button class="quiz-nav-btn" onclick="resetQuiz()">🔄 Try Again</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ FLASHCARDS ══════════════════════════ -->
+  <div id="tab-flashcards" class="tab-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+      <div class="section-title" style="margin:0">Flashcards <span class="tag">24 Cards</span></div>
+      <button class="reset-btn" onclick="resetCards()">↺ Reset All</button>
+    </div>
+    <div class="tip-box">💡 Click any card to flip it and reveal the answer. Track how many you've mastered!</div>
+    <div class="fc-grid" id="fc-grid"></div>
+  </div>
+
+  <!-- ══════════════════════════ CLINICAL CASES ══════════════════════════ -->
+  <div id="tab-cases" class="tab-panel">
+    <div class="section-title">Clinical Cases <span class="tag">6 Vignettes</span></div>
+    <div class="tip-box">📋 Read each vignette carefully. Answer the question mentally, then click <kbd>Reveal Answer</kbd> to see the full explanation.</div>
+    <div id="cases-container"></div>
+  </div>
+
+  <!-- ══════════════════════════ PATHOPHYSIOLOGY ══════════════════════════ -->
+  <div id="tab-pathophys" class="tab-panel">
+    <div class="section-title">Pathophysiology Hub <span class="tag">Mechanisms</span></div>
+
+    <div class="section-title" style="font-size:1rem;margin-bottom:14px">Graves' Disease — Mechanism Flow</div>
+    <div class="flow-chart" id="graves-flow"></div>
+
+    <div class="section-title" style="font-size:1rem;margin:24px 0 14px">Key Structural Components <small style="font-size:12px;color:var(--text3);font-weight:400">(Click for details)</small></div>
+    <div class="path-grid" id="path-grid"></div>
+
+    <div class="section-title" style="font-size:1rem;margin:24px 0 14px">Medullary Carcinoma — Mechanism Flow</div>
+    <div class="flow-chart" id="med-flow"></div>
+  </div>
+
+  <!-- ══════════════════════════ DIAGNOSIS ══════════════════════════ -->
+  <div id="tab-diagnosis" class="tab-panel">
+    <div class="section-title">Diagnostic Comparison <span class="tag">Key Features</span></div>
+
+    <div class="tip-box"><strong>Rule:</strong> Follicular Adenoma vs Carcinoma CANNOT be distinguished by FNA alone — only by surgical resection showing invasion.</div>
+
+    <table class="dx-table">
+      <thead>
+        <tr><th>Disease</th><th>Key Macro Finding</th><th>Key Micro Finding</th><th>Invasion</th><th>Spread</th><th>Marker</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Graves' Disease</strong></td><td>Diffuse symmetrical enlargement</td><td>Tall columnar cells, scalloped colloid, lymphoid aggregates</td><td><span class="dx-badge dx-neg">N/A</span></td><td><span class="dx-badge dx-neg">N/A</span></td><td>TSI, ↑↑T3/T4, ↓TSH</td></tr>
+        <tr><td><strong>Hashimoto</strong></td><td>Pale diffuse enlargement → late atrophy</td><td>Hurthle cell metaplasia, dense lymphocytic infiltrate, reactive germinal centres</td><td><span class="dx-badge dx-neg">None</span></td><td><span class="dx-badge dx-neg">N/A</span></td><td>Anti-TPO, Anti-thyroglobulin, ↑TSH</td></tr>
+        <tr><td><strong>De Quervain</strong></td><td>Firm, greyish-white, asymmetrical</td><td>Giant-cell granulomas with central colloid, histiocytes, later fibrosis</td><td><span class="dx-badge dx-neg">None</span></td><td><span class="dx-badge dx-neg">N/A</span></td><td>↑ESR, preceding viral illness</td></tr>
+        <tr><td><strong>Riedel</strong></td><td>Stony hard, fixed, marble-like</td><td>Dense fibrosclerosis replacing parenchyma, minimal inflammation</td><td><span class="dx-badge dx-neg">None</span></td><td><span class="dx-badge dx-neg">N/A</span></td><td>Clinical + imaging; histological fibrosis</td></tr>
+        <tr><td><strong>Follicular Adenoma</strong></td><td>Solitary, encapsulated, uniform</td><td>Microfollicular architecture, intact thick capsule</td><td><span class="dx-badge dx-neg">❌ None</span></td><td><span class="dx-badge dx-neg">None</span></td><td>Intact capsule on resection</td></tr>
+        <tr><td><strong>Follicular Carcinoma</strong></td><td>Solitary, encapsulated (but invasive)</td><td>Same as adenoma BUT capsular/vascular invasion</td><td><span class="dx-badge dx-pos">✅ Yes</span></td><td>Haematogenous (lung, bone)</td><td>RAS mutation; invasion confirmed post-op</td></tr>
+        <tr><td><strong>Papillary Carcinoma</strong></td><td>Often not encapsulated; soft</td><td>Complex papillae, optically clear "Orphan Annie" nuclei, nuclear grooves, Psammoma bodies</td><td><span class="dx-badge dx-var">Lymphatic</span></td><td>Cervical lymph nodes</td><td>RET mutation; excellent prognosis</td></tr>
+        <tr><td><strong>Medullary Carcinoma</strong></td><td>Firm, grey-white; may be bilateral (familial)</td><td>Polygonal C-cells in nests/sheets, amyloid stroma (Congo red +ve)</td><td><span class="dx-badge dx-var">Both</span></td><td>Lymphatic + haematogenous</td><td>Calcitonin (serum), RET germline mutation</td></tr>
+        <tr><td><strong>Anaplastic Carcinoma</strong></td><td>Large, necrotic, aggressive</td><td>Undifferentiated pleomorphic cells, necrosis, high mitotic rate</td><td><span class="dx-badge dx-pos">Extensive</span></td><td>Rapid local + distant</td><td>P53 mutation; worst prognosis</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title" style="font-size:1rem;margin-bottom:16px">Diagnostic Algorithm — Thyroid Nodule Workup</div>
+    <div id="algo-container"></div>
+  </div>
+
+  <!-- ══════════════════════════ TREATMENT ══════════════════════════ -->
+  <div id="tab-treatment" class="tab-panel">
+    <div class="section-title">Treatment Overview <span class="tag">Management</span></div>
+
+    <div class="tx-section">
+      <div class="tx-title">🔴 Graves' Disease (Hyperthyroidism)</div>
+      <div class="tx-grid">
+        <div class="tx-item urgent"><h6>🚨 Thyroid Storm</h6><p>Beta-blockers (propranolol) + PTU + steroids + iodide (Wolff-Chaikoff). ICU admission.</p></div>
+        <div class="tx-item moderate"><h6>Antithyroid Drugs</h6><p>Propylthiouracil (PTU) or Methimazole — block thyroid peroxidase → ↓ hormone synthesis</p></div>
+        <div class="tx-item moderate"><h6>Radioiodine (¹³¹I)</h6><p>Destroys hyperfunctioning tissue. First-line in many patients. May cause hypothyroidism.</p></div>
+        <div class="tx-item routine"><h6>Surgical</h6><p>Subtotal or total thyroidectomy. Used if large goiter, compression, or failed medical therapy.</p></div>
+        <div class="tx-item routine"><h6>Beta-Blockers</h6><p>Propranolol for symptomatic relief (palpitations, tremor, anxiety) while awaiting definitive therapy.</p></div>
+        <div class="tx-item routine"><h6>Exophthalmos</h6><p>Selenium, steroids, orbital decompression if severe. Does NOT always improve after thyroid treatment.</p></div>
+      </div>
+    </div>
+
+    <div class="tx-section">
+      <div class="tx-title">🔵 Hashimoto Thyroiditis (Hypothyroidism)</div>
+      <div class="tx-grid">
+        <div class="tx-item moderate"><h6>Levothyroxine (T4)</h6><p>Lifelong replacement therapy. Dosing based on weight, age, TSH target.</p></div>
+        <div class="tx-item routine"><h6>Monitoring</h6><p>Regular TSH + FT4 levels every 6–12 months once stable. Anti-TPO titres for initial confirmation.</p></div>
+        <div class="tx-item routine"><h6>Autoimmune Workup</h6><p>Screen for associated autoimmune diseases (Type 1 DM, celiac, Addison's, vitiligo).</p></div>
+      </div>
+    </div>
+
+    <div class="tx-section">
+      <div class="tx-title">🟡 Thyroiditis Management</div>
+      <div class="tx-grid">
+        <div class="tx-item routine"><h6>De Quervain</h6><p>NSAIDs or aspirin for pain. Steroids if severe. Self-limiting — full recovery expected. Monitor TFTs.</p></div>
+        <div class="tx-item moderate"><h6>Riedel Thyroiditis</h6><p>Tamoxifen (anti-fibrotic). Steroids may help. Surgery if severe compression. Unusual/rare entity.</p></div>
+        <div class="tx-item routine"><h6>Hashimoto Flares</h6><p>Monitor TFTs; treat hypothyroidism with levothyroxine; no specific immunotherapy recommended.</p></div>
+      </div>
+    </div>
+
+    <div class="tx-section">
+      <div class="tx-title">🟢 Goiter</div>
+      <div class="tx-grid">
+        <div class="tx-item routine"><h6>Iodine Supplementation</h6><p>Endemic goiter prevention via iodised salt. Effective for simple diffuse goitre if caught early.</p></div>
+        <div class="tx-item moderate"><h6>TSH Suppression</h6><p>Levothyroxine to suppress TSH and reduce goitre size. Limited efficacy for nodular goitre.</p></div>
+        <div class="tx-item moderate"><h6>Surgery</h6><p>Thyroidectomy for large compressive MNG, substernal extension, malignancy concern, or cosmesis.</p></div>
+        <div class="tx-item routine"><h6>Radioiodine</h6><p>For toxic MNG (Plummer's disease) — reduces volume and controls hyperthyroidism.</p></div>
+      </div>
+    </div>
+
+    <div class="tx-section">
+      <div class="tx-title">🔴 Thyroid Carcinomas</div>
+      <div class="tx-grid">
+        <div class="tx-item moderate"><h6>Papillary / Follicular</h6><p>Total thyroidectomy + ¹³¹I ablation + lifelong levothyroxine (suppress TSH to prevent recurrence).</p></div>
+        <div class="tx-item moderate"><h6>Medullary</h6><p>Total thyroidectomy + central neck dissection. Screen family (RET testing). ¹³¹I NOT effective (not follicular origin).</p></div>
+        <div class="tx-item urgent"><h6>Anaplastic</h6><p>No curative treatment. Palliative chemo/radiotherapy. Median survival weeks to months.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ MNEMONICS ══════════════════════════ -->
+  <div id="tab-mnemonics" class="tab-panel">
+    <div class="section-title">Mnemonics <span class="tag">6 Memory Aids</span></div>
+    <div class="tip-box">🧠 Click any mnemonic card to expand the full breakdown. Tested strategies for exam retention!</div>
+    <div id="mnem-container"></div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ── GLOBAL STATE ──
+let quizState = {cur:0, score:0, streak:0, answered:[], totalAnswered:0};
+let cardFlips = 0;
+let completedCases = 0;
+let lastTab = localStorage.getItem('thyroid_tab') || 'overview';
+
+// ── QUIZ DATA ──
+const quizData = [
+  {q:"Which of the following initiates the primary pathophysiological event in Graves' disease?",opts:["TSH-secreting pituitary adenoma","Binding of Thyroid Stimulating Immunoglobulins (TSI) to TSH receptors","Iodine deficiency in the diet","Activation of CD8+ T cells against self-antigens","Viral infection of the thyroid gland"],ans:1,exp:"Graves' disease is an autoimmune disorder where TSI (thyroid-stimulating immunoglobulins) mimic TSH by binding its receptor, causing <strong>unregulated diffuse hyperplasia</strong> and excess T3/T4. This bypasses normal feedback control. Option A = secondary hyperthyroidism; C = simple goiter; D = Hashimoto; E = subacute thyroiditis."},
+  {q:"By what cellular mechanism does Hashimoto thyroiditis ultimately cause hypothyroidism?",opts:["Absolute iodine lack preventing hormone synthesis","CD4+ T-cell activation recruiting CD8+ cytotoxic T cells to destroy follicles","Mutation in the RET oncogene triggering apoptosis","Extravasation of colloid causing giant cell granulomas","Overproduction of calcitonin"],ans:1,exp:"Hashimoto's pathogenesis: <strong>CD4+ helper T cells</strong> become sensitized to thyroid antigens → recruit <strong>CD8+ cytotoxic T cells</strong> + B cells → antibody + T-cell-mediated follicular destruction → primary hypothyroidism. Hurthle cell metaplasia is the hallmark."},
+  {q:"What mechanism converts a diffuse simple goiter into a multinodular goiter?",opts:["Hematogenous spread of malignant cells","Malignant transformation of a single adenoma","Repeated cyclic phases of TSH-driven hyperplasia followed by involution","Progressive accumulation of amyloid stroma","Activation of T-lymphocytes"],ans:2,exp:"Cyclic TSH demand → hyperplasia phases → then TSH falls (T3/T4 restored) → involution phases. Repeated cycles cause <strong>uneven fibrosis, hemorrhage, calcification, and cyst formation</strong> → asymmetrical multinodular appearance. Not malignant, not amyloid-related."},
+  {q:"Which genetic mutation is predominantly implicated in the pathogenesis of Follicular thyroid carcinoma?",opts:["RET point mutation","P53 mutation","RAS gene mutation","BRCA1 mutation","TSI antibody mutation"],ans:2,exp:"<strong>Follicular carcinoma → RAS mutation</strong>. RET mutation = Papillary & Medullary carcinoma. P53 = Anaplastic carcinoma. BRCA1 = breast/ovarian cancer. Remember: RAS = folli<strong>R</strong>cul<strong>A</strong>r carcinoma + Follicular Adenoma (sometimes)."},
+  {q:"Exophthalmos in Graves' disease is mechanistically driven by:",opts:["Metastatic infiltration of the retro-orbital space","Amyloid deposition behind the eye","Edema, fibroblast proliferation, and lymphocyte infiltration in retro-ocular tissue","Direct pressure from the enlarged thyroid gland","Spasm of the extraocular muscles due to hypercalcemia"],ans:2,exp:"<strong>Retro-ocular (orbital) autoimmune inflammation</strong>: TSI stimulates orbital fibroblasts → glycosaminoglycan deposition → edema + lymphocyte infiltration → increased orbital contents → forward displacement of the globe. It's an autoimmune process, NOT mechanical pressure from the thyroid."},
+  {q:"Medullary thyroid carcinoma produces its characteristic amyloid stroma through which mechanism?",opts:["Necrosis of follicular cells","Excessive colloid production leaking into interstitium","Secretion of calcitonin by C-cells which deposits as amyloid","Secretion of thyroglobulin by malignant follicles","Autoimmune fibrosis"],ans:2,exp:"Medullary carcinoma arises from <strong>parafollicular C-cells</strong> (NOT follicular cells). These cells secrete <strong>calcitonin</strong>, which precipitates in the stroma as amyloid (Congo red positive, apple-green birefringence). Serum calcitonin is the tumour marker."},
+  {q:"In De Quervain (subacute) thyroiditis, the formation of granulomas is a response to:",opts:["Bacterial infection in the gland","Extravasated central colloid from virus-destroyed follicles","Ischaemic necrosis of adenomas","Precipitation of calcitonin","High levels of circulating TSH"],ans:1,exp:"Following acute viral destruction of follicles, <strong>colloid leaks into the interstitium</strong>. Histiocytes and multinucleated giant cells cannot digest it → they form <strong>granulomas around the colloid</strong>. This is NOT bacterial, NOT calcitonin-related. ESR is markedly elevated."},
+  {q:"How does initial relative iodine deficiency ultimately lead to a goiter?",opts:["Decreased T3/T4 triggers excessive TSH release, stimulating follicular hyperplasia","Lack of iodine directly causes follicular cell hypertrophy","Lack of iodine triggers autoimmune destruction","The pituitary shrinks, causing the thyroid to enlarge","Iodine deficiency induces a RET gene mutation"],ans:0,exp:"Low iodine → <strong>↓ T3/T4 synthesis</strong> → removes negative feedback on pituitary → <strong>↑ TSH secretion</strong> → TSH acts as a trophic hormone → follicular hypertrophy + hyperplasia → goiter. The patient remains euthyroid initially because the enlarged gland compensates."},
+  {q:"The mechanism of tumour spread for Papillary Thyroid Carcinoma is primarily:",opts:["Direct extension into the trachea","Haematogenous spread to bones","Haematogenous spread to lungs","Lymphatic spread to cervical lymph nodes","Seeding through the cerebrospinal fluid"],ans:3,exp:"Papillary carcinoma spreads predominantly via <strong>lymphatic channels → cervical lymph nodes</strong>. Despite lymph node metastases, prognosis remains excellent (especially in young patients). Contrast with <strong>Follicular carcinoma → haematogenous → lung & bone</strong>."},
+  {q:"Palpation thyroiditis is initiated by:",opts:["Autoantibodies","Viral upper respiratory infection","Mechanical trauma to thyroid follicles from vigorous clinical examination","Iodine toxicity","Radiation exposure"],ans:2,exp:"<strong>Mechanical trauma</strong> from vigorous manual palpation of the thyroid → disrupts follicles → releases colloid → granulomatous reaction morphologically similar to subacute thyroiditis. Autoantibodies = Graves/Hashimoto; Viral = De Quervain; Radiation = papillary carcinoma."},
+  {q:"The presence of reactive lymphoid follicles with germinal centres in Hashimoto thyroiditis is due to:",opts:["Lymphatic spread of a nearby carcinoma","Recruitment of B lymphocytes by activated helper T cells","Chronic viral infection","Accumulation of amyloid","Lack of TSH stimulation"],ans:1,exp:"<strong>CD4+ helper T cells</strong> activated against thyroid antigens recruit <strong>B lymphocytes</strong> to produce auto-antibodies (anti-TPO, anti-thyroglobulin). The B cells form reactive germinal centres = lymphoid follicles. This is a hallmark of Hashimoto on histology alongside Hürthle cell metaplasia."},
+  {q:"What mechanism prevents a simple nontoxic goiter from immediately causing clinical hypothyroidism?",opts:["The gland undergoes compensatory fibrosis","Increased TSH stimulates compensatory follicular hyperplasia, restoring T3/T4 to normal","The gland switches to calcitonin production","T4 is converted to T3 at a faster rate","Autoantibodies mimic TSH"],ans:1,exp:"<strong>TSH-driven hyperplasia compensates</strong> for reduced hormone synthesis per follicle by increasing the total number and size of follicles. This successfully restores T3/T4 to normal → euthyroid state. Eventually, if iodine deficiency persists long-term, compensation may fail."},
+  {q:"Familial cases of Medullary Thyroid Carcinoma are pathogenetically linked to:",opts:["Radiation exposure in childhood","TSH-secreting pituitary adenoma","Germline RET oncogene mutation associated with MEN syndrome","Iodine deficiency","TSI auto-antibodies"],ans:2,exp:"Familial medullary thyroid carcinoma is caused by <strong>germline RET oncogene point mutation</strong>. Associated with <strong>MEN 2A</strong> (medullary thyroid Ca + phaeochromocytoma + hyperparathyroidism) and <strong>MEN 2B</strong> (medullary thyroid Ca + phaeochromocytoma + mucosal neuromas). Screen family members with RET genetic testing."},
+  {q:"The transition from a Follicular Adenoma to Follicular Carcinoma is defined pathologically by:",opts:["The onset of calcification within the nodule","The development of Psammoma bodies","Tumour cells breaching the fibrous capsule or infiltrating blood vessels","Complete loss of the fibrous capsule","Secretion of amyloid by tumour cells"],ans:2,exp:"<strong>Capsular invasion AND/OR vascular invasion = Follicular Carcinoma</strong>. Without either = Follicular Adenoma. The diagnosis cannot be made on FNA cytology alone — it requires full surgical resection and careful histological examination of the capsule. Psammoma bodies = Papillary; Amyloid = Medullary."},
+  {q:"Profound fibrosis in Riedel thyroiditis causes symptoms through which process?",opts:["Autoantibody stimulation of tracheal cartilage","Extension of fibrotic tissue beyond the thyroid capsule compressing adjacent structures","Amyloid deposition in the trachea","Autoimmune neuritis of the recurrent laryngeal nerve","Hypercalcaemia from calcitonin suppression"],ans:1,exp:"Riedel thyroiditis features <strong>extra-thyroidal fibrosclerosis</strong> that extends beyond the gland into adjacent neck structures → compresses the <strong>trachea</strong> (dyspnoea, stridor), <strong>oesophagus</strong> (dysphagia), and <strong>recurrent laryngeal nerve</strong> (dysphonia). The stony hard consistency mimics carcinoma clinically."},
+  {q:"Which nuclear feature is MOST characteristic of Papillary Thyroid Carcinoma?",opts:["Hyperchromatic nuclei with coarse chromatin","Optically clear (ground-glass) nuclei with nuclear grooves","Pyknotic nuclei with karyorrhexis","Multinucleated giant cells","Small dark nuclei with scant cytoplasm"],ans:1,exp:"Papillary carcinoma's defining nuclear features: <strong>Optically clear 'Orphan Annie eye' nuclei</strong> (ground-glass, empty-looking) + <strong>nuclear grooves</strong> (longitudinal folds in the nuclear envelope) + intranuclear pseudoinclusions. Also characteristic: <strong>Psammoma bodies</strong> (concentric calcified bodies). These can be identified on FNA."},
+  {q:"A patient with primary hypothyroidism has a diffusely enlarged thyroid. What lab pattern would you expect?",opts:["↑TSH, ↑T4, ↓TRH","↓TSH, ↑T4, ↑T3","↑TSH, ↓T4, ↓T3","↓TSH, ↓T4, normal TRH","Normal TSH, ↓T3, ↑T4"],ans:2,exp:"In <strong>primary hypothyroidism</strong>: ↓ T3/T4 → reduced negative feedback on pituitary → <strong>↑↑ TSH</strong>. Low T3 & T4 confirm primary (gland-level) failure. ↓TSH with low T3/T4 would indicate secondary (pituitary) hypothyroidism. TSH is the <strong>single best screening test</strong> for thyroid disease."},
+  {q:"The 'toxic' in 'toxic multinodular goiter' refers to:",opts:["Toxic side effects from the medications used","Presence of cancerous transformation","Hyperfunctioning (hyperthyroidism) due to autonomous nodules","Toxicity to surrounding structures due to compression","Toxic levels of iodine stored in nodules"],ans:2,exp:"<strong>Toxic = hyperfunctioning = hyperthyroidism</strong>. As the professor emphasised: 'Toxic doesn't mean poison — it means there is hyperfunction.' Toxic MNG (Plummer's disease) occurs when autonomous nodules produce T3/T4 independent of TSH regulation, causing hyperthyroidism."},
+  {q:"Which of the following thyroid carcinomas has the BEST overall prognosis?",opts:["Anaplastic carcinoma","Medullary carcinoma","Follicular carcinoma","Papillary carcinoma","Lymphoma of the thyroid"],ans:3,exp:"<strong>Papillary carcinoma = best prognosis</strong>. Even with cervical lymph node metastases, 20-year survival >95% in young patients. Follicular = intermediate. Medullary = poorer (especially sporadic). Anaplastic = worst (median survival weeks to months). Remember: Papillary is most common AND most favourable."},
+  {q:"The 'scalloped' or 'moth-eaten' appearance of colloid seen at the periphery of thyroid follicles in Graves' disease represents:",opts:["Autoimmune destruction of follicular cells","Increased colloid production overflowing the follicle","Active resorption of colloid by hyperplastic follicular cells stimulated by TSI","Haemorrhage into the follicle","Viral destruction of the follicular basement membrane"],ans:2,exp:"TSI binds TSH receptors → <strong>constant, unregulated stimulation</strong> of follicular cells → cells increase colloid resorption (endocytosis) to process for hormone release → the colloid 'scallops' at the epithelial border. The cells are also <strong>tall and columnar</strong> (hypertrophied). No colloid accumulation — it's being rapidly consumed."},
+  {q:"In Hashimoto thyroiditis, what is the name given to follicular cells with abundant eosinophilic granular cytoplasm?",opts:["Psammoma bodies","Orphan Annie cells","Hurthle (Askanazy) cells","Parafollicular C-cells","Reed-Sternberg cells"],ans:2,exp:"<strong>Hurthle cells (= Askanazy cells = oncocytic cells)</strong> are follicular cells that have undergone <strong>oncocytic metaplasia</strong> — their cytoplasm fills with mitochondria → abundant eosinophilic granular cytoplasm. This is a hallmark of Hashimoto thyroiditis. They may be seen in other thyroid lesions but are most associated with Hashimoto."},
+  {q:"A thyroid nodule biopsy shows nests of polygonal cells with an eosinophilic stroma that stains Congo red positive (apple-green birefringence under polarised light). What is the diagnosis?",opts:["Follicular carcinoma with hyaline stroma","Papillary carcinoma with dense calcification","Medullary thyroid carcinoma","Anaplastic carcinoma with necrosis","De Quervain thyroiditis with advanced fibrosis"],ans:2,exp:"<strong>Congo red positive amyloid stroma + polygonal C-cells = Medullary carcinoma</strong>. The amyloid derives from calcitonin secreted by malignant C-cells. Apple-green birefringence under polarised light is pathognomonic for amyloid. Serum calcitonin is markedly elevated. Check RET mutation and screen for MEN2."},
+  {q:"Which of the following correctly pairs each thyroid carcinoma with its characteristic mutation?",opts:["Papillary → RAS; Follicular → RET; Medullary → P53","Papillary → RET; Follicular → RAS; Medullary → RET; Anaplastic → P53","Medullary → BRCA1; Papillary → P53; Follicular → RET","All thyroid carcinomas share the same RET mutation","Papillary → TSI; Follicular → RAS; Medullary → BRCA2"],ans:1,exp:"Classic mutation pairing: <strong>Papillary → RET/PTC rearrangement (or radiation)</strong>; <strong>Follicular → RAS mutation</strong>; <strong>Medullary → RET point mutation</strong> (germline in familial, somatic in sporadic); <strong>Anaplastic → P53</strong>. TSI is an autoantibody in Graves', not a gene mutation."},
+  {q:"A 35-year-old woman has a painless diffusely enlarged thyroid, weight loss, palpitations, and bulging eyes. Which antibody is directly responsible for her thyroid overstimulation?",opts:["Anti-thyroglobulin IgG","Anti-TPO (thyroid peroxidase) antibody","Thyroid Stimulating Immunoglobulin (TSI)","Anti-TSH receptor blocking antibody","Anti-double-stranded DNA antibody"],ans:2,exp:"<strong>TSI (thyroid-stimulating immunoglobulin)</strong> is an IgG autoantibody that binds and <strong>activates</strong> TSH receptors → mimics TSH → unregulated T3/T4 production. This is the pathological driver in Graves'. Anti-thyroglobulin and anti-TPO are present in Hashimoto (and mildly in Graves') but don't stimulate the receptor. Anti-TSH receptor blocking antibodies would cause hypothyroidism."},
+  {q:"What is the MOST common cause of hypothyroidism globally?",opts:["Hashimoto thyroiditis","Subacute De Quervain thyroiditis","Dietary iodine deficiency","Riedel thyroiditis","Surgical removal of the thyroid"],ans:2,exp:"<strong>Dietary iodine deficiency</strong> is the most common cause of hypothyroidism globally (especially in developing/inland regions). Hashimoto thyroiditis is the most common cause in <strong>iodine-sufficient regions</strong> (like developed countries). As the professor noted: 'Hashimoto is the SECOND most common cause — iodine deficiency is first.'"}
+];
+
+// ── FLASHCARD DATA ──
+const flashCards = [
+  {cat:"Graves' Disease",cat_color:"tag-hyper",q:"What type of antibody drives hyperthyroidism in Graves' disease and how does it work?",a:"<strong>TSI (Thyroid Stimulating Immunoglobulins)</strong> — IgG autoantibodies that bind and activate TSH receptors, bypassing normal feedback regulation to cause continuous, unregulated T3/T4 secretion and follicular hyperplasia."},
+  {cat:"Graves' Disease",cat_color:"tag-hyper",q:"What are the three classic extrathyroidal manifestations of Graves' disease?",a:"<strong>1. Exophthalmos</strong> (proptosis) — retro-orbital edema + fibroblasts + lymphocytes<br><strong>2. Pretibial myxedema</strong> — dermal GAG deposition<br><strong>3. Thyroid acropachy</strong> — clubbing (rare)"},
+  {cat:"Graves' Disease",cat_color:"tag-hyper",q:"What is the gross pathological appearance of the thyroid in Graves' disease?",a:"<strong>Diffuse and symmetrical enlargement</strong> of the gland (diffuse toxic goiter). Cut surface is meaty/red. Microscopically: tall columnar cells with scalloped (moth-eaten) colloid due to hyperactive resorption."},
+  {cat:"Hashimoto",cat_color:"tag-hypo",q:"Name the two main autoantibodies in Hashimoto thyroiditis.",a:"<strong>1. Anti-thyroglobulin</strong> antibody<br><strong>2. Anti-TPO</strong> (anti-thyroid peroxidase) antibody<br>Both are markers of autoimmune thyroid disease. Anti-TPO is more sensitive and specific."},
+  {cat:"Hashimoto",cat_color:"tag-hypo",q:"What are Hurthle cells and in which condition are they classically seen?",a:"<strong>Hurthle cells (Askanazy/oncocytic cells)</strong>: Follicular cells with oncocytic metaplasia — abundant <strong>eosinophilic granular cytoplasm</strong> due to mitochondrial accumulation. Classic hallmark of <strong>Hashimoto thyroiditis</strong>. Seen alongside dense lymphocytic infiltrate with germinal centres."},
+  {cat:"Hashimoto",cat_color:"tag-hypo",q:"T or F: Hashimoto thyroiditis is the most common cause of hypothyroidism worldwide.",a:"<strong>FALSE.</strong> Hashimoto is the most common autoimmune cause and the leading cause in iodine-sufficient countries. However, globally, <strong>dietary iodine deficiency</strong> is the number one cause of hypothyroidism."},
+  {cat:"De Quervain",cat_color:"tag-hypo",q:"What triggers De Quervain thyroiditis and what is the hallmark histological finding?",a:"Triggered by a <strong>preceding viral respiratory infection</strong> (e.g., URI). Histology: <strong>granulomas with multinucleated giant cells surrounding extravasated colloid</strong>. Gland is tender, self-limiting. ↑ ESR."},
+  {cat:"Riedel",cat_color:"tag-hypo",q:"Why does Riedel thyroiditis clinically mimic thyroid carcinoma?",a:"Both present as a <strong>hard, fixed neck mass</strong>. In Riedel: <strong>dense fibrosclerosis</strong> replaces the thyroid parenchyma and extends beyond the capsule → compresses trachea, oesophagus, recurrent laryngeal nerve. The stony hard consistency is the key clinical clue."},
+  {cat:"Goiter",cat_color:"tag-goiter",q:"Explain how iodine deficiency causes a euthyroid goiter without causing hypothyroidism.",a:"↓ Iodine → ↓ T3/T4 → <strong>removes negative feedback</strong> on pituitary → ↑↑ TSH → TSH stimulates follicular hyperplasia + hypertrophy. The <strong>enlarged gland compensates</strong>, restoring T3/T4 to normal (euthyroid). The enlarged gland = simple non-toxic goiter."},
+  {cat:"Goiter",cat_color:"tag-goiter",q:"List the pathological changes seen within nodules of a multinodular goiter.",a:"Cyclic hyperplasia/involution leads to: <strong>Fibrosis, Calcification, Haemorrhage, Cystic degeneration</strong> (distended colloid-filled follicles). The irregular, asymmetrical surface results from uneven rates of these changes across different nodules."},
+  {cat:"Goiter",cat_color:"tag-goiter",q:"What does 'toxic' mean in toxic multinodular goiter?",a:"<strong>Toxic = hyperfunctioning = hyperthyroidism.</strong> NOT 'toxic' in the poisoning sense. Autonomous nodules develop the capacity to produce T3/T4 independent of TSH control → hyperthyroidism. Also called Plummer's disease."},
+  {cat:"Follicular Lesions",cat_color:"tag-neoplasm",q:"What is the ONLY way to distinguish follicular adenoma from follicular carcinoma?",a:"<strong>Surgical resection + histological examination for invasion.</strong> Carcinoma = capsular invasion +/− vascular invasion. FNA cytology CANNOT distinguish them (both show follicular cells). No invasion → adenoma. Invasion → carcinoma."},
+  {cat:"Papillary Ca",cat_color:"tag-neoplasm",q:"What are the 3 defining nuclear features of papillary thyroid carcinoma?",a:"<strong>1. Optically clear (ground-glass) 'Orphan Annie eye' nuclei</strong><br><strong>2. Nuclear grooves</strong> (longitudinal folds)<br><strong>3. Intranuclear pseudoinclusions</strong><br>Plus: Psammoma bodies (concentric laminated calcifications) in the stroma."},
+  {cat:"Papillary Ca",cat_color:"tag-neoplasm",q:"How does papillary carcinoma spread and what gene is mutated?",a:"Spreads via <strong>lymphatics → cervical lymph nodes</strong>. Mutation: <strong>RET/PTC gene rearrangement</strong> (or BRAF mutation). Also associated with <strong>radiation exposure</strong>. Despite LN metastases, prognosis is EXCELLENT (>95% 20-year survival in young patients)."},
+  {cat:"Follicular Ca",cat_color:"tag-neoplasm",q:"How does follicular carcinoma spread and what gene is mutated?",a:"Spreads via <strong>haematogenous route → lung and bone</strong>. Mutation: <strong>RAS gene mutation</strong>. Encapsulated like adenoma but with capsular/vascular invasion. Intermediate prognosis. Radioiodine-sensitive (follicular origin)."},
+  {cat:"Medullary Ca",cat_color:"tag-neoplasm",q:"What cell type gives rise to medullary carcinoma and what does it secrete?",a:"Arises from <strong>parafollicular C-cells</strong> (NOT follicular cells). Secretes <strong>calcitonin</strong> → deposits as <strong>amyloid stroma</strong> (Congo red positive). C-cells derive from neural crest. Mutation: <strong>RET point mutation</strong>. Associated with MEN 2A and 2B."},
+  {cat:"Medullary Ca",cat_color:"tag-neoplasm",q:"Why is radioiodine therapy NOT effective for medullary thyroid carcinoma?",a:"Radioiodine (¹³¹I) works by targeting <strong>iodine-concentrating follicular cells</strong>. Medullary carcinoma arises from <strong>parafollicular C-cells</strong>, which do NOT take up iodine. Therefore ¹³¹I has no effect. Treatment requires <strong>total thyroidectomy + central neck dissection</strong>."},
+  {cat:"HPT Axis",cat_color:"tag-exam",q:"Trace the complete HPT axis from stimulus to feedback.",a:"<strong>1.</strong> Hypothalamus → TRH (thyrotropin-releasing hormone)<br><strong>2.</strong> TRH → Anterior pituitary → TSH (thyroid-stimulating hormone)<br><strong>3.</strong> TSH → Thyroid → T3 + T4<br><strong>4.</strong> ↑ T3/T4 → <strong>negative feedback</strong> on both pituitary and hypothalamus → ↓ TSH + ↓ TRH"},
+  {cat:"Comparison",cat_color:"tag-exam",q:"Compare the spread of papillary vs follicular vs medullary thyroid carcinoma.",a:"<strong>Papillary:</strong> Lymphatic → cervical nodes (best prognosis)<br><strong>Follicular:</strong> Haematogenous → lung, bone (intermediate prognosis)<br><strong>Medullary:</strong> Both lymphatic AND haematogenous (worse prognosis)<br><strong>Anaplastic:</strong> Aggressive local + distant (worst prognosis)"},
+  {cat:"Comparison",cat_color:"tag-exam",q:"Distinguish Graves' from Hashimoto based on mechanism and functional outcome.",a:"<strong>Graves:</strong> TSI activates TSH-R → <strong>hyperthyroidism</strong> (diffuse toxic goiter)<br><strong>Hashimoto:</strong> CD4/CD8 T cells + anti-TPO/anti-Tg destroy follicles → <strong>hypothyroidism</strong> (initially may be transient hyper then hypo)<br>Both autoimmune, both female-predominant."},
+  {cat:"Histology",cat_color:"tag-exam",q:"What stain confirms amyloid in medullary thyroid carcinoma?",a:"<strong>Congo red stain</strong> → amyloid appears orange-red.<br>Under <strong>polarised light</strong>: apple-green birefringence (pathognomonic).<br>The amyloid = polymerised <strong>calcitonin</strong> fragments deposited interstitially by C-cells."},
+  {cat:"Genetics",cat_color:"tag-exam",q:"Match each thyroid carcinoma to its genetic alteration.",a:"<strong>Papillary Ca → RET/PTC rearrangement</strong> or BRAF mutation<br><strong>Follicular Ca → RAS mutation</strong><br><strong>Medullary Ca → RET point mutation</strong> (germline = familial; somatic = sporadic)<br><strong>Anaplastic Ca → P53 mutation</strong>"},
+  {cat:"Diagnosis",cat_color:"tag-exam",q:"Which investigation can distinguish Hashimoto from Graves' disease without biopsy?",a:"<strong>TFTs + Antibody panel:</strong><br>Graves: ↓TSH, ↑FT4/T3, TSI positive, diffuse uptake on ¹²³I scan<br>Hashimoto: ↑TSH, ↓FT4, anti-TPO high titre, patchy/reduced uptake on scan<br>Clinical context: Graves has eye signs & heat intolerance; Hashimoto has cold intolerance & weight gain."},
+  {cat:"Clinical Pearl",cat_color:"tag-exam",q:"Why is Riedel thyroiditis a diagnostic trap and what is its key differentiating feature from carcinoma?",a:"Both are <strong>hard, fixed, painless neck masses</strong>. However: Riedel involves <strong>bilateral diffuse fibrosis</strong>, may extend into mediastinum, and biopsy shows <strong>bland fibrosclerosis</strong> (no malignant cells). Carcinoma = malignant cells on biopsy/FNA. Riedel can also be associated with other fibrosclerotic conditions (retroperitoneal fibrosis, mediastinal fibrosis)."}
+];
+
+// ── CASES DATA ──
+const casesData = [
+  {title:"Case 1 — The Anxious Patient",vignette:"A 28-year-old woman presents with a 4-month history of weight loss despite increased appetite, palpitations, heat intolerance, and difficulty sleeping. On examination: pulse 110 bpm, fine tremor, warm moist skin, and bilateral proptosis. The thyroid is diffusely and symmetrically enlarged. TFTs: TSH <0.01, T4 elevated.",qs:[{q:"Q1: What is the most likely diagnosis?",a:"<strong>Graves' Disease.</strong> The classic triad of diffuse goiter + exophthalmos + clinical hyperthyroidism, with markedly suppressed TSH and elevated T4. Confirmed by positive TSI antibodies."},{q:"Q2: What autoantibody is responsible and how does it cause this picture?",a:"<strong>Thyroid Stimulating Immunoglobulins (TSI)</strong> bind and activate TSH receptors continuously → unregulated T3/T4 production + follicular hyperplasia. This bypasses normal negative feedback, causing persistent hyperthyroidism."},{q:"Q3: On biopsy, what would you expect to see microscopically?",a:"<strong>Tall columnar follicular epithelium</strong>, depleted colloid with peripheral 'scalloping/moth-eaten' appearance (due to active resorption), lymphoid aggregates within the gland, and diffuse hyperplasia."}]},
+  {title:"Case 2 — The Sluggish Librarian",vignette:"A 45-year-old woman presents with 1 year of fatigue, weight gain, cold intolerance, constipation, and dry skin. She reports her neck is 'swollen'. Examination: slow relaxing reflexes, periorbital puffiness, diffuse goiter. TSH: markedly elevated. Anti-TPO antibodies: very high titre. The gland is firm and pale.",qs:[{q:"Q1: What is the most likely diagnosis?",a:"<strong>Hashimoto Thyroiditis.</strong> Autoimmune primary hypothyroidism with elevated TSH, high anti-TPO antibodies, diffuse enlargement, and classic clinical features of hypothyroidism."},{q:"Q2: Describe the mechanism leading to follicular destruction.",a:"CD4+ helper T cells sensitized to thyroid antigens recruit CD8+ cytotoxic T cells and B lymphocytes → T-cell cytotoxicity + anti-TPO and anti-thyroglobulin antibody-mediated ADCC → progressive follicular destruction → ↓ T3/T4."},{q:"Q3: What histological feature distinguishes this from other causes of thyroid enlargement?",a:"<strong>Hürthle (Askanazy) cell metaplasia</strong>: follicular cells with abundant eosinophilic granular cytoplasm + <strong>dense lymphocytic infiltrate with reactive germinal centres</strong>. This combination is pathognomonic for Hashimoto."}]},
+  {title:"Case 3 — Post-Cold Neck Pain",vignette:"A 35-year-old man presents 2 weeks after an upper respiratory tract infection with severe neck pain radiating to the jaw, fever (38.5°C), and a very tender thyroid gland. He transiently had palpitations and is now feeling fatigued. ESR: 90 mm/hr. TSH is low initially. A biopsy is performed and shows granulomas with giant cells around central eosinophilic material.",qs:[{q:"Q1: What is the diagnosis and what is the central eosinophilic material?",a:"<strong>De Quervain (Subacute Granulomatous) Thyroiditis.</strong> The central eosinophilic material is <strong>extravasated colloid</strong> released when viral infection destroyed the follicles. Giant cells and histiocytes form granulomas around this foreign material."},{q:"Q2: Explain the biphasic hormonal picture (initial hyperthyroid → later hypothyroid).",a:"<strong>Phase 1 (destructive):</strong> Follicle rupture releases stored T3/T4 → transient hyperthyroidism (↓TSH). <strong>Phase 2 (recovery):</strong> Hormone stores depleted, new synthesis impaired → transient hypothyroidism (↑TSH). <strong>Phase 3:</strong> Resolution → euthyroidism. Most patients fully recover."},{q:"Q3: How does this differ from Riedel thyroiditis?",a:"De Quervain: <strong>tender</strong> gland, viral trigger, self-limiting, granulomatous histology with colloid. Riedel: <strong>painless stony-hard</strong> gland, idiopathic fibrosclerosis, NOT self-limiting, dense acellular fibrosis extends beyond the capsule."}]},
+  {title:"Case 4 — The Solitary Cold Nodule",vignette:"A 52-year-old woman is referred after incidentally finding a right-sided 3.5 cm solitary thyroid nodule on ultrasound. She is clinically euthyroid. FNA cytology is performed and shows follicular cells in a microfollicular pattern but cannot confirm malignancy. Surgical resection is performed. The pathology report describes a thick fibrous capsule with tumour cell nests identified within a blood vessel wall.",qs:[{q:"Q1: What does the surgical pathology finding confirm?",a:"<strong>Follicular Thyroid Carcinoma.</strong> The finding of tumour cells within a blood vessel wall = <strong>vascular invasion</strong>. This is the diagnostic criterion that distinguishes follicular carcinoma from adenoma. FNA correctly identified follicular cells but could not diagnose carcinoma — only resection can."},{q:"Q2: What would make you diagnose this as a benign adenoma instead?",a:"If the pathologist found an intact fibrous capsule with <strong>NO capsular penetration and NO vascular invasion</strong> → Follicular Adenoma. The two diagnoses are architecturally identical — invasion is the ONLY differentiating criterion."},{q:"Q3: What is the characteristic route of spread and preferred distant sites?",a:"Follicular carcinoma spreads <strong>haematogenously</strong> (via blood vessels) → most common distant metastases to <strong>lungs and bone</strong>. This contrasts with papillary carcinoma, which spreads via lymphatics to cervical nodes."}]},
+  {title:"Case 5 — The Elderly Lady with Stridor",vignette:"A 68-year-old woman presents with progressive dysphagia, stridor, and hoarse voice for 6 months. Examination reveals a rock-hard, fixed, non-tender mass in the anterior neck. It does not move with swallowing. The mass extends into the mediastinum on CT. Core biopsy shows dense collagenous fibrous tissue with only scattered inflammatory cells and no malignant cells.",qs:[{q:"Q1: What is the most likely diagnosis?",a:"<strong>Riedel Thyroiditis.</strong> The stony-hard, fixed mass extending beyond thyroid capsule + compression symptoms (dysphagia, stridor, hoarseness from RLN) + biopsy showing dense <strong>fibrosclerosis without malignant cells</strong> confirms this diagnosis."},{q:"Q2: Why was carcinoma suspected and how was it excluded?",a:"Thyroid carcinoma (especially anaplastic) also presents with a hard, fixed, rapidly growing neck mass causing compression. Exclusion: <strong>biopsy showed no malignant cells</strong> — only fibrous tissue. Anaplastic carcinoma would show undifferentiated pleomorphic cells with high mitotic rate."},{q:"Q3: What treatment options exist and what is the prognosis?",a:"Treatment: <strong>Tamoxifen</strong> (anti-fibrotic, sometimes effective), steroids, and surgery for decompression if life-threatening. Prognosis varies — can stabilise or slowly progress. May be associated with systemic fibrosclerosis (IgG4-related disease in some cases)."}]},
+  {title:"Case 6 — The Medullary Mass",vignette:"A 40-year-old man presents with a neck mass and diarrhoea. His father had thyroid cancer and adrenal tumours. Examination: 2 cm right thyroid nodule. Serum calcitonin: markedly elevated. Biopsy: sheets of polygonal cells with an eosinophilic stroma. Congo red staining shows orange-red deposits that display apple-green birefringence under polarised light.",qs:[{q:"Q1: What is the diagnosis and what produces the eosinophilic stroma?",a:"<strong>Medullary Thyroid Carcinoma.</strong> The eosinophilic stroma is <strong>amyloid</strong> — polymerised calcitonin secreted by the malignant <strong>parafollicular C-cells</strong>. Congo red positive + birefringence confirms amyloid."},{q:"Q2: What genetic testing should be performed and why?",a:"<strong>RET proto-oncogene germline mutation testing.</strong> Positive family history of thyroid cancer + phaeochromocytoma strongly suggests <strong>MEN 2A syndrome</strong>. Germline RET testing identifies at-risk family members who can undergo prophylactic thyroidectomy before cancer develops."},{q:"Q3: Why should radioiodine NOT be used in this patient?",a:"Radioiodine (¹³¹I) targets <strong>iodine-concentrating follicular cells</strong>. Medullary carcinoma arises from <strong>C-cells</strong> (parafollicular, neural crest origin) which do NOT have iodine-concentrating ability. Treatment = <strong>total thyroidectomy + central neck dissection</strong>."}]}
+];
+
+// ── PATHOPHYS DATA ──
+const gravesFlow = [
+  {text:"Genetic susceptibility + environmental trigger",detail:"HLA-DR3, HLA-B8 susceptibility genes + possible viral/stress trigger",gold:false},
+  {text:"Loss of immune tolerance to thyroid antigens",detail:"Self-reactive CD4+ T helper cells escape central tolerance",gold:false},
+  {text:"B-cell production of TSI (Thyroid Stimulating Immunoglobulins)",detail:"IgG antibodies directed against TSH receptors on follicular cells",gold:true},
+  {text:"TSI binds & activates TSH receptors continuously",detail:"Bypasses normal negative feedback regulation from T3/T4",gold:false},
+  {text:"Unregulated follicular cell hyperplasia + hypertrophy",detail:"Diffuse symmetrical enlargement — Gross: meaty, hyperaemic gland",gold:false},
+  {text:"Excess T3 / T4 secretion → Hyperthyroidism",detail:"↓ TSH (suppressed), ↑ T3, ↑ T4 on laboratory testing",gold:true},
+  {text:"Retro-orbital fibroblast activation → Exophthalmos",detail:"TSI receptors on orbital fibroblasts → GAG accumulation → edema + proptosis",gold:false}
+];
+
+const medFlow = [
+  {text:"Germline RET point mutation (familial) or somatic RET mutation (sporadic)",detail:"MEN 2A/2B for familial cases; sporadic cases from somatic mutation in C-cells",gold:false},
+  {text:"Constitutive activation of RET tyrosine kinase",detail:"Uncontrolled cell proliferation signalling in parafollicular C-cells",gold:false},
+  {text:"Malignant proliferation of parafollicular C-cells",detail:"C-cells: neural crest origin, do NOT concentrate iodine, produce calcitonin",gold:true},
+  {text:"Excessive calcitonin secretion by tumour cells",detail:"Serum calcitonin = tumour marker; may cause diarrhoea",gold:false},
+  {text:"Calcitonin fragments polymerise into amyloid fibrils",detail:"Deposits interstitially as amyloid stroma (Congo red positive)",gold:true},
+  {text:"Tumour spread: Lymphatic + Haematogenous",detail:"Both routes — worse prognosis than papillary/follicular",gold:false}
+];
+
+const pathItems = [
+  {title:"TSH Receptor",icon:"🎯",desc:"G-protein coupled receptor on follicular cell basolateral membrane. Normally activated by pituitary TSH.",detail:"In Graves': TSI activates this receptor mimicking TSH → unregulated cAMP → continuous cellular stimulation. Blocking antibodies to this receptor would cause hypothyroidism instead."},
+  {title:"Follicular Cells",icon:"🔬",desc:"Cuboidal epithelial cells lining thyroid follicles. Produce thyroglobulin, concentrate iodine, synthesise T3/T4.",detail:"In Graves': become tall columnar (hypertrophied) with depleted colloid. In Hashimoto: undergo Hürthle cell metaplasia. In carcinomas: lose normal architecture."},
+  {title:"Parafollicular C-cells",icon:"🧬",desc:"Neural crest-derived cells between follicles. Produce calcitonin. Do NOT concentrate iodine.",detail:"Origin of medullary thyroid carcinoma. Because they don't take up iodine, ¹³¹I therapy is ineffective against medullary carcinoma."},
+  {title:"Thyroid Colloid",icon:"🫧",desc:"Gel-like substance stored within follicular lumen. Contains thyroglobulin (precursor to T3/T4).",detail:"Normal: pale, abundant, fills follicle. Graves: scalloped/moth-eaten periphery (active resorption). De Quervain: extravasated colloid triggers granuloma formation around it."},
+  {title:"Fibrous Capsule",icon:"🛡️",desc:"Thin connective tissue layer encapsulating thyroid follicular tumours.",detail:"Critical diagnostic structure. Intact capsule (no invasion) = Follicular Adenoma. Tumour cells penetrating capsule = Follicular Carcinoma. Must be carefully sampled in multiple sections."},
+  {title:"Psammoma Bodies",icon:"🪨",desc:"Concentric laminated calcifications found in papillary carcinoma stroma.",detail:"Formed by progressive calcification of necrotic tumour cell clusters. Each concentric ring = one cell death. Highly specific for papillary thyroid carcinoma. Also seen in ovarian serous carcinoma and meningioma."},
+  {title:"Lymphoid Follicles",icon:"🔵",desc:"Reactive B-cell aggregates with germinal centres within the thyroid.",detail:"Hallmark of Hashimoto thyroiditis — indicates the B-cell arm of the autoimmune response. CD4+ T cells recruit B cells → reactive germinal centres form within the gland substance."},
+  {title:"Amyloid Stroma",icon:"🧡",desc:"Extracellular deposits of polymerised protein fibrils in medullary carcinoma.",detail:"Derived from calcitonin secreted by malignant C-cells. Congo red positive, apple-green birefringence under polarised light. A distinguishing feature from other thyroid tumours."}
+];
+
+// ── ALGO DATA ──
+const algoSteps = [
+  {num:1,h:"Identify Thyroid Nodule",p:"Incidental or symptomatic finding. Assess: size, consistency (hard = more suspicious), mobility, LN, voice change, family history."},
+  {num:2,h:"TFTs + Antibodies",p:"Check TSH, FT4, FT3. ↓ TSH = hyperfunctioning nodule (less likely malignant). Anti-TPO, anti-Tg if autoimmune suspected."},
+  {num:3,h:"Ultrasound Features",p:"Assess: size, echogenicity, microcalcifications (Psammoma bodies in papillary Ca), irregular margins, vascularity, LN."},
+  {num:4,h:"Fine Needle Aspiration (FNA)",p:"For nodules >1cm or with suspicious US features. Cytology: diagnoses papillary, anaplastic, medullary. Cannot distinguish follicular adenoma from carcinoma."},
+  {num:5,h:"FNA Result: Follicular Pattern?",p:"If FNA shows follicular cells → SURGICAL resection required. Only histology of the capsule determines adenoma vs. carcinoma (invasion)."},
+  {num:6,h:"Surgical Resection",p:"Total/subtotal thyroidectomy. Pathologist examines capsular integrity, vascular invasion, lymph nodes. RET/RAS mutation analysis aids classification."},
+  {num:7,h:"Post-op Management",p:"Papillary/Follicular: ¹³¹I ablation + levothyroxine suppression. Medullary: RET testing + screen family. Monitor calcitonin (medullary) or thyroglobulin (papillary/follicular)."}
+];
+
+// ── MNEMONICS DATA ──
+const mnemonics = [
+  {word:"GRAVES",title:"Features of Graves' Disease",items:[
+    {l:"G",t:"Goitre — diffuse, symmetrical, soft"},
+    {l:"R",t:"Restlessness, Racing heart (palpitations, tachycardia)"},
+    {l:"A",t:"Auto-antibodies (TSI) acting on TSH receptor"},
+    {l:"V",t:"Visual changes — Exophthalmos (proptosis)"},
+    {l:"E",t:"Elevated T3/T4, Excessive metabolism (weight loss)"},
+    {l:"S",t:"Sweating, heat intolerance, tremor, skin changes (pretibial myxedema)"}
+  ]},
+  {word:"HASH",title:"Hashimoto Thyroiditis Key Features",items:[
+    {l:"H",t:"Hypothyroidism (primary) — eventual outcome"},
+    {l:"A",t:"Anti-TPO + Anti-thyroglobulin antibodies"},
+    {l:"S",t:"Sensitized CD4+ T cells → CD8+ cytotoxic T cells + B cells"},
+    {l:"H",t:"Hürthle cell metaplasia + dense lymphocytic infiltrate (histology)"}
+  ]},
+  {word:"PAPER",title:"Papillary Carcinoma Features",items:[
+    {l:"P",t:"Psammoma bodies (concentric calcifications)"},
+    {l:"A",t:"Arises from follicular cells, Associated with radiation"},
+    {l:"P",t:"Papillae architecture (complex arborising papillae)"},
+    {l:"E",t:"Excellent prognosis (best of all thyroid carcinomas)"},
+    {l:"R",t:"RET/PTC mutation + Regional (lymphatic) spread to cervical nodes"}
+  ]},
+  {word:"CALM",title:"Medullary Carcinoma Features",items:[
+    {l:"C",t:"C-cells (parafollicular) are the cell of origin"},
+    {l:"A",t:"Amyloid stroma (Congo red +, calcitonin-derived)"},
+    {l:"L",t:"Lymphatic AND haematogenous spread"},
+    {l:"M",t:"MEN 2A/2B + Mutation in RET oncogene"}
+  ]},
+  {word:"CRISIS",title:"Distinguishing Goiter Types — Non-toxic vs Toxic",items:[
+    {l:"C",t:"Cyclic hyperplasia/involution → Converts simple → MNG"},
+    {l:"R",t:"Relative iodine deficiency → Reduced T3/T4 → ↑ TSH"},
+    {l:"I",t:"Initially euthyroid (compensated state)"},
+    {l:"S",t:"Symmetrical initially (diffuse goiter stage)"},
+    {l:"I",t:"Irregular nodules form (multinodular goiter stage)"},
+    {l:"S",t:"Some nodules become autonomous → Toxic MNG (Plummer's)"}
+  ]},
+  {word:"FIND IT",title:"Follicular Adenoma vs Carcinoma — The Golden Rule",items:[
+    {l:"F",t:"Follicular architecture — identical in both"},
+    {l:"I",t:"Invasion is the ONLY distinguishing criterion"},
+    {l:"N",t:"No invasion = benign Adenoma"},
+    {l:"D",t:"Demonstrates capsular breach = Carcinoma"},
+    {l:"I",t:"Imaging (FNA) CANNOT tell them apart"},
+    {l:"T",t:"Tissue resection required for definitive diagnosis"}
+  ]}
+];
+
+// ── RENDER QUIZ ──
+function renderQuiz(){
+  const q=quizData[quizState.cur];
+  const container=document.getElementById('quiz-container');
+  const sboard=document.getElementById('score-board');
+  sboard.classList.remove('show');
+  container.innerHTML=`
+    <div class="qcard" id="qcard">
+      <div class="qnum">QUESTION ${quizState.cur+1} of ${quizData.length} ${quizState.streak>1?'🔥 '+quizState.streak+' streak':''}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="options">${q.opts.map((o,i)=>`
+        <button class="opt-btn" onclick="selectAnswer(${i})" data-idx="${i}">
+          <span class="opt-letter">${['A','B','C','D','E'][i]}</span>
+          <span>${o}</span>
+        </button>`).join('')}
+      </div>
+      <div class="explanation" id="exp">${q.exp}</div>
+      <button class="quiz-nav-btn" id="next-btn" onclick="nextQ()" disabled>Next Question →</button>
+    </div>`;
+  updateBar();
+}
+
+function selectAnswer(idx){
+  if(quizState.answered[quizState.cur]) return;
+  quizState.answered[quizState.cur]=true;
+  quizState.totalAnswered++;
+  const q=quizData[quizState.cur];
+  const btns=document.querySelectorAll('.opt-btn');
+  btns.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.ans) b.classList.add('correct');
+    else if(i===idx) b.classList.add('wrong');
+  });
+  if(idx===q.ans){
+    quizState.score++;
+    quizState.streak++;
+  } else {
+    quizState.streak=0;
+  }
+  document.getElementById('exp').classList.add('show');
+  document.getElementById('next-btn').disabled=false;
+  document.getElementById('stat-score').textContent=quizState.score+'/'+quizState.totalAnswered;
+  document.getElementById('stat-streak').textContent=quizState.streak;
+  updateProgress();
+  saveState();
+}
+
+function nextQ(){
+  if(quizState.cur<quizData.length-1){
+    quizState.cur++;
+    document.getElementById('qcur').textContent=quizState.cur+1;
+    renderQuiz();
+  } else {
+    showScore();
+  }
+}
+
+function showScore(){
+  document.getElementById('quiz-container').innerHTML='';
+  const sb=document.getElementById('score-board');
+  sb.classList.add('show');
+  const pct=Math.round(quizState.score/quizData.length*100);
+  document.getElementById('final-score').textContent=quizState.score;
+  const msgs={
+    90:"🏆 Outstanding! You have mastered thyroid pathology. Exam-ready!",
+    70:"🌟 Great work! Solid understanding. Review the questions you missed.",
+    50:"📚 Good foundation. Revisit the topics where you struggled.",
+    0:"💪 Keep going! Use the flashcards and overview tabs to reinforce key concepts."
+  };
+  const msgKey=Object.keys(msgs).reverse().find(k=>pct>=k);
+  document.getElementById('score-msg').textContent=msgs[msgKey];
+  updateProgress();
+}
+
+function resetQuiz(){
+  quizState={cur:0,score:0,streak:0,answered:[],totalAnswered:0};
+  document.getElementById('stat-score').textContent='—';
+  document.getElementById('stat-streak').textContent='0';
+  document.getElementById('score-board').classList.remove('show');
+  document.getElementById('qcur').textContent='1';
+  renderQuiz();
+  saveState();
+}
+
+function updateBar(){
+  const pct=Math.max(4,(quizState.cur/quizData.length)*100);
+  document.getElementById('quiz-bar').style.width=pct+'%';
+}
+
+// ── RENDER FLASHCARDS ──
+function renderFlashcards(){
+  const grid=document.getElementById('fc-grid');
+  grid.innerHTML=flashCards.map((c,i)=>`
+    <div class="flip-card" id="fc${i}" onclick="flipCard(${i})">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="fc-cat ${c.cat_color}">${c.cat}</div>
+          <div class="fc-q">${c.q}</div>
+          <div class="fc-tap">👆 Tap to reveal answer</div>
+        </div>
+        <div class="flip-back">
+          <div class="fc-cat ${c.cat_color}">${c.cat}</div>
+          <div class="fc-a">${c.a}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function flipCard(i){
+  const card=document.getElementById('fc'+i);
+  const wasFlipped=card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  if(!wasFlipped){
+    cardFlips++;
+    document.getElementById('stat-cards').textContent=cardFlips;
+    saveState();
+  }
+}
+
+function resetCards(){
+  document.querySelectorAll('.flip-card').forEach(c=>c.classList.remove('flipped'));
+}
+
+// ── RENDER CASES ──
+function renderCases(){
+  const cont=document.getElementById('cases-container');
+  cont.innerHTML=casesData.map((c,ci)=>`
+    <div class="case-card">
+      <div class="section-title" style="font-size:1.1rem;margin-bottom:12px">🏥 ${c.title}</div>
+      <div class="case-vignette">${c.vignette}</div>
+      ${c.qs.map((q,qi)=>`
+        <div style="margin-bottom:16px">
+          <div class="case-q">${q.q}</div>
+          <button class="reveal-btn" onclick="revealCase(${ci},${qi})">🔍 Reveal Answer</button>
+          <div class="case-answer" id="case-${ci}-${qi}">
+            <div class="step-label">Answer</div>
+            ${q.a}
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function revealCase(ci,qi){
+  const el=document.getElementById(`case-${ci}-${qi}`);
+  el.classList.toggle('show');
+  updateProgress();
+  saveState();
+}
+
+// ── RENDER PATHOPHYS ──
+function renderPathophys(){
+  // Graves flow
+  const gf=document.getElementById('graves-flow');
+  gf.innerHTML=gravesFlow.map((n,i)=>`
+    <div class="flow-node ${n.gold?'highlighted':''}" onclick="toggleFlowNode(this)" id="fn${i}">
+      ${n.text}
+      <div class="fn-detail">${n.detail}</div>
+    </div>
+    ${i<gravesFlow.length-1?'<div class="flow-arrow-down">↓</div>':''}`).join('');
+  // Med flow
+  const mf=document.getElementById('med-flow');
+  mf.innerHTML=medFlow.map((n,i)=>`
+    <div class="flow-node ${n.gold?'highlighted':''}" onclick="toggleFlowNode(this)" id="mfn${i}">
+      ${n.text}
+      <div class="fn-detail">${n.detail}</div>
+    </div>
+    ${i<medFlow.length-1?'<div class="flow-arrow-down">↓</div>':''}`).join('');
+  // Path grid
+  const pg=document.getElementById('path-grid');
+  pg.innerHTML=pathItems.map((p,i)=>`
+    <div class="path-item" onclick="togglePathItem(${i})" id="pi${i}">
+      <h5>${p.icon} ${p.title}</h5>
+      <p>${p.desc}</p>
+      <div class="path-detail" id="pid${i}">${p.detail}</div>
+    </div>`).join('');
+}
+
+function toggleFlowNode(el){el.classList.toggle('expanded')}
+function togglePathItem(i){document.getElementById('pid'+i).classList.toggle('show')}
+
+// ── RENDER ALGO ──
+function renderAlgo(){
+  const cont=document.getElementById('algo-container');
+  if(!cont) return;
+  cont.innerHTML=algoSteps.map(s=>`
+    <div class="algo-step">
+      <div class="algo-num">${s.num}</div>
+      <div class="algo-content">
+        <h6>${s.h}</h6>
+        <p>${s.p}</p>
+      </div>
+    </div>`).join('');
+}
+
+// ── RENDER MNEMONICS ──
+function renderMnemonics(){
+  const cont=document.getElementById('mnem-container');
+  cont.innerHTML=mnemonics.map((m,i)=>`
+    <div class="mnem-card" onclick="toggleMnem(${i})">
+      <div class="mnem-word">${m.word}</div>
+      <div class="mnem-title">📌 ${m.title} <span style="float:right;font-size:13px;color:var(--text3)">▼ expand</span></div>
+      <ul class="mnem-list" id="mnem${i}">
+        ${m.items.map(it=>`<li><span class="mnem-letter">${it.l}</span><span>${it.t}</span></li>`).join('')}
+      </ul>
+    </div>`).join('');
+}
+
+function toggleMnem(i){
+  document.getElementById('mnem'+i).classList.toggle('show');
+}
+
+// ── SEARCH ──
+function handleSearch(val){
+  const v=val.toLowerCase().trim();
+  const items=document.querySelectorAll('.search-item');
+  const noRes=document.getElementById('no-results');
+  if(!v){
+    items.forEach(el=>el.classList.remove('hidden-search'));
+    noRes.style.display='none';
+    return;
+  }
+  let found=0;
+  items.forEach(el=>{
+    const kw=el.getAttribute('data-keywords')||'';
+    const txt=el.textContent.toLowerCase();
+    if(kw.includes(v)||txt.includes(v)){
+      el.classList.remove('hidden-search');
+      found++;
+    } else {
+      el.classList.add('hidden-search');
+    }
+  });
+  document.getElementById('search-term').textContent=val;
+  noRes.style.display=found===0?'block':'none';
+}
+
+// ── TABS ──
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('thyroid_tab',name);
+  updateProgress();
+}
+
+// ── PROGRESS ──
+function updateProgress(){
+  const total=quizData.length+flashCards.length+casesData.reduce((a,c)=>a+c.qs.length,0);
+  const done=quizState.totalAnswered+cardFlips+document.querySelectorAll('.case-answer.show').length;
+  const pct=Math.min(100,Math.round(done/total*100));
+  document.getElementById('stat-progress').textContent=pct+'%';
+  localStorage.setItem('thyroid_progress',pct);
+}
+
+// ── STATE ──
+function saveState(){
+  localStorage.setItem('thyroid_quizstate',JSON.stringify(quizState));
+  localStorage.setItem('thyroid_cardflips',cardFlips);
+}
+
+function loadState(){
+  try {
+    const qs=localStorage.getItem('thyroid_quizstate');
+    if(qs){quizState=JSON.parse(qs);}
+    const cf=localStorage.getItem('thyroid_cardflips');
+    if(cf){cardFlips=parseInt(cf)||0;}
+    document.getElementById('stat-cards').textContent=cardFlips;
+    if(quizState.totalAnswered>0){
+      document.getElementById('stat-score').textContent=quizState.score+'/'+quizState.totalAnswered;
+    }
+    document.getElementById('stat-streak').textContent=quizState.streak;
+  } catch(e){}
+}
+
+// ── INIT ──
+(function init(){
+  loadState();
+  renderFlashcards();
+  renderCases();
+  renderPathophys();
+  renderAlgo();
+  renderMnemonics();
+  renderQuiz();
+  updateProgress();
+  // Restore last tab
+  const saved=localStorage.getItem('thyroid_tab');
+  if(saved && saved!=='overview'){
+    const btn=document.querySelector(`.tab-btn[onclick*="'${saved}'"]`);
+    if(btn) switchTab(saved,btn);
+  }
+})();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ENR Checklist – Batch 63</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #141720;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --text: #e8eaf2;
+    --muted: #6b7280;
+    --accent: #6366f1;
+    --accent2: #8b5cf6;
+    --anat:   #d4a017;
+    --hist:   #e05c7a;
+    --phys:   #3dbf7a;
+    --path:   #c084fc;
+    --pharma: #38bdf8;
+    --micro:  #fb923c;
+    --bio:    #f472b6;
+    --para:   #a3e635;
+    --check-study:  #6366f1;
+    --check-solve:  #3dbf7a;
+    --check-revise: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, #141720 0%, #1a1f35 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px 16px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-sub  { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .timer-card { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; }
+  .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; color: var(--accent); letter-spacing: 2px; min-width: 90px; text-align: center; }
+  .timer-btns { display: flex; gap: 6px; }
+  .btn-timer { padding: 5px 12px; border-radius: 7px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all .15s; }
+  .btn-start  { background: var(--accent); color: #fff; }
+  .btn-pause  { background: var(--check-solve); color: #000; }
+  .btn-reset  { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .btn-timer:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+  .progress-area { margin-top: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .progress-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .prog-bar-wrap { flex: 1; min-width: 140px; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width .4s ease; }
+  .progress-pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent); min-width: 36px; text-align: right; }
+  .session-display { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  .tabs-row { display: flex; gap: 8px; padding: 16px 24px 0; overflow-x: auto; scrollbar-width: none; }
+  .tabs-row::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 7px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; white-space: nowrap; transition: all .15s; }
+  .tab-btn.active { background: rgba(99,102,241,.15); color: var(--accent); border-color: var(--accent); }
+  .tab-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  main { padding: 20px 24px 60px; max-width: 900px; margin: 0 auto; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin: 28px 0 14px; }
+  .section-title { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+  .section-count { font-size: 11px; padding: 4px 10px; border-radius: 8px; font-weight: 600; }
+
+  .lecture-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border); border-left-width: 3px; background: var(--surface); margin-bottom: 7px; transition: background .15s; }
+  .lecture-row:hover { background: var(--surface2); }
+  .lec-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--muted); text-align: center; }
+  .lec-name { font-size: 13px; line-height: 1.4; color: var(--text); direction: ltr; text-align: left; }
+  .checkboxes { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .cb-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .cb-label { font-size: 9px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); }
+  .cb { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all .15s; user-select: none; flex-shrink: 0; }
+  .cb.study  { border-color: var(--check-study);  }
+  .cb.solve  { border-color: var(--check-solve);  }
+  .cb.revise { border-color: var(--check-revise); }
+  .cb.study.checked  { background: var(--check-study);  color: #fff; }
+  .cb.solve.checked  { background: var(--check-solve);  color: #000; }
+  .cb.revise.checked { background: var(--check-revise); color: #000; }
+  .lecture-row.done { border-color: rgba(99,102,241,.3); background: rgba(99,102,241,.05); }
+  .lecture-row.done .lec-name { color: var(--muted); text-decoration: line-through; }
+  .college-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; flex-shrink: 0; transition: all .15s; }
+  .college-dot.checked { background: #f59e0b; border-color: #f59e0b; }
+
+  .subject-anat   { background-color: var(--anat);   color: #000; }
+  .subject-hist   { background-color: var(--hist);   color: #fff; }
+  .subject-phys   { background-color: var(--phys);   color: #000; }
+  .subject-path   { background-color: var(--path);   color: #fff; }
+  .subject-pharma { background-color: var(--pharma); color: #000; }
+  .subject-micro  { background-color: var(--micro);  color: #000; }
+  .subject-bio    { background-color: var(--bio);    color: #000; }
+  .subject-para   { background-color: var(--para);   color: #000; }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 12px 0 4px; border-top: 1px solid var(--border); margin-top: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+  .legend-box { width: 10px; height: 10px; border-radius: 3px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 14px 12px; }
+    main { padding: 14px 14px 60px; }
+    .tabs-row { padding: 12px 14px 0; }
+    .lec-name { font-size: 12px; }
+    .cb-label { display: none; }
+    .cb { width: 18px; height: 18px; }
+  }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">🧬</div>
+      <div>
+        <div class="logo-text">ENR Checklist</div>
+        <div class="logo-sub">Batch 63 · Semester 4</div>
+      </div>
+    </div>
+    <div class="timer-card">
+      <div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Study Timer</div>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+      </div>
+      <div>
+        <div class="timer-btns">
+          <button class="btn-timer btn-start" id="startBtn" onclick="startTimer()">▶ Start</button>
+          <button class="btn-timer btn-pause" id="pauseBtn" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
+          <button class="btn-timer btn-reset" onclick="resetTimer()">↺ Reset</button>
+        </div>
+        <div style="margin-top:4px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted)">Total: <span id="totalDisplay">0h 0m</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-area">
+    <span class="progress-label">Overall Progress</span>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+    <span class="session-display" id="checkedCount">0 / 0 lectures</span>
+  </div>
+</header>
+
+<div class="tabs-row">
+  <button class="tab-btn active" onclick="switchTab('endo', this)">🫀 Endocrine</button>
+  <button class="tab-btn" onclick="switchTab('repro', this)">🧬 Reproductive</button>
+</div>
+
+<main>
+
+<!-- ENDOCRINE -->
+<div id="tab-endo" class="tab-content active">
+  <div class="section-header">
+    <div class="section-count subject-anat">Anatomy</div>
+    <span class="section-title" style="color:var(--anat)">Endocrine Anatomy</span>
+    <span id="cnt-endo-anat" class="progress-label"></span>
+  </div>
+  <div id="rows-endo-anat"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-hist">Histology</div>
+    <span class="section-title" style="color:var(--hist)">Endocrine Histology</span>
+    <span id="cnt-endo-hist" class="progress-label"></span>
+  </div>
+  <div id="rows-endo-hist"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-phys">Physiology</div>
+    <span class="section-title" style="color:var(--phys)">Endocrine Physiology</span>
+    <span id="cnt-endo-phys" class="progress-label"></span>
+  </div>
+  <div id="rows-endo-phys"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-path">Pathology</div>
+    <span class="section-title" style="color:var(--path)">Endocrine Pathology</span>
+    <span id="cnt-endo-path" class="progress-label"></span>
+  </div>
+  <div id="rows-endo-path"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-pharma">Pharmacology</div>
+    <span class="section-title" style="color:var(--pharma)">Endocrine Pharmacology</span>
+    <span id="cnt-endo-pharma" class="progress-label"></span>
+  </div>
+  <div id="rows-endo-pharma"></div>
+</div>
+
+<!-- REPRODUCTIVE -->
+<div id="tab-repro" class="tab-content">
+  <div class="section-header">
+    <div class="section-count subject-anat">Anatomy</div>
+    <span class="section-title" style="color:var(--anat)">Reproductive Anatomy</span>
+    <span id="cnt-repro-anat" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-anat"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-hist">Histology</div>
+    <span class="section-title" style="color:var(--hist)">Reproductive Histology</span>
+    <span id="cnt-repro-hist" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-hist"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-phys">Physiology</div>
+    <span class="section-title" style="color:var(--phys)">Reproductive Physiology</span>
+    <span id="cnt-repro-phys" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-phys"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-path">Pathology</div>
+    <span class="section-title" style="color:var(--path)">Reproductive Pathology</span>
+    <span id="cnt-repro-path" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-path"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-pharma">Pharmacology</div>
+    <span class="section-title" style="color:var(--pharma)">Reproductive Pharmacology</span>
+    <span id="cnt-repro-pharma" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-pharma"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-micro">Microbiology</div>
+    <span class="section-title" style="color:var(--micro)">Reproductive Microbiology</span>
+    <span id="cnt-repro-micro" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-micro"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-bio">Biochemistry</div>
+    <span class="section-title" style="color:var(--bio)">Reproductive Biochemistry</span>
+    <span id="cnt-repro-bio" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-bio"></div>
+
+  <div class="section-header">
+    <div class="section-count subject-para">Parasitology</div>
+    <span class="section-title" style="color:var(--para)">Reproductive Parasitology</span>
+    <span id="cnt-repro-para" class="progress-label"></span>
+  </div>
+  <div id="rows-repro-para"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:var(--check-study)"></div>Study</div>
+  <div class="legend-item"><div class="legend-box" style="background:var(--check-solve)"></div>Solve</div>
+  <div class="legend-item"><div class="legend-box" style="background:var(--check-revise)"></div>Revise</div>
+  <div class="legend-item"><div class="legend-box" style="background:#f59e0b;border-radius:50%"></div>College</div>
+</div>
+</main>
+
+<script>
+const DATA = {
+  'endo-anat':   [ {num:2,name:'Thyroid and parathyroid glands (anatomy, development)'}, {num:3,name:'Pancreas and adrenal gland (anatomy, development)'} ],
+  'endo-hist':   [ {num:3,name:'Adrenal gland, pancreatic islets and DNES'} ],
+  'endo-phys':   [ {num:1,name:'Hypothalamus and post pituitary hormones'}, {num:3,name:'Physiology of thyroid hormones'}, {num:5,name:'Physiology of adrenal cortex'}, {num:6,name:'Physiology of adrenal medulla'} ],
+  'endo-path':   [ {num:1,name:'Endocrine 1 (thyroid pathology)'}, {num:2,name:'Endocrine 2 (pancreas, adrenal & pituitary)'} ],
+  'endo-pharma': [ {num:1,name:'Anti-Thyroid Drugs'} ],
+  'repro-anat':  [ {num:3,name:'Gross anatomy of female reproductive system'}, {num:5,name:'Development and descend of gonads (male, female)'}, {num:6,name:'Anatomy and development of the breast and axillary lymph nodes'}, {num:7,name:'Perineum'} ],
+  'repro-hist':  [ {num:1,name:'Testis and spermatogenesis'}, {num:2,name:'Male genital ducts and accessory male genital glands'}, {num:4,name:'Uterus, Placenta and Mammary gland'} ],
+  'repro-phys':  [ {num:1,name:'Spermatogenesis and male sex hormones function'}, {num:2,name:'Physiology of female reproductive cycle and sex hormones'}, {num:3,name:'Physiology of pregnancy and function of placenta'}, {num:4,name:'Physiology of labour and lactation'} ],
+  'repro-path':  [ {num:1,name:'Pathology of male testis & prostate'}, {num:4,name:'Pathology of the ovary'}, {num:5,name:'Pathology of the breast'} ],
+  'repro-pharma':[ {num:1,name:'Hormonal contraception'}, {num:2,name:'Tocolytic and Oxytocic Drugs'} ],
+  'repro-micro': [ {num:1,name:'Bacterial genital system infection'}, {num:2,name:'Viral genital system infection'}, {num:3,name:'Infections in pregnancy, congenital and neonatal infections'} ],
+  'repro-bio':   [ {num:1,name:'Biochemistry of sex hormones'} ],
+  'repro-para':  [ {num:1,name:'Toxoplasmosis'}, {num:2,name:'Parasite of the reproductive system and cancer'} ],
+};
+
+const BORDER_COLORS = { anat:'#d4a017', hist:'#e05c7a', phys:'#3dbf7a', path:'#c084fc', pharma:'#38bdf8', micro:'#fb923c', bio:'#f472b6', para:'#a3e635' };
+
+const STORE_KEY = 'enr63_v2';
+const TIMER_KEY = 'enr63_timer_v2';
+let state = {};
+
+function loadState() { try { state = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { state = {}; } }
+function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function getCheck(s,i,t) { return !!(state[s] && state[s][i] && state[s][i][t]); }
+function toggleCheck(s,i,t) {
+  if (!state[s]) state[s] = {};
+  if (!state[s][i]) state[s][i] = {};
+  state[s][i][t] = !state[s][i][t];
+  saveState();
+  renderRow(s,i);
+  updateProgress();
+  updateSectionCount(s);
+}
+
+function sectionColor(section) {
+  const part = section.split('-')[1];
+  return BORDER_COLORS[part] || '#6366f1';
+}
+
+function buildRow(section, idx, lec) {
+  const div = document.createElement('div');
+  div.className = 'lecture-row';
+  div.id = 'row-'+section+'-'+idx;
+  div.style.borderLeftColor = sectionColor(section);
+  const study   = getCheck(section,idx,'study');
+  const solve   = getCheck(section,idx,'solve');
+  const revise  = getCheck(section,idx,'revise');
+  const college = getCheck(section,idx,'college');
+  if (study && solve && revise) div.classList.add('done');
+  div.innerHTML = `
+    <div class="lec-num">${lec.num}</div>
+    <div class="lec-name">${lec.name}</div>
+    <div class="checkboxes">
+      <div class="cb-wrap">
+        <div class="cb-label">Study</div>
+        <div class="cb study ${study?'checked':''}" onclick="toggleCheck('${section}',${idx},'study')">${study?'✓':''}</div>
+      </div>
+      <div class="cb-wrap">
+        <div class="cb-label">Solve</div>
+        <div class="cb solve ${solve?'checked':''}" onclick="toggleCheck('${section}',${idx},'solve')">${solve?'✓':''}</div>
+      </div>
+      <div class="cb-wrap">
+        <div class="cb-label">Revise</div>
+        <div class="cb revise ${revise?'checked':''}" onclick="toggleCheck('${section}',${idx},'revise')">${revise?'✓':''}</div>
+      </div>
+      <div class="cb-wrap">
+        <div class="cb-label" style="color:#f59e0b">Col</div>
+        <div class="college-dot ${college?'checked':''}" onclick="toggleCheck('${section}',${idx},'college')"></div>
+      </div>
+    </div>`;
+  return div;
+}
+
+function renderRow(section, idx) {
+  const old = document.getElementById('row-'+section+'-'+idx);
+  if (old) old.replaceWith(buildRow(section, idx, DATA[section][idx]));
+}
+
+function renderAll() {
+  Object.keys(DATA).forEach(section => {
+    const container = document.getElementById('rows-'+section);
+    if (!container) return;
+    container.innerHTML = '';
+    DATA[section].forEach((lec,idx) => container.appendChild(buildRow(section,idx,lec)));
+    updateSectionCount(section);
+  });
+  updateProgress();
+}
+
+function updateSectionCount(section) {
+  const el = document.getElementById('cnt-'+section);
+  if (!el) return;
+  const total = DATA[section].length;
+  const done = DATA[section].filter((_,i) => getCheck(section,i,'study') && getCheck(section,i,'solve') && getCheck(section,i,'revise')).length;
+  el.textContent = done+' / '+total+' done';
+}
+
+function updateProgress() {
+  let total=0, checked=0, lecTotal=0, lecDone=0;
+  Object.keys(DATA).forEach(section => {
+    DATA[section].forEach((_,i) => {
+      total+=3; lecTotal++;
+      if (getCheck(section,i,'study'))  checked++;
+      if (getCheck(section,i,'solve'))  checked++;
+      if (getCheck(section,i,'revise')) checked++;
+      if (getCheck(section,i,'study') && getCheck(section,i,'solve') && getCheck(section,i,'revise')) lecDone++;
+    });
+  });
+  const pct = total ? Math.round(checked/total*100) : 0;
+  document.getElementById('progressBar').style.width = pct+'%';
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('checkedCount').textContent = lecDone+' / '+lecTotal+' lectures';
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// TIMER
+let timerInterval=null, elapsedSeconds=0, totalSeconds=0, running=false;
+
+function loadTimer() {
+  try { const t=JSON.parse(localStorage.getItem(TIMER_KEY)); if(t) totalSeconds=t.total||0; } catch {}
+  renderTimer(); updateTotalDisplay();
+}
+function saveTimer() { localStorage.setItem(TIMER_KEY, JSON.stringify({total:totalSeconds})); }
+function renderTimer() {
+  const h=String(Math.floor(elapsedSeconds/3600)).padStart(2,'0');
+  const m=String(Math.floor((elapsedSeconds%3600)/60)).padStart(2,'0');
+  const s=String(elapsedSeconds%60).padStart(2,'0');
+  document.getElementById('timerDisplay').textContent=h+':'+m+':'+s;
+}
+function updateTotalDisplay() {
+  const h=Math.floor(totalSeconds/3600), m=Math.floor((totalSeconds%3600)/60);
+  document.getElementById('totalDisplay').textContent=h+'h '+m+'m';
+}
+function startTimer() {
+  if(running) return; running=true;
+  document.getElementById('startBtn').style.display='none';
+  document.getElementById('pauseBtn').style.display='';
+  timerInterval=setInterval(()=>{ elapsedSeconds++; totalSeconds++; renderTimer(); updateTotalDisplay(); if(elapsedSeconds%30===0) saveTimer(); },1000);
+}
+function pauseTimer() {
+  clearInterval(timerInterval); running=false;
+  document.getElementById('startBtn').style.display='';
+  document.getElementById('pauseBtn').style.display='none';
+  saveTimer();
+}
+function resetTimer() { pauseTimer(); elapsedSeconds=0; renderTimer(); }
+
+loadState(); loadTimer(); renderAll();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

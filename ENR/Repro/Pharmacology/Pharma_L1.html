@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hormonal Contraceptives - Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary: #6C63FF;
+--primary-dark: #5A52D5;
+--primary-light: #8B83FF;
+--secondary: #FF6B9D;
+--accent: #00D2FF;
+--success: #00C851;
+--warning: #FFB300;
+--danger: #FF4444;
+--bg-dark: #0A0E27;
+--bg-card: #12183B;
+--bg-card-hover: #1A2150;
+--bg-surface: #1E2558;
+--text-primary: #FFFFFF;
+--text-secondary: #A0AEC0;
+--text-muted: #636E88;
+--border: rgba(108, 99, 255, 0.2);
+--glow: rgba(108, 99, 255, 0.4);
+--gradient-1: linear-gradient(135deg, #6C63FF, #FF6B9D);
+--gradient-2: linear-gradient(135deg, #00D2FF, #6C63FF);
+--gradient-3: linear-gradient(135deg, #FF6B9D, #FFB300);
+--gradient-4: linear-gradient(135deg, #00C851, #00D2FF);
+--shadow: 0 8px 32px rgba(0,0,0,0.3);
+--shadow-lg: 0 16px 48px rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: 'Inter', sans-serif;
+background: var(--bg-dark);
+color: var(--text-primary);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Animated Background */
+.bg-animation {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+z-index: 0;
+overflow: hidden;
+pointer-events: none;
+}
+
+.bg-orb {
+position: absolute;
+border-radius: 50%;
+filter: blur(80px);
+opacity: 0.15;
+animation: float 20s infinite ease-in-out;
+}
+
+.bg-orb:nth-child(1) {
+width: 400px; height: 400px;
+background: var(--primary);
+top: -100px; left: -100px;
+animation-delay: 0s;
+}
+
+.bg-orb:nth-child(2) {
+width: 300px; height: 300px;
+background: var(--secondary);
+top: 50%; right: -80px;
+animation-delay: -7s;
+}
+
+.bg-orb:nth-child(3) {
+width: 350px; height: 350px;
+background: var(--accent);
+bottom: -100px; left: 30%;
+animation-delay: -14s;
+}
+
+@keyframes float {
+0%, 100% { transform: translate(0, 0) scale(1); }
+25% { transform: translate(40px, -40px) scale(1.1); }
+50% { transform: translate(-20px, 30px) scale(0.95); }
+75% { transform: translate(30px, 20px) scale(1.05); }
+}
+
+/* Header */
+.header {
+position: sticky;
+top: 0;
+z-index: 100;
+background: rgba(10, 14, 39, 0.85);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+padding: 12px 24px;
+}
+
+.header-content {
+max-width: 1400px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.logo-icon {
+width: 42px; height: 42px;
+background: var(--gradient-1);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 22px;
+box-shadow: 0 4px 16px rgba(108,99,255,0.4);
+}
+
+.logo-text h1 {
+font-size: 18px;
+font-weight: 800;
+background: var(--gradient-1);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+line-height: 1.2;
+}
+
+.logo-text span {
+font-size: 11px;
+color: var(--text-muted);
+font-weight: 500;
+}
+
+.stats-bar {
+display: flex;
+gap: 16px;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.stat-item {
+display: flex;
+align-items: center;
+gap: 6px;
+background: var(--bg-card);
+padding: 6px 14px;
+border-radius: 20px;
+font-size: 13px;
+border: 1px solid var(--border);
+}
+
+.stat-item .icon { font-size: 16px; }
+.stat-value {
+font-weight: 700;
+color: var(--accent);
+font-family: 'JetBrains Mono', monospace;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+position: sticky;
+top: 67px;
+z-index: 99;
+background: rgba(10, 14, 39, 0.9);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tabs-inner {
+max-width: 1400px;
+margin: 0 auto;
+display: flex;
+gap: 4px;
+padding: 8px 24px;
+min-width: max-content;
+}
+
+.nav-tab {
+padding: 10px 18px;
+border-radius: 10px;
+border: none;
+background: transparent;
+color: var(--text-secondary);
+cursor: pointer;
+font-family: 'Inter', sans-serif;
+font-size: 13px;
+font-weight: 600;
+white-space: nowrap;
+transition: all 0.3s;
+display: flex;
+align-items: center;
+gap: 6px;
+position: relative;
+}
+
+.nav-tab:hover {
+background: var(--bg-card);
+color: var(--text-primary);
+}
+
+.nav-tab.active {
+background: var(--gradient-1);
+color: white;
+box-shadow: 0 4px 16px rgba(108,99,255,0.4);
+}
+
+.nav-tab .tab-icon { font-size: 16px; }
+
+/* Main Content */
+.main {
+position: relative;
+z-index: 1;
+max-width: 1400px;
+margin: 0 auto;
+padding: 24px;
+}
+
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.card {
+background: var(--bg-card);
+border-radius: 16px;
+padding: 24px;
+border: 1px solid var(--border);
+transition: all 0.3s;
+position: relative;
+overflow: hidden;
+}
+
+.card:hover {
+border-color: var(--primary);
+box-shadow: 0 0 30px rgba(108,99,255,0.15);
+transform: translateY(-2px);
+}
+
+.card-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 16px;
+}
+
+.card-icon {
+width: 44px; height: 44px;
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 22px;
+flex-shrink: 0;
+}
+
+.card-title {
+font-size: 18px;
+font-weight: 700;
+}
+
+.card-subtitle {
+font-size: 13px;
+color: var(--text-muted);
+}
+
+/* Section Title */
+.section-title {
+font-size: 28px;
+font-weight: 800;
+margin-bottom: 8px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.section-subtitle {
+color: var(--text-secondary);
+font-size: 15px;
+margin-bottom: 28px;
+}
+
+/* Grid Layouts */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+/* Tags */
+.tag {
+display: inline-flex;
+align-items: center;
+gap: 4px;
+padding: 4px 10px;
+border-radius: 6px;
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.tag-high-yield { background: rgba(255,68,68,0.15); color: #FF6B6B; }
+.tag-exam { background: rgba(255,179,0,0.15); color: #FFB300; }
+.tag-clinical { background: rgba(0,200,81,0.15); color: #00C851; }
+.tag-mechanism { background: rgba(0,210,255,0.15); color: #00D2FF; }
+
+/* Search */
+.search-box {
+position: relative;
+margin-bottom: 24px;
+}
+
+.search-box input {
+width: 100%;
+padding: 14px 20px 14px 48px;
+background: var(--bg-card);
+border: 2px solid var(--border);
+border-radius: 14px;
+color: var(--text-primary);
+font-size: 15px;
+font-family: 'Inter', sans-serif;
+transition: all 0.3s;
+}
+
+.search-box input:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 20px rgba(108,99,255,0.2);
+}
+
+.search-box .search-icon {
+position: absolute;
+left: 16px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 20px;
+color: var(--text-muted);
+}
+
+/* ===== OVERVIEW TAB ===== */
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+
+.summary-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 20px;
+text-align: center;
+transition: all 0.3s;
+cursor: default;
+}
+
+.summary-card:hover {
+transform: translateY(-4px);
+box-shadow: var(--shadow);
+border-color: var(--primary);
+}
+
+.summary-card .sc-icon { font-size: 36px; margin-bottom: 10px; }
+.summary-card .sc-value {
+font-size: 28px;
+font-weight: 800;
+background: var(--gradient-1);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.summary-card .sc-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin: 28px 0; }
+.timeline::before {
+content: '';
+position: absolute;
+left: 12px; top: 0; bottom: 0;
+width: 3px;
+background: var(--gradient-1);
+border-radius: 3px;
+}
+
+.timeline-item {
+position: relative;
+margin-bottom: 24px;
+padding: 20px;
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+transition: all 0.3s;
+}
+
+.timeline-item:hover {
+border-color: var(--primary);
+box-shadow: 0 0 20px rgba(108,99,255,0.15);
+}
+
+.timeline-item::before {
+content: '';
+position: absolute;
+left: -26px; top: 24px;
+width: 14px; height: 14px;
+background: var(--primary);
+border-radius: 50%;
+border: 3px solid var(--bg-dark);
+box-shadow: 0 0 10px var(--glow);
+}
+
+.timeline-item h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Key Signs Grid */
+.key-signs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+.key-sign-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 20px;
+transition: all 0.3s;
+}
+
+.key-sign-card:hover {
+border-color: var(--primary);
+transform: translateY(-2px);
+}
+
+.key-sign-card h4 {
+font-size: 15px;
+font-weight: 700;
+margin-bottom: 8px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.key-sign-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+.key-sign-card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ===== QUIZ TAB ===== */
+.quiz-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 24px;
+flex-wrap: wrap;
+gap: 16px;
+}
+
+.quiz-progress {
+flex: 1;
+min-width: 200px;
+}
+
+.progress-bar-outer {
+width: 100%;
+height: 10px;
+background: var(--bg-surface);
+border-radius: 10px;
+overflow: hidden;
+margin-top: 8px;
+}
+
+.progress-bar-inner {
+height: 100%;
+background: var(--gradient-1);
+border-radius: 10px;
+transition: width 0.5s ease;
+width: 0%;
+}
+
+.quiz-score {
+display: flex;
+gap: 16px;
+}
+
+.quiz-score-item {
+text-align: center;
+padding: 10px 18px;
+background: var(--bg-card);
+border-radius: 12px;
+border: 1px solid var(--border);
+}
+
+.quiz-score-item .qs-val {
+font-size: 24px;
+font-weight: 800;
+font-family: 'JetBrains Mono', monospace;
+}
+
+.quiz-score-item .qs-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+.quiz-question-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 28px;
+margin-bottom: 20px;
+}
+
+.quiz-q-number {
+font-size: 12px;
+font-weight: 700;
+color: var(--primary-light);
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-bottom: 8px;
+}
+
+.quiz-q-text {
+font-size: 17px;
+font-weight: 600;
+line-height: 1.6;
+margin-bottom: 20px;
+}
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+.quiz-option {
+padding: 14px 18px;
+background: var(--bg-surface);
+border: 2px solid transparent;
+border-radius: 12px;
+cursor: pointer;
+font-size: 14px;
+transition: all 0.3s;
+display: flex;
+align-items: flex-start;
+gap: 12px;
+line-height: 1.5;
+}
+
+.quiz-option:hover:not(.disabled) {
+border-color: var(--primary);
+background: rgba(108,99,255,0.1);
+}
+
+.quiz-option .opt-letter {
+width: 28px; height: 28px;
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+font-size: 13px;
+background: var(--bg-card);
+flex-shrink: 0;
+transition: all 0.3s;
+}
+
+.quiz-option.correct {
+border-color: var(--success);
+background: rgba(0,200,81,0.1);
+animation: pulse-green 0.5s;
+}
+
+.quiz-option.correct .opt-letter {
+background: var(--success);
+color: white;
+}
+
+.quiz-option.wrong {
+border-color: var(--danger);
+background: rgba(255,68,68,0.1);
+animation: shake 0.5s;
+}
+
+.quiz-option.wrong .opt-letter {
+background: var(--danger);
+color: white;
+}
+
+.quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+.quiz-option.correct.disabled, .quiz-option.wrong.disabled { opacity: 1; }
+
+@keyframes pulse-green {
+0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,81,0.4); }
+50% { box-shadow: 0 0 20px 5px rgba(0,200,81,0.2); }
+}
+
+@keyframes shake {
+0%, 100% { transform: translateX(0); }
+20% { transform: translateX(-8px); }
+40% { transform: translateX(8px); }
+60% { transform: translateX(-6px); }
+80% { transform: translateX(6px); }
+}
+
+.quiz-explanation {
+margin-top: 16px;
+padding: 16px;
+background: rgba(108,99,255,0.08);
+border: 1px solid rgba(108,99,255,0.2);
+border-radius: 12px;
+font-size: 14px;
+line-height: 1.7;
+color: var(--text-secondary);
+display: none;
+animation: fadeIn 0.3s;
+}
+
+.quiz-explanation.show { display: block; }
+
+.quiz-explanation strong { color: var(--accent); }
+
+.quiz-nav {
+display: flex;
+justify-content: space-between;
+margin-top: 24px;
+gap: 12px;
+}
+
+.btn {
+padding: 12px 24px;
+border-radius: 12px;
+border: none;
+font-family: 'Inter', sans-serif;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+}
+
+.btn-primary {
+background: var(--gradient-1);
+color: white;
+box-shadow: 0 4px 16px rgba(108,99,255,0.3);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(108,99,255,0.4); }
+.btn-secondary {
+background: var(--bg-surface);
+color: var(--text-primary);
+border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--primary); }
+
+.btn-success { background: var(--gradient-4); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+
+/* ===== FLASHCARDS ===== */
+.flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+.flashcard {
+perspective: 1000px;
+height: 280px;
+cursor: pointer;
+}
+
+.flashcard-inner {
+position: relative;
+width: 100%;
+height: 100%;
+transition: transform 0.6s;
+transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+.flashcard-front, .flashcard-back {
+position: absolute;
+width: 100%;
+height: 100%;
+backface-visibility: hidden;
+border-radius: 16px;
+padding: 24px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+border: 1px solid var(--border);
+}
+
+.flashcard-front {
+background: var(--bg-card);
+}
+
+.flashcard-front .fc-icon { font-size: 36px; margin-bottom: 16px; }
+.flashcard-front h4 { font-size: 16px; font-weight: 600; line-height: 1.5; }
+.flashcard-front .fc-hint { font-size: 12px; color: var(--text-muted); margin-top: 16px; }
+
+.flashcard-back {
+background: var(--bg-surface);
+transform: rotateY(180deg);
+border-color: var(--primary);
+}
+
+.flashcard-back p {
+font-size: 14px;
+line-height: 1.7;
+color: var(--text-secondary);
+}
+
+.flashcard-back .fc-back-title {
+font-size: 13px;
+font-weight: 700;
+color: var(--accent);
+margin-bottom: 12px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+/* ===== CLINICAL CASES ===== */
+.case-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 28px;
+margin-bottom: 24px;
+}
+
+.case-header {
+display: flex;
+align-items: center;
+gap: 16px;
+margin-bottom: 16px;
+}
+
+.case-number {
+width: 48px; height: 48px;
+background: var(--gradient-1);
+border-radius: 14px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+font-weight: 800;
+flex-shrink: 0;
+}
+
+.case-title { font-size: 18px; font-weight: 700; }
+
+.case-vignette {
+background: var(--bg-surface);
+padding: 20px;
+border-radius: 12px;
+margin-bottom: 16px;
+font-size: 14px;
+line-height: 1.8;
+color: var(--text-secondary);
+border-left: 4px solid var(--primary);
+}
+
+.case-question {
+font-size: 15px;
+font-weight: 600;
+margin: 12px 0;
+}
+
+.case-answer {
+background: rgba(0,200,81,0.08);
+border: 1px solid rgba(0,200,81,0.2);
+border-radius: 12px;
+padding: 20px;
+margin-top: 12px;
+display: none;
+animation: fadeIn 0.3s;
+font-size: 14px;
+line-height: 1.7;
+color: var(--text-secondary);
+}
+
+.case-answer.show { display: block; }
+.case-answer strong { color: var(--success); }
+
+.case-questions-list { margin-top: 16px; }
+.case-q-item { margin-bottom: 16px; }
+
+/* ===== ANATOMY/MECHANISM ===== */
+.mechanism-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
+
+.mechanism-item {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 20px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.mechanism-item:hover {
+border-color: var(--primary);
+transform: translateY(-2px);
+}
+
+.mechanism-item .mi-icon { font-size: 32px; margin-bottom: 12px; }
+.mechanism-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.mechanism-item p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+.mechanism-item .mi-detail {
+margin-top: 12px;
+padding-top: 12px;
+border-top: 1px solid var(--border);
+font-size: 13px;
+color: var(--text-muted);
+display: none;
+animation: fadeIn 0.3s;
+line-height: 1.6;
+}
+
+.mechanism-item.expanded .mi-detail { display: block; }
+
+/* Flow Chart */
+.flow-chart {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0;
+margin: 28px 0;
+}
+
+.flow-step {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 18px 28px;
+text-align: center;
+max-width: 600px;
+width: 100%;
+transition: all 0.3s;
+}
+
+.flow-step:hover {
+border-color: var(--primary);
+box-shadow: 0 0 20px rgba(108,99,255,0.15);
+}
+
+.flow-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.flow-step p { font-size: 13px; color: var(--text-secondary); }
+
+.flow-arrow {
+font-size: 24px;
+color: var(--primary);
+padding: 4px 0;
+}
+
+/* ===== DIAGNOSIS TAB ===== */
+.criteria-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 20px;
+}
+
+.criteria-card h3 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.criteria-list { list-style: none; }
+.criteria-list li {
+padding: 10px 16px;
+border-bottom: 1px solid var(--border);
+font-size: 14px;
+color: var(--text-secondary);
+display: flex;
+align-items: flex-start;
+gap: 10px;
+line-height: 1.6;
+}
+
+.criteria-list li:last-child { border-bottom: none; }
+.criteria-list li .cl-icon { flex-shrink: 0; font-size: 16px; }
+
+/* Badge Grid */
+.badge-grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+
+.badge {
+padding: 8px 16px;
+border-radius: 20px;
+font-size: 13px;
+font-weight: 600;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.badge:hover { transform: scale(1.05); }
+
+.badge-purple { background: rgba(108,99,255,0.15); color: var(--primary-light); border: 1px solid rgba(108,99,255,0.3); }
+.badge-pink { background: rgba(255,107,157,0.15); color: var(--secondary); border: 1px solid rgba(255,107,157,0.3); }
+.badge-blue { background: rgba(0,210,255,0.15); color: var(--accent); border: 1px solid rgba(0,210,255,0.3); }
+.badge-green { background: rgba(0,200,81,0.15); color: var(--success); border: 1px solid rgba(0,200,81,0.3); }
+.badge-yellow { background: rgba(255,179,0,0.15); color: var(--warning); border: 1px solid rgba(255,179,0,0.3); }
+.badge-red { background: rgba(255,68,68,0.15); color: var(--danger); border: 1px solid rgba(255,68,68,0.3); }
+
+/* Comparison Table */
+.comp-table-wrapper { overflow-x: auto; margin: 20px 0; border-radius: 14px; border: 1px solid var(--border); }
+
+.comp-table {
+width: 100%;
+border-collapse: collapse;
+font-size: 13px;
+}
+
+.comp-table th {
+background: var(--bg-surface);
+padding: 14px 16px;
+text-align: left;
+font-weight: 700;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: var(--text-secondary);
+border-bottom: 2px solid var(--border);
+white-space: nowrap;
+}
+
+.comp-table td {
+padding: 12px 16px;
+border-bottom: 1px solid var(--border);
+color: var(--text-secondary);
+line-height: 1.5;
+}
+
+.comp-table tr:hover td { background: rgba(108,99,255,0.05); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ===== TREATMENT TAB ===== */
+.treatment-section { margin-bottom: 28px; }
+.treatment-section h3 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.drug-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 20px;
+margin-bottom: 12px;
+transition: all 0.3s;
+}
+
+.drug-card:hover {
+border-color: var(--primary);
+}
+
+.drug-card .drug-name {
+font-size: 16px;
+font-weight: 700;
+margin-bottom: 6px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.drug-card .drug-info {
+font-size: 13px;
+color: var(--text-secondary);
+line-height: 1.6;
+}
+
+.urgency-high { border-left: 4px solid var(--danger); }
+.urgency-medium { border-left: 4px solid var(--warning); }
+.urgency-low { border-left: 4px solid var(--success); }
+.urgency-info { border-left: 4px solid var(--accent); }
+
+/* ===== MNEMONICS ===== */
+.mnemonic-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 20px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.mnemonic-card:hover {
+border-color: var(--primary);
+transform: translateY(-2px);
+}
+
+.mnemonic-title {
+font-size: 22px;
+font-weight: 800;
+margin-bottom: 8px;
+letter-spacing: 4px;
+}
+
+.mnemonic-subtitle {
+font-size: 14px;
+color: var(--text-muted);
+margin-bottom: 16px;
+}
+
+.mnemonic-list {
+list-style: none;
+display: none;
+animation: fadeIn 0.3s;
+}
+
+.mnemonic-card.expanded .mnemonic-list { display: block; }
+
+.mnemonic-list li {
+padding: 8px 0;
+font-size: 14px;
+color: var(--text-secondary);
+display: flex;
+align-items: flex-start;
+gap: 10px;
+line-height: 1.5;
+}
+
+.mnemonic-list .ml-letter {
+font-weight: 800;
+font-size: 18px;
+width: 28px;
+flex-shrink: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+.header-content { flex-direction: column; align-items: flex-start; }
+.stats-bar { width: 100%; justify-content: space-between; }
+.main { padding: 16px; }
+.section-title { font-size: 22px; }
+.grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+.summary-cards { grid-template-columns: repeat(2, 1fr); }
+.flashcard-grid { grid-template-columns: 1fr; }
+.key-signs-grid { grid-template-columns: 1fr; }
+.quiz-header { flex-direction: column; }
+.quiz-score { width: 100%; justify-content: space-around; }
+.mechanism-grid { grid-template-columns: 1fr; }
+.flow-step { max-width: 100%; }
+}
+
+/* Motivational Message */
+.motivational {
+text-align: center;
+padding: 24px;
+margin: 20px 0;
+background: var(--bg-card);
+border-radius: 16px;
+border: 1px solid var(--border);
+}
+
+.motivational .mot-emoji { font-size: 48px; margin-bottom: 12px; }
+.motivational .mot-text { font-size: 16px; font-weight: 600; color: var(--text-secondary); }
+
+/* Reset / Restart Button */
+.reset-btn {
+position: fixed;
+bottom: 24px;
+right: 24px;
+z-index: 200;
+width: 50px; height: 50px;
+border-radius: 50%;
+background: var(--gradient-1);
+border: none;
+color: white;
+font-size: 20px;
+cursor: pointer;
+box-shadow: var(--shadow-lg);
+transition: all 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.reset-btn:hover { transform: scale(1.1); }
+
+/* Essay Questions */
+.essay-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 20px;
+margin-bottom: 16px;
+}
+
+.essay-card h4 {
+font-size: 15px;
+font-weight: 700;
+margin-bottom: 8px;
+color: var(--primary-light);
+}
+
+.essay-card p {
+font-size: 13px;
+color: var(--text-muted);
+font-style: italic;
+}
+
+/* Side effects grid category */
+.se-category {
+margin-bottom: 16px;
+}
+
+.se-category h4 {
+font-size: 14px;
+font-weight: 700;
+padding: 8px 14px;
+border-radius: 8px;
+margin-bottom: 8px;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+}
+
+.se-category ul {
+list-style: none;
+padding-left: 0;
+}
+
+.se-category li {
+padding: 6px 14px;
+font-size: 13px;
+color: var(--text-secondary);
+border-left: 2px solid var(--border);
+margin-left: 8px;
+margin-bottom: 4px;
+}
+
+.hidden { display: none !important; }
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<div class="bg-animation">
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+</div>
+
+<!-- Header -->
+<header class="header">
+<div class="header-content">
+<div class="logo">
+<div class="logo-icon">💊</div>
+<div class="logo-text">
+<h1>Hormonal Contraceptives</h1>
+<span>Pharmacology Study Platform</span>
+</div>
+</div>
+<div class="stats-bar">
+<div class="stat-item">
+<span class="icon">📊</span>
+<span>Progress:</span>
+<span class="stat-value" id="overall-progress">0%</span>
+</div>
+<div class="stat-item">
+<span class="icon">🎯</span>
+<span>Score:</span>
+<span class="stat-value" id="overall-score">0/25</span>
+</div>
+<div class="stat-item">
+<span class="icon">🔥</span>
+<span>Streak:</span>
+<span class="stat-value" id="streak-counter">0</span>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Navigation -->
+<nav class="nav-tabs">
+<div class="nav-tabs-inner">
+<button class="nav-tab active" data-tab="overview"><span class="tab-icon">🏠</span> Overview</button>
+<button class="nav-tab" data-tab="quiz"><span class="tab-icon">❓</span> Quiz</button>
+<button class="nav-tab" data-tab="flashcards"><span class="tab-icon">🃏</span> Flashcards</button>
+<button class="nav-tab" data-tab="cases"><span class="tab-icon">🏥</span> Cases</button>
+<button class="nav-tab" data-tab="mechanism"><span class="tab-icon">🔬</span> Mechanism</button>
+<button class="nav-tab" data-tab="diagnosis"><span class="tab-icon">🔍</span> Contraindications</button>
+<button class="nav-tab" data-tab="treatment"><span class="tab-icon">💉</span> Treatment</button>
+<button class="nav-tab" data-tab="mnemonics"><span class="tab-icon">🧠</span> Mnemonics</button>
+</div>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+<!-- ===== OVERVIEW TAB ===== -->
+<div class="tab-content active" id="tab-overview">
+<h2 class="section-title">📋 Overview</h2>
+<p class="section-subtitle">Master Hormonal Contraceptives — Types, Mechanisms, Interactions & Side Effects</p>
+
+<div class="search-box">
+<span class="search-icon">🔎</span>
+<input type="text" id="overview-search" placeholder="Search concepts, drugs, mechanisms...">
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-cards">
+<div class="summary-card">
+<div class="sc-icon">💊</div>
+<div class="sc-value">2</div>
+<div class="sc-label">Main Pill Types</div>
+</div>
+<div class="summary-card">
+<div class="sc-icon">⚠️</div>
+<div class="sc-value">3</div>
+<div class="sc-label">Failure Mechanisms</div>
+</div>
+<div class="summary-card">
+<div class="sc-icon">🚫</div>
+<div class="sc-value">6+</div>
+<div class="sc-label">Contraindications</div>
+</div>
+<div class="summary-card">
+<div class="sc-icon">📦</div>
+<div class="sc-value">5+</div>
+<div class="sc-label">Delivery Forms</div>
+</div>
+<div class="summary-card">
+<div class="sc-icon">🧬</div>
+<div class="sc-value">4</div>
+<div class="sc-label">MOA Pathways</div>
+</div>
+</div>
+
+<!-- Types Timeline -->
+<h3 style="font-size:20px;font-weight:700;margin:28px 0 16px;display:flex;align-items:center;gap:10px;">⏱️ Types of Hormonal Contraceptives</h3>
+<div class="timeline" id="overview-timeline">
+<div class="timeline-item searchable" data-search="COC combined oral contraceptive estrogen progestin ethinyl estradiol ovulation LH FSH">
+<h4>💊 Combined Oral Contraceptives (COCs)</h4>
+<p>Contain synthetic estrogen (ethinyl estradiol) + synthetic progestin. Inhibit ovulation via negative feedback on LH & FSH. Taken 21–24 days active + 4–7 days placebo. Available as monophasic, biphasic, or triphasic formulations.</p>
+<div class="tags" style="margin-top:8px;">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+<span class="tag tag-mechanism">⚙️ MECHANISM</span>
+</div>
+</div>
+<div class="timeline-item searchable" data-search="POP progestogen only pill mini pill norgestrel breastfeeding lactation cervical mucus endometrial atrophy">
+<h4>💊 Progestogen-Only Pills (POPs / Mini-pills)</h4>
+<p>Contain only progestin (e.g., norgestrel). Modify cervical mucus, cause endometrial atrophy, variably inhibit ovulation. Taken daily without placebo. Ideal for breastfeeding women (no effect on lactation).</p>
+<div class="tags" style="margin-top:8px;">
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+<span class="tag tag-clinical">💡 CLINICAL PEARL</span>
+</div>
+</div>
+<div class="timeline-item searchable" data-search="injectable medroxyprogesterone injection IM progestin long acting infertility">
+<h4>💉 Injectable Progestins</h4>
+<p>Medroxyprogesterone acetate given IM every 3 months. Long-acting. Note: infertility may persist for many months after last injection.</p>
+<div class="tags" style="margin-top:8px;">
+<span class="tag tag-clinical">💡 CLINICAL PEARL</span>
+</div>
+</div>
+<div class="timeline-item searchable" data-search="implant subdermal levonorgestrel arm 3 5 years LARC">
+<h4>📌 Progestin Implants</h4>
+<p>Subdermally placed (usually upper arm). Contains levonorgestrel. Effective 3–5 years. LARC method (Long-Acting Reversible Contraceptive).</p>
+</div>
+<div class="timeline-item searchable" data-search="IUS intrauterine system levonorgestrel progestin local endometrial atrophy bleeding anemia">
+<h4>🔄 Progestin Intrauterine System (IUS)</h4>
+<p>Continuous local low-dose levonorgestrel. Induces endometrial atrophy → dramatically decreases bleeding. Excellent for patients with heavy periods & anemia.</p>
+<div class="tags" style="margin-top:8px;">
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+</div>
+</div>
+<div class="timeline-item searchable" data-search="transdermal patch skin ethinyl estradiol norelgestromin weekly abdomen">
+<h4>🩹 Transdermal Patch</h4>
+<p>Delivers ethinyl estradiol + norelgestromin through the skin. Applied to abdomen/upper torso/buttock. Changed weekly for 3 weeks, off for 1 week.</p>
+</div>
+<div class="timeline-item searchable" data-search="vaginal ring etonogestrel ethinyl estradiol 3 weeks 1 week withdrawal bleeding">
+<h4>💍 Vaginal Ring</h4>
+<p>Contains ethinyl estradiol + etonogestrel. Inserted vaginally for 3 weeks, removed for 1 week to allow withdrawal bleeding.</p>
+</div>
+<div class="timeline-item searchable" data-search="emergency contraception postcoital levonorgestrel 72 hours morning after plan B">
+<h4>🚨 Emergency Contraception (Postcoital)</h4>
+<p>Levonorgestrel taken within 72 hours of unprotected intercourse, repeated 12 hours later. NOT a routine method.</p>
+<div class="tags" style="margin-top:8px;">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+</div>
+</div>
+</div>
+
+<!-- Key Clinical Signs -->
+<h3 style="font-size:20px;font-weight:700;margin:28px 0 16px;display:flex;align-items:center;gap:10px;">🎯 Key Clinical Concepts</h3>
+<div class="key-signs-grid" id="overview-signs">
+<div class="key-sign-card searchable" data-search="enterohepatic circulation antibiotic failure bacteria glucuronic acid estrogen reabsorption">
+<h4>🔄 Enterohepatic Recycling</h4>
+<p>Liver conjugates estrogen with glucuronic acid → excreted in bile → intestinal bacteria cleave the bond → free estrogen reabsorbed. Antibiotics kill flora → estrogen excreted in stool → pregnancy.</p>
+<div class="tags">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="enzyme induction rifampin phenytoin metabolism failure drug interaction">
+<h4>⚡ Enzyme Inducers</h4>
+<p>Rifampin & Phenytoin induce hepatic CYP enzymes → accelerate estrogen/progestin metabolism → contraceptive failure.</p>
+<div class="tags">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+<span class="tag tag-mechanism">⚙️ MECHANISM</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="laxative paraffin oil absorption GI failure">
+<h4>🧴 Laxative Interaction</h4>
+<p>Paraffin oil (liquid paraffin) physically decreases intestinal absorption of oral contraceptives → failure.</p>
+<div class="tags">
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="weight gain steroid salt water retention edema">
+<h4>⚖️ Weight Gain (#1 Complaint)</h4>
+<p>Steroid nucleus → salt & water retention → weight gain & edema. Most common patient complaint.</p>
+<div class="tags">
+<span class="tag tag-clinical">💡 CLINICAL PEARL</span>
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="cardiovascular MI thrombosis hypertension smoking age 35 contraindication">
+<h4>❤️ CVS Risk (Smokers >35)</h4>
+<p>COCs are absolutely contraindicated in smokers >35 years. Risk of MI, thrombosis, hypertension dramatically elevated.</p>
+<div class="tags">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+<span class="tag tag-clinical">💡 CLINICAL PEARL</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="breastfeeding lactation POP progestin only estrogen inhibit milk">
+<h4>🍼 Breastfeeding & POPs</h4>
+<p>Estrogen inhibits lactation → POPs are the "breastfeeding pills." Progestin alone does not affect milk production.</p>
+<div class="tags">
+<span class="tag tag-exam">⭐ EXAM FAVORITE</span>
+<span class="tag tag-clinical">💡 CLINICAL PEARL</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="migraine headache stroke CNS contraindication cerebral hemorrhage">
+<h4>🧠 Migraine = STOP COCs</h4>
+<p>New onset migraine with aura is an absolute contraindication to continuing COCs. Risk of stroke increases 2–10x.</p>
+<div class="tags">
+<span class="tag tag-high-yield">🔥 HIGH-YIELD</span>
+</div>
+</div>
+<div class="key-sign-card searchable" data-search="withdrawal bleeding placebo 21 24 days cycle menstruation">
+<h4>🩸 Withdrawal Bleeding</h4>
+<p>Active pills taken 21–24 days → 4–7 days placebo → hormone levels drop → endometrial shedding = withdrawal bleeding (not true menstruation).</p>
+<div class="tags">
+<span class="tag tag-mechanism">⚙️ MECHANISM</span>
+</div>
+</div>
+</div>
+
+<!-- Essay Questions -->
+<h3 style="font-size:20px;font-weight:700;margin:28px 0 16px;display:flex;align-items:center;gap:10px;">📝 Essay Practice Questions</h3>
+<div class="essay-card">
+<h4>Q1: Compare and contrast the mechanisms of action between COCs and POPs.</h4>
+<p>Source: Hormonal Contraception.pdf, Pharma 1 repro.m4a</p>
+</div>
+<div class="essay-card">
+<h4>Q2: Describe the non-oral forms of hormonal contraceptives and their specific clinical advantages.</h4>
+<p>Source: Hormonal Contraception.pdf, Pharma 1 repro.m4a</p>
+</div>
+<div class="essay-card">
+<h4>Q3: Explain the pharmacological mechanism behind contraceptive failure when cephalosporins are co-prescribed.</h4>
+<p>Source: Hormonal Contraception.pdf, Pharma 1 repro.m4a</p>
+</div>
+<div class="essay-card">
+<h4>Q4: Discuss systemic side effects of COCs categorized by organ system (CVS, CNS, GIT, Endocrine).</h4>
+<p>Source: Hormonal Contraception.pdf, Pharma 1 repro.m4a</p>
+</div>
+</div>
+
+<!-- ===== QUIZ TAB ===== -->
+<div class="tab-content" id="tab-quiz">
+<h2 class="section-title">❓ Quiz Mode</h2>
+<p class="section-subtitle">Test your knowledge — 25 MCQs with instant feedback</p>
+
+<div class="quiz-header">
+<div class="quiz-progress">
+<span style="font-size:14px;font-weight:600;">Question <span id="q-current">1</span> of <span id="q-total">25</span></span>
+<div class="progress-bar-outer">
+<div class="progress-bar-inner" id="quiz-progress-bar"></div>
+</div>
+</div>
+<div class="quiz-score">
+<div class="quiz-score-item">
+<div class="qs-val" id="quiz-correct" style="color:var(--success);">0</div>
+<div class="qs-label">Correct</div>
+</div>
+<div class="quiz-score-item">
+<div class="qs-val" id="quiz-wrong" style="color:var(--danger);">0</div>
+<div class="qs-label">Wrong</div>
+</div>
+<div class="quiz-score-item">
+<div class="qs-val" id="quiz-streak" style="color:var(--warning);">0</div>
+<div class="qs-label">🔥 Streak</div>
+</div>
+</div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div class="quiz-nav">
+<button class="btn btn-secondary" id="quiz-prev" disabled>⬅️ Previous</button>
+<button class="btn btn-primary" id="quiz-next">Next ➡️</button>
+</div>
+
+<div class="motivational" id="quiz-complete" style="display:none;">
+<div class="mot-emoji">🏆</div>
+<div class="mot-text" id="quiz-final-msg">Great work!</div>
+<button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:16px;">🔄 Restart Quiz</button>
+</div>
+</div>
+
+<!-- ===== FLASHCARDS TAB ===== -->
+<div class="tab-content" id="tab-flashcards">
+<h2 class="section-title">🃏 Flashcards</h2>
+<p class="section-subtitle">Click any card to flip — 20 essential concepts</p>
+
+<div class="flashcard-grid" id="flashcard-container"></div>
+</div>
+
+<!-- ===== CLINICAL CASES TAB ===== -->
+<div class="tab-content" id="tab-cases">
+<h2 class="section-title">🏥 Clinical Cases</h2>
+<p class="section-subtitle">Exam-style vignettes with detailed answers</p>
+
+<div id="cases-container"></div>
+</div>
+
+<!-- ===== MECHANISM TAB ===== -->
+<div class="tab-content" id="tab-mechanism">
+<h2 class="section-title">🔬 Mechanisms of Action</h2>
+<p class="section-subtitle">Interactive pathophysiology & flow charts</p>
+
+<h3 style="font-size:18px;font-weight:700;margin-bottom:16px;">🎯 Key Structures & Processes (Click to Expand)</h3>
+<div class="mechanism-grid" id="mechanism-grid"></div>
+
+<h3 style="font-size:18px;font-weight:700;margin:28px 0 16px;">🔄 Enterohepatic Circulation — Step-by-Step</h3>
+<div class="flow-chart">
+<div class="flow-step" style="border-color:var(--primary);">
+<h4>💊 Step 1: Oral Intake</h4>
+<p>Estrogen (ethinyl estradiol) is absorbed from GI tract into bloodstream</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--accent);">
+<h4>🏭 Step 2: Hepatic Conjugation</h4>
+<p>Liver conjugates estrogen with <strong style="color:var(--accent);">glucuronic acid</strong> → water-soluble conjugate</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--warning);">
+<h4>💧 Step 3: Biliary Excretion</h4>
+<p>Conjugated estrogen excreted via bile into the intestinal lumen</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--success);">
+<h4>🦠 Step 4: Bacterial Cleavage</h4>
+<p>Intestinal bacteria produce enzymes that <strong style="color:var(--success);">cleave the glucuronic acid bond</strong> → free active estrogen</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--secondary);">
+<h4>🔄 Step 5: Reabsorption</h4>
+<p>Free estrogen is reabsorbed into bloodstream → extends duration of action to ~24 hours</p>
+</div>
+</div>
+
+<div class="card" style="margin-top:28px;border-color:var(--danger);">
+<div class="card-header">
+<div class="card-icon" style="background:rgba(255,68,68,0.15);color:var(--danger);">⚠️</div>
+<div>
+<div class="card-title">Disruption = Contraceptive Failure</div>
+<div class="card-subtitle">3 mechanisms of drug interaction</div>
+</div>
+</div>
+<div class="grid-3">
+<div class="drug-card urgency-high">
+<div class="drug-name">🦠 Broad-Spectrum Antibiotics</div>
+<div class="drug-info">Tetracyclines, Cephalosporins — Kill intestinal flora → no bacterial cleavage → estrogen stays conjugated → excreted in stool</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">⚡ Enzyme Inducers</div>
+<div class="drug-info">Rifampin, Phenytoin — Induce hepatic CYP enzymes → accelerated metabolism → lower hormone levels</div>
+</div>
+<div class="drug-card urgency-high">
+<div class="drug-name">🧴 Laxatives</div>
+<div class="drug-info">Paraffin oil — Physically decreases intestinal absorption → pills rush through GI tract → inadequate absorption</div>
+</div>
+</div>
+</div>
+
+<h3 style="font-size:18px;font-weight:700;margin:28px 0 16px;">💊 COC Mechanism Flow Chart</h3>
+<div class="flow-chart">
+<div class="flow-step" style="border-color:var(--primary);">
+<h4>💊 COC Ingested</h4>
+<p>Ethinyl estradiol + Synthetic progestin</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--accent);">
+<h4>🧠 Hypothalamic-Pituitary Axis</h4>
+<p>Negative feedback → ↓ GnRH → ↓ FSH (estrogen) & ↓ LH (progestin)</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--success);">
+<h4>🚫 Ovulation Inhibited</h4>
+<p>No LH surge → no mature follicle release</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step" style="border-color:var(--warning);">
+<h4>🔒 Additional Barriers</h4>
+<p>↑ Cervical mucus thickness + Endometrial changes + Altered tubal motility</p>
+</div>
+</div>
+</div>
+
+<!-- ===== CONTRAINDICATIONS (DIAGNOSIS) TAB ===== -->
+<div class="tab-content" id="tab-diagnosis">
+<h2 class="section-title">🔍 Contraindications & Side Effects</h2>
+<p class="section-subtitle">Know when NOT to prescribe & what to watch for</p>
+
+<div class="criteria-card">
+<h3>🚫 Absolute Contraindications for COCs</h3>
+<ul class="criteria-list">
+<li><span class="cl-icon">❌</span>Ischemic Heart Disease (IHD)</li>
+<li><span class="cl-icon">❌</span>Active or history of thromboembolism (DVT/PE)</li>
+<li><span class="cl-icon">❌</span>Smokers over 35 years of age</li>
+<li><span class="cl-icon">❌</span>Migraine with aura</li>
+<li><span class="cl-icon">❌</span>Breast cancer (estrogen-dependent tumors)</li>
+<li><span class="cl-icon">❌</span>Active liver disease / cholestatic hepatitis</li>
+<li><span class="cl-icon">❌</span>Pregnancy (known or suspected)</li>
+<li><span class="cl-icon">❌</span>Uncontrolled hypertension</li>
+</ul>
+</div>
+
+<h3 style="font-size:18px;font-weight:700;margin:20px 0 16px;">⚠️ Side Effects by Organ System</h3>
+
+<div class="grid-2">
+<div class="card">
+<div class="se-category">
+<h4 style="background:rgba(255,68,68,0.15);color:#FF6B6B;">❤️ Cardiovascular (CVS)</h4>
+<ul>
+<li>Hypertension (salt & water retention)</li>
+<li>Myocardial Infarction (especially smokers >35)</li>
+<li>Thromboembolism (DVT, PE)</li>
+<li>Increased thrombotic tendency</li>
+</ul>
+</div>
+</div>
+<div class="card">
+<div class="se-category">
+<h4 style="background:rgba(0,210,255,0.15);color:var(--accent);">🧠 Central Nervous System (CNS)</h4>
+<ul>
+<li>Migraine headache</li>
+<li>Stroke (cerebral hemorrhage — 2-10x risk)</li>
+<li>Mood changes & Depression</li>
+<li>Visual disturbances / Auras</li>
+</ul>
+</div>
+</div>
+<div class="card">
+<div class="se-category">
+<h4 style="background:rgba(255,179,0,0.15);color:var(--warning);">🫄 Gastrointestinal (GIT)</h4>
+<ul>
+<li>Nausea & Vomiting</li>
+<li>Cholestatic hepatitis</li>
+<li>Gallstones (cholecystitis)</li>
+<li>Biliary stasis</li>
+</ul>
+</div>
+</div>
+<div class="card">
+<div class="se-category">
+<h4 style="background:rgba(0,200,81,0.15);color:var(--success);">🧬 Endocrine / Metabolic</h4>
+<ul>
+<li>Weight gain (#1 complaint — salt/water retention)</li>
+<li>Edema</li>
+<li>Hyperglycemia</li>
+<li>Breast tenderness</li>
+</ul>
+</div>
+</div>
+</div>
+
+<h3 style="font-size:18px;font-weight:700;margin:28px 0 16px;">📊 COCs vs POPs — Comparison</h3>
+<div class="comp-table-wrapper">
+<table class="comp-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th>COCs</th>
+<th>POPs (Mini-pills)</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Composition</strong></td><td>Estrogen + Progestin</td><td>Progestin only</td></tr>
+<tr><td><strong>Ovulation Inhibition</strong></td><td>Reliable / Consistent</td><td>Variable / Inconsistent</td></tr>
+<tr><td><strong>Cervical Mucus</strong></td><td>Thickened</td><td>Thickened (primary mechanism)</td></tr>
+<tr><td><strong>Endometrium</strong></td><td>Modified</td><td>Atrophic</td></tr>
+<tr><td><strong>Failure Rate</strong></td><td>Lower (with compliance)</td><td>Slightly higher</td></tr>
+<tr><td><strong>Irregular Bleeding</strong></td><td>Less common</td><td>Much higher incidence</td></tr>
+<tr><td><strong>Breastfeeding</strong></td><td>❌ Estrogen inhibits lactation</td><td>✅ Safe — "breastfeeding pill"</td></tr>
+<tr><td><strong>Placebo Days</strong></td><td>4-7 days for withdrawal bleeding</td><td>None — taken daily continuously</td></tr>
+<tr><td><strong>CVS Risk</strong></td><td>Higher (thrombosis, MI)</td><td>Lower</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 style="font-size:18px;font-weight:700;margin:28px 0 16px;">💊 Drug Interactions — Quick Reference</h3>
+<div class="badge-grid">
+<span class="badge badge-red">🦠 Tetracyclines</span>
+<span class="badge badge-red">🦠 Cephalosporins</span>
+<span class="badge badge-yellow">⚡ Rifampin</span>
+<span class="badge badge-yellow">⚡ Phenytoin</span>
+<span class="badge badge-purple">🧴 Paraffin Oil</span>
+<span class="badge badge-blue">🔄 All kill enterohepatic cycle</span>
+</div>
+
+<div class="comp-table-wrapper" style="margin-top:16px;">
+<table class="comp-table">
+<thead>
+<tr>
+<th>Drug</th>
+<th>Mechanism of Interaction</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Tetracyclines / Cephalosporins</strong></td><td>Kill intestinal flora → disrupt enterohepatic recycling</td><td>↓ Estrogen reabsorption → Failure</td></tr>
+<tr><td><strong>Rifampin / Phenytoin</strong></td><td>Hepatic enzyme induction (CYP450)</td><td>↑ Metabolism → ↓ Hormone levels → Failure</td></tr>
+<tr><td><strong>Paraffin Oil (Laxative)</strong></td><td>Physical decrease in GI absorption</td><td>Pills pass through → Not absorbed → Failure</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="flow-chart" style="margin-top:28px;">
+<div class="flow-step" style="background:var(--gradient-1);color:white;border:none;">
+<h4>🧪 Step-by-Step Diagnostic Algorithm: Contraceptive Failure</h4>
+<p>When a woman on OCP becomes pregnant</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">
+<h4>📋 Step 1: Take Detailed Drug History</h4>
+<p>Any antibiotics, anticonvulsants, or laxatives in the past month?</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">
+<h4>💊 Step 2: Check Compliance</h4>
+<p>Missed pills? Vomiting/diarrhea during active pill days?</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">
+<h4>⚙️ Step 3: Identify Interaction Mechanism</h4>
+<p>Enzyme induction? Flora disruption? Malabsorption?</p>
+</div>
+<div class="flow-arrow">⬇️</div>
+<div class="flow-step">
+<h4>🛡️ Step 4: Advise Barrier Method</h4>
+<p>Always recommend condoms during & 7 days after interacting drug course</p>
+</div>
+</div>
+</div>
+
+<!-- ===== TREATMENT TAB ===== -->
+<div class="tab-content" id="tab-treatment">
+<h2 class="section-title">💉 Drug Forms & Administration</h2>
+<p class="section-subtitle">All hormonal contraceptive options with dosing and schedules</p>
+
+<div class="treatment-section">
+<h3>🚨 Emergency / Acute</h3>
+<div class="drug-card urgency-high">
+<div class="drug-name">🆘 Emergency Contraception (Levonorgestrel)</div>
+<div class="drug-info">
+<strong>Dose:</strong> First dose within 72 hours of unprotected intercourse, second dose 12 hours later.<br>
+<strong>MOA:</strong> High-dose progestin disrupts ovulation/implantation.<br>
+<strong>Note:</strong> NOT a routine contraceptive method. Efficacy decreases with time delay.
+</div>
+</div>
+</div>
+
+<div class="treatment-section">
+<h3>💊 Oral Formulations</h3>
+<div class="drug-card urgency-info">
+<div class="drug-name">💊 Combined Oral Contraceptives (COCs)</div>
+<div class="drug-info">
+<strong>Components:</strong> Ethinyl estradiol + synthetic progestin (e.g., norgestrel, desogestrel, drospirenone)<br>
+<strong>Schedule:</strong> 21-24 days active pills + 4-7 days placebo<br>
+<strong>Types:</strong> Monophasic (constant dose), Biphasic (2 dose levels), Triphasic (3 dose levels)<br>
+<strong>Key:</strong> Most reliable oral method when compliant
+</div>
+</div>
+<div class="drug-card urgency-info">
+<div class="drug-name">💊 Progestogen-Only Pills (POPs / Mini-pills)</div>
+<div class="drug-info">
+<strong>Components:</strong> Progestin only (e.g., norgestrel)<br>
+<strong>Schedule:</strong> Daily without interruption — no placebo week<br>
+<strong>Ideal for:</strong> Breastfeeding women, estrogen contraindications<br>
+<strong>Downside:</strong> Slightly higher failure rate, irregular bleeding
+</div>
+</div>
+</div>
+
+<div class="treatment-section">
+<h3>💉 Injectable</h3>
+<div class="drug-card urgency-medium">
+<div class="drug-name">💉 Medroxyprogesterone Acetate (Depot)</div>
+<div class="drug-info">
+<strong>Route:</strong> Intramuscular (IM)<br>
+<strong>Schedule:</strong> Every 3 months<br>
+<strong>⚠️ Warning:</strong> Infertility may persist for many months after final injection<br>
+<strong>Advantage:</strong> No daily compliance needed
+</div>
+</div>
+</div>
+
+<div class="treatment-section">
+<h3>📌 Long-Acting Reversible Contraceptives (LARCs)</h3>
+<div class="drug-card urgency-low">
+<div class="drug-name">📌 Subdermal Implant (Levonorgestrel)</div>
+<div class="drug-info">
+<strong>Placement:</strong> Subdermally in upper arm<br>
+<strong>Duration:</strong> 3-5 years<br>
+<strong>MOA:</strong> Continuous low-dose progestin release<br>
+<strong>Advantage:</strong> Very long-acting, highly effective, reversible
+</div>
+</div>
+<div class="drug-card urgency-low">
+<div class="drug-name">🔄 Progestin IUS (Intrauterine System)</div>
+<div class="drug-info">
+<strong>Drug:</strong> Levonorgestrel (local release)<br>
+<strong>Duration:</strong> 3-5 years<br>
+<strong>MOA:</strong> Local endometrial atrophy → dramatically ↓ bleeding<br>
+<strong>Special Use:</strong> Excellent for heavy menstrual bleeding & anemia
+</div>
+</div>
+</div>
+
+<div class="treatment-section">
+<h3>🩹 Transdermal & Vaginal</h3>
+<div class="drug-card urgency-info">
+<div class="drug-name">🩹 Transdermal Patch</div>
+<div class="drug-info">
+<strong>Components:</strong> Ethinyl estradiol + Norelgestromin<br>
+<strong>Application:</strong> Abdomen, upper torso, or buttock<br>
+<strong>Schedule:</strong> Change weekly × 3 weeks, off 1 week<br>
+<strong>Advantage:</strong> Weekly rather than daily compliance
+</div>
+</div>
+<div class="drug-card urgency-info">
+<div class="drug-name">💍 Vaginal Ring</div>
+<div class="drug-info">
+<strong>Components:</strong> Ethinyl estradiol + Etonogestrel<br>
+<strong>Schedule:</strong> Insert for 3 weeks, remove for 1 week<br>
+<strong>Advantage:</strong> Monthly compliance, steady hormone levels
+</div>
+</div>
+</div>
+
+<h3 style="font-size:18px;font-weight:700;margin:28px 0 16px;">📊 Contraceptive Comparison Table</h3>
+<div class="comp-table-wrapper">
+<table class="comp-table">
+<thead>
+<tr>
+<th>Method</th>
+<th>Frequency</th>
+<th>Estrogen</th>
+<th>Reversibility</th>
+<th>Special Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>COC</strong></td><td>Daily (21+7)</td><td>✅ Yes</td><td>Immediate</td><td>Most common; many formulations</td></tr>
+<tr><td><strong>POP</strong></td><td>Daily (continuous)</td><td>❌ No</td><td>Immediate</td><td>Breastfeeding safe</td></tr>
+<tr><td><strong>IM Injection</strong></td><td>Every 3 months</td><td>❌ No</td><td>Delayed (months)</td><td>Persistent infertility possible</td></tr>
+<tr><td><strong>Implant</strong></td><td>3-5 years</td><td>❌ No</td><td>Upon removal</td><td>LARC; subdermal</td></tr>
+<tr><td><strong>IUS</strong></td><td>3-5 years</td><td>❌ No</td><td>Upon removal</td><td>LARC; treats heavy bleeding</td></tr>
+<tr><td><strong>Patch</strong></td><td>Weekly (3+1)</td><td>✅ Yes</td><td>Immediate</td><td>Transdermal delivery</td></tr>
+<tr><td><strong>Ring</strong></td><td>Monthly (3+1 wks)</td><td>✅ Yes</td><td>Immediate</td><td>Vaginal insertion</td></tr>
+<tr><td><strong>Emergency</strong></td><td>Single use</td><td>❌ No</td><td>N/A</td><td>Within 72h; not routine</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ===== MNEMONICS TAB ===== -->
+<div class="tab-content" id="tab-mnemonics">
+<h2 class="section-title">🧠 Mnemonics</h2>
+<p class="section-subtitle">Memory aids to lock in key concepts — click to expand</p>
+
+<div id="mnemonics-container"></div>
+</div>
+
+</main>
+
+<!-- Reset Button -->
+<button class="reset-btn" onclick="resetAll()" title="Reset All Progress">🔄</button>
+
+<script>
+// ===== DATA =====
+
+const quizData = [
+{q:"How do combined oral contraceptives primarily prevent ovulation?",options:["By destroying the mature follicle","By exerting positive feedback on LH","By exerting negative feedback on LH and FSH","By killing sperm directly","By preventing implantation only"],correct:2,explanation:"They inhibit ovulation by exerting <strong>negative feedback on LH</strong> (via progesterone) and <strong>FSH</strong> (via estrogen) secretion from the pituitary."},
+{q:"What is the mechanism of action of broad-spectrum antibiotics in causing contraceptive failure?",options:["They induce hepatic enzymes","They decrease intestinal absorption physically","They eliminate intestinal bacteria disrupting enterohepatic cycling","They bind to estrogen receptors","They increase renal excretion"],correct:2,explanation:"Antibiotics kill the <strong>bacterial flora</strong> necessary to cleave estrogen-glucuronic acid conjugates, preventing reabsorption of active estrogen. The estrogen is then excreted in stool."},
+{q:"Which mechanism describes how the Progestin IUS treats heavy menstrual bleeding?",options:["Increases systemic estrogen","Induces endometrial atrophy","Increases endometrial proliferation","Prevents fertilization in the fallopian tube exclusively","Causes targeted necrosis of the uterus"],correct:1,explanation:"The IUS delivers continuous low doses of <strong>levonorgestrel locally</strong>, inducing <strong>endometrial atrophy</strong> and dramatically decreasing bleeding."},
+{q:"How do hormonal contraceptives prevent sperm transport apart from altering cervical mucus?",options:["By causing vaginal strictures","By interfering with coordinated contractions of cervix, uterus, and fallopian tubes","By producing spermicidal acid","By closing the cervical os permanently","By destroying the sperm flagellum"],correct:1,explanation:"They produce endometrial changes and <strong>interfere with the coordinated contractions</strong> necessary for sperm transport through the reproductive tract."},
+{q:"What causes the weight gain side effect of oral contraceptives?",options:["Increased caloric absorption","Salt and water retention due to the steroid nucleus","Hypothyroidism induction","Increased muscle mass","Bone density increase"],correct:1,explanation:"The <strong>steroid nucleus</strong> of the hormones causes <strong>salt and water retention</strong>, presenting as weight gain and edema. This is the #1 patient complaint."},
+{q:"How does Rifampin interact with oral contraceptives?",options:["Acts as an enzyme inducer","Acts as an enzyme inhibitor","Prevents GI absorption","Kills gut flora","Binds to the pills in the stomach"],correct:0,explanation:"Rifampin and phenytoin are <strong>hepatic enzyme inducers</strong> (CYP450) that increase the metabolism and breakdown of the contraceptive hormones, causing failure."},
+{q:"Why are progestogen-only pills (POPs) preferred for lactating women?",options:["They stimulate prolactin directly","Estrogen is contraindicated because it inhibits lactation","Progestin passes into milk to help the baby","They are 100% effective","They prevent mastitis"],correct:1,explanation:"<strong>Estrogen can inhibit lactation</strong> in breastfeeding women. POPs contain no estrogen, so they do not affect milk production — hence called 'breastfeeding pills.'"},
+{q:"Which condition is a mechanism-based absolute contraindication for COCs?",options:["Underweight","Hypotension","Ischemic heart disease (IHD)","Asthma","Peptic ulcer disease"],correct:2,explanation:"COCs can cause <strong>hypertension</strong> and increase the risk of <strong>MI and thrombosis</strong>, making IHD an absolute contraindication."},
+{q:"How does the liver normally process estrogen for excretion?",options:["Conjugation with sulfuric acid","Conjugation with glucuronic acid","Cleavage into amino acids","Storage in Kupffer cells","Exhalation via lungs"],correct:1,explanation:"The liver conjugates estrogen with <strong>glucuronic acid</strong>, making it water-soluble for excretion via bile into the intestines."},
+{q:"How does Emergency Contraception (levonorgestrel) function timeframe-wise?",options:["Effective if taken within 72 hours and repeated 12 hours later","Effective only if taken before intercourse","Effective up to 1 week after intercourse","Must be taken daily","Applied as a patch for 3 weeks"],correct:0,explanation:"Emergency contraception is effective if taken <strong>within 72 hours</strong> of unprotected intercourse and <strong>repeated 12 hours later</strong>."},
+{q:"What causes the withdrawal bleeding in a typical 28-day COC regimen?",options:["Peak of estrogen","Taking active pills for 28 days","The 4 to 7 days of placebo pills","Ovulation","Bacterial enzymes"],correct:2,explanation:"Active pills are taken for 21-24 days, followed by <strong>4-7 days of placebo</strong>. The drop in hormone levels allows endometrial shedding (withdrawal bleeding)."},
+{q:"What mechanism links oral contraceptives to cholestatic hepatitis?",options:["Direct destruction of hepatocytes","Biliary stasis and interference with gallbladder contraction","Viral infection facilitation","Increased stomach acid","Excessive glucuronic acid production"],correct:1,explanation:"The hormones affect <strong>gallbladder contraction and bile flow</strong>, leading to stasis, gallstones, and cholestatic hepatitis."},
+{q:"How does the transdermal patch deliver hormones?",options:["Through the gastrointestinal tract","Through the skin into systemic circulation","Directly into the uterus","Via inhalation","Intramuscularly"],correct:1,explanation:"Transdermal patches deliver ethinyl estradiol and norelgestromin <strong>through the skin</strong>. Applied to abdomen, upper torso, or buttock."},
+{q:"By what mechanism does Medroxyprogesterone injection affect fertility after cessation?",options:["Fertility returns immediately within 24 hours","Infertility may persist for many months after the final dose","It causes permanent sterilization","It destroys the ovaries","It permanently thickens cervical mucus"],correct:1,explanation:"A known side effect of injectable progestins is that <strong>infertility may persist for many months</strong> after the final dose. It is NOT permanent, but also NOT immediate."},
+{q:"Why do women on POPs often complain of irregular bleeding?",options:["Estrogen is required to stabilize the endometrial lining","Progestin causes immediate vaginal sloughing","POPs increase platelet destruction","POPs induce hemophilia","POPs cause heavy continuous ovulation"],correct:0,explanation:"Without estrogen to <strong>stabilize the endometrial lining</strong>, POPs cause a much higher incidence of irregular bleeding and amenorrhea."},
+{q:"Which of the following is a long-acting reversible contraceptive (LARC)?",options:["Combined oral pills","Postcoital pills","Transdermal patch","Progestin intrauterine system","Vaginal ring"],correct:3,explanation:"Progestin implants and <strong>intrauterine systems</strong> are classified as LARCs — effective for 3 to 5 years."},
+{q:"Which synthetic estrogen is most commonly used in combination oral contraceptives?",options:["Norgestrel","Desogestrel","Ethinyl estradiol","Drospirenone","Medroxyprogesterone"],correct:2,explanation:"The estrogen component is usually <strong>ethinyl estradiol</strong>. The other options are all synthetic progestins."},
+{q:"Where are Progestin implants typically placed?",options:["Inside the uterus","Subdermally in the upper arm","On the abdomen","Intravaginally","Intramuscularly in the gluteus"],correct:1,explanation:"Progestin implants are placed <strong>subdermally, usually in the upper arm</strong>."},
+{q:"Which structure is inserted for 3 weeks and removed for 1 week for withdrawal bleeding?",options:["Progestin implant","Vaginal ring","Copper IUD","Injectable progestin","Progestin-only pill"],correct:1,explanation:"The <strong>vaginal ring</strong> (ethinyl estradiol + etonogestrel) is inserted for 3 weeks and removed for 1 week."},
+{q:"What is a defining characteristic of monophasic COCs?",options:["Dosage changes twice during the cycle","Contains only estrogen","Constant dosage of both components during active pills","Taken for 365 days without placebo","Administered intravenously"],correct:2,explanation:"<strong>Monophasic</strong> forms maintain a constant dosage of both estrogen and progestin during the cycle."},
+{q:"Which side effect is classified as a CNS effect of hormonal contraceptives?",options:["Cholecystitis","Migraine headache","Myocardial infarction","Hyperglycemia","Weight gain"],correct:1,explanation:"CNS side effects include <strong>migraine headache</strong>, stroke, mood changes, and depression. Cholecystitis = GIT; MI = CVS; Hyperglycemia = Endocrine."},
+{q:"POPs compared to COCs have:",options:["A lower failure rate","A much higher incidence of irregular bleeding","Better cardiovascular protection","Complete ovulation suppression","No effect on cervical mucus"],correct:1,explanation:"POPs have a <strong>slightly higher failure rate</strong> and a <strong>much higher incidence of irregular bleeding</strong> and amenorrhea compared to COCs."},
+{q:"A woman on COCs develops sudden severe leg swelling and pain. The most likely complication is:",options:["Hyperglycemia","Deep vein thrombosis (DVT)","Cholecystitis","Migraine","Weight gain"],correct:1,explanation:"COCs increase thrombotic tendency. Sudden leg swelling and pain is classic for <strong>DVT (deep vein thrombosis)</strong>, a well-known cardiovascular side effect."},
+{q:"Which statement about the enterohepatic circulation is CORRECT?",options:["The kidney conjugates estrogen with glucuronic acid","Intestinal bacteria help reactivate estrogen for reabsorption","Conjugation makes estrogen more lipophilic","Enterohepatic circulation only applies to progestins","Antibiotics enhance estrogen reabsorption"],correct:1,explanation:"<strong>Intestinal bacteria cleave the glucuronic acid bond</strong>, freeing active estrogen for reabsorption into the bloodstream. This is how the 24-hour action is maintained."},
+{q:"A patient's OCP fails after taking paraffin oil. The mechanism is:",options:["Enzyme induction","Destruction of gut flora","Physical decrease in intestinal absorption","Competitive receptor antagonism","Increased renal clearance"],correct:2,explanation:"Paraffin oil (a laxative) <strong>physically decreases intestinal absorption</strong> by rushing contents through the GI tract, preventing adequate drug absorption."}
+];
+
+const flashcardsData = [
+{front:"What are the 2 main types of oral contraceptives?",back:"1) Combined Oral Contraceptives (COCs) — estrogen + progestin\n2) Progestogen-Only Pills (POPs / Mini-pills) — progestin only"},
+{front:"What estrogen is most commonly used in COCs?",back:"Ethinyl estradiol — a synthetic estrogen"},
+{front:"How do COCs prevent ovulation?",back:"Negative feedback on the pituitary: estrogen suppresses FSH, progestin suppresses LH → no ovulation"},
+{front:"Name 3 mechanisms of COC contraception besides ovulation suppression",back:"1) Increased cervical mucus thickness\n2) Endometrial changes preventing implantation\n3) Altered tubal/uterine contractions hindering sperm transport"},
+{front:"Why are POPs called 'breastfeeding pills'?",back:"They contain no estrogen → do not inhibit lactation. Estrogen-containing pills can suppress milk production."},
+{front:"What is enterohepatic circulation of estrogen?",back:"Liver conjugates estrogen with glucuronic acid → bile → intestine → bacteria cleave the bond → free estrogen reabsorbed → extends action to 24h"},
+{front:"How do broad-spectrum antibiotics cause OCP failure?",back:"Kill intestinal bacteria → bacteria can't cleave estrogen-glucuronide → estrogen stays conjugated → excreted in stool → ↓ hormone levels → pregnancy"},
+{front:"How does Rifampin cause OCP failure?",back:"Rifampin is a hepatic ENZYME INDUCER (CYP450) → accelerates metabolism of estrogen/progestin → lower blood levels → contraceptive failure"},
+{front:"How does Paraffin oil cause OCP failure?",back:"Acts as a laxative → physically decreases intestinal absorption → pills pass through GI too quickly → inadequate drug absorption"},
+{front:"What is the #1 patient complaint with OCPs?",back:"WEIGHT GAIN — caused by salt & water retention due to the steroid nucleus structure"},
+{front:"Name absolute contraindications for COCs (5+)",back:"1) IHD / active thromboembolism\n2) Smokers >35 years\n3) Migraine with aura\n4) Breast cancer\n5) Active liver disease\n6) Pregnancy\n7) Uncontrolled HTN"},
+{front:"Why is migraine with aura a contraindication for COCs?",back:"Risk of cerebral hemorrhage (stroke) increases 2-10 times. New onset migraine = absolute reason to STOP COCs."},
+{front:"What is the schedule for the vaginal ring?",back:"Insert for 3 weeks → Remove for 1 week (withdrawal bleeding) → Contains ethinyl estradiol + etonogestrel"},
+{front:"Where is a progestin implant placed & how long does it last?",back:"Subdermally in the upper arm. Lasts 3-5 years. Contains levonorgestrel. Classified as a LARC."},
+{front:"What is the key advantage of the Progestin IUS for anemic patients?",back:"Releases local levonorgestrel → induces endometrial atrophy → dramatically decreases heavy bleeding (unlike copper IUD which increases bleeding)"},
+{front:"Emergency contraception: timing & dosing?",back:"Levonorgestrel taken within 72 hours of unprotected intercourse, second dose 12 hours later. NOT a routine method."},
+{front:"What does 'monophasic' mean for COCs?",back:"Constant dosage of both estrogen & progestin throughout all active pills (vs. biphasic/triphasic which vary doses)"},
+{front:"Medroxyprogesterone injection: schedule & key warning?",back:"IM every 3 months. WARNING: Infertility may persist for MANY MONTHS after final injection."},
+{front:"Name 4 organ systems affected by COC side effects",back:"1) CVS: HTN, MI, thrombosis\n2) CNS: migraine, stroke, depression\n3) GIT: nausea, cholestasis, gallstones\n4) Endocrine: weight gain, hyperglycemia"},
+{front:"How does the transdermal patch work?",back:"Delivers ethinyl estradiol + norelgestromin THROUGH THE SKIN. Applied to abdomen/torso/buttock. Changed weekly × 3 weeks, off 1 week."}
+];
+
+const casesData = [
+{title:"Lactating Mother Seeking Contraception",vignette:"A 28-year-old woman who is currently breastfeeding her 3-month-old baby visits your clinic requesting a reliable contraceptive method. She has no other medical conditions.",questions:[
+{q:"What type of oral contraceptive would you prescribe and why?",a:"<strong>Progestogen-Only Pills (POPs / Mini-pills)</strong> containing levonorgestrel or norgestrel. POPs do not contain estrogen, which is important because estrogen-containing pills (COCs) can <strong>inhibit lactation</strong> by suppressing prolactin. POPs are therefore called 'breastfeeding pills.'"},
+{q:"What is the primary mechanism of action of POPs?",a:"POPs primarily work by: 1) <strong>Modifying cervical mucus</strong> to prevent sperm penetration, 2) Causing <strong>endometrial atrophy</strong> (preventing implantation), and 3) <strong>Variably inhibiting ovulation</strong> (less reliable than COCs)."},
+{q:"What side effect should you warn her about?",a:"<strong>Irregular bleeding and amenorrhea</strong> — POPs have a much higher incidence of irregular bleeding than COCs because there is no estrogen to stabilize the endometrial lining. The failure rate is also slightly higher than COCs."}
+]},
+{title:"Smoker Over 35 Requesting COCs",vignette:"A 36-year-old female who smokes 1 pack per day presents to your office requesting combined oral contraceptives for birth control. She has a BMI of 28 and a family history of deep vein thrombosis.",questions:[
+{q:"Can you prescribe COCs for this patient? Why or why not?",a:"<strong>Absolutely NOT.</strong> COCs are <strong>absolutely contraindicated</strong> in women over 35 who smoke. She has multiple risk factors: age >35, smoking, and family history of DVT. COCs increase thrombotic tendency, and in this patient, the risk of <strong>myocardial infarction, DVT, PE, and stroke</strong> is severely elevated."},
+{q:"What alternative contraceptive methods would you recommend?",a:"<strong>Progestogen-Only methods:</strong> POPs, Progestin implant (LARC), Progestin IUS (LARC), or injectable medroxyprogesterone. Alternatively, <strong>non-hormonal methods</strong> like copper IUD or barrier methods. All avoid the estrogen-related cardiovascular risks."},
+{q:"What cardiovascular side effects are you trying to avoid?",a:"<strong>Hypertension</strong> (salt/water retention), <strong>Thromboembolism</strong> (DVT/PE), <strong>Myocardial infarction</strong>, and <strong>Stroke</strong>. The steroid nucleus causes salt/water retention and the combination of estrogen + smoking + age dramatically increases clotting risk."}
+]},
+{title:"OCP Failure After Antibiotics",vignette:"A 24-year-old woman who has been adherent to her combined oral contraceptive pills for 2 years presents with a positive pregnancy test. Upon questioning, she mentions completing a 7-day course of cephalosporins 3 weeks ago for a respiratory tract infection.",questions:[
+{q:"Explain the pharmacological mechanism of this contraceptive failure.",a:"Cephalosporins are <strong>broad-spectrum antibiotics</strong> that kill normal intestinal bacterial flora. These bacteria normally produce enzymes that <strong>cleave the glucuronic acid-estrogen conjugate</strong> (formed during hepatic phase II metabolism), allowing free active estrogen to be <strong>reabsorbed via enterohepatic circulation</strong>. Without these bacteria, the conjugated estrogen remained water-soluble and was <strong>excreted in the stool</strong>, lowering systemic estrogen levels below the threshold needed to suppress ovulation."},
+{q:"What should have been recommended when prescribing the antibiotic?",a:"She should have been advised to <strong>use a barrier method (condoms)</strong> during the antibiotic course and for at least <strong>7 days after completing it</strong>, as it takes time for gut flora to recover. The prescribing physician should have explicitly warned about the drug interaction."},
+{q:"Name two other classes of drugs that can cause OCP failure and their mechanisms.",a:"1) <strong>Enzyme inducers (Rifampin, Phenytoin):</strong> Induce hepatic CYP450 enzymes → accelerated metabolism → lower hormone levels.\n2) <strong>Laxatives (Paraffin oil):</strong> Physically decrease intestinal absorption by rushing GI contents through before adequate drug absorption."}
+]},
+{title:"Switching from Copper IUD to IUS for Anemia",vignette:"A 32-year-old woman with a copper IUD presents with fatigue, pallor, and heavy menstrual bleeding. Labs show Hb 9.2 g/dL (iron-deficiency anemia). She still desires long-term contraception but cannot tolerate the heavy bleeding.",questions:[
+{q:"What contraceptive switch would you recommend and why?",a:"Switch to a <strong>Progestin Intrauterine System (IUS)</strong> containing levonorgestrel. The IUS delivers continuous local low-dose progestin that induces <strong>endometrial atrophy</strong>, dramatically reducing menstrual blood loss. Unlike the copper IUD (which can actually increase bleeding), the IUS actively treats heavy menstrual bleeding."},
+{q:"How does the IUS work as a contraceptive?",a:"The IUS works via: 1) <strong>Local progestin release</strong> causing endometrial atrophy (hostile to implantation), 2) <strong>Thickening cervical mucus</strong> (preventing sperm penetration), 3) Some degree of <strong>ovulation suppression</strong>. It is classified as a <strong>LARC</strong> — effective for 3-5 years."},
+{q:"What classification does this device fall under?",a:"<strong>Long-Acting Reversible Contraceptive (LARC)</strong> — along with subdermal implants. LARCs are among the most effective contraceptive methods because they don't depend on daily patient compliance."}
+]},
+{title:"Migraine Onset on COCs",vignette:"A 22-year-old woman who has been taking combined oral contraceptives for 8 months presents with newly developed severe headaches with visual auras (flashing lights, zigzag lines) occurring 2-3 times per week for the past month.",questions:[
+{q:"What is the most critical clinical action you must take?",a:"<strong>IMMEDIATELY DISCONTINUE the COCs.</strong> New onset migraine with aura is an <strong>absolute contraindication</strong> to continuing combined hormonal contraceptives. The risk of <strong>cerebral hemorrhage (stroke) increases 2-10 times</strong> in women with migraine on COCs."},
+{q:"What alternative contraception can you offer?",a:"<strong>Progestin-only methods</strong> are generally safer: POPs (mini-pills), progestin implants, progestin IUS, or injectable progestin. Non-hormonal options (copper IUD, barrier methods) are also appropriate. The key is to <strong>avoid estrogen</strong>."},
+{q:"Classify this side effect by organ system and name other CNS effects.",a:"This is a <strong>Central Nervous System (CNS)</strong> side effect. Other CNS effects include: <strong>Stroke (cerebral hemorrhage)</strong>, <strong>mood changes</strong>, <strong>depression</strong>, and <strong>visual disturbances</strong>. Migraine with aura specifically indicates cerebrovascular vulnerability."}
+]}
+];
+
+const mechanismItems = [
+{icon:"🧠",title:"Hypothalamic-Pituitary Axis",desc:"Target of COC negative feedback",detail:"COCs provide exogenous estrogen & progestin → hypothalamus detects adequate hormone levels → reduces GnRH pulses → pituitary releases less FSH (follicle development) and LH (ovulation trigger) → no mature follicle → NO OVULATION. This is the primary contraceptive mechanism."},
+{icon:"🔬",title:"Cervical Mucus",desc:"Modified by both COCs and POPs",detail:"Progestins cause cervical mucus to become thick, scanty, and hostile to sperm penetration. This creates a physical barrier preventing sperm from reaching the upper reproductive tract. This is the PRIMARY mechanism of POPs."},
+{icon:"🏠",title:"Endometrium",desc:"Made unreceptive to implantation",detail:"Hormonal contraceptives cause endometrial changes (atrophy in POPs, altered maturation in COCs) that make the uterine lining unreceptive to embryo implantation. The IUS leverages this maximally with local levonorgestrel delivery."},
+{icon:"🌊",title:"Tubal Motility",desc:"Coordinated contractions disrupted",detail:"Normal fallopian tube contractions help transport the egg and facilitate sperm ascent. Hormonal contraceptives interfere with these coordinated contractions of the cervix, uterus, and fallopian tubes, adding another layer of contraceptive protection."},
+{icon:"🏭",title:"Hepatic Metabolism",desc:"Phase II conjugation with glucuronic acid",detail:"The liver conjugates estrogen with glucuronic acid (Phase II glucuronidation), making it water-soluble for biliary excretion. This is critical for the enterohepatic cycling that extends the drug's action to 24 hours. Enzyme inducers (Rifampin) speed this up → faster elimination."},
+{icon:"🦠",title:"Intestinal Microbiome",desc:"Essential for estrogen reabsorption",detail:"Gut bacteria produce β-glucuronidase enzymes that cleave the estrogen-glucuronic acid conjugate in the intestinal lumen, freeing active estrogen for reabsorption. Broad-spectrum antibiotics destroy these bacteria → estrogen stays conjugated → excreted in feces → contraceptive failure."},
+{icon:"💧",title:"Steroid Nucleus Effects",desc:"Causes salt & water retention",detail:"All hormonal contraceptives share a steroid nucleus structure. This causes the kidneys to retain sodium and water, leading to weight gain (the #1 patient complaint), edema, and contributes to hypertension. Additionally promotes hyperglycemia via metabolic effects."},
+{icon:"🩸",title:"Thrombotic Cascade",desc:"Increased clotting factor activity",detail:"Estrogen-containing contraceptives increase production of clotting factors and decrease antithrombin III → increased thrombotic tendency → risk of DVT, PE, MI, and stroke. This risk is multiplicative with smoking and age >35."}
+];
+
+const mnemonicsData = [
+{title:"F.A.I.L",subtitle:"3 Mechanisms of Contraceptive Failure",gradient:"var(--gradient-3)",letters:[
+{letter:"F",color:"#FF6B6B",text:"Flora destruction — Antibiotics (Tetracyclines, Cephalosporins) kill gut bacteria → no enterohepatic recycling"},
+{letter:"A",color:"#FFB300",text:"Accelerated metabolism — Enzyme inducers (Rifampin, Phenytoin) speed up hepatic CYP450 breakdown"},
+{letter:"I",color:"#00D2FF",text:"Intestinal malabsorption — Laxatives (Paraffin oil) physically rush pills through GI tract"},
+{letter:"L",color:"#6C63FF",text:"Lost hormone levels → Ovulation occurs → Unwanted PREGNANCY"}
+]},
+{title:"S.T.O.P",subtitle:"Absolute Contraindications for COCs",gradient:"var(--gradient-1)",letters:[
+{letter:"S",color:"#FF6B6B",text:"Smokers over 35 years old"},
+{letter:"T",color:"#FFB300",text:"Thromboembolism (active or history of DVT/PE/MI)"},
+{letter:"O",color:"#00D2FF",text:"Onset of migraine with aura (stop immediately!)"},
+{letter:"P",color:"#00C851",text:"Pregnancy, breast cancer, liver disease, uncontrolled hyPertension"}
+]},
+{title:"G.L.U.E",subtitle:"Enterohepatic Circulation Steps",gradient:"var(--gradient-2)",letters:[
+{letter:"G",color:"#6C63FF",text:"Glucuronic acid conjugation by the liver"},
+{letter:"L",color:"#FF6B9D",text:"Lumen of intestine receives conjugate via bile"},
+{letter:"U",color:"#00D2FF",text:"Uncoupling by bacterial enzymes (β-glucuronidase)"},
+{letter:"E",color:"#00C851",text:"Estrogen reabsorbed — cycle extends action to 24 hours"}
+]},
+{title:"P.O.P.S",subtitle:"Features of Progestogen-Only Pills",gradient:"var(--gradient-4)",letters:[
+{letter:"P",color:"#00C851",text:"Progestin only — no estrogen component"},
+{letter:"O",color:"#00D2FF",text:"Ovulation inhibition is variable/inconsistent"},
+{letter:"P",color:"#FFB300",text:"Perfect for breastfeeding ('breastfeeding pill')"},
+{letter:"S",color:"#FF6B6B",text:"Spotting & irregular bleeding much more common"}
+]},
+{title:"W.E.I.G.H.T",subtitle:"Side Effects of Hormonal Contraceptives by System",gradient:"var(--gradient-3)",letters:[
+{letter:"W",color:"#FF6B6B",text:"Water retention & Weight gain (steroid nucleus — #1 complaint)"},
+{letter:"E",color:"#FFB300",text:"Embolism / thrombosis risk (DVT, PE, MI)"},
+{letter:"I",color:"#00D2FF",text:"Intracranial problems (migraine, stroke, depression)"},
+{letter:"G",color:"#6C63FF",text:"GI issues (nausea, cholestasis, gallstones)"},
+{letter:"H",color:"#00C851",text:"Hyperglycemia & Hypertension (endocrine/CVS)"},
+{letter:"T",color:"#FF6B9D",text:"Tenderness of breasts & bloaTing"}
+]},
+{title:"L.A.R.C",subtitle:"Long-Acting Reversible Contraceptives",gradient:"var(--gradient-2)",letters:[
+{letter:"L",color:"#6C63FF",text:"Levonorgestrel — the progestin used in both types"},
+{letter:"A",color:"#00D2FF",text:"Arm implant (subdermal, 3-5 years)"},
+{letter:"R",color:"#00C851",text:"Reduces bleeding (IUS induces endometrial atrophy)"},
+{letter:"C",color:"#FF6B9D",text:"Compliance-free — no daily/weekly action needed"}
+]}
+];
+
+// ===== STATE =====
+let state = {
+currentTab: 'overview',
+quizIndex: 0,
+quizAnswers: new Array(quizData.length).fill(null),
+quizCorrect: 0,
+quizWrong: 0,
+streak: 0,
+maxStreak: 0,
+flashcardsFlipped: new Set(),
+casesRevealed: new Set()
+};
+
+// Load from localStorage
+function loadState() {
+try {
+const saved = localStorage.getItem('hc_study_state');
+if (saved) {
+const parsed = JSON.parse(saved);
+state = { ...state, ...parsed };
+state.flashcardsFlipped = new Set(parsed.flashcardsFlipped || []);
+state.casesRevealed = new Set(parsed.casesRevealed || []);
+}
+} catch(e) {}
+}
+
+function saveState() {
+try {
+const toSave = { ...state, flashcardsFlipped: [...state.flashcardsFlipped], casesRevealed: [...state.casesRevealed] };
+localStorage.setItem('hc_study_state', JSON.stringify(toSave));
+} catch(e) {}
+}
+
+// ===== TAB MANAGEMENT =====
+function switchTab(tabId) {
+document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+document.getElementById('tab-' + tabId).classList.add('active');
+document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+state.currentTab = tabId;
+saveState();
+}
+
+document.querySelectorAll('.nav-tab').forEach(tab => {
+tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+});
+
+// ===== QUIZ =====
+function renderQuiz() {
+const container = document.getElementById('quiz-container');
+const q = quizData[state.quizIndex];
+const answered = state.quizAnswers[state.quizIndex] !== null;
+
+container.innerHTML = `
+<div class="quiz-question-card">
+<div class="quiz-q-number">Question ${state.quizIndex + 1} of ${quizData.length}</div>
+<div class="quiz-q-text">${q.q}</div>
+<div class="quiz-options">
+${q.options.map((opt, i) => {
+let cls = 'quiz-option';
+if (answered) {
+cls += ' disabled';
+if (i === q.correct) cls += ' correct';
+else if (i === state.quizAnswers[state.quizIndex] && i !== q.correct) cls += ' wrong';
+}
+return `<div class="${cls}" data-idx="${i}">
+<span class="opt-letter">${String.fromCharCode(65+i)}</span>
+<span>${opt}</span>
+</div>`;
+}).join('')}
+</div>
+<div class="quiz-explanation ${answered ? 'show' : ''}" id="quiz-exp">
+${answered ? (state.quizAnswers[state.quizIndex] === q.correct ? '✅ <strong>Correct!</strong> ' : '❌ <strong>Incorrect.</strong> ') + q.explanation : ''}
+</div>
+</div>
+`;
+
+if (!answered) {
+container.querySelectorAll('.quiz-option').forEach(opt => {
+opt.addEventListener('click', () => selectAnswer(parseInt(opt.dataset.idx)));
+});
+}
+
+document.getElementById('q-current').textContent = state.quizIndex + 1;
+document.getElementById('q-total').textContent = quizData.length;
+document.getElementById('quiz-progress-bar').style.width = ((state.quizIndex + 1) / quizData.length * 100) + '%';
+document.getElementById('quiz-prev').disabled = state.quizIndex === 0;
+document.getElementById('quiz-next').textContent = state.quizIndex === quizData.length - 1 ? '🏁 Finish' : 'Next ➡️';
+
+updateQuizStats();
+}
+
+function selectAnswer(idx) {
+const q = quizData[state.quizIndex];
+state.quizAnswers[state.quizIndex] = idx;
+
+if (idx === q.correct) {
+state.quizCorrect++;
+state.streak++;
+if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+} else {
+state.quizWrong++;
+state.streak = 0;
+}
+
+saveState();
+renderQuiz();
+}
+
+function updateQuizStats() {
+document.getElementById('quiz-correct').textContent = state.quizCorrect;
+document.getElementById('quiz-wrong').textContent = state.quizWrong;
+document.getElementById('quiz-streak').textContent = state.streak;
+document.getElementById('streak-counter').textContent = state.streak;
+
+const answered = state.quizAnswers.filter(a => a !== null).length;
+const pct = Math.round((answered / quizData.length) * 100);
+document.getElementById('overall-progress').textContent = pct + '%';
+document.getElementById('overall-score').textContent = state.quizCorrect + '/' + quizData.length;
+}
+
+document.getElementById('quiz-prev').addEventListener('click', () => {
+if (state.quizIndex > 0) { state.quizIndex--; saveState(); renderQuiz(); }
+});
+
+document.getElementById('quiz-next').addEventListener('click', () => {
+if (state.quizIndex < quizData.length - 1) {
+state.quizIndex++;
+saveState();
+renderQuiz();
+} else {
+// Show completion
+document.getElementById('quiz-container').style.display = 'none';
+document.querySelector('.quiz-nav').style.display = 'none';
+const complete = document.getElementById('quiz-complete');
+complete.style.display = 'block';
+const pct = Math.round((state.quizCorrect / quizData.length) * 100);
+let msg = '';
+if (pct >= 90) msg = '🌟 Outstanding! You\'re exam-ready! Score: ' + pct + '%';
+else if (pct >= 70) msg = '👏 Great job! Keep reviewing the tricky ones. Score: ' + pct + '%';
+else if (pct >= 50) msg = '💪 Good effort! Review the mechanisms & interactions. Score: ' + pct + '%';
+else msg = '📚 Keep studying! Focus on enterohepatic circulation & contraindications. Score: ' + pct + '%';
+document.getElementById('quiz-final-msg').textContent = msg;
+}
+});
+
+function resetQuiz() {
+state.quizIndex = 0;
+state.quizAnswers = new Array(quizData.length).fill(null);
+state.quizCorrect = 0;
+state.quizWrong = 0;
+state.streak = 0;
+saveState();
+document.getElementById('quiz-container').style.display = 'block';
+document.querySelector('.quiz-nav').style.display = 'flex';
+document.getElementById('quiz-complete').style.display = 'none';
+renderQuiz();
+}
+
+// ===== FLASHCARDS =====
+function renderFlashcards() {
+const container = document.getElementById('flashcard-container');
+container.innerHTML = flashcardsData.map((fc, i) => `
+<div class="flashcard ${state.flashcardsFlipped.has(i) ? 'flipped' : ''}" data-idx="${i}">
+<div class="flashcard-inner">
+<div class="flashcard-front">
+<div class="fc-icon">💊</div>
+<h4>${fc.front}</h4>
+<div class="fc-hint">Click to flip</div>
+</div>
+<div class="flashcard-back">
+<div class="fc-back-title">Answer</div>
+<p>${fc.back.replace(/\n/g, '<br>')}</p>
+</div>
+</div>
+</div>
+`).join('');
+
+container.querySelectorAll('.flashcard').forEach(card => {
+card.addEventListener('click', () => {
+const idx = parseInt(card.dataset.idx);
+card.classList.toggle('flipped');
+if (card.classList.contains('flipped')) {
+state.flashcardsFlipped.add(idx);
+} else {
+state.flashcardsFlipped.delete(idx);
+}
+saveState();
+});
+});
+}
+
+// ===== CLINICAL CASES =====
+function renderCases() {
+const container = document.getElementById('cases-container');
+container.innerHTML = casesData.map((c, ci) => `
+<div class="case-card">
+<div class="case-header">
+<div class="case-number">${ci + 1}</div>
+<div>
+<div class="case-title">${c.title}</div>
+</div>
+</div>
+<div class="case-vignette">${c.vignette}</div>
+<div class="case-questions-list">
+${c.questions.map((cq, qi) => {
+const key = `${ci}-${qi}`;
+return `
+<div class="case-q-item">
+<div class="case-question">Q${qi+1}: ${cq.q}</div>
+<button class="btn btn-primary" style="margin:8px 0;" onclick="revealCaseAnswer('${key}', this)">
+${state.casesRevealed.has(key) ? '🔓 Answer Revealed' : '🔍 Reveal Answer'}
+</button>
+<div class="case-answer ${state.casesRevealed.has(key) ? 'show' : ''}" id="case-${key}">
+${cq.a.replace(/\n/g, '<br>')}
+</div>
+</div>`;
+}).join('')}
+</div>
+</div>
+`).join('');
+}
+
+function revealCaseAnswer(key, btn) {
+const el = document.getElementById('case-' + key);
+el.classList.add('show');
+state.casesRevealed.add(key);
+btn.textContent = '🔓 Answer Revealed';
+saveState();
+}
+
+// ===== MECHANISM =====
+function renderMechanism() {
+const grid = document.getElementById('mechanism-grid');
+grid.innerHTML = mechanismItems.map((item, i) => `
+<div class="mechanism-item" data-idx="${i}">
+<div class="mi-icon">${item.icon}</div>
+<h4>${item.title}</h4>
+<p>${item.desc}</p>
+<div class="mi-detail">${item.detail}</div>
+</div>
+`).join('');
+
+grid.querySelectorAll('.mechanism-item').forEach(item => {
+item.addEventListener('click', () => {
+item.classList.toggle('expanded');
+});
+});
+}
+
+// ===== MNEMONICS =====
+function renderMnemonics() {
+const container = document.getElementById('mnemonics-container');
+container.innerHTML = mnemonicsData.map((m, i) => `
+<div class="mnemonic-card" data-idx="${i}" style="border-left:4px solid;border-image:${m.gradient} 1;">
+<div class="mnemonic-title" style="background:${m.gradient};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${m.title}</div>
+<div class="mnemonic-subtitle">${m.subtitle}</div>
+<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📌 Click to expand</div>
+<ul class="mnemonic-list">
+${m.letters.map(l => `
+<li>
+<span class="ml-letter" style="color:${l.color};">${l.letter}</span>
+<span>${l.text}</span>
+</li>
+`).join('')}
+</ul>
+</div>
+`).join('');
+
+container.querySelectorAll('.mnemonic-card').forEach(card => {
+card.addEventListener('click', () => {
+card.classList.toggle('expanded');
+});
+});
+}
+
+// ===== SEARCH =====
+document.getElementById('overview-search').addEventListener('input', function() {
+const query = this.value.toLowerCase().trim();
+document.querySelectorAll('#tab-overview .searchable').forEach(el => {
+const searchText = (el.dataset.search || '').toLowerCase() + ' ' + el.textContent.toLowerCase();
+if (!query || searchText.includes(query)) {
+el.style.display = '';
+} else {
+el.style.display = 'none';
+}
+});
+});
+
+// ===== RESET =====
+function resetAll() {
+if (confirm('Reset all progress? This will clear your quiz scores, flashcard flips, and case reveals.')) {
+localStorage.removeItem('hc_study_state');
+state = {
+currentTab: 'overview',
+quizIndex: 0,
+quizAnswers: new Array(quizData.length).fill(null),
+quizCorrect: 0,
+quizWrong: 0,
+streak: 0,
+maxStreak: 0,
+flashcardsFlipped: new Set(),
+casesRevealed: new Set()
+};
+init();
+switchTab('overview');
+}
+}
+
+// ===== INIT =====
+function init() {
+loadState();
+renderQuiz();
+renderFlashcards();
+renderCases();
+renderMechanism();
+renderMnemonics();
+updateQuizStats();
+
+// Restore tab
+if (state.currentTab && state.currentTab !== 'overview') {
+switchTab(state.currentTab);
+}
+
+// Check if quiz was completed
+const allAnswered = state.quizAnswers.every(a => a !== null);
+if (allAnswered && state.currentTab === 'quiz') {
+// Show completion screen
+document.getElementById('quiz-container').style.display = 'none';
+document.querySelector('.quiz-nav').style.display = 'none';
+const complete = document.getElementById('quiz-complete');
+complete.style.display = 'block';
+const pct = Math.round((state.quizCorrect / quizData.length) * 100);
+document.getElementById('quiz-final-msg').textContent = `Score: ${pct}% (${state.quizCorrect}/${quizData.length})`;
+}
+}
+
+init();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

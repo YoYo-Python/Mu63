@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🧬 Pregnancy Physiology | Interactive Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07091a;
+  --bg2: #0d1130;
+  --bg3: #111827;
+  --bg4: #1a2340;
+  --cyan: #00d4d0;
+  --amber: #f59e0b;
+  --rose: #f43f5e;
+  --green: #10b981;
+  --purple: #8b5cf6;
+  --txt: #e2e8f0;
+  --txt2: #94a3b8;
+  --txt3: #64748b;
+  --border: rgba(255,255,255,0.07);
+  --r: 12px;
+  --r2: 20px;
+  --glow: 0 0 24px rgba(0,212,208,0.25);
+  --fd: 'Fraunces', serif;
+  --fb: 'DM Sans', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--fb);
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(0,212,208,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 80%, rgba(139,92,246,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(245,158,11,0.03) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,26,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 1.5rem;
+}
+.hdr{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;gap:1rem;
+}
+.logo{display:flex;align-items:center;gap:.7rem;}
+.logo-icon{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.logo-text{font-family:var(--fd);font-size:1rem;font-weight:600;}
+.logo-sub{font-size:.65rem;color:var(--txt3);display:block;line-height:1;}
+.stats-bar{display:flex;gap:1.2rem;align-items:center;}
+.sval{font-size:.95rem;font-weight:700;color:var(--cyan);font-family:var(--fd);}
+.slbl{font-size:.6rem;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;}
+.stat-it{text-align:center;}
+.srch{position:relative;}
+.srch input{
+  background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+  padding:.38rem .75rem .38rem 2rem;color:var(--txt);
+  font-family:var(--fb);font-size:.82rem;width:180px;transition:all .2s;
+}
+.srch input:focus{outline:none;border-color:var(--cyan);box-shadow:var(--glow);width:220px;}
+.srch input::placeholder{color:var(--txt3);}
+.srch-ic{position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:.82rem;}
+
+/* NAV TABS */
+.navtabs{
+  background:rgba(7,9,26,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 1.5rem;position:sticky;top:60px;z-index:99;
+}
+.navinner{
+  max-width:1400px;margin:0 auto;
+  display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
+}
+.navinner::-webkit-scrollbar{display:none;}
+.tbn{
+  padding:.85rem 1.1rem;background:none;border:none;
+  border-bottom:2px solid transparent;
+  color:var(--txt3);font-family:var(--fb);font-size:.8rem;font-weight:500;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  display:flex;align-items:center;gap:.35rem;
+}
+.tbn:hover{color:var(--txt);}
+.tbn.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:1.75rem 1.5rem;position:relative;z-index:1;}
+.tc{display:none;}
+.tc.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* CARDS */
+.card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;
+  transition:all .2s;
+}
+.card:hover{border-color:rgba(0,212,208,.2);transform:translateY(-2px);}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+@media(max-width:1100px){.g3,.g4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:700px){
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .stats-bar,.srch{display:none;}
+  .main{padding:1rem;}
+}
+
+/* SECTION HEADERS */
+.sh{margin-bottom:1.5rem;}
+.sh-title{font-family:var(--fd);font-size:1.85rem;font-weight:700;margin-bottom:.4rem;
+  background:linear-gradient(135deg,#e2e8f0,var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sh-sub{color:var(--txt2);font-size:.88rem;}
+.mb1{margin-bottom:1rem;}
+.mb15{margin-bottom:1.5rem;}
+.mb2{margin-bottom:2rem;}
+.mt1{margin-top:1rem;}
+
+/* TAGS */
+.tag{display:inline-block;padding:.18rem .55rem;border-radius:20px;font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.tag-hy{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+.tag-ex{background:rgba(244,63,94,.15);color:var(--rose);border:1px solid rgba(244,63,94,.3);}
+.tag-pe{background:rgba(0,212,208,.15);color:var(--cyan);border:1px solid rgba(0,212,208,.3);}
+.tag-me{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3);}
+.tag-gr{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);}
+
+/* BADGES */
+.badge{padding:.25rem .65rem;border-radius:6px;font-size:.75rem;font-weight:500;}
+.bc{background:rgba(0,212,208,.15);color:var(--cyan);}
+.ba{background:rgba(245,158,11,.15);color:var(--amber);}
+.bp{background:rgba(139,92,246,.15);color:var(--purple);}
+.bg{background:rgba(16,185,129,.15);color:var(--green);}
+.br{background:rgba(244,63,94,.15);color:var(--rose);}
+
+/* BUTTONS */
+.btn{padding:.65rem 1.4rem;border-radius:8px;border:none;font-family:var(--fb);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-pri{background:var(--cyan);color:#000;}
+.btn-pri:hover{background:#00e5e0;transform:translateY(-1px);box-shadow:var(--glow);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--txt2);}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--txt);}
+.btn-amb{background:var(--amber);color:#000;}
+.btn-amb:hover{background:#fbb040;}
+.btn-rose{background:var(--rose);color:#fff;}
+
+/* ============================================================
+   OVERVIEW TAB
+============================================================ */
+.hero{
+  background:linear-gradient(135deg,#0d1130,#1a0d30,#0d2030);
+  border:1px solid rgba(0,212,208,.2);border-radius:var(--r2);
+  padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-40%;right:-15%;
+  width:450px;height:450px;
+  background:radial-gradient(circle,rgba(0,212,208,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);font-weight:600;margin-bottom:.6rem;}
+.hero-title{font-family:var(--fd);font-size:2.4rem;font-weight:700;line-height:1.2;margin-bottom:.9rem;
+  background:linear-gradient(135deg,#e2e8f0,var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-desc{color:var(--txt2);font-size:.92rem;line-height:1.75;max-width:600px;}
+.hero-stats{display:flex;gap:2rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+.hst-num{font-family:var(--fd);font-size:2.2rem;font-weight:700;color:var(--cyan);}
+.hst-lbl{font-size:.7rem;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;}
+
+.concept-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.25rem;transition:all .2s;cursor:default;
+}
+.concept-card:hover{border-color:var(--cyan);box-shadow:0 0 30px rgba(0,212,208,.1);transform:translateY(-3px);}
+.cc-icon{font-size:1.75rem;margin-bottom:.7rem;}
+.cc-name{font-size:.95rem;font-weight:700;margin-bottom:.4rem;}
+.cc-desc{font-size:.8rem;color:var(--txt2);line-height:1.6;}
+.cc-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem;}
+
+.tl-events{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem;margin-top:1rem;}
+.tl-ev{background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:.75rem;text-align:center;}
+.tl-wk{font-size:.65rem;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.tl-en{font-size:.82rem;font-weight:700;margin:.25rem 0;}
+.tl-ed{font-size:.72rem;color:var(--txt3);line-height:1.4;}
+
+.hy-item{
+  background:var(--bg4);border-left:3px solid var(--amber);
+  border-radius:0 8px 8px 0;padding:.7rem 1rem;font-size:.83rem;line-height:1.55;
+}
+.hy-item strong{color:var(--amber);}
+
+/* ============================================================
+   QUIZ TAB
+============================================================ */
+.quiz-hdr{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:1.4rem 1.5rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.qp-wrap{flex:1;min-width:200px;}
+.qp-lbl{display:flex;justify-content:space-between;font-size:.78rem;color:var(--txt2);margin-bottom:.45rem;}
+.qpbar{height:7px;background:var(--bg4);border-radius:4px;overflow:hidden;}
+.qpfill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:4px;transition:width .5s ease;}
+.qstats{display:flex;gap:1.5rem;}
+.qsval{font-size:1.6rem;font-weight:700;font-family:var(--fd);}
+.qsval.c{color:var(--green);}
+.qsval.w{color:var(--rose);}
+.qsval.s{color:var(--amber);}
+.qslbl{font-size:.65rem;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;}
+
+.qcard{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:2rem;margin-bottom:1rem;
+}
+.qnum{font-size:.72rem;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem;}
+.qtext{font-size:1rem;font-weight:500;line-height:1.65;margin-bottom:1.4rem;}
+.opts{display:flex;flex-direction:column;gap:.55rem;}
+.opt{
+  background:var(--bg4);border:1px solid var(--border);border-radius:10px;
+  padding:.75rem 1rem;color:var(--txt);font-family:var(--fb);font-size:.88rem;
+  text-align:left;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:.7rem;
+}
+.opt:hover:not(:disabled){border-color:var(--cyan);background:rgba(0,212,208,.05);}
+.opt-lbl{
+  width:26px;height:26px;border-radius:50%;background:var(--bg3);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;flex-shrink:0;
+}
+.opt.correct{border-color:var(--green);background:rgba(16,185,129,.1);animation:pulseG .5s ease;}
+.opt.wrong{border-color:var(--rose);background:rgba(244,63,94,.1);animation:shakeX .4s ease;}
+.opt.correct .opt-lbl{background:var(--green);color:#fff;border-color:var(--green);}
+.opt.wrong .opt-lbl{background:var(--rose);color:#fff;border-color:var(--rose);}
+@keyframes pulseG{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}50%{box-shadow:0 0 0 8px rgba(16,185,129,.2);}}
+@keyframes shakeX{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+
+.expl{margin-top:1rem;padding:1rem;background:var(--bg4);border-radius:10px;border-left:3px solid var(--cyan);font-size:.83rem;line-height:1.65;display:none;color:var(--txt2);}
+.expl.show{display:block;animation:fadeUp .3s ease;}
+.expl.ec{border-left-color:var(--green);}
+.expl.ew{border-left-color:var(--rose);}
+
+.quiz-nav{display:flex;justify-content:space-between;margin-top:1.5rem;gap:1rem;flex-wrap:wrap;}
+.quiz-done{display:none;text-align:center;padding:3rem 1rem;}
+.quiz-done.show{display:block;animation:fadeUp .5s ease;}
+.rd-score{font-family:var(--fd);font-size:5rem;font-weight:700;color:var(--cyan);line-height:1;}
+.rd-lbl{font-size:1.1rem;color:var(--txt2);margin:.5rem 0 1.25rem;}
+.rd-msg{font-size:1rem;color:var(--txt);margin-bottom:2rem;}
+
+/* ============================================================
+   FLASHCARDS TAB
+============================================================ */
+.fc-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem;}
+.fc-filter{display:flex;gap:.5rem;flex-wrap:wrap;}
+.fcf-btn{padding:.35rem .8rem;border-radius:20px;background:var(--bg4);border:1px solid var(--border);color:var(--txt2);font-family:var(--fb);font-size:.78rem;cursor:pointer;transition:all .2s;}
+.fcf-btn.active,.fcf-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem;}
+.fcard{height:190px;perspective:1200px;cursor:pointer;}
+.fcard-inner{position:relative;width:100%;height:100%;transition:transform .65s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;}
+.fcard.flipped .fcard-inner{transform:rotateY(180deg);}
+.fcard-face{
+  position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem;text-align:center;
+}
+.fcard-front{background:var(--bg3);border:1px solid var(--border);}
+.fcard-back{background:linear-gradient(135deg,#0d2030,#0d1130);border:1px solid rgba(0,212,208,.3);transform:rotateY(180deg);}
+.fc-cat{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);font-weight:700;margin-bottom:.6rem;}
+.fc-q{font-size:.9rem;font-weight:600;line-height:1.5;color:var(--txt);}
+.fc-a{font-size:.84rem;line-height:1.6;color:var(--txt);}
+.fc-hint{position:absolute;bottom:.6rem;right:.75rem;font-size:.65rem;color:var(--txt3);}
+
+/* ============================================================
+   CLINICAL CASES TAB
+============================================================ */
+.ccase{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:1.75rem;}
+.cc-hdr{
+  background:linear-gradient(135deg,#0d1130,#1a0d30);
+  padding:1.4rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:1rem;
+}
+.cc-num{
+  width:34px;height:34px;background:var(--cyan);color:#000;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem;flex-shrink:0;
+}
+.cc-ttl{font-size:1.05rem;font-weight:700;margin-bottom:.35rem;}
+.cc-tags{display:flex;gap:.4rem;flex-wrap:wrap;}
+.cc-vign{
+  padding:1.4rem 1.5rem;background:var(--bg4);border-bottom:1px solid var(--border);
+  font-size:.88rem;line-height:1.75;color:var(--txt2);
+}
+.cc-qs{padding:1.4rem 1.5rem;}
+.cc-qitem{margin-bottom:1.25rem;}
+.cc-qtext{font-size:.88rem;font-weight:700;margin-bottom:.65rem;color:var(--txt);}
+.reveal-btn{
+  background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+  padding:.5rem .9rem;color:var(--txt2);font-family:var(--fb);font-size:.8rem;
+  cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;
+}
+.reveal-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.ans-reveal{
+  display:none;margin-top:.65rem;padding:.9rem 1rem;
+  background:rgba(0,212,208,.05);border:1px solid rgba(0,212,208,.2);
+  border-radius:8px;font-size:.83rem;line-height:1.65;color:var(--txt2);
+}
+.ans-reveal.show{display:block;animation:slideD .3s ease;}
+@keyframes slideD{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   PATHOPHYSIOLOGY TAB
+============================================================ */
+.flow-wrap{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:2rem;overflow-x:auto;
+}
+.flow-step{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;}
+.flow-node{
+  background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+  padding:.6rem 1rem;font-size:.82rem;font-weight:500;min-width:210px;
+  transition:all .2s;cursor:pointer;position:relative;
+}
+.flow-node:hover{border-color:var(--cyan);background:rgba(0,212,208,.06);}
+.flow-node.hl{border-color:var(--amber);background:rgba(245,158,11,.06);}
+.flow-tooltip{
+  display:none;position:absolute;left:calc(100% + .75rem);top:0;
+  background:var(--bg3);border:1px solid var(--cyan);border-radius:8px;
+  padding:.7rem .9rem;font-size:.78rem;line-height:1.55;width:240px;
+  z-index:50;box-shadow:var(--glow);color:var(--txt2);
+}
+.flow-node:hover .flow-tooltip{display:block;animation:fadeUp .2s ease;}
+.flow-arr{color:var(--cyan);font-size:1.1rem;flex-shrink:0;}
+
+.str-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-top:1.5rem;}
+.str-item{
+  background:var(--bg4);border:1px solid var(--border);border-radius:10px;
+  padding:1rem;cursor:pointer;transition:all .2s;
+}
+.str-item:hover{border-color:var(--purple);transform:translateY(-2px);}
+.str-ic{font-size:1.5rem;margin-bottom:.4rem;}
+.str-nm{font-size:.85rem;font-weight:700;margin-bottom:.25rem;}
+.str-ds{font-size:.75rem;color:var(--txt2);line-height:1.5;}
+
+/* MODAL */
+.modal-ov{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:1000;align-items:center;justify-content:center;padding:1.5rem;
+  backdrop-filter:blur(6px);
+}
+.modal-ov.show{display:flex;animation:fadeUp .2s ease;}
+.modal-box{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:2rem;max-width:580px;width:100%;max-height:82vh;overflow-y:auto;
+}
+.modal-ttl{font-family:var(--fd);font-size:1.4rem;font-weight:700;margin-bottom:.4rem;}
+.modal-body{color:var(--txt2);font-size:.88rem;line-height:1.75;margin-top:1rem;}
+.modal-close{float:right;background:none;border:none;color:var(--txt3);font-size:1.2rem;cursor:pointer;margin:-0.3rem -0.3rem 0 0;}
+.modal-close:hover{color:var(--txt);}
+
+/* ============================================================
+   DIAGNOSIS TAB
+============================================================ */
+.diag-flow{display:flex;flex-direction:column;gap:.4rem;}
+.diag-step{display:flex;gap:1rem;align-items:flex-start;}
+.diag-num{
+  width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#000;
+  display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:.15rem;
+}
+.diag-cont{flex:1;padding-bottom:1rem;border-bottom:1px dashed var(--border);}
+.diag-ttl{font-size:.92rem;font-weight:700;margin-bottom:.25rem;}
+.diag-desc{font-size:.83rem;color:var(--txt2);line-height:1.6;}
+.inv-badges{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.65rem;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:.83rem;}
+.tbl th{background:var(--bg4);padding:.7rem 1rem;text-align:left;font-weight:700;color:var(--cyan);border-bottom:2px solid rgba(0,212,208,.25);}
+.tbl td{padding:.65rem 1rem;border-bottom:1px solid var(--border);color:var(--txt2);vertical-align:top;}
+.tbl tr:hover td{background:var(--bg4);}
+
+/* ============================================================
+   TREATMENT TAB
+============================================================ */
+.trx-card{border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;}
+.trx-em{background:rgba(244,63,94,.05);border:1px solid rgba(244,63,94,.3);}
+.trx-pr{background:rgba(0,212,208,.05);border:1px solid rgba(0,212,208,.2);}
+.trx-sc{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);}
+.trx-am{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);}
+.trx-hd{font-size:.95rem;font-weight:700;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.trx-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+.trx-list li{font-size:.83rem;color:var(--txt2);line-height:1.55;padding-left:1.2rem;position:relative;}
+.trx-list li::before{content:'→';position:absolute;left:0;color:var(--cyan);}
+
+/* ============================================================
+   MNEMONICS TAB
+============================================================ */
+.mn-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:1.25rem;}
+.mn-hdr{
+  padding:1.2rem 1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  transition:background .2s;
+}
+.mn-hdr:hover{background:var(--bg4);}
+.mn-acr{font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--cyan);letter-spacing:.1em;}
+.mn-nm{font-size:.82rem;color:var(--txt3);margin-top:.15rem;}
+.mn-tgl{color:var(--txt3);font-size:1.1rem;transition:transform .2s;}
+.mn-card.open .mn-tgl{transform:rotate(180deg);}
+.mn-body{display:none;padding:1.4rem 1.5rem;border-top:1px solid var(--border);}
+.mn-card.open .mn-body{display:block;animation:fadeUp .3s ease;}
+.mn-sentence{font-size:.95rem;font-weight:600;color:var(--txt);margin-bottom:1rem;font-style:italic;}
+.mn-items{display:flex;flex-direction:column;gap:.55rem;}
+.mn-item{display:flex;align-items:flex-start;gap:.85rem;padding:.55rem .8rem;background:var(--bg4);border-radius:8px;}
+.mn-letter{font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--amber);min-width:28px;line-height:1.1;}
+.mn-meaning{font-size:.85rem;line-height:1.5;color:var(--txt2);}
+.mn-meaning strong{color:var(--txt);display:block;}
+
+/* VIVA SECTION */
+.viva-item{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;margin-bottom:.75rem;
+}
+.viva-q{
+  padding:1rem 1.25rem;cursor:pointer;font-size:.88rem;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background .2s;gap:.5rem;
+}
+.viva-q:hover{background:var(--bg4);}
+.viva-a{display:none;padding:.9rem 1.25rem;border-top:1px solid var(--border);font-size:.83rem;line-height:1.65;color:var(--txt2);}
+.viva-item.open .viva-a{display:block;animation:fadeUp .2s ease;}
+.viva-ic{font-size:.9rem;color:var(--txt3);flex-shrink:0;transition:transform .2s;}
+.viva-item.open .viva-ic{transform:rotate(180deg);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:.9rem 1.25rem;z-index:200;transform:translateY(100px);opacity:0;
+  transition:all .35s ease;max-width:260px;box-shadow:0 20px 40px rgba(0,0,0,.4);
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.t-em{font-size:1.4rem;margin-bottom:.25rem;}
+.t-msg{font-size:.82rem;color:var(--txt2);}
+
+/* Progress ring */
+.ring-wrap{position:relative;width:72px;height:72px;}
+.ring{transform:rotate(-90deg);}
+.ring-track{fill:none;stroke:var(--bg4);stroke-width:6;}
+.ring-fill{fill:none;stroke:var(--cyan);stroke-width:6;stroke-linecap:round;stroke-dasharray:204;stroke-dashoffset:204;transition:stroke-dashoffset .5s ease;}
+.ring-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.ring-num{font-family:var(--fd);font-size:1rem;font-weight:700;line-height:1;}
+.ring-lbl{font-size:.58rem;color:var(--txt3);text-transform:uppercase;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--txt3);}
+</style>
+<meta name="application-name" content="MU 63">
+<meta name="apple-mobile-web-app-title" content="MU 63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b14">
+<link rel="manifest" href="../../../manifest.json">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-icon">🧬</div>
+      <div>
+        <div class="logo-text">MedStudy</div>
+        <span class="logo-sub">Pregnancy Physiology</span>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-it"><div class="sval" id="hdr-score">0</div><div class="slbl">Score</div></div>
+      <div class="stat-it"><div class="sval" id="hdr-streak">0🔥</div><div class="slbl">Streak</div></div>
+      <div class="stat-it"><div class="sval" id="hdr-pct">0%</div><div class="slbl">Progress</div></div>
+    </div>
+    <div class="srch">
+      <span class="srch-ic">🔍</span>
+      <input type="text" id="srch-input" placeholder="Search content…" oninput="runSearch(this.value)">
+    </div>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<nav class="navtabs">
+  <div class="navinner">
+    <button class="tbn active" onclick="switchTab('overview',this)">📋 Overview</button>
+    <button class="tbn" onclick="switchTab('quiz',this)">🎯 Quiz Mode</button>
+    <button class="tbn" onclick="switchTab('flashcards',this)">🃏 Flashcards</button>
+    <button class="tbn" onclick="switchTab('cases',this)">🏥 Clinical Cases</button>
+    <button class="tbn" onclick="switchTab('patho',this)">⚗️ Pathophysiology</button>
+    <button class="tbn" onclick="switchTab('diagnosis',this)">🔬 Diagnosis</button>
+    <button class="tbn" onclick="switchTab('treatment',this)">💊 Treatment</button>
+    <button class="tbn" onclick="switchTab('mnemonics',this)">🧠 Mnemonics</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ============================================================
+  OVERVIEW TAB
+============================================================ -->
+<div class="tc active" id="tab-overview">
+  <div class="hero">
+    <div class="hero-lbl">📚 Physiology · Unit 10 Reproduction</div>
+    <h1 class="hero-title">Physiology of Pregnancy<br>&amp; Functions of the Placenta</h1>
+    <p class="hero-desc">A complete interactive study platform covering fertilization, implantation, placental endocrinology, maternal adaptations, and feto-placental exchange. Built from your lecture notes with every clinical pearl and exam favourite.</p>
+    <div class="hero-stats">
+      <div><div class="hst-num">25</div><div class="hst-lbl">MCQs</div></div>
+      <div><div class="hst-num">25</div><div class="hst-lbl">Flashcards</div></div>
+      <div><div class="hst-num">6</div><div class="hst-lbl">Clinical Cases</div></div>
+      <div><div class="hst-num">5</div><div class="hst-lbl">Mnemonics</div></div>
+      <div><div class="hst-num">12</div><div class="hst-lbl">Viva Q&amp;As</div></div>
+    </div>
+  </div>
+
+  <h2 class="sh-title mb15">🔑 Core Concepts</h2>
+  <div class="g4 mb2" id="concepts-grid"></div>
+
+  <h2 class="sh-title mb15">📅 Hormonal Timeline of Pregnancy</h2>
+  <div class="card mb2">
+    <div class="tl-events" id="timeline-events"></div>
+  </div>
+
+  <div class="g2 mb2">
+    <div>
+      <h2 class="sh-title mb1">⭐ High-Yield Facts</h2>
+      <div id="hy-facts" style="display:flex;flex-direction:column;gap:.6rem;"></div>
+    </div>
+    <div>
+      <h2 class="sh-title mb1">🏆 Exam Favourites</h2>
+      <div id="exam-favs" style="display:flex;flex-direction:column;gap:.6rem;"></div>
+    </div>
+  </div>
+
+  <!-- Placental Transport quick ref -->
+  <h2 class="sh-title mb15">🚢 Placental Transport at a Glance</h2>
+  <div class="card mb2">
+    <table class="tbl">
+      <thead><tr><th>Substance</th><th>Mechanism</th><th>Direction</th><th>Clinical Note</th></tr></thead>
+      <tbody id="transport-tbl"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================
+  QUIZ TAB
+============================================================ -->
+<div class="tc" id="tab-quiz">
+  <div class="quiz-hdr">
+    <div class="qp-wrap">
+      <div class="qp-lbl">
+        <span>Question <span id="q-cur">1</span> of <span id="q-tot">25</span></span>
+        <span id="q-pct-lbl">0%</span>
+      </div>
+      <div class="qpbar"><div class="qpfill" id="q-fill" style="width:0%"></div></div>
+    </div>
+    <div class="qstats">
+      <div class="stat-it"><div class="qsval c" id="q-correct">0</div><div class="qslbl">Correct</div></div>
+      <div class="stat-it"><div class="qsval w" id="q-wrong">0</div><div class="qslbl">Wrong</div></div>
+      <div class="stat-it"><div class="qsval s" id="q-streak">0🔥</div><div class="qslbl">Streak</div></div>
+    </div>
+    <button class="btn btn-ghost" onclick="resetQuiz()">↺ Reset</button>
+  </div>
+
+  <div id="quiz-area"></div>
+  <div id="quiz-nav" class="quiz-nav">
+    <button class="btn btn-ghost" id="prev-btn" onclick="prevQ()" style="display:none">← Prev</button>
+    <button class="btn btn-pri" id="next-btn" onclick="nextQ()">Next →</button>
+  </div>
+
+  <div class="quiz-done" id="quiz-done">
+    <div class="rd-score" id="final-score">0</div>
+    <div class="rd-lbl">out of 25</div>
+    <div class="rd-msg" id="final-msg"></div>
+    <button class="btn btn-pri" onclick="resetQuiz()">🔄 Try Again</button>
+  </div>
+</div>
+
+<!-- ============================================================
+  FLASHCARDS TAB
+============================================================ -->
+<div class="tc" id="tab-flashcards">
+  <div class="fc-controls">
+    <div>
+      <h2 class="sh-title">🃏 Flashcards</h2>
+      <p style="font-size:.82rem;color:var(--txt2)">Click any card to flip it</p>
+    </div>
+    <div class="fc-filter" id="fc-filter">
+      <button class="fcf-btn active" onclick="filterFC('all',this)">All</button>
+      <button class="fcf-btn" onclick="filterFC('Hormones',this)">Hormones</button>
+      <button class="fcf-btn" onclick="filterFC('Transport',this)">Transport</button>
+      <button class="fcf-btn" onclick="filterFC('Mechanism',this)">Mechanism</button>
+      <button class="fcf-btn" onclick="filterFC('Clinical',this)">Clinical</button>
+    </div>
+  </div>
+  <div class="fc-grid" id="fc-grid"></div>
+</div>
+
+<!-- ============================================================
+  CLINICAL CASES TAB
+============================================================ -->
+<div class="tc" id="tab-cases">
+  <div class="sh mb2">
+    <h2 class="sh-title">🏥 Clinical Cases</h2>
+    <p class="sh-sub">Exam-style vignettes — work through each question before revealing the answer</p>
+  </div>
+  <div id="cases-area"></div>
+</div>
+
+<!-- ============================================================
+  PATHOPHYSIOLOGY TAB
+============================================================ -->
+<div class="tc" id="tab-patho">
+  <div class="sh mb2">
+    <h2 class="sh-title">⚗️ Pathophysiology &amp; Mechanisms</h2>
+    <p class="sh-sub">Hover over any step for a detailed explanation. Click key structures for full descriptions.</p>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">🔬 Fertilization &amp; Implantation Pathway</h3>
+  <div class="flow-wrap mb2" id="flow-chart"></div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">🧫 Key Structures &amp; Their Roles</h3>
+  <div class="str-grid" id="str-grid"></div>
+</div>
+
+<!-- ============================================================
+  DIAGNOSIS TAB
+============================================================ -->
+<div class="tc" id="tab-diagnosis">
+  <div class="sh mb2">
+    <h2 class="sh-title">🔬 Diagnosis</h2>
+    <p class="sh-sub">Diagnostic approach, criteria, and investigation findings</p>
+  </div>
+
+  <div class="g2 mb2">
+    <div class="card">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;">📋 Pregnancy Confirmation Algorithm</h3>
+      <div class="diag-flow" id="diag-flow"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;">🩺 Key Investigation Findings</h3>
+      <div id="inv-findings"></div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">📊 Hormone Comparison Table</h3>
+  <div class="card mb2">
+    <table class="tbl" id="hormone-compare"></table>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">❓ Viva Questions</h3>
+  <div id="viva-area"></div>
+</div>
+
+<!-- ============================================================
+  TREATMENT TAB
+============================================================ -->
+<div class="tc" id="tab-treatment">
+  <div class="sh mb2">
+    <h2 class="sh-title">💊 Treatment &amp; Management</h2>
+    <p class="sh-sub">Hormonal physiology applied to clinical management</p>
+  </div>
+  <div class="g2">
+    <div id="trx-left"></div>
+    <div id="trx-right"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+  MNEMONICS TAB
+============================================================ -->
+<div class="tc" id="tab-mnemonics">
+  <div class="sh mb2">
+    <h2 class="sh-title">🧠 Mnemonics</h2>
+    <p class="sh-sub">Custom memory aids built from your lecture content — click each card to expand</p>
+  </div>
+  <div id="mn-area"></div>
+</div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-ttl" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="t-em" id="toast-em">🎉</div>
+  <div class="t-msg" id="toast-msg"></div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+============================================================ */
+
+const CONCEPTS = [
+  {icon:'🏊',name:'Capacitation',desc:'Sperm gain fertilization ability by losing inhibitory factors & cholesterol from acrosome. Ca2+ permeability increases, enhancing flagellar motion.',tags:['high-yield','mechanism']},
+  {icon:'🎯',name:'Fertilization',desc:'Occurs in the AMPULLA of the fallopian tube. ~10 sperms bind ZP → acrosomal reaction → fertilin-mediated fusion → zygote formation.',tags:['exam-fav','high-yield']},
+  {icon:'🔒',name:'Polyspermy Blocks',desc:'FAST block: ↓ membrane potential immediately. SLOW block: structural change in ZP (permanent). Ensures diploid zygote.',tags:['mechanism','high-yield']},
+  {icon:'🌱',name:'Implantation',desc:'Day 6-7 post-fertilization. ZP disappears, syncytiotrophoblast erodes endometrium with proteolytic enzymes. Completed day 8-9 at posterior uterine wall.',tags:['high-yield','clinical']},
+  {icon:'🧪',name:'HCG',desc:'Secreted by syncytiotrophoblast from day 6-8. Peaks at 10-12 weeks. Maintains corpus luteum → saves E+P production until placenta takes over.',tags:['exam-fav','high-yield']},
+  {icon:'🛡️',name:'Progesterone',desc:'Corpus luteum → week 8. Both → 8-12 weeks. Placenta only → > week 12. Inhibits myometrial contractions by ↓ oxytocin sensitivity.',tags:['high-yield','clinical']},
+  {icon:'📈',name:'Estrogen',desc:'Same source timeline as progesterone. Enlarges uterus & breasts. INCREASES oxytocin sensitivity. Marked rise near term to facilitate labour.',tags:['high-yield','mechanism']},
+  {icon:'⚡',name:'HCS (Placental Lactogen)',desc:'Stimulates maternal lipolysis → fatty acids for maternal energy → SPARES GLUCOSE for fetal facilitated diffusion. Anti-insulin effect.',tags:['high-yield','exam-fav']},
+];
+
+const TIMELINE_EVENTS = [
+  {week:'Day 0',name:'Fertilization',desc:'Ampulla of fallopian tube'},
+  {week:'Day 3-4',name:'Morula',desc:'Reaches uterus via cilia + contractions'},
+  {week:'Day 6-7',name:'Implantation begins',desc:'ZP disappears, syncytiotrophoblast erodes endometrium'},
+  {week:'Day 8-9',name:'Implantation complete',desc:'Fully embedded in posterior uterine wall'},
+  {week:'Day 6-8',name:'HCG detectable',desc:'Basis of pregnancy test'},
+  {week:'Week 8',name:'Ovarian → Placental',desc:'Corpus luteum begins handing over to placenta'},
+  {week:'Week 10-12',name:'HCG peak',desc:'Then declines and stabilises'},
+  {week:'Week 12+',name:'Placenta in charge',desc:'Sole source of estrogen & progesterone'},
+  {week:'3rd Trimester',name:'Estrogen surge',desc:'Marked rise prepares for labour'},
+  {week:'Term',name:'Parturition',desc:'↓ Progesterone, ↑ Estrogen/Oxytocin → Labour'},
+];
+
+const HY_FACTS = [
+  '<strong>Capacitation</strong> removes cholesterol vesicles & inhibitory factors from the acrosome, increasing Ca2+ permeability.',
+  '<strong>Site of fertilization:</strong> ALWAYS the ampulla of the fallopian tube. ⚠️ HIGH-YIELD MCQ.',
+  '<strong>HCG</strong> peaks at 10–12 weeks; first detectable 6–8 days after conception.',
+  '<strong>HCS</strong> stimulates maternal lipolysis → spares glucose for facilitated diffusion to fetus.',
+  '<strong>Polyspermy prevention:</strong> Fast block = ↓ membrane potential; Slow block = ZP structural change.',
+  '<strong>Ovariectomy before week 8</strong> → abortion (corpus luteum is sole E+P source until week 8).',
+  '<strong>IgG</strong> is the only immunoglobulin that crosses the placenta (via pinocytosis).',
+  '<strong>Oxygen:</strong> Drives across by pressure gradient of 20 mmHg (maternal 50, fetal 30 mmHg).',
+];
+
+const EXAM_FAVS = [
+  '⚠️ <strong>IVF pearl:</strong> Sperms must be placed in specialized media first (capacitation) — cannot fertilize directly.',
+  '⚠️ <strong>Ovariectomy Q:</strong> Before week 8 → abortion. The placenta has NOT yet taken over E+P production.',
+  '⚠️ <strong>Morning sickness</strong> = HCG → thyrotropin → elevated thyroxin → nausea/vomiting.',
+  '⚠️ <strong>Amenorrhea</strong> = high E+P feedback-inhibits pituitary FSH/LH → no new follicles/menstruation.',
+  '⚠️ <strong>Ectopic pregnancy</strong> = delayed transport → blastocyst implants in tube → HCG present, empty uterus on USS.',
+  '⚠️ <strong>Anterior pituitary enlarges 50%</strong> in pregnancy due to estrogen-driven prolactin-cell hypertrophy.',
+];
+
+const TRANSPORT_DATA = [
+  {sub:'O₂ / CO₂',mech:'Simple diffusion',dir:'O₂ → fetus; CO₂ → mother',note:'PO₂ gradient = 20 mmHg (50→30)'},
+  {sub:'Glucose',mech:'Facilitated diffusion',dir:'Mother → fetus',note:'HCS spares maternal glucose for this'},
+  {sub:'Amino acids',mech:'Active transport',dir:'Mother → fetus',note:'Fetus synthesizes its own proteins'},
+  {sub:'Lipids / Fatty acids',mech:'Simple diffusion',dir:'Mother → fetus',note:'HCS liberates maternal FA for energy'},
+  {sub:'Ca²⁺ & Inorganic PO₄',mech:'Active absorption (chorionic villi)',dir:'Mother → fetus',note:'↑ PTH in mother if diet low in Ca'},
+  {sub:'IgG & Antitoxins',mech:'Pinocytosis',dir:'Mother → fetus',note:'Only IgG crosses; provides passive immunity'},
+  {sub:'Iron',mech:'Active transport',dir:'Mother → fetus',note:'Maternal anaemia → fetal iron spared'},
+  {sub:'Water / Electrolytes',mech:'Simple diffusion / osmosis',dir:'Bidirectional',note:'Regulated by fetal ADH + aldosterone'},
+];
+
+/* ============================================================
+   QUIZ DATA
+============================================================ */
+const QUIZ = [
+  {q:"Which mechanism facilitates rapid transport of sperms to the fallopian tube within 5–10 minutes of ejaculation?",opts:["Beating of the sperm flagellum","Increased contractility of the uterus and tubes due to oxytocin and prostaglandins","Chemoattraction by the ovum","Capacitation in the cervical canal","Facilitated diffusion"],ans:1,expl:"Rapid transport is driven by oxytocin- and prostaglandin-mediated contractions of the female reproductive tract — not by the sperm's own flagellar motion, which is relatively slow."},
+  {q:"During capacitation, what crucial change occurs in the sperm membrane?",opts:["Decreased permeability to sodium","Formation of new cholesterol vesicles","Increased permeability to calcium (Ca²⁺)","Hardening of the acrosomal cap","Secretion of fertilin"],ans:2,expl:"Capacitation removes inhibitory factors and increases Ca²⁺ permeability, which enhances flagellar motion and primes the acrosome for its reaction."},
+  {q:"Which trypsin-like protease is released from the acrosome to penetrate the Zona Pellucida?",opts:["Hyaluronidase","Acrosin","Protease X","Pepsin","Fertilin"],ans:1,expl:"Acrosin is the trypsin-like protease in the acrosome that digests the ZP. Fertilin mediates sperm–ovum membrane FUSION (a later step)."},
+  {q:"What is the exact anatomical site of normal fertilization?",opts:["Cervical canal","Uterine cavity","Ampulla of the fallopian tube","Isthmus of the fallopian tube","Peritoneal cavity"],ans:2,expl:"⚠️ HIGH-YIELD: The ovum is picked up by the fimbriae and stays in the ampulla, where fertilization occurs. A classic MCQ favourite."},
+  {q:"Which protein on the sperm head mediates fusion of the sperm to the ovum membrane?",opts:["ZP3","Integrin","Acrosin","Fertilin","Actin"],ans:3,expl:"Fertilin is present on the sperm head and mediates the final adhesion and membrane fusion between sperm and ovum. Acrosin is for ZP penetration."},
+  {q:"The 'fast block' to polyspermy is achieved through which mechanism?",opts:["Structural change in the Zona Pellucida","Breakdown of the acrosome","Reduction of the membrane potential of the ovum","Secretion of a chemical repellent","Contraction of the fallopian tube"],ans:2,expl:"Immediately after sperm fusion, the ovum membrane potential drops — a rapid, transient electrical block preventing immediate second-sperm fusion. The slow/permanent block is the ZP structural change."},
+  {q:"How many days after fertilization does the blastocyst normally begin to implant?",opts:["1–2 days","3–4 days","6–7 days","10–12 days","14 days"],ans:2,expl:"The morula reaches the uterus at days 3–4, floats for 3–5 days, then the ZP disappears on day 6–7 and implantation begins. Completed by day 8–9."},
+  {q:"Which layer of the blastocyst is directly responsible for eroding the endometrium?",opts:["Embryoblast","Cytotrophoblast","Decidua","Syncytiotrophoblast","Zona Pellucida"],ans:3,expl:"The syncytiotrophoblast (outer trophoblast layer) secretes proteolytic enzymes that digest the endometrium, allowing the blastocyst to burrow in."},
+  {q:"What is the primary cause of amenorrhea in pregnancy?",opts:["Depletion of ovarian follicles","Feedback inhibition of pituitary GTHs by high estrogens and progesterone","Direct inhibition of the uterus by HCG","High levels of maternal prolactin","High levels of maternal oxytocin"],ans:1,expl:"High circulating estrogen + progesterone suppress pituitary FSH and LH via negative feedback → no follicular development → no menstrual cycle."},
+  {q:"Morning sickness in the first trimester is primarily attributed to over-secretion of which hormone?",opts:["Cortisol","Thyroxin","Progesterone","Aldosterone","Insulin"],ans:1,expl:"HCG (and human chorionic thyrotropin) shares structural homology with TSH, stimulating excess thyroxin secretion. Elevated thyroxin = higher BMR + nausea = morning sickness."},
+  {q:"Which adrenal hormone modification directly contributes to fluid retention and expanded blood volume in pregnancy?",opts:["Increased ACTH","Decreased cortisol","Increased aldosterone","Increased DHEA","Decreased PTH"],ans:2,expl:"Aldosterone increases Na⁺ and water retention, expanding plasma volume by ~50% during pregnancy. This increases venous return and cardiac output."},
+  {q:"What is the pressure gradient driving O₂ diffusion from maternal to fetal blood?",opts:["10 mmHg","20 mmHg","30 mmHg","40 mmHg","50 mmHg"],ans:1,expl:"Maternal PO₂ ≈ 50 mmHg; Fetal PO₂ ≈ 30 mmHg → gradient = 20 mmHg. Despite the low gradient, fetal hemoglobin has a higher O₂ affinity which helps."},
+  {q:"How is glucose primarily transported across the placenta to the fetus?",opts:["Active transport","Simple diffusion","Facilitated diffusion","Pinocytosis","Solvent drag"],ans:2,expl:"Glucose uses facilitated diffusion (carrier-mediated, no energy required). Amino acids and Ca use active transport. Lipids and gases use simple diffusion."},
+  {q:"How are amino acids transported across the placenta?",opts:["Active transport","Facilitated diffusion","Osmosis","Simple diffusion","Endocytosis"],ans:0,expl:"Amino acids require active transport against their concentration gradient. This is why the fetus can build proteins even when maternal levels are low."},
+  {q:"Which maternal immunoglobulin provides passive immunity to the fetus?",opts:["IgA","IgE","IgM","IgG","IgD"],ans:3,expl:"IgG is the only immunoglobulin that crosses the placenta (via pinocytosis/transcytosis). It provides the newborn with passive immunity for the first few months of life."},
+  {q:"When is HCG first detectable in maternal blood?",opts:["1–2 days after conception","6–8 days after conception","14 days after conception","4 weeks after conception","12 weeks after conception"],ans:1,expl:"HCG secretion begins with implantation (day 6–8). This is the basis of immunological pregnancy tests. It peaks at weeks 10–12."},
+  {q:"What is the crucial consequence of bilateral ovariectomy performed at week 6 of gestation?",opts:["Prolonged pregnancy","Macrosomia","Abortion","Pre-eclampsia","Multiple gestation"],ans:2,expl:"⚠️ EXAM CLASSIC: Before week 8, the corpus luteum in the ovary is the SOLE source of estrogen and progesterone. Removing it = removing E+P = uterine contractions = abortion."},
+  {q:"HCS exerts what specific metabolic effect on the mother?",opts:["Increased maternal glucose uptake","Inhibition of lipolysis","Stimulation of maternal lipolysis","Increased maternal protein synthesis","Decreased maternal BMR"],ans:2,expl:"HCS stimulates lipolysis → provides maternal tissues with fatty acids for energy → spares glucose to cross to the fetus via facilitated diffusion."},
+  {q:"Which placental hormone softens and dilates the cervix at labour?",opts:["Progesterone","HCG","Relaxin","Aldosterone","Thyrotropin"],ans:2,expl:"Relaxin relaxes the pelvic ligaments and softens/dilates the cervix in preparation for labour. Progesterone maintains the pregnancy by suppressing contractions."},
+  {q:"What nourishes the fertilized ovum during its 3–4 day journey down the fallopian tube?",opts:["Zona pellucida","Tubal secretions stimulated by progesterone","Yolk sac","Syncytiotrophoblast","Placenta"],ans:1,expl:"Tubal secretions (stimulated by progesterone from the corpus luteum) provide nutrition. The syncytiotrophoblast and placenta form much later during/after implantation."},
+  {q:"What happens to the maternal immune system to prevent rejection of the fetus?",opts:["Severe hyperactivation","Complete shutdown of bone marrow","Modulation/inhibition to decrease resistance","Increase in T-cell count only","Increased IgG synthesis against fetal antigens"],ans:2,expl:"The maternal immune system is modulated/suppressed to tolerate the fetal allograft. This immunosuppression is why pregnant women are more susceptible to infections (e.g., COVID-19)."},
+  {q:"The anterior pituitary enlarges by ~50% during pregnancy due to which effect?",opts:["HCG and Relaxin","Estrogen stimulating prolactin-cell (lactotrope) hypertrophy","HCS and Cortisol","FSH and LH increase","Progesterone causing cell proliferation"],ans:1,expl:"Estrogen stimulates the hypertrophy and hyperplasia of prolactin-secreting cells (lactotropes) in the anterior pituitary. FSH and LH actually DECREASE during pregnancy."},
+  {q:"What role does HCG play in the fetal endocrine system?",opts:["Secretes aldosterone via adrenal zone","Stimulates fetal testes to secrete testosterone AND stimulates fetal adrenal cortex to secrete DHEA","Secretes cortisol via fetal adrenal","Inhibits fetal thyroid","Promotes fetal bone growth"],ans:1,expl:"HCG acts as a tropic agent: (1) stimulates fetal testes → testosterone (for male sex differentiation) and (2) stimulates the fetal zone of the adrenal cortex → DHEA."},
+  {q:"What prevents the pregnant uterus from contracting and causing premature labour?",opts:["Extremely high oxytocin","High maternal cortisol","High progesterone decreasing myometrial oxytocin sensitivity","Complete absence of estrogen","Secretion of fertilin"],ans:2,expl:"Progesterone decreases myometrial sensitivity to oxytocin → prevents premature contractions. Towards term, progesterone falls and estrogen rises, tipping the balance toward labour."},
+  {q:"How are calcium and inorganic phosphate transported across the placenta?",opts:["Simple diffusion","Solvent drag","Facilitated diffusion","Active absorption by chorionic villi","Pinocytosis"],ans:3,expl:"Ca²⁺ and inorganic phosphate are actively absorbed by the chorionic villi. This is why maternal PTH rises (mobilizing bone Ca) to maintain adequate fetal supply."},
+];
+
+/* ============================================================
+   FLASHCARD DATA
+============================================================ */
+const FLASHCARDS = [
+  {cat:'Mechanism',q:'What is capacitation and why is it essential?',a:'Removal of cholesterol & inhibitory factors from acrosome + increased Ca²⁺ permeability. Essential because without it, sperm cannot perform the acrosomal reaction to penetrate the ZP.'},
+  {cat:'Mechanism',q:'What mediates the final fusion of the sperm membrane with the ovum membrane?',a:'Fertilin — a protein on the sperm head. (Acrosin is for penetrating the ZP, fertilin is for membrane fusion.)'},
+  {cat:'Mechanism',q:'Fast vs Slow block to polyspermy?',a:'FAST: immediate ↓ in ovum membrane potential (electrical). SLOW: permanent structural change in the Zona Pellucida after cortical granule release.'},
+  {cat:'Mechanism',q:'When and where does normal implantation occur?',a:'Day 6–7 (ZP disappears) at the POSTERIOR WALL of the uterus. Completed by day 8–9.'},
+  {cat:'Mechanism',q:'What enzyme does the syncytiotrophoblast use to erode the endometrium?',a:'Proteolytic enzymes secreted by the syncytiotrophoblast digest the endometrium, allowing the blastocyst to implant.'},
+  {cat:'Hormones',q:'What is the primary role of HCG in early pregnancy?',a:'Maintains the corpus luteum so it continues secreting estrogen & progesterone until the placenta takes over (weeks 8–12). Also the basis of pregnancy tests.'},
+  {cat:'Hormones',q:'When is HCG first detectable, and when does it peak?',a:'First detectable: 6–8 days after conception. Peaks at 10–12 weeks. Then declines to a lower constant level.'},
+  {cat:'Hormones',q:'Source of progesterone across the 3 trimesters?',a:'Weeks 0–8: corpus luteum ONLY. Weeks 8–12: both corpus luteum + placenta. Week 12+: placenta ONLY.'},
+  {cat:'Hormones',q:'How do estrogen and progesterone antagonise each other regarding uterine motility?',a:'Estrogen INCREASES myometrial sensitivity to oxytocin (pro-contraction). Progesterone DECREASES sensitivity (anti-contraction). Near term: E↑, P↓ → labour.'},
+  {cat:'Hormones',q:'What is HCS (Human Chorionic Somatomammotropin) and its metabolic role?',a:'Also called Placental Lactogen. Stimulates maternal lipolysis → fatty acids for maternal energy → spares glucose for fetal facilitated diffusion.'},
+  {cat:'Hormones',q:'What is the role of Relaxin?',a:'Relaxes pelvic ligaments and softens/dilates the cervix to prepare for labour.'},
+  {cat:'Hormones',q:'Why does morning sickness occur in the first trimester?',a:'HCG (and chorionic thyrotropin) stimulates the thyroid via TSH-like action → elevated thyroxin → higher BMR → nausea and vomiting.'},
+  {cat:'Transport',q:'Transport mechanism of glucose across the placenta?',a:'Facilitated diffusion — carrier-mediated, no energy required, follows concentration gradient.'},
+  {cat:'Transport',q:'Transport mechanism of amino acids across the placenta?',a:'Active transport — energy-requiring, against concentration gradient, ensures fetal protein synthesis.'},
+  {cat:'Transport',q:'How do Ca²⁺ and inorganic phosphate cross the placenta?',a:'Active absorption by chorionic villi. Maternal PTH rises (especially if diet is Ca-poor) to mobilise bone Ca for transfer.'},
+  {cat:'Transport',q:'Which immunoglobulin crosses the placenta and how?',a:'IgG (only IgG, not IgA/M/E). Crosses via pinocytosis/transcytosis. Provides neonatal passive immunity for 3–6 months.'},
+  {cat:'Transport',q:'What drives O₂ from maternal to fetal blood?',a:'A pressure gradient of 20 mmHg (maternal PO₂ ≈ 50 mmHg; fetal PO₂ ≈ 30 mmHg). Fetal Hb has higher O₂ affinity, aiding transfer.'},
+  {cat:'Clinical',q:'Why does ovariectomy at week 6 cause abortion?',a:'The corpus luteum (in the removed ovary) is the sole source of progesterone and estrogen until week 8. Without P4, the myometrium contracts and the decidua sloughs → abortion.'},
+  {cat:'Clinical',q:'What is an ectopic pregnancy and what is the diagnostic triad?',a:'Implantation outside the uterus (usually fallopian tube). Triad: positive HCG, empty uterus on USS, adnexal mass. Risk: tubal rupture and haemorrhage.'},
+  {cat:'Clinical',q:'Why does maternal aldosterone increase in pregnancy?',a:'To expand plasma volume by Na⁺ & water retention. This increases blood volume by ~50%, raising venous return and cardiac output to meet fetal demands.'},
+  {cat:'Clinical',q:'Why does maternal PTH increase in pregnancy?',a:'To mobilise bone calcium (especially if dietary Ca is low) for active transport to the fetus for skeletal development.'},
+  {cat:'Clinical',q:'Why are pregnant women more susceptible to infections?',a:'The maternal immune system is modulated/suppressed to prevent rejection of the fetal allograft (foreign paternal antigens). This blunts immune responses to pathogens.'},
+  {cat:'Mechanism',q:'What nourishes the morula during its 3–4 day journey to the uterus?',a:'Tubal secretions, which are stimulated by progesterone from the corpus luteum.'},
+  {cat:'Mechanism',q:'How does HCG function in the fetal endocrine system?',a:'Acts as a tropic hormone: stimulates fetal testes → testosterone (male differentiation); stimulates fetal adrenal cortex → DHEA.'},
+  {cat:'Clinical',q:'What is the basis of the immunological pregnancy test?',a:'Detection of HCG in maternal blood or urine. HCG is produced by the syncytiotrophoblast from day 6–8 post-conception.'},
+];
+
+/* ============================================================
+   CLINICAL CASES DATA
+============================================================ */
+const CASES = [
+  {
+    title:"IVF Failure — Understanding Capacitation",
+    tags:['High-Yield','Mechanism','IVF Pearl'],
+    vignette:"A 32-year-old woman undergoing IVF has her mature oocyte placed in a dish. Freshly collected sperms are immediately added next to the oocyte without any prior processing. Despite optimal temperature and conditions, fertilization fails to occur.",
+    questions:[
+      {q:"1. What critical physiological process was omitted?",a:"Capacitation. Sperms must be incubated in a specialized medium for several hours to remove male inhibitory factors and cholesterol vesicles from the acrosome, and to increase Ca²⁺ permeability."},
+      {q:"2. What molecular change in the sperm enables the acrosomal reaction?",a:"Increased Ca²⁺ permeability of the sperm membrane is the key change. This enhances flagellar motion and triggers release of acrosomal enzymes (especially acrosin)."},
+      {q:"3. What is the consequence if acrosin is not released?",a:"The sperm cannot penetrate the Zona Pellucida (ZP). Without ZP penetration, the sperm head cannot adhere to the ovum membrane → no fertilization."},
+    ]
+  },
+  {
+    title:"Morning Sickness & Thyroid — HCG Cross-reactivity",
+    tags:['Clinical Pearl','Exam Favourite','HCG'],
+    vignette:"A 26-year-old woman at 10 weeks gestation presents with severe nausea, vomiting, and weight loss (hyperemesis gravidarum). Blood tests show: HCG 180,000 mIU/mL (markedly elevated), Free T4 slightly elevated, TSH suppressed. She has no prior thyroid history.",
+    questions:[
+      {q:"1. Explain the mechanism linking HCG to her thyroid results.",a:"HCG shares structural homology with TSH (both are glycoproteins with similar α-subunits). At very high concentrations, HCG activates TSH receptors on the thyroid gland, causing a thyrotropic effect → elevated T4, suppressed TSH."},
+      {q:"2. What placental hormone also contributes to this effect?",a:"Human Chorionic Thyrotropin — secreted by the syncytiotrophoblast alongside HCG. It directly stimulates the thyroid gland and contributes to elevated thyroxin in the first trimester."},
+      {q:"3. Why does this typically resolve after the first trimester?",a:"HCG levels peak at weeks 10–12 then decline. As HCG falls, the TSH-receptor stimulation diminishes and thyroid function returns toward normal."},
+    ]
+  },
+  {
+    title:"Maternal Metabolic Shift — Role of HCS",
+    tags:['High-Yield','Metabolism','HCS'],
+    vignette:"A 30-year-old woman at 28 weeks gestation undergoes routine blood tests. Results: fasting blood glucose 3.1 mmol/L (slightly below normal non-pregnant range), serum free fatty acids markedly elevated. She feels well and has had no symptoms.",
+    questions:[
+      {q:"1. What hormone is responsible for this metabolic pattern?",a:"Human Chorionic Somatomammotropin (HCS / Placental Lactogen), secreted by the syncytiotrophoblast."},
+      {q:"2. Explain the mechanism and its teleological benefit.",a:"HCS stimulates lipolysis in maternal adipose tissue → free fatty acids released as an energy substrate for the mother. This spares maternal glucose, keeping it available for facilitated diffusion across the placenta to the growing fetus."},
+      {q:"3. What transport mechanism delivers this spared glucose to the fetus?",a:"Facilitated diffusion — carrier-mediated but passive (no energy expenditure). Glucose moves down its concentration gradient from mother to fetus."},
+    ]
+  },
+  {
+    title:"Zona Pellucida Defect — Polyspermy",
+    tags:['Mechanism','Polyspermy','Genetics'],
+    vignette:"Researchers study a line of mice with a mutation rendering the Zona Pellucida unable to change its conformation following initial sperm binding. Fertilized embryos consistently show multiple nuclei and chromosomal abnormalities.",
+    questions:[
+      {q:"1. What physiological block has been eliminated by this mutation?",a:"The slow block to polyspermy. Normally, upon first sperm penetration, cortical granule release causes a permanent structural change in the ZP (zona reaction), preventing additional sperms from binding."},
+      {q:"2. What is the fast block and why is it insufficient alone?",a:"The fast block is the immediate reduction in the ovum's membrane potential following sperm fusion. It is transient and provides only brief protection — the slow ZP block is required for permanent prevention of polyspermy."},
+      {q:"3. What is the consequence of polyspermy?",a:"Polyspermy produces a polyploid zygote (abnormal chromosome number). This is lethal — the embryo fails to develop viably, resulting in spontaneous abortion."},
+    ]
+  },
+  {
+    title:"Ectopic Pregnancy — Integrative Case",
+    tags:['High-Yield','Clinical','Emergency'],
+    vignette:"A 28-year-old woman presents with right lower abdominal pain, vaginal spotting, and a positive home pregnancy test. Her last menstrual period was 7 weeks ago. She has a history of pelvic inflammatory disease. Ultrasound: empty uterine cavity, right adnexal mass of 3 cm.",
+    questions:[
+      {q:"1. What is the diagnosis and what abnormal physiological process explains it?",a:"Ectopic pregnancy (right fallopian tube). The blastocyst implanted in the tube rather than the posterior uterine wall. This occurs when ciliary/peristaltic transport is impaired (e.g., by prior PID-related tubal damage), delaying the morula's journey so it hatches from the ZP prematurely and implants in the tube."},
+      {q:"2. Why is HCG still elevated despite no intrauterine pregnancy?",a:"HCG is secreted by the syncytiotrophoblast wherever it implants. The ectopic trophoblast is actively secreting HCG, maintaining detectable levels in blood and urine. Diagnosis = positive β-HCG + empty uterus on USS."},
+      {q:"3. What is the normal site and timeline for implantation?",a:"Posterior wall of the uterus. Morula arrives at uterus days 3–4. Floats as blastocyst for 3–5 days. ZP disappears day 6–7. Syncytiotrophoblast erodes endometrium. Implantation complete by day 8–9."},
+    ]
+  },
+  {
+    title:"Calcium Deficiency in the Third Trimester",
+    tags:['Maternal Adaptation','PTH','Bone'],
+    vignette:"A 24-year-old primigravida at 34 weeks gestation, eating a very restricted diet low in dairy, presents complaining of back pain. DEXA scan shows a slight decrease in lumbar bone density compared to a pre-pregnancy scan.",
+    questions:[
+      {q:"1. What physiological mechanism explains her reduced bone density?",a:"The fetus requires large amounts of calcium for skeletal development. The maternal parathyroid glands enlarge and increase PTH secretion. PTH mobilises calcium from maternal bone (osteoclast activation), providing a circulating Ca²⁺ reservoir."},
+      {q:"2. How does this calcium reach the fetus?",a:"Calcium is actively absorbed by the chorionic villi against a concentration gradient (active transport). If maternal dietary intake is inadequate, bone mineral is the primary source."},
+      {q:"3. What clinical advice would you give this patient?",a:"Increase dietary calcium intake (dairy, fortified foods, leafy vegetables) and consider calcium supplementation. Vitamin D should also be adequate to enhance Ca absorption from the gut."},
+    ]
+  },
+];
+
+/* ============================================================
+   FLOW CHART DATA
+============================================================ */
+const FLOW_STEPS = [
+  {label:'Ejaculation (~3.5 mL, ~120M sperms/mL)',hl:false,tip:'Seminal plasma contains male inhibitory factors that prevent capacitation until removed.'},
+  {label:'Transport to Ampulla (5–10 mins)',hl:false,tip:'Rapid transport via oxytocin- and prostaglandin-driven uterine contractions. Sperms are passively carried.'},
+  {label:'Capacitation (hours in female tract)',hl:true,tip:'Inhibitory factors & cholesterol vesicles washed away. Ca²⁺ permeability ↑. Flagellar motion enhanced. Acrosome primed.'},
+  {label:'Chemoattraction to Ovum',hl:false,tip:'Chemical signals from the ovum attract the remaining viable sperms to its location.'},
+  {label:'~10 Sperms bind ZP receptors',hl:false,tip:'Multiple sperms bind to ZP3 receptors on the zona pellucida surface.'},
+  {label:'Acrosomal Reaction (acrosin released)',hl:true,tip:'Fusion of outer acrosomal membrane with sperm plasma membrane → release of acrosin (trypsin-like protease) and other enzymes.'},
+  {label:'ONE sperm penetrates ZP',hl:false,tip:'Acrosin digests the ZP, allowing one sperm to penetrate through.'},
+  {label:'Sperm adheres to ovum membrane (via fertilin)',hl:false,tip:'Fertilin on the sperm head mediates adhesion to the ovum plasma membrane.'},
+  {label:'Membrane fusion → Zygote',hl:true,tip:'Plasma membranes fuse. Sperm nucleus enters ovum. Diploid zygote formed.'},
+  {label:'FAST BLOCK: ↓ Membrane Potential',hl:true,tip:'Immediate electrical block. Prevents immediate second-sperm fusion. Transient.'},
+  {label:'SLOW BLOCK: ZP Structural Change',hl:true,tip:'Cortical granule exocytosis triggers permanent ZP conformation change (zona reaction). Permanent polyspermy prevention.'},
+  {label:'Mitosis → 8-cell Morula (day 3–4)',hl:false,tip:'Zygote divides as it travels down the fallopian tube. Nourished by tubal secretions (progesterone-stimulated).'},
+  {label:'Blastocyst formed; floats in uterus (3–5 days)',hl:false,tip:'Blastocyst has inner cell mass (embryoblast) and outer trophoblast layer.'},
+  {label:'ZP disappears (day 6–7) → Hatching',hl:true,tip:'Proteolytic dissolution of the ZP allows the blastocyst to expand and contact the endometrium.'},
+  {label:'Syncytiotrophoblast erodes endometrium',hl:true,tip:'Outer trophoblast differentiates into syncytiotrophoblast, which secretes proteolytic enzymes to invade the decidua.'},
+  {label:'Implantation complete (day 8–9, posterior wall)',hl:true,tip:'The blastocyst is fully embedded in the endometrium at the posterior uterine wall. HCG secretion begins.'},
+];
+
+/* ============================================================
+   KEY STRUCTURES
+============================================================ */
+const STRUCTURES = [
+  {icon:'🏊',name:'Zona Pellucida (ZP)',desc:'Glycoprotein coat of the ovum. ZP receptors mediate sperm binding. Structural change after fertilization = slow block to polyspermy.',detail:'The ZP contains receptors (including ZP3) for sperm binding. After the first sperm penetrates, cortical granule exocytosis modifies the ZP (zona reaction), making it impenetrable to further sperm — the permanent slow block to polyspermy. The ZP disappears on day 6–7 to allow implantation.'},
+  {icon:'🔬',name:'Syncytiotrophoblast',desc:'Outer trophoblast layer. Secretes HCG, progesterone, estrogen, HCS, relaxin. Erodes endometrium for implantation.',detail:'The syncytiotrophoblast is the endocrine powerhouse of the placenta. It secretes: HCG (maintains corpus luteum), Progesterone (prevents abortion), Estrogens, HCS (lipolysis), Relaxin (dilates cervix), Chorionic Thyrotropin. It also erodes the endometrium via proteolytic enzymes during implantation.'},
+  {icon:'🫀',name:'Corpus Luteum',desc:'Post-ovulation ovarian structure. Sole source of E+P until week 8. Maintained by HCG.',detail:'The corpus luteum of pregnancy is maintained by HCG secreted by the trophoblast. It is the sole source of estrogen and progesterone until the placenta takes over at weeks 8–12. Ovariectomy before week 8 removes this source → abortion.'},
+  {icon:'⚡',name:'Acrosome',desc:'Enzyme-containing cap on sperm head. Releases acrosin (trypsin-like) + hyaluronidase during the acrosomal reaction.',detail:'The acrosome is located at the tip of the sperm head. During capacitation, the outer acrosomal membrane fuses with the sperm plasma membrane, triggering the acrosomal reaction and releasing: (1) Acrosin — trypsin-like protease to digest the ZP; (2) Hyaluronidase — digests the cumulus mass; (3) other enzymes.'},
+  {icon:'🧬',name:'Chorionic Villi',desc:'Finger-like placental projections. Site of active Ca and phosphate absorption. Interface for all nutrient exchange.',detail:'Chorionic villi are the functional units of the placenta. They are bathed in maternal blood in the intervillous space. Key functions: O₂/CO₂ exchange (simple diffusion), glucose (facilitated diffusion), amino acids (active transport), Ca/PO₄ (active absorption), IgG (pinocytosis), and all other nutrient/waste exchange.'},
+  {icon:'🦋',name:'Fetal Zone, Adrenal Cortex',desc:'Stimulated by HCG to produce DHEA, which is converted to estrogen by the placenta.',detail:'The fetal adrenal cortex has a large "fetal zone" that is stimulated by HCG (and fetal ACTH). It produces DHEA (dehydroepiandrosterone), which the placenta converts to estrogen. This feto-placental unit is key to the massive estrogen rise in the third trimester.'},
+  {icon:'💪',name:'Myometrium',desc:'Uterine smooth muscle. Sensitivity to oxytocin = key labour switch. Progesterone ↓ sensitivity; Estrogen ↑ sensitivity.',detail:'The myometrium maintains uterine quiescence during pregnancy under the influence of progesterone (which decreases oxytocin receptor sensitivity). Near term, progesterone falls and estrogen rises, increasing oxytocin sensitivity. Combined with rising oxytocin from the posterior pituitary, this triggers coordinated uterine contractions = labour.'},
+  {icon:'🅾️',name:'Maternal Pituitary',desc:'Enlarges ~50% during pregnancy (estrogen → lactotrope hypertrophy). FSH/LH suppressed; Prolactin ↑.',detail:'High estrogen during pregnancy causes hypertrophy of lactotrope (prolactin-secreting) cells in the anterior pituitary — the gland enlarges by up to 50%. Prolactin levels rise but lactation is inhibited by the high progesterone. FSH and LH are suppressed by negative feedback (→ amenorrhea). Post-partum, P4 falls → prolactin → lactation.'},
+];
+
+/* ============================================================
+   DIAGNOSIS DATA
+============================================================ */
+const DIAG_FLOW = [
+  {step:'Suspect Pregnancy',desc:'Missed menstrual period (amenorrhea) — primary presenting symptom. Due to high E+P feedback inhibition of pituitary FSH/LH.'},
+  {step:'β-HCG Blood Test',desc:'Detectable 6–8 days post-conception. Highly sensitive and specific. Basis of all immunological pregnancy tests.'},
+  {step:'Urine Pregnancy Test',desc:'Detects HCG in urine (appears ~10–14 days after conception). Over-the-counter lateral flow assay.'},
+  {step:'Transvaginal Ultrasound',desc:'Gestational sac visible from ~5 weeks. Confirms intrauterine location (rules out ectopic). Fetal heartbeat ~6 weeks.'},
+  {step:'Quantitative β-HCG',desc:'Serial measurements: doubles every 48h in normal early pregnancy. Plateau/fall suggests ectopic or non-viable.'},
+];
+
+const INV_FINDINGS = [
+  {title:'Blood Tests',items:[
+    {label:'β-HCG elevated',type:'c'},
+    {label:'Thyroxin slightly ↑ (1st trimester)',type:'a'},
+    {label:'TSH suppressed (1st trimester)',type:'r'},
+    {label:'Aldosterone ↑',type:'c'},
+    {label:'PTH ↑ (if low Ca diet)',type:'a'},
+    {label:'Free fatty acids ↑ (2nd/3rd tri)',type:'p'},
+    {label:'Fasting glucose slightly ↓',type:'p'},
+  ]},
+  {title:'Maternal Haematology',items:[
+    {label:'Blood volume ↑ ~50%',type:'c'},
+    {label:'Cardiac output ↑',type:'c'},
+    {label:'Dilutional anaemia',type:'r'},
+    {label:'Leukocytosis (physiological)',type:'a'},
+  ]},
+];
+
+const HORMONE_COMPARE = [
+  {feat:'Type',hcg:'Glycoprotein',prog:'Steroid',est:'Steroid',hcs:'Polypeptide'},
+  {feat:'Secreted by',hcg:'Syncytiotrophoblast',prog:'Corpus luteum → Placenta',est:'Corpus luteum → Placenta',hcs:'Syncytiotrophoblast'},
+  {feat:'Main role',hcg:'Maintain corpus luteum; stimulate fetal testes & adrenal',prog:'Prevent contractions; maintain decidua',est:'Enlarge uterus/breasts; ↑ oxytocin sensitivity',hcs:'Stimulate lipolysis; spare glucose for fetus'},
+  {feat:'Timing',hcg:'Peaks 10–12 wks then ↓',prog:'Rises to 7th month then constant',est:'Rises to 7th month then marked ↑ near term',hcs:'Rises steadily throughout pregnancy'},
+  {feat:'Key exam fact',hcg:'Basis of pregnancy test',prog:'Absence → abortion',est:'↑ Oxytocin sensitivity (pro-labour)',hcs:'Maternal lipolysis = glucose sparing'},
+];
+
+/* ============================================================
+   VIVA QUESTIONS
+============================================================ */
+const VIVAS = [
+  {q:"What happens to the ovum's membrane potential immediately after fusion with a sperm?",a:"The membrane potential drops immediately. This acts as a rapid, transient 'fast block' to prevent polyspermy — an electrical barrier that gives time for the more permanent slow block (ZP structural change) to develop."},
+  {q:"Why do sperms need to spend hours in the female reproductive tract before fertilization?",a:"To undergo capacitation. The tract fluids wash away male inhibitory factors and cholesterol vesicles from the acrosome, and increase membrane Ca²⁺ permeability — essential for the acrosomal reaction."},
+  {q:"What is the normal timeline and site of implantation?",a:"Implantation begins on day 6–7 after fertilization (when the ZP disappears) at the posterior wall of the uterus. It is completed by day 8–9."},
+  {q:"How does the syncytiotrophoblast facilitate implantation?",a:"It forms the outer trophoblast layer and secretes proteolytic enzymes that erode the endometrium (decidua), allowing the blastocyst to burrow in and establish the maternal-fetal connection."},
+  {q:"What causes morning sickness in the first trimester?",a:"Over-secretion of thyroxin stimulated by HCG and human chorionic thyrotropin. HCG shares structural homology with TSH, causing a thyrotropic effect that elevates thyroid hormones and raises BMR."},
+  {q:"Explain the endocrine role of the placenta in carbohydrate metabolism.",a:"The placenta secretes HCS (Human Chorionic Somatomammotropin), which stimulates maternal lipolysis. This provides fatty acids for maternal energy, sparing glucose for facilitated diffusion to the fetus."},
+  {q:"What dictates the direction of oxygen diffusion across the placenta?",a:"A partial pressure gradient of 20 mmHg (maternal PO₂ ≈ 50 mmHg; fetal PO₂ ≈ 30 mmHg). Fetal haemoglobin's higher O₂ affinity further facilitates uptake."},
+  {q:"Why does the mother's parathyroid gland enlarge during pregnancy?",a:"To increase PTH secretion. This mobilises calcium from maternal bone to maintain blood Ca levels adequate for active transport across the placenta to the fetus for skeletal development."},
+  {q:"Name the sources of progesterone during each trimester.",a:"1st (0–8 wks): corpus luteum only. Transition (8–12 wks): both corpus luteum and placenta. 2nd + 3rd (>12 wks): placenta exclusively."},
+  {q:"What role does HCG play in the fetal endocrine system?",a:"HCG stimulates the fetal testes to secrete testosterone (essential for male sex differentiation) and acts as a tropic agent for the fetal zone of the adrenal cortex to secrete DHEA."},
+  {q:"How do estrogen and progesterone antagonise each other regarding uterine motility?",a:"Estrogen increases myometrial sensitivity to oxytocin (promoting contractions). Progesterone decreases myometrial sensitivity to oxytocin (inhibiting contractions). Near term, P4 falls and E2 rises, triggering labour."},
+  {q:"What is the basis for immunological pregnancy tests?",a:"Detection of Human Chorionic Gonadotropin (HCG) in maternal blood or urine. HCG is secreted by the syncytiotrophoblast and is detectable 6–8 days after conception."},
+];
+
+/* ============================================================
+   MNEMONICS
+============================================================ */
+const MNEMONICS = [
+  {
+    acr:'HPERHCT',
+    name:'Placental Hormones',
+    sentence:'"Happy Pregnant Emma Really Helps Children Thrive"',
+    items:[
+      {l:'H',title:'HCG',desc:'Human Chorionic Gonadotropin — maintains corpus luteum, peaks at 10–12 wks, basis of pregnancy test'},
+      {l:'P',title:'Progesterone',desc:'Prevents premature contractions, maintains decidua. Corpus luteum → placenta (transition at wk 8)'},
+      {l:'E',title:'Estrogen',desc:'Enlarges uterus/breasts, increases oxytocin sensitivity, prepares for labour near term'},
+      {l:'R',title:'Relaxin',desc:'Relaxes pelvic ligaments, softens and dilates cervix at labour'},
+      {l:'H',title:'HCS (Human Chorionic Somatomammotropin)',desc:'Stimulates maternal lipolysis → spares glucose for fetus. Also called Placental Lactogen'},
+      {l:'C',title:'Chorionic Thyrotropin',desc:'Stimulates maternal thyroid (with HCG) → elevated thyroxin → morning sickness'},
+      {l:'T',title:'(Bonus: Testosterone via HCG)',desc:'HCG stimulates fetal testes → testosterone for male sex differentiation'},
+    ]
+  },
+  {
+    acr:'CAPE',
+    name:'Steps of Capacitation',
+    sentence:'"CAPE — the sperm puts on its cape before attacking the egg"',
+    items:[
+      {l:'C',title:'Cholesterol vesicles removed',desc:'Male inhibitory factors and cholesterol are washed away from the acrosome by female tract fluids'},
+      {l:'A',title:'Acrosin (and other enzymes) primed',desc:'The acrosome is now ready to release proteolytic enzymes upon binding to the ZP'},
+      {l:'P',title:'Permeability to Ca²⁺ increased',desc:'Sperm membrane becomes more permeable to Ca²⁺ ions — the key ionic trigger'},
+      {l:'E',title:'Enhanced flagellar motion',desc:'Ca²⁺ influx drives hyperactivated flagellar beating → increased sperm velocity and penetration power'},
+    ]
+  },
+  {
+    acr:'COP',
+    name:'Hormone Source Transition (Corpus → Placenta)',
+    sentence:'"COP — the Corpus luteum calls it a day and the placenta Operates Permanently"',
+    items:[
+      {l:'C',title:'Corpus luteum ONLY (0–8 weeks)',desc:'Sole source of estrogen and progesterone. Loss = abortion. HCG keeps it alive.'},
+      {l:'O',title:'Overlap / both (8–12 weeks)',desc:'Gradual handover period — both corpus luteum and placenta contribute'},
+      {l:'P',title:'Placenta ONLY (>12 weeks)',desc:'Corpus luteum degenerates; placenta is the sole source from now on'},
+    ]
+  },
+  {
+    acr:'GALA-IP',
+    name:'Placental Transport Mechanisms',
+    sentence:'"GALA-IP — the placenta is a gala of intelligent transport"',
+    items:[
+      {l:'G',title:'Glucose → Facilitated diffusion',desc:'Carrier-mediated, passive. HCS spares maternal glucose for this.'},
+      {l:'A',title:'Amino acids → Active transport',desc:'Energy-dependent. Ensures fetal protein synthesis even when maternal levels are low.'},
+      {l:'L',title:'Lipids & O₂ → Simple diffusion',desc:'Fat-soluble substances and gases cross by simple diffusion along gradients.'},
+      {l:'A',title:'Antibodies (IgG) → Pinocytosis',desc:'Only IgG crosses; provides neonatal passive immunity.'},
+      {l:'I',title:'Iron → Active transport',desc:'Actively transported to fetus; maternal anaemia does NOT protect the fetus.'},
+      {l:'P',title:'Phosphate & Calcium → Active absorption',desc:'Chorionic villi actively absorb Ca²⁺ and PO₄. Maternal PTH rises to mobilise bone Ca.'},
+    ]
+  },
+  {
+    acr:'FAST–SLOW',
+    name:'Polyspermy Blocks',
+    sentence:'"FAST–SLOW: The egg uses a Fast Alarm then Slowly Locks Out the Others"',
+    items:[
+      {l:'F',title:'Fast block',desc:'Immediate response within milliseconds'},
+      {l:'A',title:'Altered membrane potential (↓)',desc:'Ovum plasma membrane potential drops — electrical barrier, transient'},
+      {l:'S',title:'Slow block',desc:'Permanent structural response over minutes'},
+      {l:'T',title:'Transformed ZP structure (zona reaction)',desc:'Cortical granule exocytosis → ZP hardens → permanently prevents further sperm binding'},
+    ]
+  },
+];
+
+/* ============================================================
+   QUIZ STATE
+============================================================ */
+let qIdx = 0, qCorrect = 0, qWrong = 0, qStreak = 0, qAnswered = [];
+
+/* ============================================================
+   RENDER FUNCTIONS
+============================================================ */
+function renderOverview(){
+  // Concepts grid
+  const cg = document.getElementById('concepts-grid');
+  cg.innerHTML = CONCEPTS.map(c=>`
+    <div class="concept-card searchable">
+      <div class="cc-icon">${c.icon}</div>
+      <div class="cc-name">${c.name}</div>
+      <div class="cc-desc">${c.desc}</div>
+      <div class="cc-tags">${c.tags.map(t=>`<span class="tag ${tagClass(t)}">${t}</span>`).join('')}</div>
+    </div>`).join('');
+
+  // Timeline
+  document.getElementById('timeline-events').innerHTML = TIMELINE_EVENTS.map(e=>`
+    <div class="tl-ev searchable">
+      <div class="tl-wk">${e.week}</div>
+      <div class="tl-en">${e.name}</div>
+      <div class="tl-ed">${e.desc}</div>
+    </div>`).join('');
+
+  // High yield
+  document.getElementById('hy-facts').innerHTML = HY_FACTS.map(f=>`<div class="hy-item searchable">${f}</div>`).join('');
+
+  // Exam favs
+  document.getElementById('exam-favs').innerHTML = EXAM_FAVS.map(f=>`<div class="hy-item searchable" style="border-left-color:var(--rose)">${f}</div>`).join('');
+
+  // Transport table
+  document.getElementById('transport-tbl').innerHTML = TRANSPORT_DATA.map(r=>`
+    <tr>
+      <td><strong style="color:var(--txt)">${r.sub}</strong></td>
+      <td><span class="badge bc">${r.mech}</span></td>
+      <td style="color:var(--txt2)">${r.dir}</td>
+      <td style="color:var(--txt3);font-size:.78rem">${r.note}</td>
+    </tr>`).join('');
+}
+
+function tagClass(t){
+  if(t==='high-yield'||t==='High-Yield') return 'tag-hy';
+  if(t==='exam-fav'||t==='Exam Favourite') return 'tag-ex';
+  if(t==='mechanism'||t==='Mechanism') return 'tag-me';
+  if(t==='clinical'||t==='Clinical') return 'tag-pe';
+  return 'tag-gr';
+}
+
+/* ============================================================
+   QUIZ
+============================================================ */
+function renderQuiz(){
+  if(qIdx >= QUIZ.length){
+    showResults(); return;
+  }
+  const q = QUIZ[qIdx];
+  document.getElementById('q-cur').textContent = qIdx+1;
+  document.getElementById('q-tot').textContent = QUIZ.length;
+  const pct = Math.round((qIdx/QUIZ.length)*100);
+  document.getElementById('q-pct-lbl').textContent = pct+'%';
+  document.getElementById('q-fill').style.width = pct+'%';
+  document.getElementById('q-correct').textContent = qCorrect;
+  document.getElementById('q-wrong').textContent = qWrong;
+  document.getElementById('q-streak').textContent = qStreak+'🔥';
+  document.getElementById('hdr-score').textContent = qCorrect;
+  document.getElementById('hdr-streak').textContent = qStreak+'🔥';
+  document.getElementById('hdr-pct').textContent = Math.round((qIdx/QUIZ.length)*100)+'%';
+
+  const answered = qAnswered[qIdx];
+  const html = `
+    <div class="qcard">
+      <div class="qnum">Question ${qIdx+1} / ${QUIZ.length}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="opts">
+        ${q.opts.map((o,i)=>{
+          let cls='';
+          if(answered!==undefined){
+            if(i===q.ans) cls='correct';
+            else if(i===answered && answered!==q.ans) cls='wrong';
+          }
+          return `<button class="opt ${cls}" onclick="answerQ(${i})" ${answered!==undefined?'disabled':''}>
+            <span class="opt-lbl">${String.fromCharCode(65+i)}</span>${o}
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="expl ${answered!==undefined?(answered===q.ans?'show ec':'show ew'):''}" id="expl">
+        ${answered!==undefined?`<strong>${answered===q.ans?'✅ Correct!':'❌ Incorrect.'}</strong> ${q.expl}`:''}
+      </div>
+    </div>`;
+  document.getElementById('quiz-area').innerHTML = html;
+  document.getElementById('quiz-nav').style.display='flex';
+  document.getElementById('quiz-done').classList.remove('show');
+  document.getElementById('prev-btn').style.display = qIdx>0?'block':'none';
+  document.getElementById('next-btn').textContent = qIdx===QUIZ.length-1?'Finish ✓':'Next →';
+}
+
+function answerQ(i){
+  if(qAnswered[qIdx]!==undefined) return;
+  qAnswered[qIdx]=i;
+  const q=QUIZ[qIdx];
+  if(i===q.ans){ qCorrect++; qStreak++; }
+  else{ qWrong++; qStreak=0; }
+  renderQuiz();
+  showToast(i===q.ans);
+}
+
+function nextQ(){
+  if(qAnswered[qIdx]===undefined && qIdx<QUIZ.length) return;
+  qIdx++;
+  renderQuiz();
+}
+
+function prevQ(){
+  if(qIdx>0){ qIdx--; renderQuiz(); }
+}
+
+function resetQuiz(){
+  qIdx=0;qCorrect=0;qWrong=0;qStreak=0;qAnswered=[];
+  document.getElementById('quiz-done').classList.remove('show');
+  document.getElementById('quiz-nav').style.display='flex';
+  renderQuiz();
+}
+
+function showResults(){
+  document.getElementById('quiz-area').innerHTML='';
+  document.getElementById('quiz-nav').style.display='none';
+  const done=document.getElementById('quiz-done');
+  done.classList.add('show');
+  document.getElementById('final-score').textContent=qCorrect;
+  const pct=Math.round((qCorrect/QUIZ.length)*100);
+  let msg='';
+  if(pct>=90) msg='🏆 Exceptional! You have mastered this topic!';
+  else if(pct>=75) msg='🎯 Great work! Review the questions you missed.';
+  else if(pct>=60) msg='📚 Good effort — revisit the flashcards and try again.';
+  else msg='💪 Keep going! Read through the overview and try again.';
+  document.getElementById('final-msg').textContent=msg;
+  document.getElementById('hdr-score').textContent=qCorrect;
+  document.getElementById('hdr-pct').textContent=pct+'%';
+}
+
+/* ============================================================
+   FLASHCARDS
+============================================================ */
+let currentFCFilter = 'all';
+
+function renderFlashcards(filter='all'){
+  currentFCFilter=filter;
+  const cards = filter==='all' ? FLASHCARDS : FLASHCARDS.filter(c=>c.cat===filter);
+  document.getElementById('fc-grid').innerHTML = cards.map((c,i)=>`
+    <div class="fcard" id="fc${i}" onclick="flipCard(this)">
+      <div class="fcard-inner">
+        <div class="fcard-face fcard-front">
+          <div class="fc-cat">${c.cat}</div>
+          <div class="fc-q">${c.q}</div>
+          <div class="fc-hint">👆 click to flip</div>
+        </div>
+        <div class="fcard-face fcard-back">
+          <div class="fc-cat">Answer</div>
+          <div class="fc-a">${c.a}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function flipCard(el){ el.classList.toggle('flipped'); }
+
+function filterFC(cat,btn){
+  document.querySelectorAll('.fcf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFlashcards(cat);
+}
+
+/* ============================================================
+   CLINICAL CASES
+============================================================ */
+function renderCases(){
+  document.getElementById('cases-area').innerHTML = CASES.map((c,ci)=>`
+    <div class="ccase searchable">
+      <div class="cc-hdr">
+        <div class="cc-num">${ci+1}</div>
+        <div>
+          <div class="cc-ttl">${c.title}</div>
+          <div class="cc-tags">${c.tags.map(t=>`<span class="tag ${tagClass(t)}">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="cc-vign">${c.vignette}</div>
+      <div class="cc-qs">
+        ${c.questions.map((q,qi)=>`
+          <div class="cc-qitem">
+            <div class="cc-qtext">${q.q}</div>
+            <button class="reveal-btn" onclick="revealAns(this)">🔍 Reveal Answer</button>
+            <div class="ans-reveal">${q.a}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function revealAns(btn){
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('show');
+  btn.textContent = ans.classList.contains('show') ? '🙈 Hide Answer' : '🔍 Reveal Answer';
+}
+
+/* ============================================================
+   PATHOPHYSIOLOGY
+============================================================ */
+function renderPatho(){
+  // Flow chart
+  document.getElementById('flow-chart').innerHTML = FLOW_STEPS.map(s=>`
+    <div class="flow-step">
+      <div class="flow-node ${s.hl?'hl':''}">
+        ${s.label}
+        <div class="flow-tooltip">${s.tip}</div>
+      </div>
+      <div class="flow-arr">↓</div>
+    </div>`).join('');
+
+  // Structures
+  document.getElementById('str-grid').innerHTML = STRUCTURES.map((s,i)=>`
+    <div class="str-item" onclick="showModal('${s.name}','${s.detail.replace(/'/g,"\\'")}')">
+      <div class="str-ic">${s.icon}</div>
+      <div class="str-nm">${s.name}</div>
+      <div class="str-ds">${s.desc}</div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   DIAGNOSIS
+============================================================ */
+function renderDiagnosis(){
+  // Diagnostic flow
+  document.getElementById('diag-flow').innerHTML = DIAG_FLOW.map((d,i)=>`
+    <div class="diag-step">
+      <div class="diag-num">${i+1}</div>
+      <div class="diag-cont">
+        <div class="diag-ttl">${d.step}</div>
+        <div class="diag-desc">${d.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Investigation findings
+  document.getElementById('inv-findings').innerHTML = INV_FINDINGS.map(f=>`
+    <div style="margin-bottom:1.25rem">
+      <div style="font-size:.85rem;font-weight:700;margin-bottom:.6rem;color:var(--txt)">${f.title}</div>
+      <div class="inv-badges">${f.items.map(it=>`<span class="badge b${it.type}">${it.label}</span>`).join('')}</div>
+    </div>`).join('');
+
+  // Hormone comparison table
+  document.getElementById('hormone-compare').innerHTML = `
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th style="color:var(--cyan)">HCG</th>
+        <th style="color:var(--purple)">Progesterone</th>
+        <th style="color:var(--rose)">Estrogen</th>
+        <th style="color:var(--amber)">HCS</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${HORMONE_COMPARE.map(r=>`
+        <tr>
+          <td><strong style="color:var(--txt)">${r.feat}</strong></td>
+          <td>${r.hcg}</td>
+          <td>${r.prog}</td>
+          <td>${r.est}</td>
+          <td>${r.hcs}</td>
+        </tr>`).join('')}
+    </tbody>`;
+
+  // Viva
+  document.getElementById('viva-area').innerHTML = VIVAS.map((v,i)=>`
+    <div class="viva-item" id="viva${i}">
+      <div class="viva-q" onclick="toggleViva(${i})">
+        <span>V${i+1}: ${v.q}</span>
+        <span class="viva-ic">▼</span>
+      </div>
+      <div class="viva-a">${v.a}</div>
+    </div>`).join('');
+}
+
+function toggleViva(i){
+  document.getElementById('viva'+i).classList.toggle('open');
+}
+
+/* ============================================================
+   TREATMENT
+============================================================ */
+function renderTreatment(){
+  const left = [
+    {type:'em',head:'🚨 Ectopic Pregnancy Management',items:[
+      'Surgical removal (salpingotomy or salpingectomy) — definitive treatment',
+      'Medical: Methotrexate if haemodynamically stable and unruptured (folic acid antagonist targeting trophoblast)',
+      'If ipsilateral ovary removed before week 8 → exogenous progesterone supplementation required',
+      'Monitor β-HCG to confirm treatment success (should fall to zero)',
+    ]},
+    {type:'pr',head:'💉 Progesterone & Corpus Luteum Support',items:[
+      'In IVF cycles: exogenous progesterone supplementation required because corpus luteum function is compromised',
+      'Threatened miscarriage: progesterone supplementation to maintain decidua and inhibit contractions',
+      'Goal: maintain P4 levels until placenta takes over production at weeks 8–12',
+      'Progesterone inhibits myometrial oxytocin receptors → prevents premature labour',
+    ]},
+    {type:'am',head:'🦋 Thyroid Management in Pregnancy',items:[
+      'First-trimester transient gestational hyperthyroidism (HCG-driven) — usually self-limiting',
+      'Does NOT require anti-thyroid therapy unless severely symptomatic',
+      'Resolves as HCG declines after 12 weeks',
+      'Pre-existing hypothyroidism: levothyroxine dose often needs increase in pregnancy',
+    ]},
+  ];
+  const right = [
+    {type:'pr',head:'🧂 Maternal Volume & Electrolyte Management',items:[
+      'Physiological rise in aldosterone → Na⁺ retention → plasma volume expansion (~50%) is NORMAL',
+      'Pre-eclampsia: characterized by hypertension + proteinuria; abnormal vascular adaptation',
+      'Calcium supplementation recommended if dietary intake is poor (prevents maternal bone resorption)',
+      'Vitamin D co-administration improves gut Ca absorption',
+    ]},
+    {type:'sc',head:'🩹 Preterm Labour Prevention',items:[
+      'Tocolytics: β₂ agonists (salbutamol), magnesium sulfate, nifedipine — inhibit uterine contractions',
+      'Progesterone supplementation: reduces risk of recurrent preterm birth',
+      'Mechanism: ↑ myometrial Ca²⁺ sensitivity inhibited → smooth muscle relaxation',
+      'Cervical cerclage if cervical insufficiency detected on ultrasound',
+    ]},
+    {type:'pr',head:'🤢 Management of Hyperemesis Gravidarum',items:[
+      'Treat underlying cause: HCG-driven thyroid stimulation peaks at weeks 10–12',
+      'Antiemetics: ondansetron, metoclopramide, promethazine',
+      'IV fluid rehydration if severe (Hartmann\'s solution)',
+      'Thiamine (Vitamin B1) supplementation — prevents Wernicke\'s encephalopathy',
+      'Usually resolves spontaneously as HCG levels decline after week 12',
+    ]},
+  ];
+
+  function renderTrxCards(arr){
+    return arr.map(c=>`
+      <div class="trx-card trx-${c.type}">
+        <div class="trx-hd">${c.head}</div>
+        <ul class="trx-list">${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+      </div>`).join('');
+  }
+  document.getElementById('trx-left').innerHTML = renderTrxCards(left);
+  document.getElementById('trx-right').innerHTML = renderTrxCards(right);
+}
+
+/* ============================================================
+   MNEMONICS
+============================================================ */
+function renderMnemonics(){
+  document.getElementById('mn-area').innerHTML = MNEMONICS.map((m,i)=>`
+    <div class="mn-card" id="mn${i}">
+      <div class="mn-hdr" onclick="toggleMn(${i})">
+        <div>
+          <div class="mn-acr">${m.acr}</div>
+          <div class="mn-nm">${m.name}</div>
+        </div>
+        <span class="mn-tgl">▼</span>
+      </div>
+      <div class="mn-body">
+        <div class="mn-sentence">${m.sentence}</div>
+        <div class="mn-items">
+          ${m.items.map(it=>`
+            <div class="mn-item">
+              <div class="mn-letter">${it.l}</div>
+              <div class="mn-meaning"><strong>${it.title}</strong>${it.desc}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleMn(i){
+  document.getElementById('mn'+i).classList.toggle('open');
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function showModal(title, body){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').textContent=body;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function closeModal(e){
+  if(!e || e.target===document.getElementById('modal-overlay') || e.currentTarget.classList.contains('modal-close'))
+    document.getElementById('modal-overlay').classList.remove('show');
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+function runSearch(q){
+  const all = document.querySelectorAll('.searchable');
+  if(!q){ all.forEach(el=>{ el.style.opacity='1'; el.style.outline='none'; }); return; }
+  const lq = q.toLowerCase();
+  all.forEach(el=>{
+    const txt = el.textContent.toLowerCase();
+    if(txt.includes(lq)){
+      el.style.opacity='1';
+      el.style.outline='2px solid var(--cyan)';
+      el.style.outlineOffset='2px';
+    } else {
+      el.style.opacity='0.25';
+      el.style.outline='none';
+    }
+  });
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+const MOTIVATIONAL = ['🔥 On fire!','💡 Nailed it!','🎯 Perfect!','⚡ Brilliant!','🏆 Outstanding!','✨ Superb!'];
+const WRONG_MSG = ['💪 Keep going!','📚 Review & retry','🤔 Think again!','Almost! Try again'];
+let toastTimer;
+
+function showToast(correct){
+  const t = document.getElementById('toast');
+  const em = document.getElementById('toast-em');
+  const msg = document.getElementById('toast-msg');
+  if(correct){
+    em.textContent = MOTIVATIONAL[Math.floor(Math.random()*MOTIVATIONAL.length)];
+    msg.textContent = 'Correct answer!';
+    t.style.borderColor = 'var(--green)';
+  } else {
+    em.textContent = WRONG_MSG[Math.floor(Math.random()*WRONG_MSG.length)];
+    msg.textContent = 'Check the explanation below.';
+    t.style.borderColor = 'var(--rose)';
+  }
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ============================================================
+   TAB SWITCHING & INIT
+============================================================ */
+function switchTab(id, btn){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tbn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('lastTab', id);
+  if(id==='quiz') renderQuiz();
+}
+
+function initAll(){
+  renderOverview();
+  renderFlashcards();
+  renderCases();
+  renderPatho();
+  renderDiagnosis();
+  renderTreatment();
+  renderMnemonics();
+  renderQuiz();
+
+  // Restore last tab
+  const last = localStorage.getItem('lastTab');
+  if(last){
+    const btn = [...document.querySelectorAll('.tbn')].find(b=>b.getAttribute('onclick')?.includes(`'${last}'`));
+    if(btn) switchTab(last, btn);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initAll);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../../../service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
