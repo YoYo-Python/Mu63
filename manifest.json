@@ -2,7 +2,7 @@
   "name": "MU 63 — Study Platform",
   "short_name": "MU 63",
   "description": "Comprehensive study platform for MU Batch 63 — Endocrine, Reproductive & Research modules",
-  "start_url": "./main.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#080b14",

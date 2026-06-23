@@ -315,16 +315,16 @@
 
     netlifyIdentity.on('init', function(user) {
       if (user) {
-        window.location.href = '/main.html';
+        window.location.href = '/main-dashboard.html';
       }
     });
 
     netlifyIdentity.on('login', function(user) {
-      window.location.href = '/main.html';
+      window.location.href = '/main-dashboard.html';
     });
 
     netlifyIdentity.on('signup', function(user) {
-      window.location.href = '/main.html';
+      window.location.href = '/main-dashboard.html';
     });
 
     netlifyIdentity.init();
