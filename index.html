@@ -712,66 +712,56 @@
     </div>
   </div>
 
-  <script>
-    // 1. Configure your Clerk Publishable Key here
-    const clerkPublishableKey = "pk_test_dmFsaWQta2l0dGVuLTg5LmNsZXJrLmFjY291bnRzLmRldiQ";
-
-    // 2. Inject Clerk Browser SDK 
-    const script = document.createElement('script');
-    script.setAttribute('data-clerk-publishable-key', clerkPublishableKey);
-    script.async = true;
-    script.src = `https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
-    script.crossOrigin = "anonymous";
-
-    script.addEventListener('load', async function () {
-      await window.Clerk.load();
-
-      const loginBtn = document.getElementById('login-btn');
-      const mainCard = document.getElementById('main-login-card');
-      const inlineAuthDiv = document.getElementById('clerk-inline-auth');
-      const userProfileDiv = document.getElementById('clerk-user-profile');
-      const footerBranding = document.getElementById('footer-branding');
-
-      // Visual configurations mapping your exact styling system to Clerk UI components
-      const themeUiOptions = {
-        variables: {
-          colorPrimary: '#b8a0e8',
-          colorBackground: '#121523',
-          colorText: '#eceaf0',
-          colorTextSecondary: '#9890a8',
-          borderRadius: '24px',
-          fontFamily: "'Outfit', sans-serif"
-        }
-      };
-
-      // 3. Monitor state shifts and react instantly
-      if (window.Clerk.user) {
-        // Authenticated state: bypass completely and route directly to dashboard file
-        window.location.href = '/main-dashboard.html';
-      } else {
-        // Unauthenticated state: activate your native login CTA trigger link
-        if (loginBtn) {
-          loginBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            // Switch display layouts seamlessly to reveal the embedded Clerk block
-            loginBtn.style.display = 'none';
-            inlineAuthDiv.style.display = 'block';
-            footerBranding.style.marginTop = '16px';
-
-            // Render Clerk container explicitly customized down to UI theme choices
-            window.Clerk.mountSignIn(inlineAuthDiv, {
-              appearance: themeUiOptions,
-              redirectUrl: '/main-dashboard.html'
-            });
-          });
-        }
-      }
-    });
-
-    document.body.appendChild(script);
+<script defer crossorigin="anonymous"
+  src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js" type="text/javascript">
   </script>
 
+<script defer crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_dmFsaWQta2l0dGVuLTg5LmNsZXJrLmFjY291bnRzLmRldiQ"
+  src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js" type="text/javascript">
+</script>
+<!-- Rest of your HTML file -->
+
+<script>
+  window.addEventListener('load', async function () {
+    await Clerk.load({
+      ui: { ClerkUI: window.__internal_ClerkUICtor },
+    })
+
+    console.log('ClerkJS is loaded')
+  })
+</script>
+<div id="app"></div>
+
+<script defer crossorigin="anonymous"
+  src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js" type="text/javascript"></script>
+
+<script defer crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_dmFsaWQta2l0dGVuLTg5LmNsZXJrLmFjY291bnRzLmRldiQ"
+  src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
+  type="text/javascript"></script>
+
+<script>
+  window.addEventListener('load', async function () {
+    await Clerk.load({
+      ui: { ClerkUI: window.__internal_ClerkUICtor },
+    })
+
+    const loginBtn = document.getElementById('login-btn')
+
+    if (Clerk.isSignedIn) {
+      loginBtn.textContent = 'Open Dashboard'
+      loginBtn.addEventListener('click', function () {
+        window.location.href = '/main-dashboard.html'
+      })
+    } else {
+      loginBtn.addEventListener('click', function (e) {
+        e.preventDefault()
+        Clerk.openSignIn()
+      })
+    }
+  })
+</script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
