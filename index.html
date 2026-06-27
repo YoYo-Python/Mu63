@@ -697,14 +697,14 @@
       <p class="subtitle">Welcome back. Securely authenticate to access your learning dashboard.</p>
 
       <!-- Trigger Modal Authentication directly via script -->
-      <button id="login-btn" class="btn-login">
+      <a href="main-dashboard.html" id="login-btn" class="btn-login">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
           </path>
         </svg>
         Sign in to Continue
-      </button>
+      </a>
 
       <div id="clerk-inline-auth"></div>
 
@@ -712,42 +712,42 @@
     </div>
   </div>
 
-<script defer crossorigin="anonymous"
+<!-- <script defer crossorigin="anonymous"
   src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js"
   type="text/javascript"></script>
 
 <script defer crossorigin="anonymous"
   data-clerk-publishable-key="pk_test_dmFsaWQta2l0dGVuLTg5LmNsZXJrLmFjY291bnRzLmRldiQ"
   src="https://valid-kitten-89.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
-  type="text/javascript"></script>
+  type="text/javascript"></script> -->
 
 <script>
-  function initClerk() {
-    if (!window.Clerk || !window.__internal_ClerkUICtor) {
-      setTimeout(initClerk, 50);
-      return;
-    }
+  // function initClerk() {
+  //   if (!window.Clerk || !window.__internal_ClerkUICtor) {
+  //     setTimeout(initClerk, 50);
+  //     return;
+  //   }
 
-    Clerk.load({
-      ui: { ClerkUI: window.__internal_ClerkUICtor },
-    }).then(function () {
-      if (Clerk.user) {
-        window.location.href = '/main-dashboard.html';
-        return;
-      }
+  //   Clerk.load({
+  //     ui: { ClerkUI: window.__internal_ClerkUICtor },
+  //   }).then(function () {
+  //     if (Clerk.user) {
+  //       window.location.href = '/main-dashboard.html';
+  //       return;
+  //     }
 
-      const loginBtn = document.getElementById('login-btn');
-      loginBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        Clerk.openSignIn({
-          afterSignInUrl: '/main-dashboard.html',
-          afterSignUpUrl: '/main-dashboard.html',
-        });
-      });
-    });
-  }
+  //     const loginBtn = document.getElementById('login-btn');
+  //     loginBtn.addEventListener('click', function (e) {
+  //       e.preventDefault();
+  //       Clerk.openSignIn({
+  //         afterSignInUrl: '/main-dashboard.html',
+  //         afterSignUpUrl: '/main-dashboard.html',
+  //       });
+  //     });
+  //   });
+  // }
 
-  document.addEventListener('DOMContentLoaded', initClerk);
+  // document.addEventListener('DOMContentLoaded', initClerk);
 </script>
   <script>
     if ('serviceWorker' in navigator) {
