@@ -98,3 +98,27 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );
 });
+self.addEventListener('install', (event) => {
+  // Forces the new service worker to become the active service worker immediately.
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  // Tells the active service worker to take control of all open pages immediately.
+  event.waitUntil(clients.claim());
+
+  // Clear out old caches so users get the fresh HTML
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          // Delete any cache that isn't your newest version
+          // Update 'my-site-cache-v2' whenever you push a major change
+          if (cache !== 'my-site-cache-v2') {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+});
